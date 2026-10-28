@@ -272,6 +272,16 @@ nav button{min-width:0}
 .sst{display:flex;flex-direction:column;gap:3px;margin-top:6px;font-size:13px}
 .sst.c{font-size:12px;margin-top:3px}
 .sst .s-ok{color:var(--green)}.sst .s-up{color:var(--green)}.sst .s-no{color:var(--red)}.sst .s-warn{color:var(--amber)}.sst .s-na{color:var(--muted)}
+
+/* ---- HELAIAN SAHAM: kepala tetap ---- */
+.sheet .panel{padding-top:0}
+.shd{position:sticky;top:0;z-index:3;background:var(--bg);margin:0 -16px 12px;padding:16px 16px 12px;border-bottom:1px solid var(--line)}
+.shd-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.shd-name{min-width:0}
+.xbtn{flex:none;width:46px;height:46px;border-radius:12px;border:1px solid var(--line);background:var(--card2);color:var(--ink);font:700 20px var(--f);cursor:pointer;display:grid;place-items:center}
+.xbtn:active{transform:scale(.96)}
+.sheet .panel>.row.between:first-child{position:sticky;top:0;z-index:3;background:var(--bg);margin:0 -16px 12px;padding:16px 16px 12px;border-bottom:1px solid var(--line)}
+.verd{margin-top:12px;padding:12px;border-radius:10px;background:var(--card2)}
 </style>
 </head>
 <body translate="no">
@@ -749,7 +759,7 @@ function stockStatus(code,name){
     else if(el>BTH().h)out.push({ic:'⌛',cls:'s-na',t:`Isyarat ${fmtD(sig.start)} tamat tanpa keputusan`});
     else if(el>md)out.push({ic:'⏳',cls:'s-warn',t:`Isyarat ${sig.p}% · tempoh biasa sudah berlalu (hari ke-${el} daripada ~${md})`});
     else out.push({ic:'🟢',cls:'s-ok',t:`Isyarat aktif ${sig.p}% · dalam tempoh biasa (hari ke-${el} daripada ~${md})`});}
-  else if(m&&m.va)out.push({ic:'⚪',cls:'s-na',t:`Tiada isyarat teknikal aktif · skor ${m.sc}/${m.va}`});
+  else if(m&&m.va)out.push({ic:'⚪',cls:'s-na',t:`Tiada isyarat teknikal aktif · skor ${m.sc}/${m.va} (${scoreVerdict(m.sc,m.va).lbl})`});
   if(hd){const lc=lastClose(code);if(lc){const pl=(lc.c-hd.cost)*hd.qty,pct=(lc.c/hd.cost-1)*100;const XP=exitPlan(hd);
     out.push({ic:'💼',cls:pl>=0?'s-up':'s-no',t:`Pegangan anda ${pl>=0?'untung':'rugi'} ${rmS(pl)} (${pct>=0?'+':''}${pct.toFixed(1)}%)${XP?(XP.hit?' · harga tutup di bawah paras sokongan mengekor':' · di atas paras sokongan mengekor'):''}`});}}
   return out.length?out:null;
@@ -1154,6 +1164,10 @@ const EN_PHRASE=[
 ];
 
 Object.assign(EN_EXACT,{
+'Kuat':'Strong','Neutral – tunggu pengesahan':'Neutral – wait for confirmation','Lemah':'Weak',
+'Kebanyakan indicator menunjukkan trend dan momentum menaik.':'Most indicators show an upward trend and momentum.',
+'Indicator bercampur. Tunggu lebih banyak indicator menjadi positif sebelum membuat keputusan.':'Indicators are mixed. Wait for more indicators to turn positive before deciding.',
+'Kebanyakan indicator menunjukkan trend atau momentum menurun.':'Most indicators show a downward trend or momentum.',
 'Tidak patuh syariah':'Not Shariah-compliant','Ujian sejarah 12 bulan':'12-month historical test',
 'Ujian sejarah menggunakan senarai syariah SC terkini untuk semua tempoh. Keputusan simulasi bukan jaminan prestasi masa depan.':'The historical test uses the latest SC Shariah list for the whole period. Simulated results are not a guarantee of future performance.',
 'Tunjuk kurang':'Show less',
@@ -1195,6 +1209,8 @@ Object.assign(EN_EXACT,{
 'Paras ini naik mengikut harga tertinggi sejak tarikh belian dan tidak pernah turun. Harga tutup di bawahnya menandakan momentum menurun.':'This level rises with the highest price since the purchase date and never falls. A close below it signals weakening momentum.',
 });
 EN_RX.unshift(
+[/^(.+) Skor ialah bilangan indicator \(daripada (\d+)\) yang positif sekarang\.$/,(m,a,b)=>`${trText(a)} The score is the number of indicators (out of ${b}) that are positive now.`],
+[/^Tiada isyarat teknikal aktif · skor (\d+)\/(\d+) \((.+)\)$/,(m,a,b,c)=>`No active technical signal · score ${a}/${b} (${trText(c)})`],
 [/^Sudah sampai paras atas (\S+) \(isyarat (.+)\)$/,'Already reached upper level $1 (signal $2)'],
 [/^Jatuh ke paras bawah (\S+) \(isyarat (.+)\)$/,'Fell to lower level $1 (signal $2)'],
 [/^Isyarat (.+) tamat tanpa keputusan$/,'Signal $1 expired without a result'],
@@ -1394,7 +1410,7 @@ function heroHTML(){
     <span class="tag">✦ <b>${f.tag}</b> ${badge(st)}</span>
     <h2>${esc(shortName(nm)||code)}</h2>
     <p class="sub">${esc(code)} di Bursa Malaysia${lc?`, ditutup ${px(lc.c)} pada ${fmtD(lc.d)}${m&&m.ch!=null?` (${m.ch>=0?'+':''}${m.ch.toFixed(2)}%)`:''}.`:'.'}</p>
-    ${m&&m.va&&!hide?`<div class="stats">${bestOp(code)?`<div><b>${bestOp(code).p}%</b>kebarangkalian sejarah</div><div><b>${Math.round(bestOp(code).md||0)} hari</b>tempoh biasa</div>`:''}<div><b>${m.sc}/${m.va}</b>skor teknikal</div><div><b>${m.r!=null?Math.round(m.r):'-'}</b>RSI 14</div><div><b>${m.e2==null?'-':m.e2?'Atas':'Bawah'}</b>EMA200</div></div>`:''}
+    ${m&&m.va&&!hide?`<div class="stats">${bestOp(code)?`<div><b>${bestOp(code).p}%</b>kebarangkalian sejarah</div><div><b>${Math.round(bestOp(code).md||0)} hari</b>tempoh biasa</div>`:''}<div><b>${m.sc}/${m.va}</b>${(scoreVerdict(m.sc,m.va)||{}).lbl||'skor teknikal'}</div><div><b>${m.r!=null?Math.round(m.r):'-'}</b>RSI 14</div><div><b>${m.e2==null?'-':m.e2?'Atas':'Bawah'}</b>EMA200</div></div>`:''}
     <div class="acts"><button class="btn" data-open="${esc(code)}">▶ Lihat analisa</button><button class="btn sec" data-wt="${esc(code)}">${inW?'✓ Dalam watchlist':'+ Watchlist'}</button></div></section>`;
 }
 function rSaham(){
@@ -1442,8 +1458,9 @@ function stockSheet(code,name){
   name=name||nameOf(code);const st=status(code,name);const L=latestList();
   const blocked=S.settings.shariahMode&&st==='no';
   const inW=code&&S.watch.includes(code);
-  let h=`<div class="row between"><div><h2 style="margin:0">${esc(name||code)}</h2><div class="code">${esc(code||'tiada kod')} · KLSE</div>${code?statusHTML(code,name):''}</div><button class="btn sm sec" onclick="closeSheet()">Tutup</button></div>
-    <div style="margin:10px 0">${badge(st)} ${L?`<span class="muted">Senarai SC ${fmtD(L.date)}</span>`:''}</div>`;
+  let h=`<div class="shd"><div class="shd-top"><div class="shd-name"><h2 style="margin:0">${esc(name||code)}</h2><div class="code">${esc(code||'tiada kod')} · KLSE</div></div><button class="xbtn" onclick="closeSheet()" aria-label="Tutup">✕</button></div>
+    ${code?statusHTML(code,name):''}
+    <div style="margin:10px 0 0">${badge(st)} ${L?`<span class="muted">Senarai SC ${fmtD(L.date)}</span>`:''}</div></div>`;
   if(st==='no')h+=`<div class="alert a-red">Saham ini <b>tiada</b> dalam senarai patuh syariah SC terkini.${blocked?' Isyarat teknikal disembunyikan kerana Mod Patuh Syariah ON.':''}</div>`;
   if(st==='na')h+=`<div class="alert a-amber">Senarai SC belum diimport — status tidak dapat ditentukan.</div>`;
   h+=`<details class="card"><summary><b>Kenapa?</b> Kaedah saringan SC</summary><p class="muted">Majlis Penasihat Syariah (SAC) SC menyaring syarikat berdasarkan dua ujian: <b>aktiviti perniagaan</b> (sumbangan aktiviti tidak patuh kepada hasil & untung mesti bawah penanda aras) dan <b>nisbah kewangan</b> (tunai dalam akaun konvensional dan hutang berfaedah berbanding jumlah aset, bawah 33%). App ini memaparkan keputusan rasmi SAC, bukan pengiraan sendiri.</p></details>`;
@@ -1468,13 +1485,21 @@ function stockSheet(code,name){
   $('#ldBtn').onclick=()=>run(true);
   if(mk(code)||S.cache[code])run(false);
 }
+
+function scoreVerdict(sc,va){
+  if(!va)return null;const r=sc/va;
+  if(r>=0.75)return {lbl:'Kuat',cls:'b-ok',txt:'Kebanyakan indicator menunjukkan trend dan momentum menaik.'};
+  if(r>=0.5)return {lbl:'Neutral – tunggu pengesahan',cls:'b-warn',txt:'Indicator bercampur. Tunggu lebih banyak indicator menjadi positif sebelum membuat keputusan.'};
+  return {lbl:'Lemah',cls:'b-no',txt:'Kebanyakan indicator menunjukkan trend atau momentum menurun.'};
+}
 function showInd(A,blocked){
   const L=A.last;
   let h=`<div class="muted">Carta ${A.tf} · harga tutup ${px(L.c)} pada ${fmtD(L.d)}</div><canvas id="cv"></canvas>
    <div class="muted" style="font-size:11px">— Harga · <span style="color:var(--gold)">EMA20</span> · <span style="color:var(--blue)">EMA50</span> · <span style="color:var(--red)">EMA200</span> · kawasan hijau = Bollinger</div>`;
   if(blocked)h+=`<div class="alert a-red" style="margin-top:10px">Isyarat & skor disembunyikan (Mod Patuh Syariah ON).</div>`;
   else{
-    h+=`<div class="row between" style="margin-top:10px"><b>Skor teknikal</b><span class="big">${A.score}/${A.valid}</span></div>`;
+    const V=scoreVerdict(A.score,A.valid);
+    h+=`<div class="verd"><div class="row between"><div><b>Skor teknikal</b>${V?`<div style="margin-top:4px"><span class="badge ${V.cls}">${V.lbl}</span></div>`:''}</div><span class="big">${A.score}/${A.valid}</span></div>${V?`<p class="muted" style="margin:6px 0 0">${V.txt} Skor ialah bilangan indicator (daripada ${A.valid}) yang positif sekarang.</p>`:''}</div>`;
     h+=A.checks.map(c=>`<div class="check"><span class="i">${c.ok===null?'·':c.ok?'✅':'❌'}</span><div><b>${c.title}</b><div class="muted">${esc(c.txt)}</div></div></div>`).join('');
     if(A.cross)h+=`<div class="alert a-gold">${A.cross}</div>`;
     h+=`<div class="disc">Isyarat teknikal untuk rujukan sahaja — bukan cadangan beli/jual. Data harga harian bersifat indikatif dan mungkin berbeza sedikit dari harga bursa.</div>`;

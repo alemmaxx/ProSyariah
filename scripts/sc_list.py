@@ -96,6 +96,10 @@ def pick_link(links):
             s += 3
         if re.search(r"ipo|seeking listing|listing on", t):
             s -= 6
+        if "download pdf" in t:
+            s += 2
+        if re.search(r"organisation structure|derivatives|act 20\d\d|annual report", t):
+            s -= 8
         m = re.search(rf"(\d{{1,2}})\s+({MONTHS})\s+(20\d\d)", l.get("text") or "", re.I)
         d = ""
         if m:
@@ -128,25 +132,40 @@ def from_browser(url):
             if n:
                 break
             pg.wait_for_timeout(1500)
-        links = pg.evaluate("""()=>[...document.querySelectorAll('a[href]')].map(a=>{
-            const tr=a.closest('tr');return {href:a.href,text:((tr?tr.innerText:a.innerText)||'').replace(/\\s+/g,' ').trim()};})""")
+        links = pg.evaluate("""()=>[...document.querySelectorAll('a[href]')]
+            .filter(a=>!a.closest('header,footer,nav,.header,.footer,.navbar,.menu,.mega-menu'))
+            .map(a=>{let el=a,t='';for(let i=0;i<5&&el;i++){t=(el.innerText||'').replace(/\\s+/g,' ').trim();
+              if(t.length>=30&&t.replace(/download pdf/ig,'').trim().length>=20)break;el=el.parentElement;}
+              return {href:a.href,text:t.slice(0,300)};})""")
         log(f"Pelayar: {pg.url} · tajuk '{pg.title()}' · {len(links)} pautan")
         cands = pick_link(links)
         for l in cands[:8]:
             log(f"  calon: {l['text'][:120]} → {l['href']}")
         if not cands:
             DEBUG.append("---- TEKS HALAMAN ----\n" + pg.evaluate("document.body.innerText")[:6000])
-        for l in cands[:5]:
+        best, seen = None, set()
+        for l in cands[:10]:
+            if l["href"] in seen:
+                continue
+            seen.add(l["href"])
             try:
                 r = ctx.request.get(l["href"], timeout=90000)
                 body = r.body()
                 k = kind_of(body, (r.headers.get("content-type") or "").lower())
-                log(f"  muat turun {l['href']} → {r.status} {k} {len(body)} bait")
-                if r.ok and k:
-                    b.close()
-                    return k, body, l["href"]
+                if not (r.ok and k):
+                    log(f"  muat turun {l['href']} → {r.status} {k} — langkau")
+                    continue
+                names, text = parse_pdf(body) if k == "pdf" else parse_xlsx(body)
+                is_list = bool(re.search(r"shariah[- ]compliant securities", text[:4000], re.I))
+                d = find_date(text) if is_list else ""
+                log(f"  semak {l['href']} → {len(body)} bait, {len(set(names))} nama, senarai SC: {is_list}, tarikh {d or '-'}")
+                if is_list and len(set(names)) >= MIN_NAMES and (not best or d > best[3]):
+                    best = (k, body, l["href"], d)
             except Exception as e:
                 log(f"  gagal {l['href']}: {e}")
+        if best:
+            b.close()
+            return best[:3]
         b.close()
     return None
 

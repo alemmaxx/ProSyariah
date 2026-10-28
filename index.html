@@ -291,6 +291,10 @@ nav button{min-width:0}
 .hrow p{margin:2px 0 0;font-size:13px}
 .hic{font-size:20px;width:26px;flex:none;text-align:center}
 .wnote{font-size:12px;color:var(--gold);line-height:1.4}
+
+.rate{display:flex;flex-direction:column;gap:3px;align-items:flex-start;margin:4px 0}
+.rate .muted{font-size:12px}
+.rbit{font-size:12px;color:var(--ink);opacity:.85}
 </style>
 </head>
 <body translate="no">
@@ -574,11 +578,11 @@ function probBar(p,be){return `<div class="pbar"><span style="width:${p}%"></spa
 function opCard(code,op,m){
   const be=breakeven(op);const tp=(op.tg/op.en-1)*100,sp=(1-op.sl/op.en)*100;const H=BTH().h;
   const short=(op.md||0)<5;const edge=op.p/100-be;
-  const verdict=op.ev!=null&&op.ev>0&&edge>0.03?['Rekod sejarah: baik','b-ok']:edge>0?['Rekod sejarah: sederhana','b-warn']:['Rekod sejarah: kurang baik','b-no'];
-  return `<div class="opc"><div class="row between"><div><b>${esc(setupName(op.k))}</b><div class="muted">${op.ago?`Isyarat ${op.ago} hari dagangan lalu`:'Isyarat hari ini'}${short?' · jangka pendek':''}</div></div><span class="badge ${verdict[1]}">${verdict[0]}</span></div>
-   <div class="muted" style="font-size:12px;margin-top:6px">Rekod sejarah = seberapa kerap isyarat ini berjaya pada saham ini dahulu. Ia berbeza daripada skor teknikal, yang menunjukkan trend sekarang.</div>
+  const RS=rateSignal({...op});
+  return `<div class="opc"><div class="row between"><div><b>${esc(setupName(op.k))}</b><div class="muted">${op.ago?`Isyarat ${op.ago} hari dagangan lalu`:'Isyarat hari ini'}${short?' · jangka pendek':''}</div></div></div>
    ${weakNote(code,op.k)?`<div class="wnote" style="margin-top:8px">ℹ️ ${weakNote(code,op.k)}</div>`:''}
    <div class="opp"><span class="big">${op.p}%</span><span class="muted">kali harga sampai paras atas sebelum paras bawah, dalam sejarah saham ini</span></div>
+   <div style="margin:0 0 8px">${rateHTML({...op})}</div>
    ${probBar(op.p,be)}<div class="muted" style="font-size:12px">Garis putih = paras neutral ${(be*100).toFixed(0)}%, iaitu kadar yang dijangka jika pergerakan harga rawak. Peratus melepasi garis bermakna isyarat ini pernah lebih kuat daripada rawak.</div>
    <div class="plan">
     <div><span>Harga semasa</span><b>${px(op.en)}</b></div>
@@ -625,10 +629,11 @@ function topSignals(n=5){
     const now=m.c,hitUp=now!=null&&now>=x.tg,hitDn=now!=null&&now<=x.sl;if(hitUp||hitDn)return;
     const el=tdBetween(x.start,asof),md=Math.max(1,Math.round(x.md||0));
     out.push({...x,be,edge,now,el,md,end:addTradingDays(x.start,md),passed:el>md,limitEnd:addTradingDays(x.start,BTH().h)});};
-  Object.entries(M.stocks).forEach(([c,v])=>(v.op||[]).forEach(o=>{if(o.ev>0)add({code:c,name:v.n,k:o.k,p:o.p,start:subTradingDays(v.d,o.ago||0),en:o.en,tg:o.tg,sl:o.sl,md:o.md,cf:o.cf,w:o.w,nn:o.n});}));
-  ((S.track&&S.track.openList)||[]).forEach(s=>add({code:s.c,name:s.n,k:s.k,p:s.p,start:s.d,en:s.en,tg:s.tg,sl:s.sl,md:s.md}));
+  Object.entries(M.stocks).forEach(([c,v])=>(v.op||[]).forEach(o=>{if(o.ev>0)add({code:c,name:v.n,k:o.k,p:o.p,start:subTradingDays(v.d,o.ago||0),en:o.en,tg:o.tg,sl:o.sl,md:o.md,cf:o.cf,w:o.w,n:o.n,ev:o.ev});}));
+  ((S.track&&S.track.openList)||[]).forEach(s=>add({code:s.c,name:s.n,k:s.k,p:s.p,start:s.d,en:s.en,tg:s.tg,sl:s.sl,md:s.md,n:s.ns,w:s.ws,ev:s.ev}));
   const best={};out.forEach(x=>{if(!best[x.code]||x.edge>best[x.code].edge)best[x.code]=x;});
-  return Object.values(best).sort((a,b)=>b.edge-a.edge||b.p-a.p).slice(0,n);
+  const gr=x=>'ABCD'.indexOf(rateSignal(x).g);
+  return Object.values(best).sort((a,b)=>gr(a)-gr(b)||b.edge-a.edge||b.p-a.p).slice(0,n);
 }
 
 function weakNote(code,k){
@@ -637,15 +642,38 @@ function weakNote(code,k){
   if(k==='pb')return 'Skor teknikal '+V.lbl.split(' –')[0].toLowerCase()+' adalah biasa untuk isyarat koreksi: harga baru turun sementara dalam trend menaik.';
   return '';
 }
+
+/* ================= PENILAIAN ISYARAT (A/B/C) ================= */
+function rateSignal(x){
+  // x: {p, en, tg, sl, n (sampel), w, ev, k}
+  const fee=BTH().fee;const tp=x.tg/x.en-1,sp=1-x.sl/x.en,be=(sp+fee)/(tp+sp),edge=x.p/100-be;
+  const n=x.n==null?null:+x.n;
+  let g;
+  if(edge<=0||(x.ev!=null&&x.ev<=0))g='D';
+  else if(edge>=0.10&&(n==null||n>=8))g='A';
+  else if(edge>=0.05&&(n==null||n>=5))g='B';
+  else g='C';
+  const G={A:['A · Kukuh','b-ok','Melepasi paras neutral dengan jelas dan disokong banyak contoh dalam sejarah.'],
+           B:['B · Baik','b-ok','Melepasi paras neutral dengan baik.'],
+           C:['C · Sederhana','b-warn','Sedikit melepasi paras neutral, atau contoh sejarah masih sedikit.'],
+           D:['D · Tidak meyakinkan','b-no','Tidak melepasi paras neutral dalam sejarah saham ini.']}[g];
+  const bits=[];
+  if(n!=null&&x.w!=null)bits.push(`Berjaya ${x.w} daripada ${n} kali pada saham ini`);
+  const H=S.paper&&S.paper.hist&&S.paper.hist.bySetup&&S.paper.hist.bySetup[x.k];
+  if(H&&H.n)bits.push(`Ujian robot 12 bulan: ${setupName(x.k)} ${H.win}% · ${H.pnl>=0?'untung':'rugi'} ${rmS(H.pnl*rbScale())}`);
+  return {g,lbl:G[0],cls:G[1],txt:G[2],bits,edge,be};
+}
+function rateHTML(x){const R=rateSignal(x);
+  return `<span class="rate"><span class="badge ${R.cls}">${R.lbl}</span><span class="muted">${R.txt}</span>${R.bits.map(b=>`<span class="rbit">${esc(b)}</span>`).join('')}</span>`;}
 function top5HTML(){
   const L=topSignals(5);if(!S.market)return '';
-  let h=`<section class="rowsec"><h3>5 isyarat teknikal terkuat<small>disusun ikut kekuatan sejarah</small></h3><div class="t5">`;
+  let h=`<section class="rowsec"><h3>5 isyarat teknikal terkuat<small>disusun ikut penilaian & kekuatan sejarah</small></h3><div class="t5">`;
   if(!L.length)h+=`<div class="emptyrail" style="margin:0">Tiada isyarat teknikal yang melepasi paras neutral pada masa ini.</div>`;
   L.forEach((x,i)=>{const pct=Math.min(100,x.el/x.md*100);
     h+=`<button class="t5r" data-code="${esc(x.code)}"><span class="t5n">${i+1}</span><span class="t5b">
       <span class="row between"><span><b>${esc(shortName(x.name))}</b> <span class="code">${esc(x.code)}</span>${(S.t5&&S.t5[x.code+':'+x.k+':'+x.start]&&S.t5[x.code+':'+x.k+':'+x.start].ev.in===S.market.meta.asof)?' <span class="badge b-ok">Baharu</span>':''}</span><b class="t5p">${x.p}%</b></span>
-      <span class="muted">${esc(setupName(x.k))}${(()=>{const m=mk(x.code);const V=m&&scoreVerdict(m.sc,m.va);return V?` · skor ${m.sc}/${m.va} <span class="badge ${V.cls}" style="font-size:11px">${V.lbl}</span>`:''})()}</span>
-      ${weakNote(x.code,x.k)?`<span class="wnote">ℹ️ ${weakNote(x.code,x.k)}</span>`:''}
+      <span class="muted">${esc(setupName(x.k))}</span>
+      ${rateHTML(x)}
       <span class="t5d"><span>Isyarat bermula <b>${fmtD(x.start)}</b></span><span>Tempoh biasa ${x.md} hari dagangan, hingga <b>${fmtD(x.end)}</b></span></span>
       <span class="t5bar${x.passed?' over':''}"><span style="width:${pct}%"></span></span>
       <span class="t5s"><span class="badge ${x.passed?'b-warn':'b-ok'}">${x.passed?`Tempoh biasa sudah berlalu`:`Masih dalam tempoh biasa`}</span><span class="muted">hari dagangan ke-${x.el} daripada ~${x.md}</span></span>
@@ -761,8 +789,8 @@ function bindRb(){
 function signalFor(code){
   // isyarat terkini untuk saham ini: aktif sekarang, atau yang sedang dipantau robot/5 terkuat
   const M=S.market;if(!M)return null;const m=mk(code);if(!m)return null;let best=null;
-  (m.op||[]).forEach(o=>{if(o.ev>0){const x={k:o.k,p:o.p,start:subTradingDays(m.d,o.ago||0),en:o.en,tg:o.tg,sl:o.sl,md:o.md};if(!best||x.p>best.p)best=x;}});
-  const more=[...((S.track&&S.track.openList)||[]).filter(s=>s.c===code).map(s=>({k:s.k,p:s.p,start:s.d,en:s.en,tg:s.tg,sl:s.sl,md:s.md})),
+  (m.op||[]).forEach(o=>{if(o.ev>0){const x={k:o.k,p:o.p,start:subTradingDays(m.d,o.ago||0),en:o.en,tg:o.tg,sl:o.sl,md:o.md,n:o.n,w:o.w,ev:o.ev};if(!best||x.p>best.p)best=x;}});
+  const more=[...((S.track&&S.track.openList)||[]).filter(s=>s.c===code).map(s=>({k:s.k,p:s.p,start:s.d,en:s.en,tg:s.tg,sl:s.sl,md:s.md,n:s.ns,w:s.ws,ev:s.ev})),
     ...Object.values(S.t5||{}).filter(t=>t.code===code).map(t=>({k:t.k,p:t.p,start:t.start,en:t.en,tg:t.tg,sl:t.sl,md:t.md}))];
   more.forEach(x=>{if(!best||x.start>best.start)best=x;});
   return best;
@@ -777,7 +805,7 @@ function stockStatus(code,name){
     else if(now<=sig.sl)out.push({ic:'🛑',cls:'s-no',t:`Jatuh ke paras bawah ${px(sig.sl)} (isyarat ${fmtD(sig.start)})`});
     else if(el>BTH().h)out.push({ic:'⌛',cls:'s-na',t:`Isyarat ${fmtD(sig.start)} tamat tanpa keputusan`});
     else if(el>md)out.push({ic:'⏳',cls:'s-warn',t:`Isyarat ${sig.p}% · tempoh biasa sudah berlalu (hari ke-${el} daripada ~${md})`});
-    else out.push({ic:'🟢',cls:'s-ok',t:`Isyarat aktif ${sig.p}% · dalam tempoh biasa (hari ke-${el} daripada ~${md})`});}
+    else out.push({ic:'🟢',cls:'s-ok',t:`Isyarat aktif ${sig.p}% (${rateSignal({...sig,n:sig.n,w:sig.w}).lbl}) · dalam tempoh biasa (hari ke-${el} daripada ~${md})`});}
   else if(m&&m.va)out.push({ic:'⚪',cls:'s-na',t:`Tiada isyarat teknikal aktif · skor ${m.sc}/${m.va} (${scoreVerdict(m.sc,m.va).lbl})`});
   if(hd){const lc=lastClose(code);if(lc){const pl=(lc.c-hd.cost)*hd.qty,pct=(lc.c/hd.cost-1)*100;const XP=exitPlan(hd);
     out.push({ic:'💼',cls:pl>=0?'s-up':'s-no',t:`Pegangan anda ${pl>=0?'untung':'rugi'} ${rmS(pl)} (${pct>=0?'+':''}${pct.toFixed(1)}%)${XP?(XP.hit?' · harga tutup di bawah paras sokongan mengekor':' · di atas paras sokongan mengekor'):''}`});}}
@@ -798,11 +826,12 @@ function openStatusHelp(){
   const d=document.createElement('div');d.className='help';d.id='help';
   d.innerHTML=`<div class="help-p" role="dialog" aria-modal="true"><div class="shd-top" style="margin-bottom:10px"><h2 style="margin:0">Maksud status</h2><button class="xbtn" id="helpX" aria-label="Tutup">✕</button></div>
     ${rows.map(r=>`<div class="hrow"><span class="hic">${r[0]}</span><div><b>${r[1]}</b><p class="muted">${r[2]}</p></div></div>`).join('')}
-    <h3>Rekod sejarah isyarat</h3>
-    <div class="hrow"><span class="badge b-ok">Rekod sejarah: baik</span><p class="muted" style="margin:4px 0 0">Pada saham ini, isyarat jenis ini selalu sampai paras atas, jelas melebihi kadar rawak.</p></div>
-    <div class="hrow"><span class="badge b-warn">Rekod sejarah: sederhana</span><p class="muted" style="margin:4px 0 0">Sedikit lebih baik daripada rawak.</p></div>
-    <div class="hrow"><span class="badge b-no">Rekod sejarah: kurang baik</span><p class="muted" style="margin:4px 0 0">Tidak lebih baik daripada rawak. Ini bukan ramalan harga akan jatuh atau melantun; ia cuma bermaksud isyarat ini kurang boleh dipercayai untuk saham ini.</p></div>
-    <p class="muted" style="font-size:13px">Saham boleh mempunyai skor teknikal <b>Kuat</b> (trend sekarang naik) tetapi rekod sejarah <b>kurang baik</b> (corak isyarat itu jarang berjaya pada saham itu), atau sebaliknya. Kedua-duanya mengukur perkara yang berbeza.</p>
+    <h3>Penilaian isyarat</h3>
+    <div class="hrow"><span class="badge b-ok">A · Kukuh</span><p class="muted" style="margin:4px 0 0">Kebarangkalian melepasi paras neutral sekurang-kurangnya 10 mata dan disokong sekurang-kurangnya 8 contoh dalam sejarah saham itu.</p></div>
+    <div class="hrow"><span class="badge b-ok">B · Baik</span><p class="muted" style="margin:4px 0 0">Melepasi paras neutral sekurang-kurangnya 5 mata.</p></div>
+    <div class="hrow"><span class="badge b-warn">C · Sederhana</span><p class="muted" style="margin:4px 0 0">Melepasi paras neutral sedikit, atau contoh sejarah masih sedikit.</p></div>
+    <div class="hrow"><span class="badge b-no">D · Tidak meyakinkan</span><p class="muted" style="margin:4px 0 0">Tidak melepasi paras neutral. Bukan ramalan harga akan jatuh; cuma isyarat ini tidak boleh dipercayai untuk saham itu.</p></div>
+    <p class="muted" style="font-size:13px">Penilaian isyarat menilai corak isyarat berdasarkan sejarah saham itu sendiri. Skor teknikal (Kuat / Neutral / Lemah) pula menunjukkan trend sekarang. Untuk isyarat lantunan, skor teknikal memang selalu lemah kerana harga baru jatuh.</p>
     <h3>Tahap skor teknikal</h3>${lv.map(r=>`<div class="hrow"><span class="badge ${r[0]}">${r[1]}</span><p class="muted" style="margin:4px 0 0">${r[2]}</p></div>`).join('')}
     <p class="disc">Semua status ialah bacaan indicator berdasarkan sejarah harga, bukan cadangan beli atau jual.</p></div>`;
   document.body.appendChild(d);
@@ -1208,6 +1237,16 @@ const EN_PHRASE=[
 ];
 
 Object.assign(EN_EXACT,{
+'A · Kukuh':'A · Solid','B · Baik':'B · Good','C · Sederhana':'C · Moderate','D · Tidak meyakinkan':'D · Not convincing','Penilaian isyarat':'Signal rating',
+'Melepasi paras neutral dengan jelas dan disokong banyak contoh dalam sejarah.':'Clearly above the neutral level and supported by many past examples.',
+'Melepasi paras neutral dengan baik.':'Comfortably above the neutral level.',
+'Sedikit melepasi paras neutral, atau contoh sejarah masih sedikit.':'Slightly above the neutral level, or few past examples.',
+'Tidak melepasi paras neutral dalam sejarah saham ini.':"Not above the neutral level in this stock's history.",
+'Kebarangkalian melepasi paras neutral sekurang-kurangnya 10 mata dan disokong sekurang-kurangnya 8 contoh dalam sejarah saham itu.':"Probability at least 10 points above the neutral level and backed by at least 8 examples in that stock's history.",
+'Melepasi paras neutral sekurang-kurangnya 5 mata.':'At least 5 points above the neutral level.',
+'Melepasi paras neutral sedikit, atau contoh sejarah masih sedikit.':'Slightly above the neutral level, or few past examples.',
+'Tidak melepasi paras neutral. Bukan ramalan harga akan jatuh; cuma isyarat ini tidak boleh dipercayai untuk saham itu.':'Not above the neutral level. Not a prediction that price will fall; only that this signal is not reliable for that stock.',
+'Penilaian isyarat menilai corak isyarat berdasarkan sejarah saham itu sendiri. Skor teknikal (Kuat / Neutral / Lemah) pula menunjukkan trend sekarang. Untuk isyarat lantunan, skor teknikal memang selalu lemah kerana harga baru jatuh.':"The signal rating judges the signal pattern using the stock's own history. The technical score (Strong / Neutral / Weak) shows the current trend. For bounce signals the technical score is usually weak because price has just fallen.",
 'Rekod sejarah: baik':'Track record: good','Rekod sejarah: sederhana':'Track record: moderate','Rekod sejarah: kurang baik':'Track record: poor','Rekod sejarah isyarat':'Signal track record',
 'Rekod sejarah = seberapa kerap isyarat ini berjaya pada saham ini dahulu. Ia berbeza daripada skor teknikal, yang menunjukkan trend sekarang.':'Track record = how often this signal worked on this stock in the past. It is different from the technical score, which shows the current trend.',
 'Pada saham ini, isyarat jenis ini selalu sampai paras atas, jelas melebihi kadar rawak.':'On this stock, this type of signal often reached the upper level, clearly above the random rate.',
@@ -1253,7 +1292,7 @@ Object.assign(EN_EXACT,{
 'Tekan butang':'Tap the','Kongsi':'Share','(petak dengan anak panah ke atas) di bawah skrin Safari.':'button (square with an up arrow) at the bottom of Safari.','Tambah ke Skrin Utama':'Add to Home Screen','Pastikan nama':'Make sure the name is',', kemudian tekan':', then tap','Tambah':'Add',
 
 '5 isyarat terkuat (masuk, paras atas/bawah, tempoh)':'5 strongest signals (entry, upper/lower level, period)','Baharu':'New',
-'5 isyarat teknikal terkuat':'5 strongest technical signals','disusun ikut kekuatan sejarah':'ranked by historical strength',
+'5 isyarat teknikal terkuat':'5 strongest technical signals','disusun ikut kekuatan sejarah':'ranked by historical strength','disusun ikut penilaian & kekuatan sejarah':'ranked by rating & historical strength',
 'Tiada isyarat teknikal yang melepasi paras neutral pada masa ini.':'No technical signal is above the neutral level right now.',
 'Isyarat bermula':'Signal started','Tempoh biasa sudah berlalu':'Typical period has passed','Masih dalam tempoh biasa':'Still within typical period',
 'Kekuatan = kebarangkalian sejarah berbanding paras neutral. "Tempoh biasa" ialah median masa harga sampai paras atas dalam sejarah saham ini. Ini bacaan indicator, bukan cadangan beli atau jual.':'Strength = historical probability versus the neutral level. "Typical period" is the median time for price to reach the upper level in this stock\'s history. This is an indicator reading, not a buy or sell recommendation.',
@@ -1273,6 +1312,9 @@ Object.assign(EN_EXACT,{
 'Paras ini naik mengikut harga tertinggi sejak tarikh belian dan tidak pernah turun. Harga tutup di bawahnya menandakan momentum menurun.':'This level rises with the highest price since the purchase date and never falls. A close below it signals weakening momentum.',
 });
 EN_RX.unshift(
+[/^Berjaya (\d+) daripada (\d+) kali pada saham ini$/,'Worked $1 out of $2 times on this stock'],
+[/^Ujian robot 12 bulan: (.+) (\S+)% · (untung|rugi) (.+)$/,(m,a,b,c,d)=>`12-month robot test: ${trText(a)} ${b}% · ${c==='untung'?'profit':'loss'} ${d}`],
+[/^Isyarat aktif (\d+)% \((.+)\) · dalam tempoh biasa \(hari ke-(\d+) daripada ~(\d+)\)$/,(m,a,b,c,d)=>`Active signal ${a}% (${trText(b)}) · within typical period (day ${c} of ~${d})`],
 [/^(?:ℹ️ )?Skor teknikal (lemah|neutral) adalah biasa untuk isyarat lantunan: harga baru jatuh dengan banyak dan sedang dipantau untuk melantun\.$/,(m,a)=>`${m.startsWith('ℹ️')?'ℹ️ ':''}A ${a==='lemah'?'weak':'neutral'} technical score is normal for a bounce signal: price has just fallen sharply and is being watched for a rebound.`],
 [/^(?:ℹ️ )?Skor teknikal (lemah|neutral) adalah biasa untuk isyarat koreksi: harga baru turun sementara dalam trend menaik\.$/,(m,a)=>`${m.startsWith('ℹ️')?'ℹ️ ':''}A ${a==='lemah'?'weak':'neutral'} technical score is normal for a pullback signal: price has dipped temporarily within an uptrend.`],
 [/^skor (\d+)\/(\d+)$/,'score $1/$2'],

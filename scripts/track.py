@@ -83,7 +83,8 @@ def update(prices, stocks, today_str, out_dir):
             if key in have:
                 continue
             keep_open.append({"c": code, "n": v["n"], "k": op["k"], "d": v["d"], "p": op["p"],
-                              "en": op["en"], "tg": op["tg"], "sl": op["sl"], "md": op.get("md")})
+                              "en": op["en"], "tg": op["tg"], "sl": op["sl"], "md": op.get("md"),
+                              "ns": op.get("n"), "ws": op.get("w"), "ev": op.get("ev")})
             added += 1
     closed = sorted(st["closed"] + newly, key=lambda s: s["end"])
     cutoff = (date.fromisoformat(today_str) - timedelta(days=730)).isoformat()

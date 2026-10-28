@@ -148,7 +148,12 @@ def main():
     if a.limit:
         syms = syms[: a.limit]
     st, sc = load_sc()
-    codes = [s["code"] for s in syms]
+    if st and st.get("lists"):
+        have = {s["code"] for s in syms}
+        extra = [{"code": c, "name": n, "type": "SC"} for c, n in st["lists"][-1].get("codes", {}).items()
+                 if c not in have and CODE_RE.match(c)]
+        syms = syms + extra  # cth. saham pasaran LEAP: tiada harga, tetapi status syariah tetap dipaparkan
+    codes = [s["code"] for s in syms if s.get("type") != "SC"]
     print(f"Tarik harga {len(codes)} kaunter guna {PROVIDER} …")
     px = prices_eodhd(codes) if PROVIDER == "eodhd" and KEY else prices_yf(codes)
     if len(px) < max(5, len(codes) * 0.3):

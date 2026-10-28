@@ -156,15 +156,16 @@ def from_browser(url):
                 if not (r.ok and k):
                     log(f"  muat turun {l['href']} → {r.status} {k} — langkau")
                     continue
-                names, text = parse_pdf(body) if k == "pdf" else parse_xlsx(body)
+                cmap, text, how = parse_doc(k, body)
+                names = list(cmap.values())
                 flat = re.sub(r"\s+", " ", text[:20000])
                 ctx_t = l.get("text") or ""
                 is_list = bool(re.search(r"shariah[- ]compliant securities", flat, re.I)) or bool(
                     re.search(r"list of shariah[- ]compliant securities", ctx_t, re.I))
                 d = find_date(ctx_t) if re.search(rf"\d{{1,2}}\s+(?:{MONTHS})\s+20\d\d", ctx_t, re.I) else find_date(flat)
                 l["date"] = d
-                log(f"  semak {l['href']} → {len(body)} bait, {len(set(names))} nama, senarai SC: {is_list}, tarikh {d or '-'}")
-                if is_list and len(set(names)) >= MIN_NAMES and (not best or d > best[3]):
+                log(f"  semak {l['href']} → {len(body)} bait, {len(cmap)} saham (ikut {how}), senarai SC: {is_list}, tarikh {d or '-'}")
+                if is_list and len(cmap) >= MIN_NAMES and (not best or d > best[3]):
                     best = (k, body, l["href"], d)
                     break  # calon disusun dari terkini; dokumen sah pertama ialah yang terbaharu
             except Exception as e:
@@ -212,6 +213,29 @@ def split_names(line):
     return [o for o in out if o]
 
 
+ENTRY = re.compile(r"(?<![\d.\w])(\d{1,3})(?:\.\s+(0\d{4}|\d{4})(?=\s|$)|\s+(0\d{4}|\d{4})(?=\s+[A-Z][A-Za-z]))")
+MAIN_HDR = re.compile(r"LIST\s+OF\s+SHARIAH[-\s]*COMPLIANT\s+SECURITIES\s*[–—-]\s*(?:MAY|NOVEMBER|MEI)\s+20\d\d", re.I)
+
+
+def parse_codes(text):
+    """Baca senarai penuh (selepas tajuk 'LIST OF SHARIAH-COMPLIANT SECURITIES – <bulan> <tahun>').
+    Pulangkan {kod: nama} berdasarkan corak 'No. Kod Nama' — Jadual 1 & 2 di awal dokumen diabaikan."""
+    m = MAIN_HDR.search(text)
+    body = text[m.start():] if m else text
+    out = {}
+    for line in body.splitlines():
+        hits = list(ENTRY.finditer(line))
+        for i, h in enumerate(hits):
+            end = hits[i + 1].start() if i + 1 < len(hits) else len(line)
+            name = re.split(r"\s{2,}", line[h.end():end].strip())[0].strip()
+            name = re.sub(r"\s*(No\.|Bil\.)\s.*$", "", name).strip()
+            code = h.group(2) or h.group(3)
+            if code not in out or len(name) > len(out[code]):
+                out[code] = name
+    return out, bool(m)
+
+
+
 def looks_like_name(s):
     if len(s) < 4 or SKIP.match(s):
         return False
@@ -233,6 +257,15 @@ def parse_text(text):
             if looks_like_name(n):
                 names.append(n)
     return names
+
+
+def parse_doc(kind, body):
+    """Pulangkan (kod->nama, teks). Utamakan kod saham dari senarai penuh; sandaran: nama sahaja."""
+    names, text = parse_pdf(body) if kind == "pdf" else parse_xlsx(body)
+    codes, hdr = parse_codes(text)
+    if len(codes) >= MIN_NAMES:
+        return codes, text, "kod"
+    return {f"~{i}": n for i, n in enumerate(dict.fromkeys(names))}, text, "nama"
 
 
 def parse_pdf(body):
@@ -306,21 +339,28 @@ def main():
                          "Lihat sc-debug.txt, atau letak PDF SC dalam data/sc-upload/.")
     kind, body, final_url = res
     h = hashlib.sha256(body).hexdigest()
-    if state.get("sourceHash") == h and state.get("lists"):
+    if state.get("sourceHash") == h and state.get("lists") and state["lists"][-1].get("method") == "kod":
         print("Senarai SC tidak berubah — tiada kemas kini.")
         return
-    names, text = parse_pdf(body) if kind == "pdf" else parse_xlsx(body)
-    names = list(dict.fromkeys(names))
-    log(f"Dokumen: {kind} dari {final_url} · {len(names)} nama dikesan")
-    if len(names) < MIN_NAMES:
+    cmap, text, how = parse_doc(kind, body)
+    syms = {x["code"]: x["name"] for x in json.load(open(SYMBOLS))} if os.path.exists(SYMBOLS) else {}
+    if how == "kod":
+        # nama penuh dari senarai simbol (nama dalam PDF kadang-kadang terpotong ke baris seterusnya)
+        cmap = {c: syms.get(c) or n for c, n in cmap.items()}
+    names = list(dict.fromkeys(cmap.values()))
+    log(f"Dokumen: {kind} dari {final_url} · {len(cmap)} saham dikesan (ikut {how})")
+    if len(cmap) < MIN_NAMES:
         write_debug("---- TEKS DOKUMEN ----\n" + text[:20000])
         raise SystemExit(
             f"GAGAL: hanya {len(names)} nama dikesan (< {MIN_NAMES}). Susun atur dokumen SC mungkin berubah. "
             "Senarai lama TIDAK diubah. Semak sc-debug.txt dalam artifact workflow."
         )
     d = FOUND_DATE[0] or find_date(text)
-    codes, unmatched = match_codes(names)
-    new = {"date": d, "names": names, "codes": codes, "count": len(names)}
+    if how == "kod":
+        codes, unmatched = dict(cmap), [f"{c} {n}" for c, n in cmap.items() if c not in syms]
+    else:
+        codes, unmatched = match_codes(names)  # sandaran: padan nama dengan senarai simbol
+    new = {"date": d, "names": names, "codes": codes, "count": len(cmap), "method": how}
     lists = [x for x in state.get("lists", []) if x["date"] != d]
     lists.append(new)
     lists.sort(key=lambda x: x["date"])
@@ -334,9 +374,9 @@ def main():
     }
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
     json.dump(state, open(OUT, "w"), ensure_ascii=False, indent=1)
-    open("sc-debug.txt", "w").write("\n".join(DEBUG) + f"\n\n---- {len(names)} NAMA ----\n" + "\n".join(names)
+    open("sc-debug.txt", "w").write("\n".join(DEBUG) + f"\n\n---- {len(cmap)} SAHAM ----\n" + "\n".join(f"{c} {n}" for c, n in cmap.items())
                                     + "\n\n---- TEKS DOKUMEN ----\n" + text[:400000])
-    print(f"✓ Senarai SC {d}: {len(names)} nama, {len(codes)} dipadankan dengan kod, {len(unmatched)} belum dipadankan")
+    print(f"✓ Senarai SC {d}: {len(cmap)} saham (ikut {how}), {len(unmatched)} tiada dalam senarai simbol harga")
 
 
 if __name__ == "__main__":

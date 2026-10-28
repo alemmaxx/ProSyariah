@@ -866,8 +866,8 @@ function stockStatus(code,name){
     if(now>=sig.tg)out.push({ic:'🎯',cls:'s-up',t:`Sudah sampai paras atas ${px(sig.tg)} (isyarat ${fmtD(sig.start)})`});
     else if(now<=sig.sl)out.push({ic:'🛑',cls:'s-no',t:`Jatuh ke paras bawah ${px(sig.sl)} (isyarat ${fmtD(sig.start)})`});
     else if(el>BTH().h)out.push({ic:'⌛',cls:'s-na',t:`Isyarat ${fmtD(sig.start)} tamat tanpa keputusan`});
-    else if(el>md)out.push({ic:'⏳',cls:'s-warn',t:`Isyarat ${sig.p}% · tempoh biasa sudah berlalu (hari ke-${el} daripada ~${md})`});
-    else out.push({ic:'🟢',cls:'s-ok',t:`Isyarat aktif ${sig.p}% (${rateSignal({...sig,n:sig.n,w:sig.w}).lbl}) · dalam tempoh biasa (hari ke-${el} daripada ~${md})`});}
+    else if(el>md)out.push({ic:'⏳',cls:'s-warn',t:`Isyarat ${sig.p}% · tempoh indicator trading sudah berlalu (hari ke-${el} daripada ~${md}) · bermula ${fmtD(sig.start)}`});
+    else out.push({ic:'🟢',cls:'s-ok',t:`Isyarat aktif ${sig.p}% (${rateSignal({...sig,n:sig.n,w:sig.w}).lbl}) · tempoh indicator trading (hari ke-${el} daripada ~${md}) · bermula ${fmtD(sig.start)}`});}
   else if(m&&m.va)out.push({ic:'⚪',cls:'s-na',t:`Tiada isyarat teknikal aktif · skor ${m.sc}/${m.va} (${scoreVerdict(m.sc,m.va).lbl})`});
   const rp=S.paper&&S.paper.live&&S.paper.live.open.find(p=>p.c===code);if(rp){const now=m&&m.c;const u=now?(now/rp.en-1-S.paper.fee)*rbStake():null;out.push({ic:'🤖',cls:'s-warn',t:`Dalam robot sejak ${fmtD(rp.d)} @ ${px(rp.en)}${u!=null?` · ${rmS(u)}`:''}`});}
   if(hd){const lc=lastClose(code);if(lc){const pl=(lc.c-hd.cost)*hd.qty,pct=(lc.c/hd.cost-1)*100;const XP=exitPlan(hd);
@@ -894,7 +894,7 @@ function openSummary(){
 }
 function openStatusHelp(){
   const rows=[
-    ['🟢','Isyarat aktif · dalam tempoh biasa','Ada isyarat teknikal yang masih "segar". Harga belum sampai paras atas atau paras bawah, dan masih dalam tempoh biasa saham ini sampai ke paras atas dalam sejarah. "Hari ke-X daripada ~Y" menunjukkan berapa hari dagangan sudah berlalu sejak isyarat bermula.'],
+    ['🟢','Isyarat aktif · tempoh indicator trading','Ada isyarat teknikal yang masih "segar". Harga belum sampai paras atas atau paras bawah, dan masih dalam tempoh biasa saham ini sampai ke paras atas dalam sejarah. "Hari ke-X daripada ~Y" menunjukkan berapa hari dagangan sudah berlalu sejak isyarat bermula.'],
     ['⏳','Tempoh biasa sudah berlalu','Isyarat masih berjalan, tetapi sudah melepasi tempoh biasa. Dalam sejarah, kebanyakan isyarat yang berjaya sampai paras atas lebih awal, jadi peluangnya makin berkurang.'],
     ['🎯','Sudah sampai paras atas','Harga sudah mencapai paras atas (+2× ATR) sejak isyarat bermula. Isyarat itu telah mencapai sasaran sejarahnya.'],
     ['🛑','Jatuh ke paras bawah','Harga sudah jatuh ke paras bawah (−1.25× ATR). Isyarat itu gagal.'],
@@ -1351,7 +1351,7 @@ Object.assign(EN_EXACT,{
 'Saham boleh mempunyai skor teknikal':'A stock can have a technical score of','(trend sekarang naik) tetapi rekod sejarah':'(current trend up) but a','(corak isyarat itu jarang berjaya pada saham itu), atau sebaliknya. Kedua-duanya mengukur perkara yang berbeza.':'track record (that signal pattern rarely worked on that stock), or the other way round. They measure different things.',
 'kurang baik':'poor',
 'Maksud status':'What the statuses mean','Tahap skor teknikal':'Technical score levels',
-'Isyarat aktif · dalam tempoh biasa':'Active signal · within typical period',
+'Isyarat aktif · dalam tempoh biasa':'Active signal · within typical period','Isyarat aktif · tempoh indicator trading':'Active signal · trading indicator period',
 'Ada isyarat teknikal yang masih "segar". Harga belum sampai paras atas atau paras bawah, dan masih dalam tempoh biasa saham ini sampai ke paras atas dalam sejarah. "Hari ke-X daripada ~Y" menunjukkan berapa hari dagangan sudah berlalu sejak isyarat bermula.':'There is a "fresh" technical signal. Price has not reached the upper or lower level and is still within the time this stock typically took to reach the upper level historically. "Day X of ~Y" shows how many trading days have passed since the signal started.',
 'Isyarat masih berjalan, tetapi sudah melepasi tempoh biasa. Dalam sejarah, kebanyakan isyarat yang berjaya sampai paras atas lebih awal, jadi peluangnya makin berkurang.':'The signal is still running but has passed its typical period. Historically, most successful signals reached the upper level earlier, so the odds are getting lower.',
 'Sudah sampai paras atas':'Reached the upper level','Harga sudah mencapai paras atas (+2× ATR) sejak isyarat bermula. Isyarat itu telah mencapai sasaran sejarahnya.':'Price has reached the upper level (+2× ATR) since the signal started. The signal has hit its historical target.',
@@ -1414,6 +1414,8 @@ EN_RX.unshift(
 [/^Skor teknikal (\d+)\/(\d+)$/,'Technical score $1/$2'],[/^Harga (\S+)$/,'Price $1'],
 [/^Berjaya (\d+) daripada (\d+) kali pada saham ini$/,'Worked $1 out of $2 times on this stock'],
 [/^Ujian robot 12 bulan: (.+) (\S+)% · (untung|rugi) (.+)$/,(m,a,b,c,d)=>`12-month robot test: ${trText(a)} ${b}% · ${c==='untung'?'profit':'loss'} ${d}`],
+[/^Isyarat aktif (\d+)% \((.+)\) · tempoh indicator trading \(hari ke-(\d+) daripada ~(\d+)\) · bermula (.+)$/,(m,a,b,c,d,e)=>`Active signal ${a}% (${trText(b)}) · trading indicator period (day ${c} of ~${d}) · starting date ${trText(e)}`],
+[/^Isyarat (\d+)% · tempoh indicator trading sudah berlalu \(hari ke-(\d+) daripada ~(\d+)\) · bermula (.+)$/,(m,a,c,d,e)=>`Signal ${a}% · trading indicator period has passed (day ${c} of ~${d}) · starting date ${trText(e)}`],
 [/^Isyarat aktif (\d+)% \((.+)\) · dalam tempoh biasa \(hari ke-(\d+) daripada ~(\d+)\)$/,(m,a,b,c,d)=>`Active signal ${a}% (${trText(b)}) · within typical period (day ${c} of ~${d})`],
 [/^(?:ℹ️ )?Skor teknikal (lemah|neutral) adalah biasa untuk isyarat lantunan: harga baru jatuh dengan banyak dan sedang dipantau untuk melantun\.$/,(m,a)=>`${m.startsWith('ℹ️')?'ℹ️ ':''}A ${a==='lemah'?'weak':'neutral'} technical score is normal for a bounce signal: price has just fallen sharply and is being watched for a rebound.`],
 [/^(?:ℹ️ )?Skor teknikal (lemah|neutral) adalah biasa untuk isyarat koreksi: harga baru turun sementara dalam trend menaik\.$/,(m,a)=>`${m.startsWith('ℹ️')?'ℹ️ ':''}A ${a==='lemah'?'weak':'neutral'} technical score is normal for a pullback signal: price has dipped temporarily within an uptrend.`],
@@ -1685,12 +1687,20 @@ function rSaham(){
 }
 function goTab(t){TAB=t;if(t!=='saham')bkEnsure();document.querySelectorAll('#nav button').forEach(x=>x.classList.toggle('on',x.dataset.tab===t));render();window.scrollTo(0,0);}
 function renderWatch(){if(TAB==='saham'){const y=window.scrollY;rSaham();window.scrollTo(0,y);}}
+function sheetStatHTML(code){
+  const m=mk(code);if(!m||!m.va)return '';
+  let so=bestOp(code);
+  if(!so){const sg=signalFor(code),now=m.c;if(sg&&now!=null&&now<sg.tg&&now>sg.sl&&tdBetween(sg.start,S.market.meta.asof)<=BTH().h)so=sg;}
+  const R=so?rateSignal(so):null,V=scoreVerdict(m.sc,m.va);
+  return `<div class="hstat" style="margin:10px 0 0"><span><small>Isyarat</small>${R?`<span class="badge ${R.cls}">${R.lbl}</span>`:`<span class="badge b-na">Tiada isyarat aktif</span>`}</span>${V?`<span><small>Skor teknikal ${m.sc}/${m.va}</small><span class="badge ${V.cls}">${V.lbl}</span></span>`:''}<button class="sinfo" onclick="openStatusHelp()" aria-label="Maksud status">ⓘ</button></div>`;
+}
 function stockSheet(code,name){
   name=name||nameOf(code);const st=status(code,name);const L=latestList();
   const blocked=S.settings.shariahMode&&st==='no';
   const inW=code&&S.watch.includes(code);
   let h=`<div class="shd"><div class="shd-top"><div class="shd-name"><h2 style="margin:0">${esc(name||code)}</h2><div class="code">${esc(code||'tiada kod')} · KLSE</div></div><button class="xbtn" onclick="closeSheet()" aria-label="Tutup">✕</button></div>
     ${code?statusHTML(code,name):''}
+    ${code&&st!=='no'?sheetStatHTML(code):''}
     <div style="margin:10px 0 0">${badge(st)} ${L?`<span class="muted">Senarai SC ${fmtD(L.date)}</span>`:''}</div></div>`;
   if(st==='no')h+=`<div class="alert a-red">Saham ini <b>tiada</b> dalam senarai patuh syariah SC terkini.${blocked?' Isyarat teknikal disembunyikan kerana Mod Patuh Syariah ON.':''}</div>`;
   if(st==='na')h+=`<div class="alert a-amber">Senarai SC belum diimport — status tidak dapat ditentukan.</div>`;

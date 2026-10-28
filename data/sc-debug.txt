@@ -2,71 +2,41 @@ Cuba sumber: permalink
 GET https://www.sc.com.my/permalink.aspx?id=A978BB30-65DB-4B26-97D5-DB4E14173A7D → 200 text/html; charset=utf-8 91286 bait (akhir: https://www.sc.com.my/development/icm/shariah-compliant-securities/list-of-shariah-compliant-securities)
 Cuba sumber: pelayar: halaman senarai
 Pelayar: https://www.sc.com.my/development/icm/shariah-compliant-securities/list-of-shariah-compliant-securities · tajuk 'List of Shariah-Compliant Securities - Shariah-Compliant Securities | Securities Commission Malaysia' · 346 pautan
-  calon: Organisation Structure → https://www.sc.com.my/api/documentms/download.ashx?id=4731ea3e-5caf-42cc-a08f-049dad5d9f8a
-  calon: Derivatives → https://www.sc.com.my/api/documentms/download.ashx?id=985D39B2-D548-4E57-AE55-B141159FD20A
-  calon: Demutualisation (Kuala Lumpur Stock Exchange) Act 2003 (pdf) → https://www.sc.com.my/api/documentms/download.ashx?id=4ccf8a7d-1175-42b4-889b-fc2232920f9f
-  calon: Demutualisation (Kuala Lumpur Stock Exchange) Act 2003 (pdf) → https://www.sc.com.my/api/documentms/download.ashx?id=4ccf8a7d-1175-42b4-889b-fc2232920f9f
-  calon: Derivatives → https://www.sc.com.my/api/documentms/download.ashx?id=985D39B2-D548-4E57-AE55-B141159FD20A
-  calon: DOWNLOAD PDF → https://www.sc.com.my/api/documentms/download.ashx?id=9f03c706-607f-4fbe-b4c7-91afc352ee49
-  calon: DOWNLOAD PDF → https://www.sc.com.my/api/documentms/download.ashx?id=5f0bb08b-802c-49a0-b093-d6f0edf6c276
-  calon: DOWNLOAD PDF → https://www.sc.com.my/api/documentms/download.ashx?id=2671e073-8b4c-4291-af90-7cb34ad7715f
-  muat turun https://www.sc.com.my/api/documentms/download.ashx?id=4731ea3e-5caf-42cc-a08f-049dad5d9f8a → 200 pdf 141152 bait
-Dokumen: pdf dari https://www.sc.com.my/api/documentms/download.ashx?id=4731ea3e-5caf-42cc-a08f-049dad5d9f8a · 1 nama dikesan
-
----- TEKS DOKUMEN ----
-                                                                                                                                    
-                                                                                                                                    
-                                                                                                                                    
-                                                                                                                                    
-                                                                                                                                    
-                                                                                                                                    
-                                                                                                                                    
-                                                      BOARD MEMBERS OF THE                                                          
-                                                      SECURITIES COMMISSION                                                         
-                                                          MALAYSIA                                                                  
-                                                                                     AUDIT OVERSIGHT                                
-                                                                                       BOARD                                        
-                                                          CHAIRMAN                                                                  
-                                    MANAGING DIRECTOR                                                                               
-                                                                                     Audit Oversight     Internal Audit             
-                                                                   Special Adviser &                                                
-                                                   Commission                                                                       
-                                                                   Chairman’s Office                                                
-                                                    Secretary                                                                       
-                                                    Digital                      Corporate                       General            
-             Market   Strategy &                                      Islamic Capital       Market                                  
-  Enterprise                                        Strategy & Sustainability    Finance &            Supervision Counsel’s Enforcement
-           Development Policy                                           Market             Intelligence                             
-                                                   Innovation                    Investments                     Office             
-            Exchanges &                  Technology &                                                                               
-    Human              Strategy & International      Digital                                Corporate  Institution        Investigation
-              Market                     Information         Environmental ICM Development Equities              Law Reform         
-   Resources           Research   Affairs           Innovation                              Surveillance Supervision      Management
-            Infrastructure               Management                                                                                 
-                        Corporate                                                                                                   
-  Org T a a n le is n a t t i & on al M In an ve a s g t e m m e e n n t t P S la t n ra n t i e n g g y & Finance Technology Co M re a r D ke ig t i s tal Social ICM Product Tak M e e - r o g v e e r r s s & Su M rv a e r il k la e n t ce I S n u te p r e m rv e i d si i o a n ry Advisory Investigation
-            Development                                                                                                             
-  Development                                                                                                                       
-                       Economics & Project                                                                                 Enforcement
-            Intermediaries & Market Management Data &         Corporate Shariah  Bond Market          Technology  Rules &   Planning &
-  Procurement & Advisory Intelligence Office Information     Governance                               Supervision Regulations Management
-  Office Services Development             Management                                                                                
-                                                                                  Managed                         Investor          
-            Issuers & Fund- Strategic                         Enterprise ICM Strategic                Compliance           Prosecution &
-   Facilities Raising Communication Integrity                Sustainability Affairs Investment        Intervention Protection & Civil Enforcement
-  Management Development                                                         Schemes &                        Literacy          
-   & Services                                                                    Investment                                         
-                                 Office of the               Sustainability       Products            Governance Authorisation & Administrative
-             Investor           Capital Markets              Disclosure &                             Reporting & Licensing Enforcement
-  Safety & Security Development  Malaysia                     Reporting                                Analytics                    
-    Risk &  Market Specialists                                                                                                      
-   Compliance • Licensing &                                                                                                         
-             Unit Trust                                                                                                             
-            • Equities &                                                                                                            
-             Derivatives                                                                                                            
-            • Private                                                                                                               
-             Markets &                                                                                                              
-             Special                                                                                                                
-             Schemes                                                                                                                
-            • Debt Capital                                                                                                          
-             Market                                                                                                                 
+  calon: List of Shariah-compliant Securities as at 29 May 2026 DOWNLOAD PDF → https://www.sc.com.my/api/documentms/download.ashx?id=9f03c706-607f-4fbe-b4c7-91afc352ee49
+  calon: List of Shariah-compliant Securities as at 28 November 2025 (Updated 3 December 2025) DOWNLOAD PDF → https://www.sc.com.my/api/documentms/download.ashx?id=5f0bb08b-802c-49a0-b093-d6f0edf6c276
+  calon: List of Shariah-compliant Securities as at 30 May 2025 DOWNLOAD PDF → https://www.sc.com.my/api/documentms/download.ashx?id=2671e073-8b4c-4291-af90-7cb34ad7715f
+  calon: List of Shariah Compliant Securities as at 29 November 2024 DOWNLOAD PDF → https://www.sc.com.my/api/documentms/download.ashx?id=1920c06f-61e5-46d7-8016-28a918acd4c8
+  calon: List of Shariah-Compliant Securities as at 31 May 2024 DOWNLOAD PDF → https://www.sc.com.my/api/documentms/download.ashx?id=d540937f-6840-41e1-b4ec-b3681b11bedf
+  calon: List of Shariah-Compliant Securities as at 24 November 2023 DOWNLOAD PDF → https://www.sc.com.my/api/documentms/download.ashx?id=c39e4960-6720-40da-92f3-633e6c86c36e
+  calon: List of Shariah-Compliant Securities as at 26 May 2023 DOWNLOAD PDF → https://www.sc.com.my/api/documentms/download.ashx?id=e6cffd45-ccdc-42f5-ac1c-d10d670e86bd
+  calon: List of Shariah-Compliant Securities as at 25 November 2022 DOWNLOAD PDF → https://www.sc.com.my/api/documentms/download.ashx?id=d167b551-2f93-4d28-a08f-e4bf9804b09a
+  semak https://www.sc.com.my/api/documentms/download.ashx?id=9f03c706-607f-4fbe-b4c7-91afc352ee49 → 486522 bait, 726 nama, senarai SC: False, tarikh -
+  semak https://www.sc.com.my/api/documentms/download.ashx?id=5f0bb08b-802c-49a0-b093-d6f0edf6c276 → 533720 bait, 710 nama, senarai SC: False, tarikh -
+  semak https://www.sc.com.my/api/documentms/download.ashx?id=2671e073-8b4c-4291-af90-7cb34ad7715f → 484045 bait, 672 nama, senarai SC: False, tarikh -
+  semak https://www.sc.com.my/api/documentms/download.ashx?id=1920c06f-61e5-46d7-8016-28a918acd4c8 → 729200 bait, 640 nama, senarai SC: False, tarikh -
+  semak https://www.sc.com.my/api/documentms/download.ashx?id=d540937f-6840-41e1-b4ec-b3681b11bedf → 586223 bait, 611 nama, senarai SC: False, tarikh -
+  semak https://www.sc.com.my/api/documentms/download.ashx?id=c39e4960-6720-40da-92f3-633e6c86c36e → 516311 bait, 620 nama, senarai SC: False, tarikh -
+  semak https://www.sc.com.my/api/documentms/download.ashx?id=e6cffd45-ccdc-42f5-ac1c-d10d670e86bd → 548129 bait, 610 nama, senarai SC: False, tarikh -
+  semak https://www.sc.com.my/api/documentms/download.ashx?id=d167b551-2f93-4d28-a08f-e4bf9804b09a → 816533 bait, 644 nama, senarai SC: False, tarikh -
+  semak https://www.sc.com.my/api/documentms/download.ashx?id=f594c8f5-17a1-4007-9334-4db1330e705f → 1265605 bait, 661 nama, senarai SC: False, tarikh -
+  semak https://www.sc.com.my/api/documentms/download.ashx?id=03897690-c1cd-4748-b221-204052582c75 → 1179605 bait, 622 nama, senarai SC: False, tarikh -
+Cuba sumber: pelayar: permalink
+Pelayar: https://www.sc.com.my/development/icm/shariah-compliant-securities/list-of-shariah-compliant-securities · tajuk 'List of Shariah-Compliant Securities - Shariah-Compliant Securities | Securities Commission Malaysia' · 346 pautan
+  calon: List of Shariah-compliant Securities as at 29 May 2026 DOWNLOAD PDF → https://www.sc.com.my/api/documentms/download.ashx?id=9f03c706-607f-4fbe-b4c7-91afc352ee49
+  calon: List of Shariah-compliant Securities as at 28 November 2025 (Updated 3 December 2025) DOWNLOAD PDF → https://www.sc.com.my/api/documentms/download.ashx?id=5f0bb08b-802c-49a0-b093-d6f0edf6c276
+  calon: List of Shariah-compliant Securities as at 30 May 2025 DOWNLOAD PDF → https://www.sc.com.my/api/documentms/download.ashx?id=2671e073-8b4c-4291-af90-7cb34ad7715f
+  calon: List of Shariah Compliant Securities as at 29 November 2024 DOWNLOAD PDF → https://www.sc.com.my/api/documentms/download.ashx?id=1920c06f-61e5-46d7-8016-28a918acd4c8
+  calon: List of Shariah-Compliant Securities as at 31 May 2024 DOWNLOAD PDF → https://www.sc.com.my/api/documentms/download.ashx?id=d540937f-6840-41e1-b4ec-b3681b11bedf
+  calon: List of Shariah-Compliant Securities as at 24 November 2023 DOWNLOAD PDF → https://www.sc.com.my/api/documentms/download.ashx?id=c39e4960-6720-40da-92f3-633e6c86c36e
+  calon: List of Shariah-Compliant Securities as at 26 May 2023 DOWNLOAD PDF → https://www.sc.com.my/api/documentms/download.ashx?id=e6cffd45-ccdc-42f5-ac1c-d10d670e86bd
+  calon: List of Shariah-Compliant Securities as at 25 November 2022 DOWNLOAD PDF → https://www.sc.com.my/api/documentms/download.ashx?id=d167b551-2f93-4d28-a08f-e4bf9804b09a
+  semak https://www.sc.com.my/api/documentms/download.ashx?id=9f03c706-607f-4fbe-b4c7-91afc352ee49 → 486522 bait, 726 nama, senarai SC: False, tarikh -
+  semak https://www.sc.com.my/api/documentms/download.ashx?id=5f0bb08b-802c-49a0-b093-d6f0edf6c276 → 533720 bait, 710 nama, senarai SC: False, tarikh -
+  semak https://www.sc.com.my/api/documentms/download.ashx?id=2671e073-8b4c-4291-af90-7cb34ad7715f → 484045 bait, 672 nama, senarai SC: False, tarikh -
+  semak https://www.sc.com.my/api/documentms/download.ashx?id=1920c06f-61e5-46d7-8016-28a918acd4c8 → 729200 bait, 640 nama, senarai SC: False, tarikh -
+  semak https://www.sc.com.my/api/documentms/download.ashx?id=d540937f-6840-41e1-b4ec-b3681b11bedf → 586223 bait, 611 nama, senarai SC: False, tarikh -
+  semak https://www.sc.com.my/api/documentms/download.ashx?id=c39e4960-6720-40da-92f3-633e6c86c36e → 516311 bait, 620 nama, senarai SC: False, tarikh -
+  semak https://www.sc.com.my/api/documentms/download.ashx?id=e6cffd45-ccdc-42f5-ac1c-d10d670e86bd → 548129 bait, 610 nama, senarai SC: False, tarikh -
+  semak https://www.sc.com.my/api/documentms/download.ashx?id=d167b551-2f93-4d28-a08f-e4bf9804b09a → 816533 bait, 644 nama, senarai SC: False, tarikh -
+  semak https://www.sc.com.my/api/documentms/download.ashx?id=f594c8f5-17a1-4007-9334-4db1330e705f → 1265605 bait, 661 nama, senarai SC: False, tarikh -
+  semak https://www.sc.com.my/api/documentms/download.ashx?id=03897690-c1cd-4748-b221-204052582c75 → 1179605 bait, 622 nama, senarai SC: False, tarikh -

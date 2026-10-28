@@ -292,7 +292,10 @@ nav button{min-width:0}
 
 .sinfo{border:0;background:none;color:var(--muted);font:700 14px var(--f);padding:0 4px;cursor:pointer;vertical-align:middle}
 .help{position:fixed;inset:0;z-index:40;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;padding:16px}
-.help-p{background:var(--bg);border:1px solid var(--line);border-radius:16px;max-width:560px;width:100%;max-height:86vh;overflow:auto;padding:16px;animation:up .25s ease-out}
+.help-p{background:var(--bg);border:1px solid var(--line);border-radius:16px;max-width:560px;width:100%;max-height:86vh;overflow:auto;padding:0 16px 16px;animation:up .25s ease-out;overscroll-behavior:contain}
+.help-p>:first-child{position:sticky;top:0;z-index:3;background:var(--bg);margin:0 -16px 10px!important;padding:16px 16px 12px;border-bottom:1px solid var(--line)}
+.sheet .panel{overscroll-behavior:contain}
+body.ovl{overflow:hidden}
 .hrow{display:flex;gap:12px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--line)}
 .hrow:last-of-type{border-bottom:0}
 .hrow p{margin:2px 0 0;font-size:13px}
@@ -365,8 +368,13 @@ const px=n=>n==null||isNaN(n)?'-':Number(n).toFixed(3);
 const num=v=>{const n=parseFloat(String(v).replace(/,/g,''));return isNaN(n)?0:n;};
 const uid=()=>Math.random().toString(36).slice(2,10);
 function toast(m){const t=$('#toast');t.textContent=m;t.style.display='block';clearTimeout(t._t);t._t=setTimeout(()=>t.style.display='none',2600);}
-function openSheet(html){$('#sheetBody').innerHTML=html;$('#sheet').classList.add('on');}
-function closeSheet(){$('#sheet').classList.remove('on');if(typeof TAB!=='undefined'&&TAB==='saham')renderWatch();}
+function openSheet(html){const B=$('#sheetBody');B.innerHTML=html;
+  /* Kepala tetap untuk semua helaian: tajuk + butang tutup kekal di atas, butiran di bawah boleh skrol */
+  const f=B.firstElementChild;
+  if(f&&f.tagName==='H2'){const hd=document.createElement('div');hd.className='shd';hd.innerHTML='<div class="shd-top"></div>';f.style.margin='0';hd.firstChild.appendChild(f);const x=document.createElement('button');x.className='xbtn';x.setAttribute('aria-label','Tutup');x.textContent='✕';x.onclick=closeSheet;hd.firstChild.appendChild(x);B.prepend(hd);}
+  else if(f&&!f.classList.contains('shd')&&!(f.classList.contains('row')&&f.classList.contains('between'))){const hd=document.createElement('div');hd.className='shd';hd.innerHTML='<div class="shd-top" style="justify-content:flex-end"><button class="xbtn" aria-label="Tutup">✕</button></div>';hd.querySelector('.xbtn').onclick=closeSheet;B.prepend(hd);}
+  B.scrollTop=0;$('#sheet').classList.add('on');if(typeof bkEnsure==='function')bkEnsure();document.body.classList.add('ovl');}
+function closeSheet(){$('#sheet').classList.remove('on');if(!$('#help'))document.body.classList.remove('ovl');if(typeof TAB!=='undefined'&&TAB==='saham')renderWatch();}
 $('#sheet').addEventListener('click',e=>{if(e.target.id==='sheet')closeSheet();});
 
 /* ================= MODUL 1: SENARAI SYARIAH ================= */
@@ -875,14 +883,14 @@ function openSummary(){
   let body='';
   grp.forEach(([g,l,c])=>{if(!by[g].length)return;body+=`<h3 class="smh"><span class="badge ${c}">${l}</span> <small>${by[g].length} saham</small></h3>${by[g].map(row).join('')}`;});
   if(!body)body=`<p class="muted">Tiada isyarat teknikal aktif yang melepasi paras neutral pada masa ini.</p>`;
-  const d=document.createElement('div');d.className='help';d.id='help';
-  d.innerHTML=`<div class="help-p" role="dialog" aria-modal="true"><div class="shd-top" style="margin-bottom:6px"><h2 style="margin:0">Ringkasan isyarat aktif</h2><button class="xbtn" id="helpX" aria-label="Tutup">✕</button></div>
+  const d=document.createElement('div');d.className='help';d.id='help';document.body.classList.add('ovl');bkEnsure();
+  d.innerHTML=`<div class="help-p" role="dialog" aria-modal="true"><div><div class="shd-top" style="margin-bottom:6px"><h2 style="margin:0">Ringkasan isyarat aktif</h2><button class="xbtn" id="helpX" aria-label="Tutup">✕</button></div>
     <p class="muted" style="margin:0 0 6px">Saham patuh syariah yang ada isyarat teknikal aktif hari ini, disusun dari yang terkuat. Tekan nama untuk lihat butiran.</p>
-    <p class="muted" style="margin:0 0 10px;font-size:12px">🤖 sedang diuji robot · ⏳ tempoh biasa sudah berlalu · % = kebarangkalian sejarah</p>
+    <p class="muted" style="margin:0;font-size:12px">🤖 sedang diuji robot · ⏳ tempoh biasa sudah berlalu · % = kebarangkalian sejarah</p></div>
     ${body}
     <p class="disc" style="margin-top:12px">Ini bacaan indicator, bukan cadangan beli atau jual.</p></div>`;
   document.body.appendChild(d);
-  const close=()=>d.remove();d.onclick=e=>{const b=e.target.closest('[data-sc]');if(b){close();stockSheet(b.dataset.sc,nameOf(b.dataset.sc));return;}if(e.target===d)close();};$('#helpX').onclick=close;
+  const close=()=>{d.remove();if(!$('#sheet').classList.contains('on'))document.body.classList.remove('ovl');};d.onclick=e=>{const b=e.target.closest('[data-sc]');if(b){close();stockSheet(b.dataset.sc,nameOf(b.dataset.sc));return;}if(e.target===d)close();};$('#helpX').onclick=close;
 }
 function openStatusHelp(){
   const rows=[
@@ -895,7 +903,7 @@ function openStatusHelp(){
     ['💼','Pegangan anda','Untung atau rugi pegangan anda berbanding harga kos yang anda masukkan di Portfolio. "Di bawah paras sokongan mengekor" bermaksud harga tutup jatuh di bawah harga tertinggi sejak tarikh belian tolak 2.5× ATR, iaitu tanda momentum menurun.'],
     ['✕','Tidak patuh syariah','Saham ini tiada dalam senarai patuh syariah terkini Majlis Penasihat Syariah SC.']];
   const lv=[['b-ok','Kuat','4–5 daripada 5 indicator positif: trend dan momentum menaik.'],['b-warn','Neutral – tunggu pengesahan','Kira-kira separuh indicator positif: keadaan bercampur.'],['b-no','Lemah','Kebanyakan indicator negatif: trend atau momentum menurun.']];
-  const d=document.createElement('div');d.className='help';d.id='help';
+  const d=document.createElement('div');d.className='help';d.id='help';document.body.classList.add('ovl');bkEnsure();
   d.innerHTML=`<div class="help-p" role="dialog" aria-modal="true"><div class="shd-top" style="margin-bottom:10px"><h2 style="margin:0">Maksud status</h2><button class="xbtn" id="helpX" aria-label="Tutup">✕</button></div>
     ${rows.map(r=>`<div class="hrow"><span class="hic">${r[0]}</span><div><b>${r[1]}</b><p class="muted">${r[2]}</p></div></div>`).join('')}
     <h3>Penilaian isyarat</h3>
@@ -906,7 +914,7 @@ function openStatusHelp(){
     <h3>Tahap skor teknikal</h3>${lv.map(r=>`<div class="hrow"><span class="badge ${r[0]}">${r[1]}</span><p class="muted" style="margin:4px 0 0">${r[2]}</p></div>`).join('')}
     <p class="disc">Semua status ialah bacaan indicator berdasarkan sejarah harga, bukan cadangan beli atau jual.</p></div>`;
   document.body.appendChild(d);
-  const close=()=>d.remove();d.onclick=e=>{if(e.target===d)close();};$('#helpX').onclick=close;
+  const close=()=>{d.remove();if(!$('#sheet').classList.contains('on'))document.body.classList.remove('ovl');};d.onclick=e=>{if(e.target===d)close();};$('#helpX').onclick=close;
 }
 function statusHTML(code,name,compact){
   const s=stockStatus(code,name);if(!s)return '';
@@ -1308,6 +1316,7 @@ const EN_PHRASE=[
 ];
 
 Object.assign(EN_EXACT,{
+'Tekan Kembali sekali lagi untuk keluar':'Press Back again to exit',
 'Ringkasan isyarat aktif':'Active signals summary','Buka':'Open',
 'Saham patuh syariah yang ada isyarat teknikal aktif hari ini, disusun dari yang terkuat. Tekan nama untuk lihat butiran.':'Shariah-compliant stocks with an active technical signal today, strongest first. Tap a name for details.',
 '🤖 sedang diuji robot · ⏳ tempoh biasa sudah berlalu · % = kebarangkalian sejarah':'🤖 being tested by robot · ⏳ typical period has passed · % = historical probability',
@@ -1523,6 +1532,23 @@ async function installApp(){
 
 /* ================= NAV ================= */
 let TAB='saham';
+/* ===== Butang Kembali (telefon) =====
+   Kembali: tutup pop up → tutup helaian → balik ke tab utama → tekan 2 kali untuk keluar app */
+const BK={exitAt:0,t:null};
+function bkGuard(){try{history.pushState({ps:1},'');}catch(e){}}
+function bkEnsure(){if(!(history.state&&history.state.ps===1)){clearTimeout(BK.t);BK.exitAt=0;bkGuard();}}
+function closeTopOverlay(){
+  const h=$('#help');if(h){h.remove();if(!$('#sheet').classList.contains('on'))document.body.classList.remove('ovl');return true;}
+  if($('#sheet').classList.contains('on')){closeSheet();return true;}
+  return false;}
+window.addEventListener('popstate',()=>{
+  clearTimeout(BK.t);
+  if(closeTopOverlay()||(TAB!=='saham'&&(goTab('saham'),true))){bkGuard();return;}
+  if(Date.now()-BK.exitAt<2200)return;            // tekan kali kedua: biar app tutup
+  BK.exitAt=Date.now();toast('Tekan Kembali sekali lagi untuk keluar');
+  BK.t=setTimeout(bkGuard,2200);                    // tidak tekan lagi: pasang semula
+});
+try{history.replaceState({ps:0},'');}catch(e){}bkGuard();
 document.querySelectorAll('#nav button').forEach(b=>b.onclick=()=>goTab(b.dataset.tab));
 function render(){document.body.dataset.tab=TAB;setTimeout(updateBell,0);({saham:rSaham,robot:rRobot,portfolio:rPortfolio,tathir:rTathir,zakat:rZakat,tetapan:rTetapan})[TAB]();}
 
@@ -1657,7 +1683,7 @@ function rSaham(){
   const hf=$('#hFocus');if(hf)hf.onclick=()=>$('#q').focus();
   const hs=$('#hSync');if(hs)hs.onclick=()=>syncData(true);
 }
-function goTab(t){TAB=t;document.querySelectorAll('#nav button').forEach(x=>x.classList.toggle('on',x.dataset.tab===t));render();window.scrollTo(0,0);}
+function goTab(t){TAB=t;if(t!=='saham')bkEnsure();document.querySelectorAll('#nav button').forEach(x=>x.classList.toggle('on',x.dataset.tab===t));render();window.scrollTo(0,0);}
 function renderWatch(){if(TAB==='saham'){const y=window.scrollY;rSaham();window.scrollTo(0,y);}}
 function stockSheet(code,name){
   name=name||nameOf(code);const st=status(code,name);const L=latestList();

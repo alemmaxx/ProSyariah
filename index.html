@@ -1004,14 +1004,15 @@ function openStatusHelp(){
     ['🛑','Jatuh ke paras bawah','Harga sudah jatuh ke paras bawah (−1.25× ATR). Isyarat itu gagal.'],
     ['⌛','Isyarat tamat tanpa keputusan','40 hari dagangan berlalu tanpa harga sampai paras atas atau paras bawah.'],
     ['⚪','Tiada isyarat teknikal aktif','Tiada isyarat baharu buat masa ini. Skor dan tahap (Kuat / Neutral / Lemah) menunjukkan keadaan indicator sekarang.'],
+    ['✍️','Robot manual sejak …','Saham ini sedang diuji dalam Robot Manual anda (tab Robot): tarikh dan harga masuk maya, serta untung atau rugi semasa.'],
     ['💼','Pegangan anda','Untung atau rugi pegangan anda berbanding harga kos yang anda masukkan di Portfolio. "Di bawah paras sokongan mengekor" bermaksud harga tutup jatuh di bawah harga tertinggi sejak tarikh belian tolak 2.5× ATR, iaitu tanda momentum menurun.'],
     ['✕','Tidak patuh syariah','Saham ini tiada dalam senarai patuh syariah terkini Majlis Penasihat Syariah SC.']];
   const lv=[['b-ok','Kuat','4–5 daripada 5 indicator positif: trend dan momentum menaik.'],['b-warn','Neutral – tunggu pengesahan','Kira-kira separuh indicator positif: keadaan bercampur.'],['b-no','Lemah','Kebanyakan indicator negatif: trend atau momentum menurun.']];
   const d=document.createElement('div');d.className='help';d.id='help';document.body.classList.add('ovl');bkEnsure();
   d.innerHTML=`<div class="help-p" role="dialog" aria-modal="true"><div class="shd-top" style="margin-bottom:10px"><h2 style="margin:0">Maksud status</h2><button class="xbtn" id="helpX" aria-label="Tutup">✕</button></div>
-    ${rows.map(r=>`<div class="hrow"><span class="hic">${r[0]}</span><div><b>${r[1]}</b><p class="muted">${r[2]}</p></div></div>`).join('')}
+    ${rows.filter(r=>r[0]!=='💼'||S.holdings.length).map(r=>`<div class="hrow"><span class="hic">${r[0]}</span><div><b>${r[1]}</b><p class="muted">${r[2]}</p></div></div>`).join('')}
     <h3>🏆 Isyarat Champion</h3>
-    <div class="hrow"><span class="badge b-gold">🏆 Champion</span><p class="muted" style="margin:4px 0 0">Saham yang isyaratnya dinilai <b>Isyarat Kuat</b> dan skor teknikalnya juga <b>Kuat</b> (4–5 daripada 5) pada masa yang sama. Ia jarang muncul.</p></div>
+    <div class="hrow"><span class="badge b-gold">🏆 Champion</span><p class="muted" style="margin:4px 0 0">Saham yang isyaratnya dinilai Isyarat Kuat dan skor teknikalnya juga Kuat (4–5 daripada 5) pada masa yang sama. Ia jarang muncul.</p></div>
     <h3>Penilaian isyarat</h3>
     <div class="hrow"><span class="badge b-ok">Isyarat Kuat</span><p class="muted" style="margin:4px 0 0">Kebarangkalian sejarah jelas melepasi paras neutral (sekurang-kurangnya 10 mata) dan disokong sekurang-kurangnya 8 contoh pada saham itu.</p></div>
     <div class="hrow"><span class="badge b-warn">Isyarat Sederhana</span><p class="muted" style="margin:4px 0 0">Melepasi paras neutral, tetapi tidak banyak, atau contoh sejarahnya masih sedikit.</p></div>
@@ -1458,6 +1459,7 @@ const EN_PHRASE=[
 ];
 
 Object.assign(EN_EXACT,{
+'Robot manual sejak …':'Manual robot since …','Saham ini sedang diuji dalam Robot Manual anda (tab Robot): tarikh dan harga masuk maya, serta untung atau rugi semasa.':'This stock is being tested in your Manual Robot (Robot tab): virtual entry date and price, and current profit or loss.',
 'Robot Manual (tutup, cut loss, tarikh tutup)':'Manual Robot (close, cut loss, closing date)',
 'Sedang diuji':'Being tested','Untung/rugi kini':'Profit/loss now','Ketepatan':'Accuracy','Untung/rugi selesai':'Closed profit/loss',
 '✍️ Robot Manual':'✍️ Manual Robot','Ditambah ke Robot Manual':'Added to Manual Robot','Dipadam dari senarai':'Removed from list',

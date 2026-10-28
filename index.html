@@ -251,6 +251,23 @@ main>.card,main>.alert,main>.grid2,main>.disc,main>.pad,.search,.results{margin-
 @media (min-width:820px){.hero .hc{position:absolute;margin:0;left:40%;right:80px;height:300px;bottom:130px;z-index:-1}}
 
 @media (max-width:430px){header{gap:7px;padding-left:12px;padding-right:12px}header h1{font-size:18px}.instb{padding:0 11px}.instb .lbl{display:none}.langb span{padding:0 8px}.bell{width:38px}}
+
+/* ---- ROBOT AUTO ---- */
+.rbk{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.rbk>div{display:flex;flex-direction:column;gap:2px}
+.rbk span{font-size:12px;color:var(--muted)}
+.rbk .big{font-size:24px;white-space:nowrap}.rbk small{font-size:12px;color:var(--muted)}
+@media (min-width:820px){.rbk{grid-template-columns:repeat(4,1fr)}}
+.eq{position:relative;height:200px;margin:8px 70px 24px 0}
+.eq svg{position:absolute;inset:0;width:100%;height:100%}
+.eq .eq0{stroke:var(--muted);stroke-dasharray:3 4;stroke-width:1;vector-effect:non-scaling-stroke;opacity:.6}
+.eqz{position:absolute;left:calc(100% + 8px);transform:translateY(-50%);font-size:11px;color:var(--muted)}
+.eqv{position:absolute;left:calc(100% + 8px);transform:translateY(-50%);font-size:12px;font-weight:800;background:var(--card2);padding:2px 6px;border-radius:6px}
+.rbr{display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;padding:11px 0;border:0;border-bottom:1px solid var(--line);background:none;color:var(--ink);font:14px var(--f);text-align:left;cursor:pointer}
+.rbr:last-child{border-bottom:0}
+.rbm{display:flex;flex-direction:column;gap:2px;min-width:0}
+.rbres{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex:none}
+nav button{min-width:0}
 </style>
 </head>
 <body translate="no">
@@ -258,6 +275,7 @@ main>.card,main>.alert,main>.grid2,main>.disc,main>.pad,.search,.results{margin-
 <main id="main"></main>
 <nav id="nav">
   <button data-tab="saham" class="on"><span class="ic">📈</span>Saham</button>
+  <button data-tab="robot"><span class="ic">🤖</span>Robot</button>
   <button data-tab="portfolio"><span class="ic">💼</span>Portfolio</button>
   <button data-tab="tathir"><span class="ic">🤲</span>Tathir</button>
   <button data-tab="zakat"><span class="ic">🕌</span>Zakat</button>
@@ -278,7 +296,7 @@ const DEF={
   settings:{apiKey:'',shariahMode:true,style:'sc',capital:0,riskPct:1,lang:'bm'},
   lists:[], symbols:[], symbolsDate:'', watch:[], holdings:[], tathir:[],
   zakat:{state:'WP',method:'semasa',nisab:{},haulDate:'',divs:0,debt:0,other:0,prices:{},paid:[]},
-  cache:{}, calls:{date:'',n:0}, market:null, track:null, sync:{at:'',err:'',scAuto:false}
+  cache:{}, calls:{date:'',n:0}, market:null, track:null, paper:null, sync:{at:'',err:'',scAuto:false}
 };
 let S;
 function load(){try{const r=localStorage.getItem(KEY);S=r?Object.assign(structuredClone(DEF),JSON.parse(r)):structuredClone(DEF);}catch(e){S=structuredClone(DEF);}
@@ -447,6 +465,7 @@ async function syncData(manual){
           const isNew=curLatest&&newLatest.date>curLatest.date;
           S.lists=conv;changed=true;S.sync.scAuto=true;
           if(isNew)msg=`Senarai syariah SC baharu (${fmtD(newLatest.date)}) diterima`;}}}
+    try{const r4=await fetch(DATA_BASE+'paper.json?t='+Math.floor(Date.now()/36e5),{cache:'no-cache'});if(r4.ok){const t=await r4.json();if(!S.paper||S.paper.asof!==t.asof||!S.paper.hist!==!t.hist){S.paper=t;changed=true;}}}catch(e){}
     try{const r3=await fetch(DATA_BASE+'track.json?t='+Math.floor(Date.now()/36e5),{cache:'no-cache'});if(r3.ok){const t=await r3.json();if(!S.track||S.track.asof!==t.asof){S.track=t;changed=true;}}}catch(e){}
     updateTop5Track();
     S.sync.at=new Date().toISOString();S.sync.err='';
@@ -628,6 +647,67 @@ function top5Alerts(push){
       body:`Tempoh biasa tamat ${fmtD(t.end)}; harga ${px(t.last)} belum sampai paras atas ${px(t.tg)}.`});
     if(ev.exp)push({id:'t5exp:'+key,lv:'info',ic:'⌛',cat:'top5',code:t.code,title:`Isyarat ${nm} tamat`,
       body:`${BTH().h} hari dagangan berlalu sejak ${fmtD(t.start)} tanpa sampai paras atas atau bawah.`});});
+}
+
+/* ================= TAB ROBOT AUTO (akaun latihan maya) ================= */
+let RB_MODE='hist',RB_ALL=false;
+const RES3={W:['Menang','up','b-ok'],L:['Kalah','dn','b-no'],T:['Tamat masa','','b-na']};
+function rbStake(){return num(S.settings.paperStake)||20;}
+function rbScale(){return rbStake()/((S.paper&&S.paper.stake)||20);}
+function rmS(n){const v=(Number(n)||0);return (v>0?'+':v<0?'−':'')+rm(Math.abs(v));}
+function equitySVG(curve,scale){
+  if(!curve||curve.length<2)return `<div class="muted" style="padding:16px 0">Belum cukup dagangan selesai untuk melukis graf.</div>`;
+  const W=600,H=200,pad=6,v=curve.map(x=>x[1]*scale),mn=Math.min(0,...v),mx=Math.max(0,...v),r=mx-mn||1;
+  const X=i=>pad+(W-2*pad)*i/(v.length-1),Y=x=>pad+(H-2*pad)*(1-(x-mn)/r);
+  const pts=v.map((x,i)=>`${X(i).toFixed(1)},${Y(x).toFixed(1)}`).join(' ');const last=v[v.length-1],col=last>=0?'var(--green)':'var(--red)';
+  return `<div class="eq"><svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none"><line x1="0" x2="${W}" y1="${Y(0)}" y2="${Y(0)}" class="eq0"/>
+    <polygon points="${X(0)},${Y(0)} ${pts} ${X(v.length-1)},${Y(0)}" style="fill:${col};opacity:.14"/><polyline points="${pts}" fill="none" style="stroke:${col}" stroke-width="2.2" vector-effect="non-scaling-stroke" stroke-linejoin="round"/></svg>
+    <span class="eqz" style="top:${(Y(0)/H*100).toFixed(1)}%">RM 0</span><span class="eqv ${last>=0?'up':'dn'}" style="top:${(Y(last)/H*100).toFixed(1)}%">${rmS(last)}</span>
+    <span class="hcd l">${fmtD(curve[0][0])}</span><span class="hcd r">${fmtD(curve[curve.length-1][0])}</span></div>`;
+}
+function rbStats(sum,scale,capital){
+  if(!sum||!sum.n)return `<div class="alert a-gold" style="margin:0">Belum ada dagangan maya yang selesai. Robot akan mula merekod keputusan sebaik isyarat pertama sampai paras atas, paras bawah atau had masa.</div>`;
+  const pnl=sum.pnl*scale,roi=pnl/capital*100;
+  return `<div class="rbk">
+    <div><span>Ketepatan</span><b class="big">${sum.win}%</b><small>${sum.w} menang · ${sum.l} kalah · ${sum.to} tamat masa</small></div>
+    <div><span>Untung / rugi</span><b class="big ${pnl>=0?'up':'dn'}">${rmS(pnl)}</b><small>daripada ${sum.n} dagangan maya</small></div>
+    <div><span>Pulangan atas modal</span><b class="big ${roi>=0?'up':'dn'}">${roi>=0?'+':''}${roi.toFixed(1)}%</b><small>modal maya ${rm(capital)} (${S.paper.maxOpen} × ${rm(rbStake())})</small></div>
+    <div><span>Purata setiap dagangan</span><b class="big ${sum.avg>=0?'up':'dn'}">${sum.avg>0?'+':''}${sum.avg}%</b><small>purata tempoh ${sum.days} hari dagangan</small></div></div>
+    <div class="alert ${pnl>=0?'a-green':'a-red'}" style="margin:12px 0 0">${pnl>=0?`Dalam ujian ini, robot <b>untung</b>. Ketepatan ${sum.win}% cukup tinggi untuk menampung dagangan yang kalah.`:`Dalam ujian ini, robot <b>rugi</b>. Ketepatan ${sum.win}% belum cukup tinggi untuk menampung dagangan yang kalah.`}</div>`;
+}
+function rbRow(t,scale,live){
+  const nm=shortName((S.paper.names&&S.paper.names[t.c])||t.n||nameOf(t.c)||t.c);
+  if(live){const m=mk(t.c),now=m&&m.c;const u=now?(now/t.en-1-S.paper.fee)*rbStake():null;
+    return `<button class="rbr" data-code="${esc(t.c)}"><span class="rbm"><b>${esc(nm)}</b> <span class="code">${esc(t.c)}</span><span class="muted">${esc(setupName(t.k))} · masuk ${fmtD(t.d)} @ ${px(t.en)}</span><span class="muted">sasaran ${px(t.tg)} · had ${px(t.sl)}${now?` · kini ${px(now)}`:''}</span></span><b class="${u==null?'':u>=0?'up':'dn'}">${u==null?'-':rmS(u)}</b></button>`;}
+  const r=RES3[t.res];return `<button class="rbr" data-code="${esc(t.c)}"><span class="rbm"><b>${esc(nm)}</b> <span class="code">${esc(t.c)}</span><span class="muted">${esc(setupName(t.k))} · ${fmtD(t.d)} → ${fmtD(t.exit||t.end)} · ${t.days} hari</span></span><span class="rbres"><span class="badge ${r[2]}">${r[0]}</span><b class="${r[1]}">${rmS(t.ret*rbStake()/100)}</b></span></button>`;
+}
+function rRobot(){
+  const P=S.paper;let h=`<div class="card"><div class="row between"><h2 style="margin:0">Robot Auto</h2><span class="badge b-warn">Wang maya</span></div>
+    <p class="muted" style="margin:6px 0 10px">Robot "melabur" nilai maya pada setiap isyarat dalam 5 terkuat dan keluar bila harga sampai paras atas (menang), paras bawah (kalah) atau selepas ${(S.market&&S.market.meta.bt&&S.market.meta.bt.h)||40} hari dagangan. Paling banyak ${P?P.maxOpen:5} kedudukan serentak. Tiada wang sebenar terlibat.</p>
+    <label>Nilai maya setiap isyarat (RM)</label><input id="rbS" inputmode="decimal" value="${rbStake()}"></div>`;
+  if(!P){$('#main').innerHTML=h+`<div class="alert a-amber">Data Robot Auto belum diterima. Robot GitHub akan menghasilkannya pada larian seterusnya.</div>`;bindRb();return;}
+  const sc=rbScale(),cap=P.maxOpen*rbStake();
+  h+=`<div class="seg" style="margin:0 var(--gut) 12px"><button data-rb="hist" class="${RB_MODE==='hist'?'on':''}">Ujian sejarah 12 bulan</button><button data-rb="live" class="${RB_MODE==='live'?'on':''}">Ujian langsung</button></div>`;
+  if(RB_MODE==='hist'){const H=P.hist;
+    if(!H){h+=`<div class="alert a-amber">Sejarah belum cukup untuk ujian.</div>`;}
+    else{h+=`<div class="card"><h2>${fmtD(H.start)} – ${fmtD(H.end)}</h2><p class="muted" style="margin-top:0">Robot mengulang setiap hari dagangan setahun lepas. Pada setiap hari, ia hanya guna statistik daripada dagangan yang sudah selesai sebelum hari itu, jadi tiada maklumat masa depan digunakan.</p>${rbStats(H.summary,sc,cap)}</div>`;
+      h+=`<div class="card"><h2>Untung / rugi terkumpul</h2>${equitySVG(H.curve,sc)}</div>`;
+      h+=`<div class="card"><h2>Ikut jenis isyarat</h2><div class="bth"><div class="hd"><span>Isyarat</span><span>Dagangan</span><span>Ketepatan</span><span>Untung/rugi</span></div>`+
+        Object.entries(H.bySetup).map(([k,v])=>`<div><span>${esc(setupName(k))}</span><span>${v.n||0}</span><span>${v.n?v.win+'%':'-'}</span><span class="${(v.pnl||0)>=0?'up':'dn'}">${v.n?rmS(v.pnl*sc):'-'}</span></div>`).join('')+`</div></div>`;
+      h+=`<div class="card"><h2>Dagangan maya terkini</h2>${H.recent.slice(0,RB_ALL?60:12).map(t=>rbRow(t,sc)).join('')}${H.recent.length>12?`<button class="btn sm sec" style="margin-top:10px" id="rbAll">${RB_ALL?'Tunjuk kurang':'Lihat semua ('+H.recent.length+')'}</button>`:''}</div>`;}}
+  else{const L=P.live;
+    h+=`<div class="card"><h2>Sejak ${fmtD(L.started)}</h2><p class="muted" style="margin-top:0">Pilihan sebenar robot setiap hari bekerja, disemak dengan harga sebenar.</p>${rbStats(L.summary,sc,cap)}</div>`;
+    h+=`<div class="card"><h2>Kedudukan maya terbuka (${L.open.length}/${P.maxOpen})</h2>${L.open.length?L.open.map(t=>rbRow(t,sc,true)).join(''):'<p class="muted">Tiada kedudukan terbuka. Robot akan masuk bila ada isyarat baharu dalam 5 terkuat.</p>'}</div>`;
+    if(L.curve&&L.curve.length>1)h+=`<div class="card"><h2>Untung / rugi terkumpul</h2>${equitySVG(L.curve,sc)}</div>`;
+    if(L.recent.length)h+=`<div class="card"><h2>Dagangan maya selesai</h2>${L.recent.slice(0,RB_ALL?60:12).map(t=>rbRow(t,sc)).join('')}${L.recent.length>12?`<button class="btn sm sec" style="margin-top:10px" id="rbAll">${RB_ALL?'Tunjuk kurang':'Lihat semua ('+L.recent.length+')'}</button>`:''}</div>`;}
+  h+=`<p class="disc" style="margin:6px var(--gut) 0">Simulasi menggunakan harga tutup harian dan kos dagangan ${(P.fee*100).toFixed(1)}%. Ujian sejarah menggunakan senarai syariah SC terkini untuk semua tempoh. Keputusan simulasi bukan jaminan prestasi masa depan dan bukan cadangan beli atau jual.</p>`;
+  $('#main').innerHTML=h;bindRb();
+}
+function bindRb(){
+  const i=$('#rbS');if(i)i.onchange=e=>{S.settings.paperStake=Math.max(1,num(e.target.value)||20);save();rRobot();};
+  document.querySelectorAll('[data-rb]').forEach(b=>b.onclick=()=>{RB_MODE=b.dataset.rb;RB_ALL=false;rRobot();});
+  const ra=$('#rbAll');if(ra)ra.onclick=()=>{RB_ALL=!RB_ALL;rRobot();};
+  document.querySelectorAll('.rbr').forEach(b=>b.onclick=()=>stockSheet(b.dataset.code,nameOf(b.dataset.code)));
 }
 
 /* ================= KETEPATAN ISYARAT ================= */
@@ -1024,6 +1104,19 @@ const EN_PHRASE=[
 ];
 
 Object.assign(EN_EXACT,{
+'Tunjuk kurang':'Show less',
+'Robot':'Robot','Robot Auto':'Auto Robot','Wang maya':'Virtual money','Nilai maya setiap isyarat (RM)':'Virtual amount per signal (RM)',
+'Ujian sejarah 12 bulan':'12-month historical test','Ujian langsung':'Live test','Ketepatan':'Accuracy','Untung / rugi':'Profit / loss',
+'Pulangan atas modal':'Return on capital','Purata setiap dagangan':'Average per trade','Untung / rugi terkumpul':'Cumulative profit / loss',
+'Ikut jenis isyarat':'By signal type','Dagangan':'Trades','Untung/rugi':'Profit/loss','Dagangan maya terkini':'Latest virtual trades',
+'Dagangan maya selesai':'Closed virtual trades','Pilihan sebenar robot setiap hari bekerja, disemak dengan harga sebenar.':"The robot's actual picks every working day, checked against real prices.",
+'Belum cukup dagangan selesai untuk melukis graf.':'Not enough closed trades to draw the chart yet.',
+'Belum ada dagangan maya yang selesai. Robot akan mula merekod keputusan sebaik isyarat pertama sampai paras atas, paras bawah atau had masa.':'No virtual trades closed yet. The robot will record results as soon as the first signal reaches its upper level, lower level or time limit.',
+'Tiada kedudukan terbuka. Robot akan masuk bila ada isyarat baharu dalam 5 terkuat.':'No open positions. The robot will enter when a new signal joins the 5 strongest.',
+'Data Robot Auto belum diterima. Robot GitHub akan menghasilkannya pada larian seterusnya.':'Auto Robot data not received yet. The GitHub robot will produce it on its next run.',
+'Sejarah belum cukup untuk ujian.':'Not enough history for the test yet.',
+'Robot mengulang setiap hari dagangan setahun lepas. Pada setiap hari, ia hanya guna statistik daripada dagangan yang sudah selesai sebelum hari itu, jadi tiada maklumat masa depan digunakan.':'The robot replays every trading day of the past year. Each day it only uses statistics from trades already closed before that day, so no future information is used.',
+'Dalam ujian ini, robot':'In this test, the robot','untung':'made a profit','rugi':'made a loss','Menang':'Won',
 '⬇ Pasang':'⬇ Install','Pasang':'Install','Pasang app':'Install app','Pasang ProSyariah':'Install ProSyariah','✓ ProSyariah dipasang':'✓ ProSyariah installed',
 'App dibuka dalam tetingkap sendiri tanpa bar alamat, dan sentiasa memuat data terkini.':'The app opens in its own window without an address bar, and always loads the latest data.',
 'Tekan menu':'Tap the menu','di atas kanan Chrome.':'at the top right of Chrome.','Pilih':'Choose','atau':'or','Pasang aplikasi':'Install app','Tambah ke skrin utama':'Add to Home screen','Tekan':'Tap','Pasang':'Install','. Ikon ProSyariah akan muncul dalam senarai app.':'. The ProSyariah icon will appear in your app list.',
@@ -1050,6 +1143,19 @@ Object.assign(EN_EXACT,{
 'Paras ini naik mengikut harga tertinggi sejak tarikh belian dan tidak pernah turun. Harga tutup di bawahnya menandakan momentum menurun.':'This level rises with the highest price since the purchase date and never falls. A close below it signals weakening momentum.',
 });
 EN_RX.unshift(
+[/^Lihat semua \((\d+)\)$/,'See all ($1)'],
+[/^Robot "melabur" nilai maya pada setiap isyarat dalam 5 terkuat dan keluar bila harga sampai paras atas \(menang\), paras bawah \(kalah\) atau selepas (\d+) hari dagangan\. Paling banyak (\d+) kedudukan serentak\. Tiada wang sebenar terlibat\.$/,'The robot "invests" a virtual amount in every signal among the 5 strongest and exits when price reaches the upper level (win), the lower level (loss) or after $1 trading days. At most $2 positions at a time. No real money is involved.'],
+[/^(\d+) menang · (\d+) kalah · (\d+) tamat masa$/,'$1 won · $2 lost · $3 timed out'],
+[/^daripada (\d+) dagangan maya$/,'from $1 virtual trades'],
+[/^modal maya (.+) \((\d+) × (.+)\)$/,'virtual capital $1 ($2 × $3)'],
+[/^purata tempoh (\S+) hari dagangan$/,'average duration $1 trading days'],
+[/^\. Ketepatan (\S+)% cukup tinggi untuk menampung dagangan yang kalah\.$/,'. Accuracy of $1% is high enough to cover the losing trades.'],
+[/^\. Ketepatan (\S+)% belum cukup tinggi untuk menampung dagangan yang kalah\.$/,'. Accuracy of $1% is not yet high enough to cover the losing trades.'],
+[/^Sejak (.+)$/,'Since $1'],
+[/^Kedudukan maya terbuka \((\d+)\/(\d+)\)$/,'Open virtual positions ($1/$2)'],
+[/^masuk (.+) @ (\S+)$/,'entered $1 @ $2'],[/^sasaran (\S+)$/,'target $1'],[/^had (\S+)$/,'limit $1'],[/^kini (\S+)$/,'now $1'],
+[/^(.+) → (.+)$/,(m,a,b)=>`${trText(a)} → ${trText(b)}`],
+[/^Simulasi menggunakan harga tutup harian dan kos dagangan (\S+)%\. Ujian sejarah menggunakan senarai syariah SC terkini untuk semua tempoh\. Keputusan simulasi bukan jaminan prestasi masa depan dan bukan cadangan beli atau jual\.$/,'The simulation uses daily closing prices and $1% trading costs. The historical test uses the latest SC Shariah list for the whole period. Simulated results are not a guarantee of future performance and not a buy or sell recommendation.'],
 [/^Tertinggi (\S+)$/,'High $1'],[/^Terendah (\S+)$/,'Low $1'],
 [/^(.+) masuk 5 isyarat terkuat \((\d+)%\)$/,'$1 entered the 5 strongest signals ($2%)'],
 [/^(.+), bermula (.+)\. Tempoh biasa (\d+) hari dagangan, hingga (.+)\.$/,(m,a,b,c,d)=>`${trText(a)}, started ${b}. Typical period ${c} trading days, until ${d}.`],
@@ -1112,7 +1218,7 @@ function setLang(l){
   S.settings.lang=l;save();document.documentElement.lang=l==='en'?'en':'ms';
   if(MO){MO.disconnect();MO=null;}
   closeSheet();render();
-  const nav={saham:'Saham',portfolio:'Portfolio',tathir:'Tathir',zakat:'Zakat',tetapan:'Tetapan'};
+  const nav={saham:'Saham',robot:'Robot',portfolio:'Portfolio',tathir:'Tathir',zakat:'Zakat',tetapan:'Tetapan'};
   document.querySelectorAll('#nav button').forEach(b=>{const t=b.lastChild;t.nodeValue=nav[b.dataset.tab];});
   $('#bell').setAttribute('aria-label','Amaran');
   updateLangBtn();startI18N();
@@ -1140,7 +1246,7 @@ async function installApp(){
 /* ================= NAV ================= */
 let TAB='saham';
 document.querySelectorAll('#nav button').forEach(b=>b.onclick=()=>goTab(b.dataset.tab));
-function render(){document.body.dataset.tab=TAB;setTimeout(updateBell,0);({saham:rSaham,portfolio:rPortfolio,tathir:rTathir,zakat:rZakat,tetapan:rTetapan})[TAB]();}
+function render(){document.body.dataset.tab=TAB;setTimeout(updateBell,0);({saham:rSaham,robot:rRobot,portfolio:rPortfolio,tathir:rTathir,zakat:rZakat,tetapan:rTetapan})[TAB]();}
 
 /* ================= TAB: SAHAM ================= */
 let Q='';let SCAN={};

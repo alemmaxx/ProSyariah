@@ -70,11 +70,11 @@ def simulate(t, o, h, l, c, a):
     tgt, stp = e * (1 + tp), e * (1 - sp)
     for j in range(t + 1, min(n, t + 1 + H)):
         if l[j] <= stp:
-            return {"res": "L", "days": j - t, "ret": -sp - FEE}
+            return {"res": "L", "days": j - t, "ret": -sp - FEE, "t": t, "tp": tp, "sp": sp}
         if h[j] >= tgt:
-            return {"res": "W", "days": j - t, "ret": tp - FEE}
+            return {"res": "W", "days": j - t, "ret": tp - FEE, "t": t, "tp": tp, "sp": sp}
     if t + H < n:
-        return {"res": "T", "days": H, "ret": c[t + H] / e - 1 - FEE}
+        return {"res": "T", "days": H, "ret": c[t + H] / e - 1 - FEE, "t": t, "tp": tp, "sp": sp}
     return None  # dagangan belum selesai — tidak dikira
 
 

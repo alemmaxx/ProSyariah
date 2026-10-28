@@ -24,6 +24,7 @@ sys.path.insert(0, os.path.dirname(__file__))
 from common import analyze, norm_name  # noqa: E402
 import backtest as BT  # noqa: E402
 import track  # noqa: E402
+import paper  # noqa: E402
 
 ROOT = os.path.join(os.path.dirname(__file__), "..")
 SC = os.path.join(ROOT, "data", "sc-list.json")
@@ -233,6 +234,7 @@ def main():
         stocks[c] = item
     asof = max((v.get("d", "") for v in stocks.values()), default="")
     track.update(px, stocks, asof, a.out)
+    paper.build(runs, px, stocks, asof, a.out)
     meta = {
         "generated": datetime.now(timezone.utc).isoformat(timespec="minutes"),
         "asof": asof, "provider": PROVIDER if not (PROVIDER == "eodhd" and not KEY) else "yfinance",

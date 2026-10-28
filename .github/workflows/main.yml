@@ -75,7 +75,7 @@ jobs:
 
       - name: Commit rekod prestasi isyarat
         run: |
-          git add data/signals.json 2>/dev/null || true
+          git add data/signals.json data/paper-live.json 2>/dev/null || true
           if ! git diff --cached --quiet; then
             git commit -m "Data: rekod prestasi isyarat"
             git pull --rebase -q || true

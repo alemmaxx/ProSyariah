@@ -1,0 +1,4 @@
+__pycache__/
+*.pyc
+sc-debug.txt
+_site/

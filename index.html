@@ -1839,18 +1839,6 @@ function rTetapan(){
    <div class="toggle"><span>Sembunyi isyarat untuk saham tidak patuh</span><input type="checkbox" id="sm" ${st.shariahMode?'checked':''}></div>
    <label>Gaya dagangan</label><div class="seg"><button data-sty="sc" class="${st.style==='sc'?'on':''}">Ikut SC (carta harian)</button><button data-sty="ketat" class="${st.style==='ketat'?'on':''}">Ketat (carta mingguan)</button></div>
    <div class="disc">Terdapat perbezaan pandangan ulama tentang dagangan jangka sangat pendek. "Ketat" mengira indicator pada carta mingguan untuk fokus jangka sederhana–panjang. App ini tidak menyokong margin, short selling, options, futures atau waran.</div></div>`;
-  h+=`<details class="card"><summary><b>Import senarai SC secara manual</b> <span class="muted">(sandaran jika data automatik gagal)</span></summary>
-   <div class="muted">Senarai semasa: ${L?`<b>${fmtD(L.date)}</b> · ${L.count} entri`:'<b>belum ada</b>'}</div>
-   <label>Tarikh berkuat kuasa senarai</label><input type="date" id="ld" value="${isoD(reviewDates().last)}">
-   <label>Tampal senarai (satu saham sebaris: "kod,nama" atau nama sahaja)</label><textarea id="lt" placeholder="1155,Malayan Banking Berhad&#10;5347,Tenaga Nasional Berhad&#10;Bursa Malaysia Berhad"></textarea>
-   <label>atau pilih fail (.csv / .txt)</label><input type="file" id="lf" accept=".csv,.txt,text/plain,text/csv">
-   <button class="btn" style="margin-top:10px;width:100%" id="lI">Import senarai</button>
-   <div class="disc">Sumber rasmi: Senarai Sekuriti Patuh Syariah oleh SAC SC (sc.com.my), dikemas kini setiap Jumaat terakhir Mei & November. Simpan sejarah setiap import untuk pengesanan perubahan status.</div>
-   ${S.lists.length?`<h3>Sejarah import</h3>${S.lists.map((x,i)=>`<div class="kv"><span>${fmtD(x.date)} · ${x.count} entri${x.removed&&i?` · −${x.removed.length}/+${x.added.length}`:''}</span><button class="btn sm red" data-dl="${i}">Padam</button></div>`).join('')}`:''}</details>`;
-  h+=`<details class="card"><summary><b>Lanjutan: kunci API EODHD sendiri</b> <span class="muted">(pilihan)</span></summary>
-   <p class="muted">Tidak diperlukan. Guna hanya jika anda mahu tarik harga terus dari akaun EODHD anda.</p>
-   <label>Kunci API EODHD</label><input id="ak" value="${esc(st.apiKey)}" placeholder="kosongkan untuk guna data automatik">
-   <div class="row" style="margin-top:8px"><button class="btn sm sec" id="akS">Simpan</button></div></details>`;
   h+=`<div class="card"><h2>Sandaran data</h2><div class="row"><button class="btn sm sec" id="bE">Muat turun sandaran</button><button class="btn sm sec" id="bC">Salin sandaran</button><button class="btn sm sec" id="bI">Pulihkan</button><button class="btn sm red" id="cc">Kosongkan cache harga</button></div></div>`;
   h+=`<div class="card"><h2>Ketelusan & sumber</h2>
    <div class="kv"><span>Status syariah</span><span>SAC SC · ${L?fmtD(L.date):'-'}</span></div>
@@ -1860,16 +1848,10 @@ function rTetapan(){
    <p class="disc"><b>Penafian:</b> ProSyariah ialah alat bantu maklumat dan pengiraan, bukan fatwa dan bukan nasihat pelaburan. Isyarat teknikal untuk rujukan sahaja. Data harga daripada penyedia pihak ketiga bersifat indikatif dan mungkin berbeza sedikit dari harga sebenar bursa. Keputusan pelaburan, penyucian dan zakat adalah tanggungjawab pengguna — rujuk SC, lembaga zakat negeri atau penasihat syariah bertauliah.</p>
    <p class="disc">ProSyariah · Versi Percuma v1.0 · Semua data disimpan dalam peranti ini sahaja.</p></div>`;
   $('#main').innerHTML=h;
-  $('#akS').onclick=()=>{st.apiKey=$('#ak').value.trim();save();toast(st.apiKey?'Kunci disimpan':'Kunci dikosongkan');};
   $('#syncB').onclick=()=>syncData(true);
   bindAlertSettings();
   $('#sm').onchange=e=>{st.shariahMode=e.target.checked;save();};
   document.querySelectorAll('[data-sty]').forEach(b=>b.onclick=()=>{st.style=b.dataset.sty;S.cache={};save();render();toast('Cache harga dikosongkan untuk gaya baharu');});
-  $('#lf').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{$('#lt').value=r.result;};r.readAsText(f);};
-  $('#lI').onclick=()=>{const d=$('#ld').value,t=$('#lt').value;if(!d||!t.trim()){toast('Isi tarikh & senarai');return;}
-    if(S.lists.some(x=>x.date===d)&&!confirm('Senarai bertarikh ini sudah wujud. Tambah juga?'))return;
-    const Lx=importList(d,t);if(Lx){toast(`✓ ${Lx.count} entri diimport`+(prevList()?` · −${Lx.removed.length} / +${Lx.added.length}`:''));render();}};
-  document.querySelectorAll('[data-dl]').forEach(b=>b.onclick=()=>{if(confirm('Padam senarai ini?')){S.lists.splice(+b.dataset.dl,1);save();render();}});
   const backup=()=>JSON.stringify(Object.assign({},S,{cache:{}}));
   $('#bE').onclick=()=>download('prosyariah-sandaran-'+today()+'.json',backup(),'application/json');
   $('#bC').onclick=()=>{navigator.clipboard&&navigator.clipboard.writeText(backup());toast('Sandaran disalin');};

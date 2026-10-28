@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="theme-color" content="#0a1210">
-<title>ProSyariah by ProKuiz</title>
+<title>ProSyariah</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&display=swap" rel="stylesheet">
 <style>
@@ -18,7 +18,7 @@
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f);font-size:15px;line-height:1.5}
 header{position:sticky;top:0;z-index:5;padding:14px 16px 18px;background:linear-gradient(180deg,rgba(10,18,16,.96) 40%,rgba(10,18,16,0));display:flex;align-items:center;gap:10px}
-header .mark{width:30px;height:30px;border-radius:8px;background:var(--gold) var(--star) center/28px;background-blend-mode:multiply;display:grid;place-items:center;color:#1b1503;font-weight:800;font-size:16px}
+header .mark{width:36px;height:36px;border-radius:9px;background:var(--gold);display:grid;place-items:center;color:#1b1503;font-weight:800;font-size:16px}
 header h1{margin:0;font-size:20px;font-weight:800;letter-spacing:-.3px}
 header h1 span{font-weight:400;color:var(--muted);font-size:13px;letter-spacing:0}
 main{padding:0 0 96px;max-width:900px;margin:0 auto}
@@ -211,10 +211,24 @@ main>.card,main>.alert,main>.grid2,main>.disc,main>.pad,.search,.results{margin-
 .trk .go{margin-left:auto;font-weight:700;color:var(--gold)}
 .cal{display:grid;grid-template-columns:64px 1fr 70px;gap:10px;align-items:center;font-size:13px;margin:8px 0}
 .trow{cursor:pointer}
+
+/* ---- 5 ISYARAT TERKUAT ---- */
+.t5{display:grid;gap:10px;margin:0 var(--gut)}
+@media (min-width:900px){.t5{grid-template-columns:1fr 1fr}}
+.t5r{display:flex;gap:14px;align-items:flex-start;text-align:left;width:100%;padding:14px;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);font:14px var(--f);cursor:pointer}
+.t5n{flex:none;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--gold);color:#1b1503;font-weight:800;font-size:16px}
+.t5b{flex:1;display:flex;flex-direction:column;gap:5px;min-width:0}
+.t5p{font-size:22px;color:var(--gold)}
+.t5d{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:13px;color:var(--muted)}
+.t5d b{color:var(--ink)}
+.t5bar{height:6px;border-radius:999px;background:var(--line);overflow:hidden}
+.t5bar span{display:block;height:100%;background:var(--green);border-radius:999px}
+.t5bar.over span{background:var(--amber)}
+.t5s{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 </style>
 </head>
 <body>
-<header><div class="mark" aria-hidden="true">✦</div><h1>ProSyariah <span>by ProKuiz</span></h1><button id="langB" class="langb" aria-label="Bahasa / Language" onclick="setLang(S.settings.lang==='en'?'bm':'en')"></button><button id="bell" class="bell" aria-label="Amaran" onclick="openAlerts()">🔔<span id="bellN"></span></button></header>
+<header><div class="mark" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M3 20h18" stroke="#1b1503" stroke-width="1.6" stroke-linecap="round"/><path d="M6 6v12M12 3v14M18 8v9" stroke="#1b1503" stroke-width="1.4" stroke-linecap="round"/><rect x="4.4" y="9" width="3.2" height="6" rx=".8" fill="#1b1503"/><rect x="10.4" y="5.5" width="3.2" height="8" rx=".8" fill="#0f5a45"/><rect x="16.4" y="10" width="3.2" height="5" rx=".8" fill="#1b1503"/></svg></div><h1>ProSyariah</h1><button id="langB" class="langb" aria-label="Bahasa / Language" onclick="setLang(S.settings.lang==='en'?'bm':'en')"></button><button id="bell" class="bell" aria-label="Amaran" onclick="openAlerts()">🔔<span id="bellN"></span></button></header>
 <main id="main"></main>
 <nav id="nav">
   <button data-tab="saham" class="on"><span class="ic">📈</span>Saham</button>
@@ -528,6 +542,40 @@ function exitPlan(hd){
   return {trail,peak,atr:a,last,target,hit:last.c<trail};
 }
 
+/* ================= 5 ISYARAT TEKNIKAL TERKUAT ================= */
+function tdBetween(a,b){if(!a||!b||b<=a)return 0;const x=parseD(a),y=parseD(b);let n=0;while(x<y){x.setDate(x.getDate()+1);if(x.getDay()%6)n++;}return n;}
+function subTradingDays(d,n){const x=parseD(d);let k=0;while(k<n){x.setDate(x.getDate()-1);if(x.getDay()%6)k++;}return isoD(x);}
+function topSignals(n=5){
+  const M=S.market;if(!M)return [];const asof=M.meta.asof;const fee=BTH().fee;const out=[],seen=new Set();
+  const add=x=>{const m=mk(x.code);if(!m||m.s!=='ok'||!x.en||!x.tg||!x.sl)return;
+    if(S.settings.style==='ketat'&&(x.md||0)<5)return;
+    const key=x.code+x.k+x.start;if(seen.has(key))return;seen.add(key);
+    const tp=x.tg/x.en-1,sp=1-x.sl/x.en,be=(sp+fee)/(tp+sp),edge=x.p/100-be;if(edge<=0)return;
+    const now=m.c,hitUp=now!=null&&now>=x.tg,hitDn=now!=null&&now<=x.sl;if(hitUp||hitDn)return;
+    const el=tdBetween(x.start,asof),md=Math.max(1,Math.round(x.md||0));
+    out.push({...x,be,edge,now,el,md,end:addTradingDays(x.start,md),passed:el>md,limitEnd:addTradingDays(x.start,BTH().h)});};
+  Object.entries(M.stocks).forEach(([c,v])=>(v.op||[]).forEach(o=>{if(o.ev>0)add({code:c,name:v.n,k:o.k,p:o.p,start:subTradingDays(v.d,o.ago||0),en:o.en,tg:o.tg,sl:o.sl,md:o.md,cf:o.cf,w:o.w,nn:o.n});}));
+  ((S.track&&S.track.openList)||[]).forEach(s=>add({code:s.c,name:s.n,k:s.k,p:s.p,start:s.d,en:s.en,tg:s.tg,sl:s.sl,md:s.md}));
+  const best={};out.forEach(x=>{if(!best[x.code]||x.edge>best[x.code].edge)best[x.code]=x;});
+  return Object.values(best).sort((a,b)=>b.edge-a.edge||b.p-a.p).slice(0,n);
+}
+function top5HTML(){
+  const L=topSignals(5);if(!S.market)return '';
+  let h=`<section class="rowsec"><h3>5 isyarat teknikal terkuat<small>disusun ikut kekuatan sejarah</small></h3><div class="t5">`;
+  if(!L.length)h+=`<div class="emptyrail" style="margin:0">Tiada isyarat teknikal yang melepasi paras neutral pada masa ini.</div>`;
+  L.forEach((x,i)=>{const pct=Math.min(100,x.el/x.md*100);
+    h+=`<button class="t5r" data-code="${esc(x.code)}"><span class="t5n">${i+1}</span><span class="t5b">
+      <span class="row between"><span><b>${esc(shortName(x.name))}</b> <span class="code">${esc(x.code)}</span></span><b class="t5p">${x.p}%</b></span>
+      <span class="muted">${esc(setupName(x.k))}</span>
+      <span class="t5d"><span>Isyarat bermula <b>${fmtD(x.start)}</b></span><span>Tempoh biasa ${x.md} hari dagangan, hingga <b>${fmtD(x.end)}</b></span></span>
+      <span class="t5bar${x.passed?' over':''}"><span style="width:${pct}%"></span></span>
+      <span class="t5s"><span class="badge ${x.passed?'b-warn':'b-ok'}">${x.passed?`Tempoh biasa sudah berlalu`:`Masih dalam tempoh biasa`}</span><span class="muted">hari dagangan ke-${x.el} daripada ~${x.md}</span></span>
+      <span class="muted" style="font-size:12px">Harga kini ${px(x.now)} · paras atas ${px(x.tg)} · paras bawah ${px(x.sl)} · isyarat tamat ${fmtD(x.limitEnd)}</span>
+    </span></button>`;});
+  h+=`</div><p class="disc" style="margin:8px var(--gut) 0">Kekuatan = kebarangkalian sejarah berbanding paras neutral. "Tempoh biasa" ialah median masa harga sampai paras atas dalam sejarah saham ini. Ini bacaan indicator, bukan cadangan beli atau jual.</p></section>`;
+  return h;
+}
+
 /* ================= KETEPATAN ISYARAT ================= */
 const RES={W:['Paras atas','up'],L:['Paras bawah','dn'],T:['Tamat masa','']};
 function trackCard(){
@@ -616,7 +664,7 @@ function updateBell(){const n=unread(computeAlerts());const b=$('#bellN');if(!b)
 function notifyNew(){
   const A=AL();if(!A.notify||!('Notification' in window)||Notification.permission!=='granted')return;
   computeAlerts().filter(a=>a.lv!=='info'&&!A.notified[a.id]&&!A.seen[a.id]).slice(0,3).forEach(a=>{
-    try{new Notification(trText(a.title),{body:trText(a.body),tag:a.id,icon:'data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#d9b44a"/><text x="32" y="44" font-size="34" text-anchor="middle" fill="#1b1503">✦</text></svg>')});}catch(e){}
+    try{new Notification(trText(a.title),{body:trText(a.body),tag:a.id,icon:'data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#d9b44a"/><rect x="16" y="24" width="8" height="18" rx="2" fill="#1b1503"/><rect x="28" y="14" width="8" height="26" rx="2" fill="#0f5a45"/><rect x="40" y="28" width="8" height="14" rx="2" fill="#1b1503"/></svg>')});}catch(e){}
     A.notified[a.id]=1;});
   save();
 }
@@ -921,6 +969,11 @@ const EN_PHRASE=[
 ];
 
 Object.assign(EN_EXACT,{
+'5 isyarat teknikal terkuat':'5 strongest technical signals','disusun ikut kekuatan sejarah':'ranked by historical strength',
+'Tiada isyarat teknikal yang melepasi paras neutral pada masa ini.':'No technical signal is above the neutral level right now.',
+'Isyarat bermula':'Signal started','Tempoh biasa sudah berlalu':'Typical period has passed','Masih dalam tempoh biasa':'Still within typical period',
+'Kekuatan = kebarangkalian sejarah berbanding paras neutral. "Tempoh biasa" ialah median masa harga sampai paras atas dalam sejarah saham ini. Ini bacaan indicator, bukan cadangan beli atau jual.':'Strength = historical probability versus the neutral level. "Typical period" is the median time for price to reach the upper level in this stock\'s history. This is an indicator reading, not a buy or sell recommendation.',
+'ProSyariah · Versi Percuma v1.0 · Semua data disimpan dalam peranti ini sahaja.':'ProSyariah · Free Version v1.0 · All data is stored on this device only.',
 'Kebarangkalian dijangka berbanding kadar sebenar harga sampai paras atas. Bar emas sepatutnya hampir sama panjang dengan garis.':'Expected probability versus the actual rate at which price reached the upper level. The gold bar should be about as long as the line.',
 'Salin kod saham':'Copy stock code','Isyarat kuat (sejarah)':'Strong signal (historical)','Isyarat sederhana':'Moderate signal','Isyarat lemah':'Weak signal',
 'kali harga sampai paras atas sebelum paras bawah, dalam sejarah saham ini':"of the time price reached the upper level before the lower level, in this stock's history",
@@ -936,6 +989,9 @@ Object.assign(EN_EXACT,{
 'Paras ini naik mengikut harga tertinggi sejak tarikh belian dan tidak pernah turun. Harga tutup di bawahnya menandakan momentum menurun.':'This level rises with the highest price since the purchase date and never falls. A close below it signals weakening momentum.',
 });
 EN_RX.unshift(
+[/^Tempoh biasa (\d+) hari dagangan, hingga$/,'Typical period $1 trading days, until'],
+[/^hari dagangan ke-(\d+) daripada ~(\d+)$/,'trading day $1 of ~$2'],
+[/^Harga kini (\S+) · paras atas (\S+) · paras bawah (\S+) · isyarat tamat (.+)$/,'Price now $1 · upper level $2 · lower level $3 · signal expires $4'],
 [/^Garis putih = paras neutral (\d+)%, iaitu kadar yang dijangka jika pergerakan harga rawak\. Peratus melepasi garis bermakna isyarat ini pernah lebih kuat daripada rawak\.$/,'White line = neutral level $1%, the rate expected if price moves were random. A percentage above the line means this signal has historically been stronger than random.'],
 [/^isyarat tamat jika tiada paras dicapai menjelang (.+)$/,'signal expires if no level is reached by $1'],
 [/^(\d+)\/(\d+) kali ke paras atas$/,'$1/$2 times to upper level'],
@@ -1075,6 +1131,7 @@ function rSaham(){
   const crit=unread(computeAlerts()).filter(a=>a.lv==='critical');
   if(crit.length)h+=`<button class="urgent" onclick="openAlerts()"><span class="ai">${crit[0].ic}</span><span><b>${esc(crit[0].title)}</b><span class="ab">${crit.length>1?`dan ${crit.length-1} lagi amaran segera`:esc(crit[0].body)}</span></span><span class="go">Lihat</span></button>`;
   const al=scheduleAlerts();if(al)h+=`<div class="pad" style="margin-top:12px">${al}</div>`;
+  h+=top5HTML();
   h+=rail('Watchlist anda',S.watch.length?S.watch.length+' saham':'',S.watch.map(c=>({code:c,name:nameOf(c)})),false,'Belum ada saham. Buka mana-mana saham dan tekan ☆ Tambah watchlist.');
   if(S.holdings.length)h+=rail('Pegangan saya','',S.holdings.map(x=>({code:x.code,name:x.name||nameOf(x.code)})),true,'');
   if(M){
@@ -1099,6 +1156,7 @@ function rSaham(){
     $('#res').querySelectorAll('.item').forEach(el=>el.onclick=()=>stockSheet(el.dataset.code,el.dataset.name));
   };
   $('#q').oninput=e=>{Q=e.target.value;res();};res();
+  document.querySelectorAll('.t5r').forEach(p=>p.onclick=()=>stockSheet(p.dataset.code,nameOf(p.dataset.code)));
   document.querySelectorAll('.poster').forEach(p=>p.onclick=()=>stockSheet(p.dataset.code,p.dataset.name));
   document.querySelectorAll('[data-open]').forEach(b=>b.onclick=()=>stockSheet(b.dataset.open,nameOf(b.dataset.open)));
   document.querySelectorAll('[data-wt]').forEach(b=>b.onclick=()=>{const c=b.dataset.wt;if(S.watch.includes(c))S.watch=S.watch.filter(x=>x!==c);else S.watch.push(c);save();render();});
@@ -1393,7 +1451,7 @@ function rTetapan(){
    <div class="kv"><span>Panduan tindakan & penyucian</span><span>Panduan SAC SC</span></div>
    <div class="kv"><span>Nisab & kaedah zakat</span><span>Lembaga zakat negeri</span></div>
    <p class="disc"><b>Penafian:</b> ProSyariah ialah alat bantu maklumat dan pengiraan, bukan fatwa dan bukan nasihat pelaburan. Isyarat teknikal untuk rujukan sahaja. Data harga daripada penyedia pihak ketiga bersifat indikatif dan mungkin berbeza sedikit dari harga sebenar bursa. Keputusan pelaburan, penyucian dan zakat adalah tanggungjawab pengguna — rujuk SC, lembaga zakat negeri atau penasihat syariah bertauliah.</p>
-   <p class="disc">ProSyariah by ProKuiz · Versi Percuma v1.0 · Semua data disimpan dalam peranti ini sahaja.</p></div>`;
+   <p class="disc">ProSyariah · Versi Percuma v1.0 · Semua data disimpan dalam peranti ini sahaja.</p></div>`;
   $('#main').innerHTML=h;
   $('#akS').onclick=()=>{st.apiKey=$('#ak').value.trim();save();toast(st.apiKey?'Kunci disimpan':'Kunci dikosongkan');};
   $('#syncB').onclick=()=>syncData(true);

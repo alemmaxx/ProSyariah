@@ -9,30 +9,31 @@ npm warn deprecated uuid@9.0.1: uuid@10 and below is no longer supported.  For E
 npm warn deprecated uuid@9.0.1: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
 npm warn deprecated glob@10.5.0: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
 
-[1m[31mError:[39m[22m could not find site "prosyariah" for project "prosyariah-26a55"
-
-[32m[1m✔  hosting:sites:[22m[39m Site [1mprosyariah[22m has been created in project [1mprosyariah-26a55[22m.
-[32m[1m✔  hosting:sites:[22m[39m Site URL: https://prosyariah.web.app
-
-To deploy to this site, follow the guide at https://firebase.google.com/docs/hosting/multisites.
-[2026-10-28T09:21:50.166Z] <<< [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/prosyariah/versions/b6baeaec2bfb8a68/files/d03b4deb478a27f675ff5d7aefcf9288fba2718332c1f9ce01a5646919bb1838 [stream]
-[2026-10-28T09:21:50.168Z] <<< [apiv2][status] POST https://upload-firebasehosting.googleapis.com/upload/sites/prosyariah/versions/b6baeaec2bfb8a68/files/8fbbc68460a0b98edbdf034e146895b50d6a5b1aa21827fe17c23af3ff1a6048 200
-[2026-10-28T09:21:50.168Z] <<< [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/prosyariah/versions/b6baeaec2bfb8a68/files/8fbbc68460a0b98edbdf034e146895b50d6a5b1aa21827fe17c23af3ff1a6048 [stream]
-[2026-10-28T09:21:50.176Z] <<< [apiv2][status] POST https://upload-firebasehosting.googleapis.com/upload/sites/prosyariah/versions/b6baeaec2bfb8a68/files/e618d638daef3b6dff712c1fde28685f7552f929fc54d0cf2ce865dd36ba8d74 200
-[2026-10-28T09:21:50.176Z] <<< [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/prosyariah/versions/b6baeaec2bfb8a68/files/e618d638daef3b6dff712c1fde28685f7552f929fc54d0cf2ce865dd36ba8d74 [stream]
-[2026-10-28T09:21:50.185Z] <<< [apiv2][status] POST https://upload-firebasehosting.googleapis.com/upload/sites/prosyariah/versions/b6baeaec2bfb8a68/files/9861e6c6eac091437efdb4f63c21880fa86d24f5ff911d365468d5f82ded4d5e 200
-[2026-10-28T09:21:50.185Z] <<< [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/prosyariah/versions/b6baeaec2bfb8a68/files/9861e6c6eac091437efdb4f63c21880fa86d24f5ff911d365468d5f82ded4d5e [stream]
-[2026-10-28T09:21:50.199Z] <<< [apiv2][status] POST https://upload-firebasehosting.googleapis.com/upload/sites/prosyariah/versions/b6baeaec2bfb8a68/files/dffd90f26e0049f6109e08d4e48274780d4af413504014ab3231da83756d20aa 200
-[2026-10-28T09:21:50.199Z] <<< [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/prosyariah/versions/b6baeaec2bfb8a68/files/dffd90f26e0049f6109e08d4e48274780d4af413504014ab3231da83756d20aa [stream]
-[2026-10-28T09:21:50.231Z] <<< [apiv2][status] POST https://upload-firebasehosting.googleapis.com/upload/sites/prosyariah/versions/b6baeaec2bfb8a68/files/260bdb4367f4e94b3bec7ee5a769f00f8f17ca3c66e7823f6afcdb12a2c46b38 200
-[2026-10-28T09:21:50.232Z] <<< [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/prosyariah/versions/b6baeaec2bfb8a68/files/260bdb4367f4e94b3bec7ee5a769f00f8f17ca3c66e7823f6afcdb12a2c46b38 [stream]
-[2026-10-28T09:21:50.438Z] <<< [apiv2][status] POST https://upload-firebasehosting.googleapis.com/upload/sites/prosyariah/versions/b6baeaec2bfb8a68/files/4b89c5fb0f4b0636eab3a1daa5c38d3bc4a810291b0c217cd0fa609e132397ce 200
-[2026-10-28T09:21:50.438Z] <<< [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/prosyariah/versions/b6baeaec2bfb8a68/files/4b89c5fb0f4b0636eab3a1daa5c38d3bc4a810291b0c217cd0fa609e132397ce [stream]
-[2026-10-28T09:21:50.438Z] [hosting][upload queue][FINAL] {"max":2686,"min":342,"avg":560.9870129870126,"active":0,"complete":1078,"success":1078,"errored":0,"retried":0,"total":1078,"elapsed":3788}
+┌──────────────┬────────────────────────────┐
+│ Site ID:     │ prosyariah                 │
+├──────────────┼────────────────────────────┤
+│ Default URL: │ https://prosyariah.web.app │
+├──────────────┼────────────────────────────┤
+│ App ID:      │                            │
+└──────────────┴────────────────────────────┘
+[2026-10-28T09:33:57.467Z] <<< [apiv2][status] POST https://upload-firebasehosting.googleapis.com/upload/sites/prosyariah/versions/258425270b0077b1/files/7039a870be3ea7271ec86d49ab9ddd107d24f5a6ce55e5a6e8bf59c164d736bb 200
+[2026-10-28T09:33:57.467Z] <<< [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/prosyariah/versions/258425270b0077b1/files/7039a870be3ea7271ec86d49ab9ddd107d24f5a6ce55e5a6e8bf59c164d736bb [stream]
+[2026-10-28T09:33:57.468Z] <<< [apiv2][status] POST https://upload-firebasehosting.googleapis.com/upload/sites/prosyariah/versions/258425270b0077b1/files/a430a3fd835facd0e5628537b50fbc256206cf0e8ac639740b083e155a9fef28 200
+[2026-10-28T09:33:57.468Z] <<< [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/prosyariah/versions/258425270b0077b1/files/a430a3fd835facd0e5628537b50fbc256206cf0e8ac639740b083e155a9fef28 [stream]
+[2026-10-28T09:33:57.474Z] <<< [apiv2][status] POST https://upload-firebasehosting.googleapis.com/upload/sites/prosyariah/versions/258425270b0077b1/files/6f7ca8377e9569c4d8ab3537f6726c98d3783c723b40d0a46c2a1abec89de2f8 200
+[2026-10-28T09:33:57.474Z] <<< [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/prosyariah/versions/258425270b0077b1/files/6f7ca8377e9569c4d8ab3537f6726c98d3783c723b40d0a46c2a1abec89de2f8 [stream]
+[2026-10-28T09:33:57.484Z] <<< [apiv2][status] POST https://upload-firebasehosting.googleapis.com/upload/sites/prosyariah/versions/258425270b0077b1/files/4e3d3c5b27461c8f8dbb7c01e64aab42c838d33b1db777e50ebd28787e6b0244 200
+[2026-10-28T09:33:57.485Z] <<< [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/prosyariah/versions/258425270b0077b1/files/4e3d3c5b27461c8f8dbb7c01e64aab42c838d33b1db777e50ebd28787e6b0244 [stream]
+[2026-10-28T09:33:57.592Z] <<< [apiv2][status] POST https://upload-firebasehosting.googleapis.com/upload/sites/prosyariah/versions/258425270b0077b1/files/04b557c529b706e5607eff333d73f83eb2139c2f44dd8a5bea8ffc28c3a56ae1 200
+[2026-10-28T09:33:57.592Z] <<< [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/prosyariah/versions/258425270b0077b1/files/04b557c529b706e5607eff333d73f83eb2139c2f44dd8a5bea8ffc28c3a56ae1 [stream]
+i  hosting: uploading new files [893/894] (99%) 
+[2026-10-28T09:33:58.150Z] <<< [apiv2][status] POST https://upload-firebasehosting.googleapis.com/upload/sites/prosyariah/versions/258425270b0077b1/files/f0856278805743376cd89be5e45ca296785af3a486370f074ee00ad1ed9f9b12 200
+[2026-10-28T09:33:58.150Z] <<< [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/prosyariah/versions/258425270b0077b1/files/f0856278805743376cd89be5e45ca296785af3a486370f074ee00ad1ed9f9b12 [stream]
+[2026-10-28T09:33:58.150Z] [hosting][upload queue][FINAL] {"max":1875,"min":627,"avg":839.2662192393738,"active":0,"complete":894,"success":894,"errored":0,"retried":0,"total":894,"elapsed":5034}
 i  hosting: upload complete 
 ✔  hosting[prosyariah]: file upload complete 
-[2026-10-28T09:21:50.438Z] [hosting] deploy completed after 4564ms
-[2026-10-28T09:21:50.438Z] [
+[2026-10-28T09:33:58.150Z] [hosting] deploy completed after 6105ms
+[2026-10-28T09:33:58.151Z] [
   {
     "config": {
       "site": "prosyariah",
@@ -71,24 +72,24 @@ i  hosting: upload complete
         }
       ]
     },
-    "version": "projects/449079095972/sites/prosyariah/versions/b6baeaec2bfb8a68"
+    "version": "projects/449079095972/sites/prosyariah/versions/258425270b0077b1"
   }
 ]
 i  hosting[prosyariah]: finalizing version... 
-[2026-10-28T09:21:50.439Z] No OAuth tokens found
-[2026-10-28T09:21:50.440Z] >>> [apiv2][query] PATCH https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/prosyariah/versions/b6baeaec2bfb8a68 updateMask=status%2Cconfig
-[2026-10-28T09:21:50.440Z] >>> [apiv2][body] PATCH https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/prosyariah/versions/b6baeaec2bfb8a68 {"status":"FINALIZED","config":{"headers":[{"glob":"/data/**","headers":{"Cache-Control":"no-cache"}},{"glob":"**/@(index.html|sw.js|manifest.webmanifest)","headers":{"Cache-Control":"no-cache"}},{"glob":"/","headers":{"Cache-Control":"no-cache"}}]}}
-[2026-10-28T09:21:50.641Z] <<< [apiv2][status] PATCH https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/prosyariah/versions/b6baeaec2bfb8a68 200
-[2026-10-28T09:21:50.642Z] <<< [apiv2][body] PATCH https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/prosyariah/versions/b6baeaec2bfb8a68 {"name":"projects/449079095972/sites/prosyariah/versions/b6baeaec2bfb8a68","status":"FINALIZED","config":{"headers":[{"headers":{"Cache-Control":"no-cache"},"glob":"/data/**"},{"headers":{"Cache-Control":"no-cache"},"glob":"**/@(index.html|sw.js|manifest.webmanifest)"},{"headers":{"Cache-Control":"no-cache"},"glob":"/"}]},"labels":{"deployment-tool":"cli-firebase"},"createTime":"2026-10-28T09:21:45.127297Z","createUser":{"email":"github-deploy@prosyariah-26a55.iam.gserviceaccount.com"},"finalizeTime":"2026-10-28T09:21:50.614804Z","finalizeUser":{"email":"github-deploy@prosyariah-26a55.iam.gserviceaccount.com"}}
-[2026-10-28T09:21:50.642Z] [hosting] finalized version for prosyariah:[object Object]
+[2026-10-28T09:33:58.151Z] No OAuth tokens found
+[2026-10-28T09:33:58.152Z] >>> [apiv2][query] PATCH https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/prosyariah/versions/258425270b0077b1 updateMask=status%2Cconfig
+[2026-10-28T09:33:58.152Z] >>> [apiv2][body] PATCH https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/prosyariah/versions/258425270b0077b1 {"status":"FINALIZED","config":{"headers":[{"glob":"/data/**","headers":{"Cache-Control":"no-cache"}},{"glob":"**/@(index.html|sw.js|manifest.webmanifest)","headers":{"Cache-Control":"no-cache"}},{"glob":"/","headers":{"Cache-Control":"no-cache"}}]}}
+[2026-10-28T09:33:58.495Z] <<< [apiv2][status] PATCH https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/prosyariah/versions/258425270b0077b1 200
+[2026-10-28T09:33:58.495Z] <<< [apiv2][body] PATCH https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/prosyariah/versions/258425270b0077b1 {"name":"projects/449079095972/sites/prosyariah/versions/258425270b0077b1","status":"FINALIZED","config":{"headers":[{"headers":{"Cache-Control":"no-cache"},"glob":"/data/**"},{"headers":{"Cache-Control":"no-cache"},"glob":"**/@(index.html|sw.js|manifest.webmanifest)"},{"headers":{"Cache-Control":"no-cache"},"glob":"/"}]},"labels":{"deployment-tool":"cli-firebase"},"createTime":"2026-10-28T09:33:51.769156Z","createUser":{"email":"github-deploy@prosyariah-26a55.iam.gserviceaccount.com"},"finalizeTime":"2026-10-28T09:33:58.450596Z","finalizeUser":{"email":"github-deploy@prosyariah-26a55.iam.gserviceaccount.com"}}
+[2026-10-28T09:33:58.495Z] [hosting] finalized version for prosyariah:[object Object]
 ✔  hosting[prosyariah]: version finalized 
 i  hosting[prosyariah]: releasing new version... 
-[2026-10-28T09:21:50.642Z] No OAuth tokens found
-[2026-10-28T09:21:50.642Z] >>> [apiv2][query] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/prosyariah/channels/live/releases versionName=projects%2F449079095972%2Fsites%2Fprosyariah%2Fversions%2Fb6baeaec2bfb8a68
-[2026-10-28T09:21:50.642Z] >>> [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/prosyariah/channels/live/releases {"message":"Kemas kini 2026-10-28"}
-[2026-10-28T09:21:50.866Z] <<< [apiv2][status] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/prosyariah/channels/live/releases 200
-[2026-10-28T09:21:50.867Z] <<< [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/prosyariah/channels/live/releases {"name":"projects/449079095972/sites/prosyariah/channels/live/releases/1793179310233000","version":{"name":"projects/449079095972/sites/prosyariah/versions/b6baeaec2bfb8a68","status":"FINALIZED","config":{"headers":[{"headers":{"Cache-Control":"no-cache"},"glob":"/data/**"},{"headers":{"Cache-Control":"no-cache"},"glob":"**/@(index.html|sw.js|manifest.webmanifest)"},{"headers":{"Cache-Control":"no-cache"},"glob":"/"}]},"labels":{"deployment-tool":"cli-firebase"},"createTime":"2026-10-28T09:21:45.127297Z","createUser":{"email":"github-deploy@prosyariah-26a55.iam.gserviceaccount.com","imageUrl":"https://lh3.googleusercontent.com/a/ACg8ocKMPHxJcZotkz3s1Rwn0CHMm1GjHWRNjVLkQBlOeqWul_psjcU=mo"},"finalizeTime":"2026-10-28T09:21:50.614804Z","finalizeUser":{"email":"github-deploy@prosyariah-26a55.iam.gserviceaccount.com","imageUrl":"https://lh3.googleusercontent.com/a/ACg8ocKMPHxJcZotkz3s1Rwn0CHMm1GjHWRNjVLkQBlOeqWul_psjcU=mo"}},"type":"DEPLOY","releaseTime":"2026-10-28T09:21:50.233Z","message":"Kemas kini 2026-10-28","releaseUser":{"email":"github-deploy@prosyariah-26a55.iam.gserviceaccount.com","imageUrl":"https://lh3.googleusercontent.com/a/ACg8ocKMPHxJcZotkz3s1Rwn0CHMm1GjHWRNjVLkQBlOeqWul_psjcU=mo"}}
-[2026-10-28T09:21:50.867Z] [hosting] release: Kemas kini 2026-10-28 {"name":"projects/449079095972/sites/prosyariah/channels/live/releases/1793179310233000","version":{"name":"projects/449079095972/sites/prosyariah/versions/b6baeaec2bfb8a68","status":"FINALIZED","config":{"headers":[{"headers":{"Cache-Control":"no-cache"},"glob":"/data/**"},{"headers":{"Cache-Control":"no-cache"},"glob":"**/@(index.html|sw.js|manifest.webmanifest)"},{"headers":{"Cache-Control":"no-cache"},"glob":"/"}]},"labels":{"deployment-tool":"cli-firebase"},"createTime":"2026-10-28T09:21:45.127297Z","createUser":{"email":"github-deploy@prosyariah-26a55.iam.gserviceaccount.com","imageUrl":"https://lh3.googleusercontent.com/a/ACg8ocKMPHxJcZotkz3s1Rwn0CHMm1GjHWRNjVLkQBlOeqWul_psjcU=mo"},"finalizeTime":"2026-10-28T09:21:50.614804Z","finalizeUser":{"email":"github-deploy@prosyariah-26a55.iam.gserviceaccount.com","imageUrl":"https://lh3.googleusercontent.com/a/ACg8ocKMPHxJcZotkz3s1Rwn0CHMm1GjHWRNjVLkQBlOeqWul_psjcU=mo"}},"type":"DEPLOY","releaseTime":"2026-10-28T09:21:50.233Z","message":"Kemas kini 2026-10-28","releaseUser":{"email":"github-deploy@prosyariah-26a55.iam.gserviceaccount.com","imageUrl":"https://lh3.googleusercontent.com/a/ACg8ocKMPHxJcZotkz3s1Rwn0CHMm1GjHWRNjVLkQBlOeqWul_psjcU=mo"}}
+[2026-10-28T09:33:58.495Z] No OAuth tokens found
+[2026-10-28T09:33:58.495Z] >>> [apiv2][query] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/prosyariah/channels/live/releases versionName=projects%2F449079095972%2Fsites%2Fprosyariah%2Fversions%2F258425270b0077b1
+[2026-10-28T09:33:58.495Z] >>> [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/prosyariah/channels/live/releases {"message":"Kemas kini 2026-10-28"}
+[2026-10-28T09:33:58.766Z] <<< [apiv2][status] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/prosyariah/channels/live/releases 200
+[2026-10-28T09:33:58.766Z] <<< [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/prosyariah/channels/live/releases {"name":"projects/449079095972/sites/prosyariah/channels/live/releases/1793180038126000","version":{"name":"projects/449079095972/sites/prosyariah/versions/258425270b0077b1","status":"FINALIZED","config":{"headers":[{"headers":{"Cache-Control":"no-cache"},"glob":"/data/**"},{"headers":{"Cache-Control":"no-cache"},"glob":"**/@(index.html|sw.js|manifest.webmanifest)"},{"headers":{"Cache-Control":"no-cache"},"glob":"/"}]},"labels":{"deployment-tool":"cli-firebase"},"createTime":"2026-10-28T09:33:51.769156Z","createUser":{"email":"github-deploy@prosyariah-26a55.iam.gserviceaccount.com","imageUrl":"https://lh3.googleusercontent.com/a/ACg8ocKMPHxJcZotkz3s1Rwn0CHMm1GjHWRNjVLkQBlOeqWul_psjcU=mo"},"finalizeTime":"2026-10-28T09:33:58.450596Z","finalizeUser":{"email":"github-deploy@prosyariah-26a55.iam.gserviceaccount.com","imageUrl":"https://lh3.googleusercontent.com/a/ACg8ocKMPHxJcZotkz3s1Rwn0CHMm1GjHWRNjVLkQBlOeqWul_psjcU=mo"}},"type":"DEPLOY","releaseTime":"2026-10-28T09:33:58.126Z","message":"Kemas kini 2026-10-28","releaseUser":{"email":"github-deploy@prosyariah-26a55.iam.gserviceaccount.com","imageUrl":"https://lh3.googleusercontent.com/a/ACg8ocKMPHxJcZotkz3s1Rwn0CHMm1GjHWRNjVLkQBlOeqWul_psjcU=mo"}}
+[2026-10-28T09:33:58.766Z] [hosting] release: Kemas kini 2026-10-28 {"name":"projects/449079095972/sites/prosyariah/channels/live/releases/1793180038126000","version":{"name":"projects/449079095972/sites/prosyariah/versions/258425270b0077b1","status":"FINALIZED","config":{"headers":[{"headers":{"Cache-Control":"no-cache"},"glob":"/data/**"},{"headers":{"Cache-Control":"no-cache"},"glob":"**/@(index.html|sw.js|manifest.webmanifest)"},{"headers":{"Cache-Control":"no-cache"},"glob":"/"}]},"labels":{"deployment-tool":"cli-firebase"},"createTime":"2026-10-28T09:33:51.769156Z","createUser":{"email":"github-deploy@prosyariah-26a55.iam.gserviceaccount.com","imageUrl":"https://lh3.googleusercontent.com/a/ACg8ocKMPHxJcZotkz3s1Rwn0CHMm1GjHWRNjVLkQBlOeqWul_psjcU=mo"},"finalizeTime":"2026-10-28T09:33:58.450596Z","finalizeUser":{"email":"github-deploy@prosyariah-26a55.iam.gserviceaccount.com","imageUrl":"https://lh3.googleusercontent.com/a/ACg8ocKMPHxJcZotkz3s1Rwn0CHMm1GjHWRNjVLkQBlOeqWul_psjcU=mo"}},"type":"DEPLOY","releaseTime":"2026-10-28T09:33:58.126Z","message":"Kemas kini 2026-10-28","releaseUser":{"email":"github-deploy@prosyariah-26a55.iam.gserviceaccount.com","imageUrl":"https://lh3.googleusercontent.com/a/ACg8ocKMPHxJcZotkz3s1Rwn0CHMm1GjHWRNjVLkQBlOeqWul_psjcU=mo"}}
 ✔  hosting[prosyariah]: release complete 
 
 ✔  Deploy complete! 

@@ -30,6 +30,7 @@ jobs:
     env:
       EODHD_API_KEY: ${{ secrets.EODHD_API_KEY }}
       PRICE_PROVIDER: ${{ vars.PRICE_PROVIDER || 'yfinance' }}
+      FIREBASE_SA: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
     steps:
       - uses: actions/checkout@v4
 
@@ -94,6 +95,16 @@ jobs:
           path: _site
       - id: deploy
         uses: actions/deploy-pages@v4
+
+      # Cermin yang sama ke Firebase Hosting (prosyariah.web.app) — hanya jika secret FIREBASE_SERVICE_ACCOUNT ada
+      - name: Cermin ke Firebase (prosyariah.web.app)
+        if: env.FIREBASE_SA != ''
+        continue-on-error: true
+        run: |
+          printf '%s' "$FIREBASE_SA" > "$RUNNER_TEMP/sa.json"
+          export GOOGLE_APPLICATION_CREDENTIALS="$RUNNER_TEMP/sa.json"
+          npx -y firebase-tools@13.29.1 deploy --only hosting --project prosyariah --non-interactive --message "Kemas kini $(date -u +%F)"
+          rm -f "$RUNNER_TEMP/sa.json"
 
       - name: Gagalkan job jika bacaan SC gagal (supaya anda dapat emel)
         if: steps.sc.outcome == 'failure'

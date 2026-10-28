@@ -105,7 +105,9 @@ jobs:
           export GOOGLE_APPLICATION_CREDENTIALS="$RUNNER_TEMP/sa.json"
           set +e
           python3 -c "import json,os;d=json.load(open(os.environ['RUNNER_TEMP']+'/sa.json'));print('kunci OK:',d.get('type'),d.get('project_id'),d.get('client_email'))" > firebase-debug.txt 2>&1 || echo "kunci JSON tidak sah (salin semua isi fail .json)" > firebase-debug.txt
-          npx -y firebase-tools@13.29.1 deploy --only hosting --project prosyariah --non-interactive --debug --message "Kemas kini $(date -u +%F)" > fb.log 2>&1
+          PID=$(python3 -c "import json,os;print(json.load(open(os.environ['RUNNER_TEMP']+'/sa.json')).get('project_id','prosyariah'))")
+          echo "project_id dalam kunci: $PID" >> firebase-debug.txt
+          npx -y firebase-tools@13.29.1 deploy --only hosting --project "$PID" --non-interactive --debug --message "Kemas kini $(date -u +%F)" > fb.log 2>&1
           rc=$?
           grep -v -i "private_key\|bearer\|access_token\|refresh_token" fb.log | tail -80 >> firebase-debug.txt
           echo "exit=$rc" >> firebase-debug.txt

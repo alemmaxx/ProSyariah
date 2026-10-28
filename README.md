@@ -12,7 +12,9 @@ App saringan syariah & **indicator** saham Bursa. Ia memaparkan indicator, bukan
 
 Hasilnya diterbitkan ke GitHub Pages. App membaca `data/market.json`, `data/sc-list.json` dan `data/s/<kod>.json`.
 
-Jika bacaan senarai SC gagal (contohnya SC tukar susun atur dokumen), robot **tidak** mengubah senarai lama, dan GitHub hantar emel kepada anda. Log disimpan sebagai artifact `sc-debug`.
+Robot membuka halaman senarai SC dengan pelayar Chromium (jadual SC dimuatkan dengan JavaScript), memilih dokumen "List of Shariah-Compliant Securities" terkini, dan membacanya.
+
+Jika bacaan gagal, robot **tidak** mengubah senarai lama, GitHub hantar emel kepada anda, dan log disimpan sebagai artifact `sc-debug`. **Sandaran:** muat naik PDF senarai SC ke folder `data/sc-upload/` — robot akan membacanya secara automatik.
 
 ## Kebarangkalian & paras harga (indicator)
 

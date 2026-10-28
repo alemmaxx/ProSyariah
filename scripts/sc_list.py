@@ -11,7 +11,6 @@ import os
 import re
 import sys
 from datetime import date
-from urllib.parse import urljoin
 
 import requests
 
@@ -36,25 +35,138 @@ SKIP = re.compile(
 )
 
 
-def fetch(url, depth=0):
-    r = requests.get(url, headers=UA, timeout=90, allow_redirects=True)
-    r.raise_for_status()
-    ctype = r.headers.get("content-type", "").lower()
-    body = r.content
+UPLOAD_DIR = os.path.join(os.path.dirname(__file__), "..", "data", "sc-upload")
+LIST_PAGE = os.environ.get(
+    "SC_LIST_PAGE",
+    "https://www.sc.com.my/development/icm/shariah-compliant-securities/list-of-shariah-compliant-securities",
+)
+BROWSER_UA = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
+              "Chrome/124.0 Safari/537.36")
+DEBUG = []
+
+
+def log(msg):
+    print(msg)
+    DEBUG.append(str(msg))
+
+
+def kind_of(body, ctype=""):
     if body[:4] == b"%PDF" or "pdf" in ctype:
-        return "pdf", body, r.url
+        return "pdf"
     if body[:2] == b"PK" or "spreadsheet" in ctype or "excel" in ctype:
-        return "xlsx", body, r.url
-    # Halaman HTML: cari pautan PDF/Excel di dalamnya
-    if depth < 2:
-        html = r.text
-        links = re.findall(r'href=["\']([^"\']+)["\']', html, re.I)
-        pref = [l for l in links if re.search(r"\.(pdf|xlsx?)(\?|$)", l, re.I)]
-        pref += [l for l in links if "permalink" in l.lower() and l not in pref]
-        for l in pref:
-            if re.search(r"shariah|syariah|list", l, re.I) or l.lower().endswith((".pdf", ".xlsx")):
-                return fetch(urljoin(r.url, l), depth + 1)
-    raise RuntimeError(f"Format dokumen SC tidak dikenali ({ctype}) di {r.url}")
+        return "xlsx"
+    return None
+
+
+def from_upload():
+    """Sandaran manual: fail PDF/XLSX terbaharu dalam data/sc-upload/."""
+    if not os.path.isdir(UPLOAD_DIR):
+        return None
+    files = [os.path.join(UPLOAD_DIR, f) for f in os.listdir(UPLOAD_DIR) if f.lower().endswith((".pdf", ".xlsx"))]
+    if not files:
+        return None
+    f = max(files, key=lambda p: (os.path.getmtime(p), p))
+    body = open(f, "rb").read()
+    k = kind_of(body)
+    log(f"Fail muat naik manual: {os.path.basename(f)} ({k}, {len(body)} bait)")
+    return (k, body, "upload:" + os.path.basename(f)) if k else None
+
+
+def from_requests(url):
+    r = requests.get(url, headers={"User-Agent": BROWSER_UA, "Accept": "*/*"}, timeout=90, allow_redirects=True)
+    ctype = r.headers.get("content-type", "").lower()
+    log(f"GET {url} → {r.status_code} {ctype} {len(r.content)} bait (akhir: {r.url})")
+    if r.ok:
+        k = kind_of(r.content, ctype)
+        if k:
+            return k, r.content, r.url
+    return None
+
+
+def pick_link(links):
+    """Pilih dokumen senarai terkini dari pautan jadual SC."""
+    def score(l):
+        t = (l.get("text") or "").lower()
+        s = 0
+        if "shariah" in t or "syariah" in t:
+            s += 5
+        if "list" in t or "senarai" in t:
+            s += 3
+        if "compliant" in t or "patuh" in t:
+            s += 3
+        if re.search(r"ipo|seeking listing|listing on", t):
+            s -= 6
+        m = re.search(rf"(\d{{1,2}})\s+({MONTHS})\s+(20\d\d)", l.get("text") or "", re.I)
+        d = ""
+        if m:
+            mon = [x.lower() for x in MONTHS.split("|")].index(m.group(2).lower()) + 1
+            d = f"{m.group(3)}-{mon:02d}-{int(m.group(1)):02d}"
+        return (s, d)
+    cands = [l for l in links if re.search(r"download\.ashx|\.pdf|\.xlsx|documentms", l["href"], re.I)]
+    cands.sort(key=score, reverse=True)
+    return cands
+
+
+def from_browser(url):
+    """Buka halaman SC dengan Chromium, tunggu jadual dimuatkan, muat turun dokumen terkini."""
+    try:
+        from playwright.sync_api import sync_playwright
+    except ImportError:
+        log("Playwright tiada — langkau pelayar.")
+        return None
+    with sync_playwright() as pw:
+        b = pw.chromium.launch(args=["--no-sandbox"])
+        ctx = b.new_context(user_agent=BROWSER_UA, locale="en-MY", accept_downloads=True)
+        pg = ctx.new_page()
+        pg.goto(url, wait_until="domcontentloaded", timeout=90000)
+        try:
+            pg.wait_for_load_state("networkidle", timeout=45000)
+        except Exception:
+            pass
+        for _ in range(20):  # tunggu baris jadual muncul
+            n = pg.evaluate("document.querySelectorAll('table a[href], tbody a[href]').length")
+            if n:
+                break
+            pg.wait_for_timeout(1500)
+        links = pg.evaluate("""()=>[...document.querySelectorAll('a[href]')].map(a=>{
+            const tr=a.closest('tr');return {href:a.href,text:((tr?tr.innerText:a.innerText)||'').replace(/\\s+/g,' ').trim()};})""")
+        log(f"Pelayar: {pg.url} · tajuk '{pg.title()}' · {len(links)} pautan")
+        cands = pick_link(links)
+        for l in cands[:8]:
+            log(f"  calon: {l['text'][:120]} → {l['href']}")
+        if not cands:
+            DEBUG.append("---- TEKS HALAMAN ----\n" + pg.evaluate("document.body.innerText")[:6000])
+        for l in cands[:5]:
+            try:
+                r = ctx.request.get(l["href"], timeout=90000)
+                body = r.body()
+                k = kind_of(body, (r.headers.get("content-type") or "").lower())
+                log(f"  muat turun {l['href']} → {r.status} {k} {len(body)} bait")
+                if r.ok and k:
+                    b.close()
+                    return k, body, l["href"]
+            except Exception as e:
+                log(f"  gagal {l['href']}: {e}")
+        b.close()
+    return None
+
+
+def fetch_document():
+    for name, fn in (("permalink", lambda: from_requests(PERMALINK)),
+                     ("pelayar: halaman senarai", lambda: from_browser(LIST_PAGE)),
+                     ("pelayar: permalink", lambda: from_browser(PERMALINK))):
+        try:
+            log(f"Cuba sumber: {name}")
+            res = fn()
+            if res:
+                return res
+        except Exception as e:
+            log(f"  ralat {name}: {type(e).__name__}: {e}")
+    return None
+
+
+def write_debug(extra=""):
+    open("sc-debug.txt", "w").write("\n".join(DEBUG) + ("\n\n" + extra if extra else ""))
 
 
 def split_names(line):
@@ -154,16 +266,28 @@ def match_codes(names):
 
 def main():
     state = json.load(open(OUT)) if os.path.exists(OUT) else {"lists": []}
-    kind, body, final_url = fetch(PERMALINK)
+    res = from_upload()
+    if res:
+        h = hashlib.sha256(res[1]).hexdigest()
+        if h in (state.get("sourceHash"), state.get("uploadHash")) and state.get("lists"):
+            log("Fail muat naik manual sama seperti sebelum ini — semak laman SC pula.")
+            res = None
+    if not res:
+        res = fetch_document()
+    if not res:
+        write_debug()
+        raise SystemExit("GAGAL: dokumen senarai SC tidak dapat dimuat turun. Senarai lama TIDAK diubah. "
+                         "Lihat sc-debug.txt, atau letak PDF SC dalam data/sc-upload/.")
+    kind, body, final_url = res
     h = hashlib.sha256(body).hexdigest()
     if state.get("sourceHash") == h and state.get("lists"):
         print("Senarai SC tidak berubah — tiada kemas kini.")
         return
     names, text = parse_pdf(body) if kind == "pdf" else parse_xlsx(body)
     names = list(dict.fromkeys(names))
-    print(f"Dokumen: {kind} dari {final_url} · {len(names)} nama dikesan")
+    log(f"Dokumen: {kind} dari {final_url} · {len(names)} nama dikesan")
     if len(names) < MIN_NAMES:
-        open("sc-debug.txt", "w").write(text)
+        write_debug("---- TEKS DOKUMEN ----\n" + text[:20000])
         raise SystemExit(
             f"GAGAL: hanya {len(names)} nama dikesan (< {MIN_NAMES}). Susun atur dokumen SC mungkin berubah. "
             "Senarai lama TIDAK diubah. Semak sc-debug.txt dalam artifact workflow."
@@ -178,6 +302,7 @@ def main():
         "updated": date.today().isoformat(),
         "source": final_url,
         "sourceHash": h,
+        "uploadHash": h if final_url.startswith("upload:") else state.get("uploadHash"),
         "lists": lists[-2:],
         "unmatched": unmatched,
     }

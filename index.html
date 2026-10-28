@@ -422,6 +422,7 @@ async function syncData(manual){
           S.lists=conv;changed=true;S.sync.scAuto=true;
           if(isNew)msg=`Senarai syariah SC baharu (${fmtD(newLatest.date)}) diterima`;}}}
     try{const r3=await fetch(DATA_BASE+'track.json?t='+Math.floor(Date.now()/36e5),{cache:'no-cache'});if(r3.ok){const t=await r3.json();if(!S.track||S.track.asof!==t.asof){S.track=t;changed=true;}}}catch(e){}
+    updateTop5Track();
     S.sync.at=new Date().toISOString();S.sync.err='';
   }catch(e){S.sync.err=e.message;if(manual)toast('Gagal segerak: '+e.message);}
   save();
@@ -565,7 +566,7 @@ function top5HTML(){
   if(!L.length)h+=`<div class="emptyrail" style="margin:0">Tiada isyarat teknikal yang melepasi paras neutral pada masa ini.</div>`;
   L.forEach((x,i)=>{const pct=Math.min(100,x.el/x.md*100);
     h+=`<button class="t5r" data-code="${esc(x.code)}"><span class="t5n">${i+1}</span><span class="t5b">
-      <span class="row between"><span><b>${esc(shortName(x.name))}</b> <span class="code">${esc(x.code)}</span></span><b class="t5p">${x.p}%</b></span>
+      <span class="row between"><span><b>${esc(shortName(x.name))}</b> <span class="code">${esc(x.code)}</span>${(S.t5&&S.t5[x.code+':'+x.k+':'+x.start]&&S.t5[x.code+':'+x.k+':'+x.start].ev.in===S.market.meta.asof)?' <span class="badge b-ok">Baharu</span>':''}</span><b class="t5p">${x.p}%</b></span>
       <span class="muted">${esc(setupName(x.k))}</span>
       <span class="t5d"><span>Isyarat bermula <b>${fmtD(x.start)}</b></span><span>Tempoh biasa ${x.md} hari dagangan, hingga <b>${fmtD(x.end)}</b></span></span>
       <span class="t5bar${x.passed?' over':''}"><span style="width:${pct}%"></span></span>
@@ -574,6 +575,33 @@ function top5HTML(){
     </span></button>`;});
   h+=`</div><p class="disc" style="margin:8px var(--gut) 0">Kekuatan = kebarangkalian sejarah berbanding paras neutral. "Tempoh biasa" ialah median masa harga sampai paras atas dalam sejarah saham ini. Ini bacaan indicator, bukan cadangan beli atau jual.</p></section>`;
   return h;
+}
+
+/* Jejak 5 isyarat terkuat: rekod bila masuk, kemudian pantau paras atas/bawah & tempoh */
+function updateTop5Track(){
+  const M=S.market;if(!M)return;const asof=M.meta.asof;S.t5=S.t5||{};
+  topSignals(5).forEach(x=>{const key=x.code+':'+x.k+':'+x.start;
+    if(!S.t5[key])S.t5[key]={code:x.code,name:x.name,k:x.k,p:x.p,start:x.start,en:x.en,tg:x.tg,sl:x.sl,md:x.md,end:x.end,limitEnd:x.limitEnd,ev:{in:asof}};});
+  Object.entries(S.t5).forEach(([key,t])=>{const m=mk(t.code);const ev=t.ev;
+    if(ev.up||ev.dn||ev.exp){if(daysBetween(ev.up||ev.dn||ev.exp,today())>30)delete S.t5[key];return;}
+    const c=m&&m.c;
+    if(c!=null&&c>=t.tg)ev.up=asof;else if(c!=null&&c<=t.sl)ev.dn=asof;
+    else if(asof>=t.limitEnd)ev.exp=asof;
+    else if(asof>t.end&&!ev.md)ev.md=asof;
+    t.last=c;});
+}
+function top5Alerts(push){
+  Object.entries(S.t5||{}).forEach(([key,t])=>{const nm=shortName(t.name),ev=t.ev;
+    if(ev.in)push({id:'t5in:'+key,lv:'action',ic:'🟢',cat:'top5',code:t.code,title:`${nm} masuk 5 isyarat terkuat (${t.p}%)`,
+      body:`${setupName(t.k)}, bermula ${fmtD(t.start)}. Tempoh biasa ${Math.round(t.md)} hari dagangan, hingga ${fmtD(t.end)}.`});
+    if(ev.up)push({id:'t5up:'+key,lv:'action',ic:'🎯',cat:'top5',code:t.code,title:`${nm} sampai paras atas`,
+      body:`Harga ${px(t.last)} ≥ paras atas ${px(t.tg)}. Isyarat yang bermula ${fmtD(t.start)} selesai.`});
+    if(ev.dn)push({id:'t5dn:'+key,lv:'critical',ic:'🛑',cat:'top5',code:t.code,title:`${nm} jatuh ke paras bawah`,
+      body:`Harga ${px(t.last)} ≤ paras bawah ${px(t.sl)}. Isyarat yang bermula ${fmtD(t.start)} gagal.`});
+    if(ev.md&&!ev.up&&!ev.dn)push({id:'t5md:'+key,lv:'action',ic:'⏳',cat:'top5',code:t.code,title:`Tempoh biasa ${nm} sudah berlalu`,
+      body:`Tempoh biasa tamat ${fmtD(t.end)}; harga ${px(t.last)} belum sampai paras atas ${px(t.tg)}.`});
+    if(ev.exp)push({id:'t5exp:'+key,lv:'info',ic:'⌛',cat:'top5',code:t.code,title:`Isyarat ${nm} tamat`,
+      body:`${BTH().h} hari dagangan berlalu sejak ${fmtD(t.start)} tanpa sampai paras atas atau bawah.`});});
 }
 
 /* ================= KETEPATAN ISYARAT ================= */
@@ -605,7 +633,7 @@ function openTrack(){
 }
 
 /* ================= PUSAT AMARAN ================= */
-const ALERT_DEF={on:{syariah:true,harga:true,teknikal:true,ibadah:true,jadual:true},lossPct:10,price:[],seen:{},notified:{},notify:false};
+const ALERT_DEF={on:{top5:true,syariah:true,harga:true,teknikal:true,ibadah:true,jadual:true},lossPct:10,price:[],seen:{},notified:{},notify:false};
 function AL(){S.alerts=Object.assign(structuredClone(ALERT_DEF),S.alerts||{});S.alerts.on=Object.assign({},ALERT_DEF.on,S.alerts.on);return S.alerts;}
 const LV={critical:{t:'Perlu tindakan segera',c:'a-red'},action:{t:'Perlu perhatian',c:'a-amber'},info:{t:'Untuk makluman',c:'a-green'}};
 function computeAlerts(){
@@ -647,6 +675,7 @@ function computeAlerts(){
       if(m.r!=null&&m.r<30)push({id:'rsi:'+c+':'+m.d,lv:'info',ic:'🔻',cat:'teknikal',code:c,title:`${nm}: RSI ${m.r.toFixed(0)}`,body:'Lebih jualan, potensi lantunan.'});
       if(m.r!=null&&m.r>70&&own)push({id:'rsih:'+c+':'+m.d,lv:'info',ic:'🔺',cat:'teknikal',code:c,title:`${nm}: RSI ${m.r.toFixed(0)}`,body:'Lebih belian, berisiko pembetulan.'});});
   }
+  if(A.on.top5)top5Alerts(push);
   if(A.on.ibadah){
     const Z=S.zakat;if(Z.haulDate){const dd=daysBetween(today(),Z.haulDate);if(dd>=0&&dd<=30)push({id:'haul:'+Z.haulDate,lv:'action',ic:'🕌',cat:'ibadah',
       title:`Haul zakat ${dd===0?'hari ini':dd+' hari lagi'}`,body:`Tarikh haul ${fmtD(Z.haulDate)}. Semak kiraan di tab Zakat.`,go:'zakat'});}
@@ -702,7 +731,7 @@ function priceAlertForm(code){
   document.querySelectorAll('[data-pd]').forEach(b=>b.onclick=()=>{A.price=A.price.filter(p=>p.id!==b.dataset.pd);save();updateBell();priceAlertForm(code);});
 }
 function alertSettingsHTML(){
-  const A=AL();const lab={syariah:'Status syariah (pegangan & watchlist)',harga:'Harga (sasaran harga & had penurunan)',teknikal:'Isyarat teknikal (cross, RSI)',ibadah:'Zakat & penyucian',jadual:'Jadual senarai SC'};
+  const A=AL();const lab={top5:'5 isyarat terkuat (masuk, paras atas/bawah, tempoh)',syariah:'Status syariah (pegangan & watchlist)',harga:'Harga (sasaran harga & had penurunan)',teknikal:'Isyarat teknikal (cross, RSI)',ibadah:'Zakat & penyucian',jadual:'Jadual senarai SC'};
   return `<div class="card"><h2>Amaran</h2>
    ${Object.entries(lab).map(([k,v])=>`<div class="toggle"><span>${v}</span><input type="checkbox" data-alon="${k}" ${A.on[k]?'checked':''}></div>`).join('')}
    <label>Amaran bila pegangan turun melebihi (% dari kos)</label><input id="alLoss" inputmode="decimal" value="${A.lossPct}">
@@ -969,6 +998,7 @@ const EN_PHRASE=[
 ];
 
 Object.assign(EN_EXACT,{
+'5 isyarat terkuat (masuk, paras atas/bawah, tempoh)':'5 strongest signals (entry, upper/lower level, period)','Baharu':'New',
 '5 isyarat teknikal terkuat':'5 strongest technical signals','disusun ikut kekuatan sejarah':'ranked by historical strength',
 'Tiada isyarat teknikal yang melepasi paras neutral pada masa ini.':'No technical signal is above the neutral level right now.',
 'Isyarat bermula':'Signal started','Tempoh biasa sudah berlalu':'Typical period has passed','Masih dalam tempoh biasa':'Still within typical period',
@@ -989,6 +1019,15 @@ Object.assign(EN_EXACT,{
 'Paras ini naik mengikut harga tertinggi sejak tarikh belian dan tidak pernah turun. Harga tutup di bawahnya menandakan momentum menurun.':'This level rises with the highest price since the purchase date and never falls. A close below it signals weakening momentum.',
 });
 EN_RX.unshift(
+[/^(.+) masuk 5 isyarat terkuat \((\d+)%\)$/,'$1 entered the 5 strongest signals ($2%)'],
+[/^(.+), bermula (.+)\. Tempoh biasa (\d+) hari dagangan, hingga (.+)\.$/,(m,a,b,c,d)=>`${trText(a)}, started ${b}. Typical period ${c} trading days, until ${d}.`],
+[/^(.+) sampai paras atas$/,'$1 reached the upper level'],[/^(.+) jatuh ke paras bawah$/,'$1 fell to the lower level'],
+[/^Harga (\S+) ≥ paras atas (\S+)\. Isyarat yang bermula (.+) selesai\.$/,'Price $1 ≥ upper level $2. The signal that started $3 is complete.'],
+[/^Harga (\S+) ≤ paras bawah (\S+)\. Isyarat yang bermula (.+) gagal\.$/,'Price $1 ≤ lower level $2. The signal that started $3 failed.'],
+[/^Tempoh biasa (.+) sudah berlalu$/,'Typical period for $1 has passed'],
+[/^Tempoh biasa tamat (.+); harga (\S+) belum sampai paras atas (\S+)\.$/,'Typical period ended $1; price $2 has not reached the upper level $3.'],
+[/^Isyarat (.+) tamat$/,'Signal for $1 expired'],
+[/^(\d+) hari dagangan berlalu sejak (.+) tanpa sampai paras atas atau bawah\.$/,'$1 trading days have passed since $2 without reaching the upper or lower level.'],
 [/^Tempoh biasa (\d+) hari dagangan, hingga$/,'Typical period $1 trading days, until'],
 [/^hari dagangan ke-(\d+) daripada ~(\d+)$/,'trading day $1 of ~$2'],
 [/^Harga kini (\S+) · paras atas (\S+) · paras bawah (\S+) · isyarat tamat (.+)$/,'Price now $1 · upper level $2 · lower level $3 · signal expires $4'],

@@ -1,0 +1,5352 @@
+[
+{
+"code": "0001",
+"name": "Supercomnet Technologies Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0002",
+"name": "Kotra Industries Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0005",
+"name": "UCrest Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0006",
+"name": "Pineapple Resources Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0007",
+"name": "PUC Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0008",
+"name": "Willowglen MSC Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0010",
+"name": "IRIS Corporation Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0011",
+"name": "Brite Tech Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0012",
+"name": "Three A Resources Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0017",
+"name": "Nova Technology Services Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0020",
+"name": "NetX Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0022",
+"name": "Parlo Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0023",
+"name": "IFCA MSC Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0024",
+"name": "JAG Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0025",
+"name": "YBS International Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0026",
+"name": "Nova MSC Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0028",
+"name": "Scope Industries Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0029",
+"name": "Digistar Corporation Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0032",
+"name": "Redtone International Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0034",
+"name": "MMAG Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0035",
+"name": "OPCOM Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0036",
+"name": "Key Alliance Group Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0037",
+"name": "RGB International Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0038",
+"name": "Artroniq Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0039",
+"name": "GFM Services Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0040",
+"name": "OpenSys M Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0041",
+"name": "Aimax Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0043",
+"name": "Metronic Global Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0045",
+"name": "Southern Score Builders Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0048",
+"name": "Ancom Logistics Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0049",
+"name": "Oceancash Pacific Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0050",
+"name": "WTS Capital Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0051",
+"name": "Cuscapi Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0053",
+"name": "OSK Ventures International Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0054",
+"name": "Karyon Industries Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0055",
+"name": "Sersol Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0056",
+"name": "NCT Alliance Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0058",
+"name": "JCBNext Berhad Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0059",
+"name": "Ecobuilt Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0060",
+"name": "Vortex Consolidated Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0064",
+"name": "Efficient E Solutions Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0065",
+"name": "Excel Force MSC Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0066",
+"name": "Vsolar Group Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0068",
+"name": "Asdion Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0069",
+"name": "Vinvest Capital Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0070",
+"name": "MQ Technology Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0072",
+"name": "AT Systematization Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0074",
+"name": "Ace Pacific Group Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0075",
+"name": "Lyc Healthcare Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0078",
+"name": "GD Express Carrier Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0079",
+"name": "Aldrich Resources Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0080",
+"name": "Straits Inter Logistics Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0081",
+"name": "Mega Sun City Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0082",
+"name": "Green Packet Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0083",
+"name": "Notion Vtec Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0084",
+"name": "Techfast Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0085",
+"name": "Mlabs Systems Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0086",
+"name": "YGL Convergence Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0089",
+"name": "Tex Cycle Technology M Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0090",
+"name": "Elsoft Research Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0091",
+"name": "Daya Materials Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0092",
+"name": "mTouche Technology Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0093",
+"name": "Solution Engineering Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0094",
+"name": "Inix Technologies Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0095",
+"name": "MAG Holdings Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0096",
+"name": "Nexgram Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0097",
+"name": "ViTrox Corporation Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0098",
+"name": "Bahvest Resources Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0099",
+"name": "Scicom MSC Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0100",
+"name": "ES Ceramics Technology Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0101",
+"name": "TMC Life Sciences Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0102",
+"name": "Waja Konsortium Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0103",
+"name": "M N C Wireless Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0104",
+"name": "Genetec Technology Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0105",
+"name": "Asia Poly Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0106",
+"name": "Openmove AI Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0107",
+"name": "Eduspec Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0108",
+"name": "N2N Connect Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0109",
+"name": "SC Estate Builder Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0111",
+"name": "K-One Technology Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0112",
+"name": "Mikro MSC Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0113",
+"name": "MMS Ventures Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0116",
+"name": "Focus Dynamics Group Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0117",
+"name": "SMRT Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0118",
+"name": "Trive Property Group Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0119",
+"name": "Appasia Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0120",
+"name": "VisDynamics Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0122",
+"name": "Advance Information Marketing Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0123",
+"name": "Privasia Technology Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0126",
+"name": "Microlink Solutions Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0127",
+"name": "JHM Consolidation Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0128",
+"name": "Frontken Corporation Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0129",
+"name": "Silver Ridge Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0131",
+"name": "Diversified Gateway Solutions Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0132",
+"name": "TechnoDex Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0133",
+"name": "Sanichi Technology Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0136",
+"name": "Greenyield Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0138",
+"name": "Zetrix AI Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0140",
+"name": "Xox Networks Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0143",
+"name": "Key ASIC Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0145",
+"name": "TFP Group Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0146",
+"name": "JF Technology BHD",
+"type": "Common Stock"
+},
+{
+"code": "0147",
+"name": "Innity Corporation Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0148",
+"name": "Sunzen Biotech Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0149",
+"name": "Fibon Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0150",
+"name": "Fintec Global Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0151",
+"name": "Kelington Group Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0152",
+"name": "DGB Asia Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0153",
+"name": "Oversea Enterprise Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0154",
+"name": "EA Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0155",
+"name": "Malaysian Genomics Resource",
+"type": "Common Stock"
+},
+{
+"code": "0156",
+"name": "Managepay Systems Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0157",
+"name": "Focus Point Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0158",
+"name": "SCC Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0160",
+"name": "Hiap Huat Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0161",
+"name": "SCH Group Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0162",
+"name": "Widad Group Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0163",
+"name": "Careplus Group Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0165",
+"name": "XOX Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0166",
+"name": "Inari Amertron Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0167",
+"name": "MClean Technologies Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0168",
+"name": "Boilermech Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0169",
+"name": "Smtrack Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0170",
+"name": "Kanger International Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0171",
+"name": "PeterLabs Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0172",
+"name": "OCK Group Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0173",
+"name": "Catcha Digital Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0174",
+"name": "iDimension Consolidated Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0175",
+"name": "Heng Huat Resources Group Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0176",
+"name": "Kronologi Asia Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0177",
+"name": "Midtown Group Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0178",
+"name": "Sedania Innovator Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0179",
+"name": "Bioalpha Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0180",
+"name": "Kim Teck Cheong Consolidated Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0181",
+"name": "Aemulus Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0182",
+"name": "LKL International Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0183",
+"name": "Salutica Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0185",
+"name": "HSS Engineers Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0186",
+"name": "Perak Transit Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0187",
+"name": "BCM Alliance Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0188",
+"name": "HLT Global Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0189",
+"name": "Matang Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0190",
+"name": "Eversafe Rubber Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0191",
+"name": "Cabnet Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0192",
+"name": "Inta Bina Group Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0193",
+"name": "Kinergy Advancement Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0195",
+"name": "Binasat Communications Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0196",
+"name": "QES Group Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0197",
+"name": "Wegmans Holdings Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0198",
+"name": "GDB Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0199",
+"name": "Tri-Mode System M Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0200",
+"name": "Revenue IF Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0201",
+"name": "Nova Wellness Group Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0202",
+"name": "Radiant Globaltech Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0203",
+"name": "Securemetric Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0205",
+"name": "Dpi Holdings Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0206",
+"name": "Gagasan Nadi Cergas Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0207",
+"name": "Mestron Holdings",
+"type": "Common Stock"
+},
+{
+"code": "0208",
+"name": "Greatech Technology Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0209",
+"name": "Aimflex Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0210",
+"name": "Kim Hin Joo",
+"type": "Common Stock"
+},
+{
+"code": "0211",
+"name": "Tashin Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0212",
+"name": "SDS Group Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0213",
+"name": "Mtag Group Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0215",
+"name": "Solarvest Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0216",
+"name": "Spring Art Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0217",
+"name": "Powerwell Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0218",
+"name": "Aco Group Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0219",
+"name": "Reservoir Link Energy Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0220",
+"name": "Ocean Vantage Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0221",
+"name": "TCS Group Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0222",
+"name": "Optimax Holdings Sdn Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0223",
+"name": "Samaiden Group Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0225",
+"name": "Southern Cable Group Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0226",
+"name": "Aneka Jaringan Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0227",
+"name": "Econframe Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0228",
+"name": "HPP Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0229",
+"name": "Mobilia Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0230",
+"name": "Teladan Setia Group Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0231",
+"name": "Flexidynamic Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0232",
+"name": "Volcano Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0233",
+"name": "Pekat Group Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0235",
+"name": "Nestcon Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0236",
+"name": "Ramssol Group Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0237",
+"name": "Haily Group Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0238",
+"name": "CEKD Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0239",
+"name": "Ecomate Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0240",
+"name": "Coraza Integrated Technology Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0241",
+"name": "Siab Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0242",
+"name": "Pappajack Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0243",
+"name": "Cengild Medical Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0245",
+"name": "MN Holdings Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0246",
+"name": "Cnergenz Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0247",
+"name": "UNITRAD",
+"type": "Common Stock"
+},
+{
+"code": "0248",
+"name": "Yew Lee Pacific Group Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0249",
+"name": "LGMS Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0250",
+"name": "YX Precious Metals Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0251",
+"name": "SFP Tech Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0252",
+"name": "Orgabio Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0253",
+"name": "Infoline Tec Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0255",
+"name": "Ecoscience International Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0256",
+"name": "UMediC Group Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0257",
+"name": "UNIQUE",
+"type": "Common Stock"
+},
+{
+"code": "0258",
+"name": "AGMO",
+"type": "Common Stock"
+},
+{
+"code": "0259",
+"name": "SNS",
+"type": "Common Stock"
+},
+{
+"code": "0260",
+"name": "PTRB",
+"type": "Common Stock"
+},
+{
+"code": "0261",
+"name": "Cosmos Technology International Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0262",
+"name": "Sunview Group Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0263",
+"name": "Betamek Bhd ",
+"type": "Common Stock"
+},
+{
+"code": "0265",
+"name": "INFOM",
+"type": "Common Stock"
+},
+{
+"code": "0266",
+"name": "LEFORM",
+"type": "Common Stock"
+},
+{
+"code": "0267",
+"name": "ECA",
+"type": "Common Stock"
+},
+{
+"code": "0268",
+"name": "L&P Global Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0269",
+"name": "DS Sigma Holdings Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0270",
+"name": "NationGate Holdings Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0271",
+"name": "Wellspire Holdings Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0272",
+"name": "TT Vision Holdings Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0273",
+"name": "Vestland Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0275",
+"name": "OPPSTAR",
+"type": "Common Stock"
+},
+{
+"code": "0276",
+"name": "Autocount Dotcom Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0277",
+"name": "Cloudpoint Technology Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0278",
+"name": "Edelteq Holdings Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0279",
+"name": "Synergy House Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0280",
+"name": "MYMBN Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0281",
+"name": "DAYTHREE DIGITAL BERHAD",
+"type": "Common Stock"
+},
+{
+"code": "0282",
+"name": "KGW Group Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0283",
+"name": "DC HEALTHCARE HOLDINGS BERHAD",
+"type": "Common Stock"
+},
+{
+"code": "0284",
+"name": "Glostrext Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0285",
+"name": "Mercury Securities Group Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0286",
+"name": "Evergreen Max Cash Capital Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0287",
+"name": "SSF Home Group Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0288",
+"name": "Minox International Group Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0289",
+"name": "PLYTEC Holding Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0290",
+"name": "Panda Eco System Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0291",
+"name": "Critical Holdings Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0292",
+"name": "Jati Tinggi Group Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0293",
+"name": "KJTS",
+"type": "Common Stock"
+},
+{
+"code": "0295",
+"name": "Master Tec Group Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0296",
+"name": "HE Group Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0297",
+"name": "TSA",
+"type": "Common Stock"
+},
+{
+"code": "0298",
+"name": "Wentel Engineering Holdings Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0299",
+"name": "AGX Group Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0300",
+"name": "SBH Marine Holdings Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0301",
+"name": "Zantat Holdings Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0302",
+"name": "Topmix Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0303",
+"name": "ALPHA",
+"type": "Common Stock"
+},
+{
+"code": "0304",
+"name": "Farm Price Holdings Berhad",
+"type": "Common Stock"
+},
+{
+"code": "03041",
+"name": "ONETECH SOLUTIONS HOLDINGS BERHAD",
+"type": "Common Stock"
+},
+{
+"code": "0305",
+"name": "Sin-Kung Logistics Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0306",
+"name": "SMART ",
+"type": "Common Stock"
+},
+{
+"code": "03060",
+"name": "Hydropipes Industries Sdn. Bhd.",
+"type": "Common Stock"
+},
+{
+"code": "03061",
+"name": "TP TEC Holding Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0307",
+"name": "KENERGY",
+"type": "Common Stock"
+},
+{
+"code": "0308",
+"name": "KTI",
+"type": "Common Stock"
+},
+{
+"code": "0309",
+"name": "Agricore CS Holdings Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0310",
+"name": "UUE Holdings Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0311",
+"name": "Go Hub Capital Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0312",
+"name": "Ocean Fresh Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0313",
+"name": "BWYS Group Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0315",
+"name": "Kucingko Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0316",
+"name": "Sik Cheong Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0317",
+"name": "EPB Group Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0318",
+"name": "Elridge Energy Holdings Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0319",
+"name": "VETECE Holdings Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0320",
+"name": "Steel Hawk Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0321",
+"name": "Solar District Cooling Group Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0322",
+"name": "KHPT Holdings Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0323",
+"name": "Crest Group Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0325",
+"name": "Northeast Group Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0326",
+"name": "Sorento Capital Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0327",
+"name": "OB Holdings Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0328",
+"name": "3REN Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0329",
+"name": "Metro Healthcare Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0330",
+"name": "SUPREME",
+"type": "Common Stock"
+},
+{
+"code": "0331",
+"name": "Cropmate Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0332",
+"name": "Topvision Eye Specialist Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0333",
+"name": "VANZO",
+"type": "Common Stock"
+},
+{
+"code": "0335",
+"name": "Carlo Rino Group Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0336",
+"name": "WINSTAR CAPITAL BERHAD",
+"type": "Common Stock"
+},
+{
+"code": "0337",
+"name": "SWIFT ENERGY TECHNOLOGY BERHAD",
+"type": "Common Stock"
+},
+{
+"code": "0338",
+"name": "Oriental Kopi Holdings Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0339",
+"name": "CBH Engineering Holding Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0340",
+"name": "Northern Solar Holdings Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0341",
+"name": "Colform Group Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0342",
+"name": "RichTech Digital Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0343",
+"name": "TechStore Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0345",
+"name": "ES SUNLOGY BERHAD",
+"type": "Common Stock"
+},
+{
+"code": "0346",
+"name": "Saliran Group Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0347",
+"name": "Wawasan Dengkil Holdings Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0348",
+"name": "Chemlite Innovation Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0349",
+"name": "Sumisaujana Group Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0350",
+"name": "MSB Global Group Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0351",
+"name": "Lim Seong Hai Capital Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0352",
+"name": "WTEC Group Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0353",
+"name": "West River Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0355",
+"name": "Fibromat (M) Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0356",
+"name": "Peoplelogy Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0357",
+"name": "Oasis Home Holding Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0358",
+"name": "ICT Zone Asia Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0359",
+"name": "Hartanah Kenyalang Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0360",
+"name": "Signature Alliance Group Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0361",
+"name": "Pan Merchant Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0362",
+"name": "ASM Automation Group Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0363",
+"name": "PMCK Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0365",
+"name": "A1 A.K. Koh Group Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0366",
+"name": "iCents Group Holdings Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0367",
+"name": "Enproserve Group Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0368",
+"name": "OXB",
+"type": "Common Stock"
+},
+{
+"code": "0369",
+"name": "JS Solar Holding Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0370",
+"name": "XPB",
+"type": "Common Stock"
+},
+{
+"code": "0371",
+"name": "CAMAROE",
+"type": "Common Stock"
+},
+{
+"code": "0372",
+"name": "Cheeding Holdings Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0373",
+"name": "VERDANT",
+"type": "Common Stock"
+},
+{
+"code": "0375",
+"name": "THMY Holdings Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0376",
+"name": "Insights Analytics Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0377",
+"name": "Powertechnic Group Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0378",
+"name": "Farmiera Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0379",
+"name": "PMW International Bhd",
+"type": "Common Stock"
+},
+{
+"code": "0380",
+"name": "Aquawalk Group Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0381",
+"name": "Polymer Link Holdings Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0382",
+"name": "Foodie Media Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0383",
+"name": "PSP Energy Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0385",
+"name": "BMS Holdings Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0386",
+"name": "SBS NEXUS BERHAD",
+"type": "Common Stock"
+},
+{
+"code": "0387",
+"name": "GUAN HUAT SENG HOLDINGS BERHAD",
+"type": "Common Stock"
+},
+{
+"code": "0388",
+"name": "SEMICO CAPITAL BERHAD",
+"type": "Common Stock"
+},
+{
+"code": "0389",
+"name": "One Gasmaster Holdings Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0390",
+"name": "ISF Group Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0391",
+"name": "Ambest Group Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0392",
+"name": "Kee Ming Group Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0393",
+"name": "TEAMSTAR BERHAD",
+"type": "Common Stock"
+},
+{
+"code": "0395",
+"name": "OGX GROUP BERHAD",
+"type": "Common Stock"
+},
+{
+"code": "0396",
+"name": "ADNEX GROUP BERHAD",
+"type": "Common Stock"
+},
+{
+"code": "0397",
+"name": "5E Resources Holdings Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0398",
+"name": "Golden Destinations Group Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0399",
+"name": "AMS Advanced Material Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0452",
+"name": "Gold Li Holdings Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0453",
+"name": "EI Power Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0457",
+"name": "Pentech Holdings Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0458",
+"name": "Elsa Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0459",
+"name": "Sum Technology Berhad",
+"type": "Common Stock"
+},
+{
+"code": "0820EA",
+"name": "FTSE4Good Bursa Malaysia ETF",
+"type": "ETF"
+},
+{
+"code": "0823EA",
+"name": "EQ8 FTSE China 50 ETF",
+"type": "ETF"
+},
+{
+"code": "0827EA",
+"name": "MyETF Dow Jones Islamic Market U.S. Titans 50",
+"type": "FUND"
+},
+{
+"code": "0828EA",
+"name": "TradePlus Shariah Gold ETF",
+"type": "ETF"
+},
+{
+"code": "0829EA",
+"name": "TradePlus S&P New China Tracker ETF",
+"type": "ETF"
+},
+{
+"code": "0838EA",
+"name": "VP-DJ SHARIAH CHINA A-SHARES 100 ETF - MYR",
+"type": "ETF"
+},
+{
+"code": "1015",
+"name": "AMMB Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "1023",
+"name": "CIMB Group Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "1058",
+"name": "Manulife Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "1066",
+"name": "RHB Bank Bhd",
+"type": "Common Stock"
+},
+{
+"code": "1082",
+"name": "Hong Leong Financial Group Bhd",
+"type": "Common Stock"
+},
+{
+"code": "1147",
+"name": "Global Oriental Bhd",
+"type": "Common Stock"
+},
+{
+"code": "1155",
+"name": "Malayan Banking Bhd",
+"type": "Common Stock"
+},
+{
+"code": "1163",
+"name": "Allianz Malaysia Bhd",
+"type": "Common Stock"
+},
+{
+"code": "1171",
+"name": "Malaysia Building Society Bhd",
+"type": "Common Stock"
+},
+{
+"code": "1198",
+"name": "MAA Group Bhd",
+"type": "Common Stock"
+},
+{
+"code": "1287",
+"name": "Pan Malaysia Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "1295",
+"name": "Public Bank Bhd",
+"type": "Common Stock"
+},
+{
+"code": "1481",
+"name": "Advance Synergy Bhd",
+"type": "Common Stock"
+},
+{
+"code": "1538",
+"name": "Symphony Life Bhd",
+"type": "Common Stock"
+},
+{
+"code": "1562",
+"name": "Sports Toto Berhad",
+"type": "Common Stock"
+},
+{
+"code": "1589",
+"name": "Iskandar Waterfront City Bhd",
+"type": "Common Stock"
+},
+{
+"code": "1619",
+"name": "DRB - Hicom Bhd",
+"type": "Common Stock"
+},
+{
+"code": "1643",
+"name": "Landmarks Bhd",
+"type": "Common Stock"
+},
+{
+"code": "1651",
+"name": "Malaysian Resources Corporation",
+"type": "Common Stock"
+},
+{
+"code": "1694",
+"name": "Menang Corporation (Malaysia) Bhd",
+"type": "Common Stock"
+},
+{
+"code": "1724",
+"name": "Paramount Corporation Bhd",
+"type": "Common Stock"
+},
+{
+"code": "1818",
+"name": "Bursa Malaysia Bhd",
+"type": "Common Stock"
+},
+{
+"code": "1899",
+"name": "Batu Kawan Bhd",
+"type": "Common Stock"
+},
+{
+"code": "1929",
+"name": "Chin Teck Plantations Bhd",
+"type": "Common Stock"
+},
+{
+"code": "1961",
+"name": "IOI Corporation Bhd",
+"type": "Common Stock"
+},
+{
+"code": "1996",
+"name": "Kretam Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "2038",
+"name": "Negri Sembilan Oil Palms Bhd",
+"type": "Common Stock"
+},
+{
+"code": "2054",
+"name": "TDM Berhad",
+"type": "Common Stock"
+},
+{
+"code": "2062",
+"name": "Harbour Link Group Bhd",
+"type": "Common Stock"
+},
+{
+"code": "2089",
+"name": "United Plantations Bhd",
+"type": "Common Stock"
+},
+{
+"code": "2097",
+"name": "Eastland Equity Bhd",
+"type": "Common Stock"
+},
+{
+"code": "2127",
+"name": "Comfort Gloves Bhd",
+"type": "Common Stock"
+},
+{
+"code": "2135",
+"name": "Gopeng Bhd",
+"type": "Common Stock"
+},
+{
+"code": "2143",
+"name": "ECM Libra Financial Group Bhd",
+"type": "Common Stock"
+},
+{
+"code": "2224",
+"name": "Selangor Dredging Bhd",
+"type": "Common Stock"
+},
+{
+"code": "2259",
+"name": "Talam Transform Bhd",
+"type": "Common Stock"
+},
+{
+"code": "2283",
+"name": "Zelan Bhd",
+"type": "Common Stock"
+},
+{
+"code": "2291",
+"name": "Genting Plantations Bhd",
+"type": "Common Stock"
+},
+{
+"code": "2305",
+"name": "AYER Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "2429",
+"name": "Tanco Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "2445",
+"name": "Kuala Lumpur Kepong Bhd",
+"type": "Common Stock"
+},
+{
+"code": "2453",
+"name": "Kluang Rubber Company Malaya",
+"type": "Common Stock"
+},
+{
+"code": "2488",
+"name": "Alliance Financial Group Bhd",
+"type": "Common Stock"
+},
+{
+"code": "2542",
+"name": "Riverview Rubber Estates Bhd",
+"type": "Common Stock"
+},
+{
+"code": "2569",
+"name": "Sungei Bagan Rubber Malaya",
+"type": "Common Stock"
+},
+{
+"code": "2593",
+"name": "United Malacca Bhd",
+"type": "Common Stock"
+},
+{
+"code": "2607",
+"name": "Inch Kenneth Kajang Rubber PLC",
+"type": "Common Stock"
+},
+{
+"code": "2658",
+"name": "Ajinomoto Malaysia Bhd",
+"type": "Common Stock"
+},
+{
+"code": "2674",
+"name": "Alcom Group Bhd",
+"type": "Common Stock"
+},
+{
+"code": "2682",
+"name": "Amalgamated Industrial Steel Berhad",
+"type": "Common Stock"
+},
+{
+"code": "2739",
+"name": "Sino Hua-An International Bhd",
+"type": "Common Stock"
+},
+{
+"code": "2755",
+"name": "FCW Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "2828",
+"name": "CI Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "2836",
+"name": "Carlsberg Brewery Malaysia Bhd",
+"type": "Common Stock"
+},
+{
+"code": "2852",
+"name": "Cahya Mata Sarawak Bhd",
+"type": "Common Stock"
+},
+{
+"code": "2984",
+"name": "FACB Industries Incorporated",
+"type": "Common Stock"
+},
+{
+"code": "3018",
+"name": "Olympia Industries Bhd",
+"type": "Common Stock"
+},
+{
+"code": "3026",
+"name": "Dutch Lady Milk Industries Bhd",
+"type": "Common Stock"
+},
+{
+"code": "3034",
+"name": "Hap Seng Consolidated Bhd",
+"type": "Common Stock"
+},
+{
+"code": "3042",
+"name": "Petron Malaysia Refining Marketing",
+"type": "Common Stock"
+},
+{
+"code": "3069",
+"name": "Mega First Corporation Bhd",
+"type": "Common Stock"
+},
+{
+"code": "3107",
+"name": "Fima Corporation Bhd",
+"type": "Common Stock"
+},
+{
+"code": "3158",
+"name": "YNH Property Bhd",
+"type": "Common Stock"
+},
+{
+"code": "3174",
+"name": "Land General Bhd",
+"type": "Common Stock"
+},
+{
+"code": "3182",
+"name": "Genting Bhd",
+"type": "Common Stock"
+},
+{
+"code": "3204",
+"name": "George Kent (Malaysia) Bhd",
+"type": "Common Stock"
+},
+{
+"code": "3239",
+"name": "Berjaya Assets Bhd",
+"type": "Common Stock"
+},
+{
+"code": "3247",
+"name": "GUH Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "3255",
+"name": "Heineken Bhd",
+"type": "Common Stock"
+},
+{
+"code": "3298",
+"name": "Hexza Corporation Bhd",
+"type": "Common Stock"
+},
+{
+"code": "3301",
+"name": "Hong Leong Industries Bhd",
+"type": "Common Stock"
+},
+{
+"code": "3336",
+"name": "IJM Corporation Bhd",
+"type": "Common Stock"
+},
+{
+"code": "3379",
+"name": "Insas Bhd",
+"type": "Common Stock"
+},
+{
+"code": "3395",
+"name": "Berjaya Corporation Bhd",
+"type": "Common Stock"
+},
+{
+"code": "3417",
+"name": "Eastern & Oriental Bhd",
+"type": "Common Stock"
+},
+{
+"code": "3441",
+"name": "Johan Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "3476",
+"name": "Keck Seng Malaysia Bhd",
+"type": "Common Stock"
+},
+{
+"code": "3514",
+"name": "Marco Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "3557",
+"name": "EcoFirst Consolidated Bhd",
+"type": "Common Stock"
+},
+{
+"code": "3565",
+"name": "WCE Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "3573",
+"name": "Lien Hoe Corporation Bhd",
+"type": "Common Stock"
+},
+{
+"code": "3611",
+"name": "Paragon Globe Bhd",
+"type": "Common Stock"
+},
+{
+"code": "3662",
+"name": "Malayan Flour Mills Bhd",
+"type": "Common Stock"
+},
+{
+"code": "3689",
+"name": "Fraser Neave Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "3719",
+"name": "Panasonic Manufacture Malaysia",
+"type": "Common Stock"
+},
+{
+"code": "3743",
+"name": "Sunsuria Bhd",
+"type": "Common Stock"
+},
+{
+"code": "3778",
+"name": "Melewar Industrial Group Bhd",
+"type": "Common Stock"
+},
+{
+"code": "3794",
+"name": "Lafarge Malayan Cement Bhd",
+"type": "Common Stock"
+},
+{
+"code": "3816",
+"name": "MISC Bhd",
+"type": "Common Stock"
+},
+{
+"code": "3859",
+"name": "Magnum Bhd",
+"type": "Common Stock"
+},
+{
+"code": "3867",
+"name": "Malaysian Pacific Industries",
+"type": "Common Stock"
+},
+{
+"code": "3883",
+"name": "Muda Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "3891",
+"name": "Malayan United Industries Bhd",
+"type": "Common Stock"
+},
+{
+"code": "3905",
+"name": "Mulpha International Bhd",
+"type": "Common Stock"
+},
+{
+"code": "3913",
+"name": "MUI Properties Bhd",
+"type": "Common Stock"
+},
+{
+"code": "3948",
+"name": "Dutaland Bhd",
+"type": "Common Stock"
+},
+{
+"code": "4006",
+"name": "Oriental Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "4022",
+"name": "Tadmax Resources Berhad",
+"type": "Common Stock"
+},
+{
+"code": "4057",
+"name": "Asian Pac Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "4065",
+"name": "PPB Group Bhd",
+"type": "Common Stock"
+},
+{
+"code": "4081",
+"name": "Pan Malaysia Corporation Bhd",
+"type": "Common Stock"
+},
+{
+"code": "4162",
+"name": "British American Tobacco Malaysia Bhd",
+"type": "Common Stock"
+},
+{
+"code": "4197",
+"name": "Sime Darby Bhd",
+"type": "Common Stock"
+},
+{
+"code": "4219",
+"name": "Berjaya Property Berhad",
+"type": "Common Stock"
+},
+{
+"code": "4235",
+"name": "Lion Industries Corporation Bhd",
+"type": "Common Stock"
+},
+{
+"code": "4243",
+"name": "WTK Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "4251",
+"name": "I-Berhad",
+"type": "Common Stock"
+},
+{
+"code": "4286",
+"name": "SEAL Incorporated Bhd",
+"type": "Common Stock"
+},
+{
+"code": "4316",
+"name": "Sin Heng Chan (Malaya) Bhd",
+"type": "Common Stock"
+},
+{
+"code": "4324",
+"name": "Hengyuan Refining Company Bhd",
+"type": "Common Stock"
+},
+{
+"code": "4359",
+"name": "Turiya Bhd",
+"type": "Common Stock"
+},
+{
+"code": "4375",
+"name": "South Malaysia Industries Bhd",
+"type": "Common Stock"
+},
+{
+"code": "4383",
+"name": "Jaya Tiasa Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "4405",
+"name": "Tan Chong Motor Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "4456",
+"name": "Dagang Nexchange Bhd",
+"type": "Common Stock"
+},
+{
+"code": "4464",
+"name": "Pegasus Heights Bhd",
+"type": "Common Stock"
+},
+{
+"code": "4502",
+"name": "Media Prima Bhd",
+"type": "Common Stock"
+},
+{
+"code": "4596",
+"name": "Sapura Resources Bhd",
+"type": "Common Stock"
+},
+{
+"code": "4634",
+"name": "POS Malaysia&Services Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "4677",
+"name": "YTL Corporation Bhd",
+"type": "Common Stock"
+},
+{
+"code": "4707",
+"name": "Nestle (Malaysia) Bhd",
+"type": "Common Stock"
+},
+{
+"code": "4715",
+"name": "Genting Malaysia Bhd",
+"type": "Common Stock"
+},
+{
+"code": "4723",
+"name": "JAKS Resources Bhd",
+"type": "Common Stock"
+},
+{
+"code": "4731",
+"name": "Scientex Bhd",
+"type": "Common Stock"
+},
+{
+"code": "4758",
+"name": "Ancom Berhad",
+"type": "Common Stock"
+},
+{
+"code": "4847",
+"name": "Konsortium Transnasional Bhd",
+"type": "Common Stock"
+},
+{
+"code": "4863",
+"name": "Telekom Malaysia Bhd",
+"type": "Common Stock"
+},
+{
+"code": "4995",
+"name": "Versatile Creative Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5000",
+"name": "Hume Industries Berhad",
+"type": "Common Stock"
+},
+{
+"code": "5001",
+"name": "Mieco Berhad",
+"type": "Common Stock"
+},
+{
+"code": "5005",
+"name": "Unisem M Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5006",
+"name": "Stella Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5007",
+"name": "Chin Well Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5008",
+"name": "Harrisons Holdings (Malaysia)",
+"type": "Common Stock"
+},
+{
+"code": "5009",
+"name": "White Horse Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5010",
+"name": "Tong Herr Resources Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5011",
+"name": "Mesiniaga Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5012",
+"name": "Ta Ann Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5015",
+"name": "APM Automotive Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5016",
+"name": "Warisan TC Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5020",
+"name": "Glomac Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5021",
+"name": "AYS Ventures Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5022",
+"name": "Paos Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5024",
+"name": "Hup Seng Industries Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5025",
+"name": "NWP Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5026",
+"name": "MHC Plantations Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5027",
+"name": "Kim Loong Resources Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5028",
+"name": "HeiTech Padu Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5029",
+"name": "Far East Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5031",
+"name": "TIME Dotcom Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5032",
+"name": "Bintulu Port Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5035",
+"name": "Knusford Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5036",
+"name": "Edaran Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5037",
+"name": "Compugates Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5038",
+"name": "KSL Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5040",
+"name": "Meridian Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5041",
+"name": "PBA Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5042",
+"name": "TSR Capital Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5048",
+"name": "YB Ventures Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5049",
+"name": "Country View Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5053",
+"name": "OSK Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5054",
+"name": "TRC Synergy Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5056",
+"name": "Engtex Group Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5062",
+"name": "Hua Yang Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5065",
+"name": "Ornapaper Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5066",
+"name": "NTPM Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5068",
+"name": "Luster Industries Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5069",
+"name": "BLD Plantation Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5070",
+"name": "Protasco Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5071",
+"name": "Coastal Contracts Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5072",
+"name": "Hiap Teck Venture Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5073",
+"name": "Naim Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5075",
+"name": "Plenitude Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5077",
+"name": "Malaysian Bulk Carriers Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5078",
+"name": "Marine & General Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5079",
+"name": "GETS Global Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5080",
+"name": "Poh Kong Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5081",
+"name": "Esthetics International Group",
+"type": "Common Stock"
+},
+{
+"code": "5084",
+"name": "Ibraco Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5085",
+"name": "Mudajaya Group Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5087",
+"name": "Mycron Steel Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5088",
+"name": "Apex Equity Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5090",
+"name": "Media Chinese International Ltd",
+"type": "Common Stock"
+},
+{
+"code": "5094",
+"name": "CSC Steel Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5095",
+"name": "HeveaBoard Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5098",
+"name": "Malaysia Steel Works KL Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5099",
+"name": "Capital A Berhad",
+"type": "Common Stock"
+},
+{
+"code": "5100",
+"name": "BP Plastics Holding Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5101",
+"name": "Evergreen Fibreboard Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5102",
+"name": "Guan Chong Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5104",
+"name": "Citra Nusa Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5105",
+"name": "Can One Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5106",
+"name": "Axis Real Estate Investment Trust",
+"type": "Common Stock"
+},
+{
+"code": "5107",
+"name": "IQ Group Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5108",
+"name": "iCapital.biz Berhad",
+"type": "Common Stock"
+},
+{
+"code": "5109",
+"name": "YTL Hospitality REIT",
+"type": "Common Stock"
+},
+{
+"code": "5110",
+"name": "UOA Real Estate Investment Trust",
+"type": "Common Stock"
+},
+{
+"code": "5111",
+"name": "Tower Real Estate Investment Trust",
+"type": "Common Stock"
+},
+{
+"code": "5112",
+"name": "TH Plantations Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5113",
+"name": "Rimbunan Sawit Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5115",
+"name": "Alam Maritim Resources Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5116",
+"name": "Al Aqar Healthcare Reit",
+"type": "Common Stock"
+},
+{
+"code": "5120",
+"name": "AmFIRST Real Estate Investment Trust",
+"type": "Common Stock"
+},
+{
+"code": "5121",
+"name": "Hektar Real Estate Investment Trust",
+"type": "Common Stock"
+},
+{
+"code": "5123",
+"name": "Sentral REIT",
+"type": "Common Stock"
+},
+{
+"code": "5125",
+"name": "Pantech Group Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5126",
+"name": "Sarawak Oil Palms Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5127",
+"name": "AmanahRaya Real Estate Investment Trust",
+"type": "Common Stock"
+},
+{
+"code": "5129",
+"name": "Melati Ehsan Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5130",
+"name": "Atrium Real Estate Investment Trust",
+"type": "Common Stock"
+},
+{
+"code": "5131",
+"name": "Zhulian Corporation Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5132",
+"name": "Deleum Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5133",
+"name": "Petra Energy Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5134",
+"name": "Southern Acids (M) Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5135",
+"name": "Sarawak Plantation Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5136",
+"name": "Complete Logistic Services Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5138",
+"name": "Hap Seng Plantations Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5139",
+"name": "Aeon Credit Service Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5140",
+"name": "Tasco Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5141",
+"name": "Dayang Enterprise Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5142",
+"name": "Wah Seong Corporation Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5143",
+"name": "Luxchem Corporation Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5145",
+"name": "Sealink International Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5147",
+"name": "Samchem Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5148",
+"name": "UEM Sunrise Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5149",
+"name": "TAS Offshore Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5151",
+"name": "Hextar Global Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5152",
+"name": "Muar Ban Lee Group Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5156",
+"name": "XiDeLang Holdings Ltd",
+"type": "Common Stock"
+},
+{
+"code": "5157",
+"name": "Saudee Group Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5159",
+"name": "Yoong Onn Corporation Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5160",
+"name": "Homeritz Corporation Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5161",
+"name": "JCY International Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5162",
+"name": "ECS ICT Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5163",
+"name": "Seremban Engineering Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5165",
+"name": "Dfcity Group Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5166",
+"name": "Minda Global Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5167",
+"name": "Turbo Mech Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5168",
+"name": "Hartalega Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5169",
+"name": "Ho Hup Construction Company",
+"type": "Common Stock"
+},
+{
+"code": "5171",
+"name": "Kimlun Corporation Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5172",
+"name": "Sinaran Advance Group Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5173",
+"name": "Shin Yang Shipping Corporation Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5176",
+"name": "Sunway Real Estate Investment Trust",
+"type": "Common Stock"
+},
+{
+"code": "5178",
+"name": "Dynaciate Group Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5180",
+"name": "CapitaLand Malaysia Mall Trust",
+"type": "Common Stock"
+},
+{
+"code": "5182",
+"name": "MCT Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5183",
+"name": "Petronas Chemicals Group Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5184",
+"name": "Cypark Resources Berhad",
+"type": "Common Stock"
+},
+{
+"code": "5185",
+"name": "AFFIN Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5186",
+"name": "Malaysia Marine and Heavy Engineering Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5187",
+"name": "HB Global Ltd",
+"type": "Common Stock"
+},
+{
+"code": "5188",
+"name": "China Ouhua Winery Holdings",
+"type": "Common Stock"
+},
+{
+"code": "5190",
+"name": "Benalec Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5191",
+"name": "Tambun Indah Land Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5192",
+"name": "EC Excel Holdings Berhad",
+"type": "Common Stock"
+},
+{
+"code": "5195",
+"name": "Censof Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5196",
+"name": "Berjaya Food Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5197",
+"name": "Focus Lumber Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5198",
+"name": "ABM Fujiya Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5199",
+"name": "Hibiscus Petroleum BHD",
+"type": "Common Stock"
+},
+{
+"code": "5200",
+"name": "UOA Development Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5202",
+"name": "MSM Malaysia Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5204",
+"name": "Awanbiru Technology Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5205",
+"name": "Eversendai Corporation Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5207",
+"name": "SBC Corp Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5208",
+"name": "EITA Resources Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5209",
+"name": "Gas Malaysia Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5210",
+"name": "Bumi Armada Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5211",
+"name": "Sunway Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5212",
+"name": "Pavilion Real Estate Inv Trust",
+"type": "Common Stock"
+},
+{
+"code": "5216",
+"name": "Datasonic Group Berhad",
+"type": "Common Stock"
+},
+{
+"code": "5218",
+"name": "Vantris Energy Berhad",
+"type": "Common Stock"
+},
+{
+"code": "5219",
+"name": "PESTECH International Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5220",
+"name": "Globaltec Formation Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5223",
+"name": "Mentiga Corporation Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5225",
+"name": "IHH Healthcare Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5226",
+"name": "Gabungan AQRS Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5227",
+"name": "IGB Real Estate Investment Trust",
+"type": "Common Stock"
+},
+{
+"code": "5228",
+"name": "ELK-Desa Resources Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5230",
+"name": "Tune Protect Group Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5231",
+"name": "Pelikan International Corp",
+"type": "Common Stock"
+},
+{
+"code": "5232",
+"name": "Leon Fuat Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5236",
+"name": "Matrix Concepts Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5238",
+"name": "AirAsia Group Berhad",
+"type": "Common Stock"
+},
+{
+"code": "5239",
+"name": "Titijaya Land Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5242",
+"name": "Solid Automotive Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5243",
+"name": "Velesto Energy Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5246",
+"name": "Westports Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5247",
+"name": "Karex Berhad",
+"type": "Common Stock"
+},
+{
+"code": "5248",
+"name": "Bermaz Auto Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5249",
+"name": "IOI Properties Group Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5250",
+"name": "7 Eleven Malaysia Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5252",
+"name": "Sasbadi Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5253",
+"name": "Econpile Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5255",
+"name": "Lianson Fleet Group Berhad",
+"type": "Common Stock"
+},
+{
+"code": "5257",
+"name": "Carimin Petroleum Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5258",
+"name": "Bank Islam Malaysia Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5259",
+"name": "EA Technique M Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5260",
+"name": "Only World Group Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5263",
+"name": "Sunway Construction Group Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5264",
+"name": "Malakoff Corporation Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5265",
+"name": "Dolphin International Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5267",
+"name": "Xin Hwa Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5269",
+"name": "Al-Salam Real Estate Investment Trust",
+"type": "Common Stock"
+},
+{
+"code": "5271",
+"name": "Pecca Group Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5272",
+"name": "Ranhill Holdings Ltd",
+"type": "Common Stock"
+},
+{
+"code": "5273",
+"name": "Chin Hin Group Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5274",
+"name": "Hong Leong Capital Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5275",
+"name": "myNEWS Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5276",
+"name": "Dancomech Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5277",
+"name": "FoundPac Group Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5278",
+"name": "Rhone Ma Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5280",
+"name": "KIP Real Estate Investment Trust",
+"type": "Common Stock"
+},
+{
+"code": "5281",
+"name": "Advancecon Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5283",
+"name": "Eco World International Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5284",
+"name": "Lotte Chemical Titan Holding BHD",
+"type": "Common Stock"
+},
+{
+"code": "5285",
+"name": "Sime Darby Plantation Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5286",
+"name": "MI Technovation Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5288",
+"name": "Sime Darby Property Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5289",
+"name": "Techbond Group Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5291",
+"name": "HPMT Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5292",
+"name": "Uwc Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5293",
+"name": "AME Elite Consortium Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5295",
+"name": "Innature Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5296",
+"name": "Mr D I Y Group M Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5297",
+"name": "Tuju Setia Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5298",
+"name": "OM Holdings Ltd",
+"type": "Common Stock"
+},
+{
+"code": "5299",
+"name": "IGB Commercial Real Estate Investment Trust Unit",
+"type": "Common Stock"
+},
+{
+"code": "5300",
+"name": "Yenher Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5301",
+"name": "CTOS Digital Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5302",
+"name": "Aurelius Technologies Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5303",
+"name": "Swift Haulage Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5305",
+"name": "Senheng New Retail Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5306",
+"name": "FARM FRESH BERHAD",
+"type": "Common Stock"
+},
+{
+"code": "5307",
+"name": "AME REIT",
+"type": "Common Stock"
+},
+{
+"code": "5308",
+"name": "SENFONG",
+"type": "Common Stock"
+},
+{
+"code": "5309",
+"name": "ITMAX System Berhad",
+"type": "Common Stock"
+},
+{
+"code": "5310",
+"name": "Kumpulan Kitacon Berhad",
+"type": "Common Stock"
+},
+{
+"code": "5311",
+"name": "Cape EMS Berhad",
+"type": "Common Stock"
+},
+{
+"code": "5313",
+"name": "Radium Development Berhad",
+"type": "Common Stock"
+},
+{
+"code": "5315",
+"name": "SkyWorld Development Berhad",
+"type": "Common Stock"
+},
+{
+"code": "5316",
+"name": "MST GOLF GROUP BERHAD",
+"type": "Common Stock"
+},
+{
+"code": "5317",
+"name": "CPE Technology Berhad",
+"type": "Common Stock"
+},
+{
+"code": "5318",
+"name": "DXN HOLDINGS BHD.",
+"type": "Common Stock"
+},
+{
+"code": "5319",
+"name": "MKH Oil Palm (East Kalimantan) Berhad",
+"type": "Common Stock"
+},
+{
+"code": "5320",
+"name": "PLINTAS",
+"type": "Common Stock"
+},
+{
+"code": "5321",
+"name": "Keyfield International Berhad",
+"type": "Common Stock"
+},
+{
+"code": "5322",
+"name": "Feytech Holdings Berhad",
+"type": "Common Stock"
+},
+{
+"code": "5323",
+"name": "JPG",
+"type": "Common Stock"
+},
+{
+"code": "5325",
+"name": "Well Chip Group Berhad",
+"type": "Common Stock"
+},
+{
+"code": "5326",
+"name": "99 Speed Mart Retail Holdings Berhad",
+"type": "Common Stock"
+},
+{
+"code": "5327",
+"name": "Mega Fortris Berhad",
+"type": "Common Stock"
+},
+{
+"code": "5328",
+"name": "LWSABAH ",
+"type": "Common Stock"
+},
+{
+"code": "5329",
+"name": "Azam Jaya Berhad",
+"type": "Common Stock"
+},
+{
+"code": "5330",
+"name": "TMK",
+"type": "Common Stock"
+},
+{
+"code": "5331",
+"name": "PANTECH GLOBAL BERHAD",
+"type": "Common Stock"
+},
+{
+"code": "5332",
+"name": "Reach Ten Holdings Berhad",
+"type": "Common Stock"
+},
+{
+"code": "5335",
+"name": "HI Mobility Berhad",
+"type": "Common Stock"
+},
+{
+"code": "5336",
+"name": "CUCKOO International (MAL) Berhad",
+"type": "Common Stock"
+},
+{
+"code": "5337",
+"name": "Eco-Shop Marketing Berhad",
+"type": "Common Stock"
+},
+{
+"code": "5338",
+"name": "PARADIGM REAL ESTATE INVESTMENT TRUST",
+"type": "Common Stock"
+},
+{
+"code": "5340",
+"name": "UMS Integration Limited",
+"type": "Common Stock"
+},
+{
+"code": "5341",
+"name": "LACMED",
+"type": "Common Stock"
+},
+{
+"code": "5343",
+"name": "Wasco Greenergy Berhad",
+"type": "Common Stock"
+},
+{
+"code": "5345",
+"name": "Geohan Corporation Berhad",
+"type": "Common Stock"
+},
+{
+"code": "5346",
+"name": "HOCK SOON CAPITAL BERHAD",
+"type": "Common Stock"
+},
+{
+"code": "5347",
+"name": "Tenaga Nasional Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5348",
+"name": "Orkim Berhad",
+"type": "Common Stock"
+},
+{
+"code": "5351",
+"name": "EMPIRE",
+"type": "Common Stock"
+},
+{
+"code": "5352",
+"name": "MTT Shipping and Logistics Berhad",
+"type": "Common Stock"
+},
+{
+"code": "5356",
+"name": "STRATUS",
+"type": "Common Stock"
+},
+{
+"code": "5357",
+"name": "SkyeChip Berhad",
+"type": "Common Stock"
+},
+{
+"code": "5371",
+"name": "Kim Hin Industry Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5398",
+"name": "Gamuda Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5401",
+"name": "Tropicana Corporation Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5436",
+"name": "Perusahaan Sadur Timah Malaysia Perstima Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5517",
+"name": "Shangri La Hotels Malaysia Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5533",
+"name": "OCB Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5555",
+"name": "Sunway Healthcare Holdings Berhad",
+"type": "Common Stock"
+},
+{
+"code": "5568",
+"name": "APB Resources Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5576",
+"name": "Minho M Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5592",
+"name": "Grand Central Enterprises Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5606",
+"name": "IGB Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5614",
+"name": "Integrated Logistics Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5649",
+"name": "Golden Pharos Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5657",
+"name": "Parkson Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5665",
+"name": "Southern Steel Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5673",
+"name": "Jentayu Sustainables Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5681",
+"name": "Petronas Dagangan Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5703",
+"name": "Muhibbah Engineering M Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5738",
+"name": "Country Heights Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5789",
+"name": "LBS Bina Group Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5797",
+"name": "Choo Bee Metal Industries Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5819",
+"name": "Hong Leong Bank Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5827",
+"name": "Oriental Interest Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5843",
+"name": "Kumpulan Perangsang Selangor",
+"type": "Common Stock"
+},
+{
+"code": "5878",
+"name": "KPJ Healthcare Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5908",
+"name": "DKSH Holdings Malaysia Berhad",
+"type": "Common Stock"
+},
+{
+"code": "5916",
+"name": "Malaysia Smelting Corporation Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5932",
+"name": "Bina Puri Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "5983",
+"name": "MBM Resources Bhd",
+"type": "Common Stock"
+},
+{
+"code": "6009",
+"name": "Pacific Orient Bhd",
+"type": "Common Stock"
+},
+{
+"code": "6012",
+"name": "Maxis Bhd",
+"type": "Common Stock"
+},
+{
+"code": "6017",
+"name": "SHL Consolidated Bhd",
+"type": "Common Stock"
+},
+{
+"code": "6033",
+"name": "Petronas Gas Bhd",
+"type": "Common Stock"
+},
+{
+"code": "6041",
+"name": "Farlim Group (Malaysia) Bhd",
+"type": "Common Stock"
+},
+{
+"code": "6068",
+"name": "PCCS Group Bhd",
+"type": "Common Stock"
+},
+{
+"code": "6076",
+"name": "Encorp Bhd",
+"type": "Common Stock"
+},
+{
+"code": "6084",
+"name": "Star Media Group Bhd",
+"type": "Common Stock"
+},
+{
+"code": "6114",
+"name": "MKH Bhd",
+"type": "Common Stock"
+},
+{
+"code": "6139",
+"name": "Syarikat Takaful Malaysia Bhd",
+"type": "Common Stock"
+},
+{
+"code": "6149",
+"name": "Metrod Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "6173",
+"name": "Bina Darulaman Bhd",
+"type": "Common Stock"
+},
+{
+"code": "6181",
+"name": "Malton Bhd",
+"type": "Common Stock"
+},
+{
+"code": "6203",
+"name": "Khee San Bhd",
+"type": "Common Stock"
+},
+{
+"code": "6211",
+"name": "Kia Lim Bhd",
+"type": "Common Stock"
+},
+{
+"code": "6254",
+"name": "PDZ Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "6262",
+"name": "Innoprise Plantations Bhd",
+"type": "Common Stock"
+},
+{
+"code": "6297",
+"name": "Box Pak (Malaysia) Bhd",
+"type": "Common Stock"
+},
+{
+"code": "6351",
+"name": "Amway (Malaysia) Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "6378",
+"name": "WMG Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "6399",
+"name": "Astro Malaysia Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "6432",
+"name": "Apollo Food Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "6459",
+"name": "MNRB Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "6483",
+"name": "K N Kenanga Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "6491",
+"name": "Kumpulan Fima Bhd",
+"type": "Common Stock"
+},
+{
+"code": "6521",
+"name": "Suria Capital Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "6556",
+"name": "Ann Joo Resources Bhd",
+"type": "Common Stock"
+},
+{
+"code": "6599",
+"name": "AEON Co (Malaysia) Bhd",
+"type": "Common Stock"
+},
+{
+"code": "6602",
+"name": "BCB Bhd",
+"type": "Common Stock"
+},
+{
+"code": "6633",
+"name": "Leong Hup International Berhad",
+"type": "Common Stock"
+},
+{
+"code": "6637",
+"name": "PNE PCB Bhd",
+"type": "Common Stock"
+},
+{
+"code": "6718",
+"name": "Crescendo Corporation Bhd",
+"type": "Common Stock"
+},
+{
+"code": "6742",
+"name": "YTL Power International Bhd",
+"type": "Common Stock"
+},
+{
+"code": "6769",
+"name": "JKG Land Bhd",
+"type": "Common Stock"
+},
+{
+"code": "6807",
+"name": "Puncak Niaga Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "6815",
+"name": "Eupe Corporation Bhd",
+"type": "Common Stock"
+},
+{
+"code": "6874",
+"name": "JAG Capital Berhad",
+"type": "Common Stock"
+},
+{
+"code": "6888",
+"name": "Axiata Group Bhd",
+"type": "Common Stock"
+},
+{
+"code": "6904",
+"name": "Subur Tiasa Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "6912",
+"name": "Pasdec Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "6939",
+"name": "Fiamma Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "6947",
+"name": "CelcomDigi Berhad",
+"type": "Common Stock"
+},
+{
+"code": "6963",
+"name": "VS Industry Bhd",
+"type": "Common Stock"
+},
+{
+"code": "6971",
+"name": "Kobay Tech Bhd",
+"type": "Common Stock"
+},
+{
+"code": "6998",
+"name": "Bintai Kinden Corporation Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7003",
+"name": "Y&G Corp Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7004",
+"name": "MCE Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7005",
+"name": "BIG Industries Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7006",
+"name": "Latitude Tree Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7007",
+"name": "ARK Resources Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7010",
+"name": "PTT Synergy Group Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7013",
+"name": "HUBLine Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7014",
+"name": "YLI Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7016",
+"name": "Chuan Huat Resources Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7017",
+"name": "Komarkcorp Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7018",
+"name": "CME Group Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7020",
+"name": "YKGI Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7022",
+"name": "Globetronics Tech Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7025",
+"name": "Woodlandor Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7028",
+"name": "ZECON Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7029",
+"name": "Master Pack Group Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7031",
+"name": "Amtel Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7033",
+"name": "Kumpulan H & L High-Tech Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7034",
+"name": "Thong Guan Industries Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7035",
+"name": "CCK Consolidated Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7036",
+"name": "Borneo Oil Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7043",
+"name": "Jade Marvel Group Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7047",
+"name": "Fajarbaru Builder Group Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7048",
+"name": "Atlan Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7050",
+"name": "Wong Engineering Corporation Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7052",
+"name": "Padini Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7053",
+"name": "See Hup Consolidated Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7054",
+"name": "Astral Asia Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7055",
+"name": "PLB Engineering Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7060",
+"name": "New Hoong Fatt Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7062",
+"name": "Khind Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7066",
+"name": "Yong Tai Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7070",
+"name": "Vizione Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7071",
+"name": "OCR Group Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7073",
+"name": "Seacera Group Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7076",
+"name": "CB Industrial Product Holding",
+"type": "Common Stock"
+},
+{
+"code": "7077",
+"name": "Kerjaya Prospek Property Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7078",
+"name": "Ahmad Zaki Resources Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7079",
+"name": "TWL Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7080",
+"name": "Permaju Industries Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7081",
+"name": "Pharmaniaga Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7082",
+"name": "M & A EQUITY HOLDINGS BERHAD",
+"type": "Common Stock"
+},
+{
+"code": "7083",
+"name": "Analabs Resources Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7084",
+"name": "QL Resources Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7085",
+"name": "LTKM Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7086",
+"name": "AbleGroup Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7087",
+"name": "Magni Tech Industries Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7088",
+"name": "Poh Huat Resources Holdings",
+"type": "Common Stock"
+},
+{
+"code": "7089",
+"name": "Lii Hen Industries Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7091",
+"name": "Unimech Group Berhad",
+"type": "Common Stock"
+},
+{
+"code": "7094",
+"name": "Eurospan Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7095",
+"name": "PIE Industrial Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7096",
+"name": "Joe Holding Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7097",
+"name": "Ta Win Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7099",
+"name": "Atta Global Group Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7100",
+"name": "Uchi Technologies Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7103",
+"name": "Spritzer Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7105",
+"name": "HCK Capital Group Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7106",
+"name": "Supermax Corporation Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7107",
+"name": "Oriental Food Industries Hold",
+"type": "Common Stock"
+},
+{
+"code": "7108",
+"name": "Perdana Petroleum Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7113",
+"name": "Top Glove Corporation Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7114",
+"name": "Dnonce Tech Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7115",
+"name": "SKB Shutters Corporation Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7117",
+"name": "CJ Century Logistics Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7120",
+"name": "Axteria Group Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7121",
+"name": "XL Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7123",
+"name": "Priceworth International Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7128",
+"name": "CAM Resources Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7129",
+"name": "Asia File Corporation Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7131",
+"name": "Land 33 Berhad",
+"type": "Common Stock"
+},
+{
+"code": "7132",
+"name": "SMIS Corporation Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7133",
+"name": "United U Li Corporation Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7134",
+"name": "PW Consolidated Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7137",
+"name": "UMS Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7139",
+"name": "Niche Capital Emas Holdings",
+"type": "Common Stock"
+},
+{
+"code": "7140",
+"name": "Oka Corporation Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7145",
+"name": "Ageson Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7146",
+"name": "AE Multi Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7148",
+"name": "Duopharma Biotech Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7149",
+"name": "Eng Kah Corporation Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7152",
+"name": "Jaycorp Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7153",
+"name": "Kossan Rubber Industries Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7154",
+"name": "Caely Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7155",
+"name": "SKP Resources Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7157",
+"name": "CYL Corporation Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7160",
+"name": "Pentamaster Corporation Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7161",
+"name": "Kerjaya Prospek Group Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7162",
+"name": "Astino Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7163",
+"name": "PJBumi Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7165",
+"name": "CSH Alliance Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7167",
+"name": "Able Global Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7168",
+"name": "Prg Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7169",
+"name": "Dominant Enterprise Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7170",
+"name": "LFE Corporation Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7172",
+"name": "PMB Technology Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7173",
+"name": "Toyo Ventures Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7174",
+"name": "CAB Cakaran Corporation Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7176",
+"name": "TPC Plus Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7178",
+"name": "YSP Southeast Asia Holding Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7179",
+"name": "Lagenda Properties Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7180",
+"name": "Sern Kou Resources Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7181",
+"name": "Arb Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7184",
+"name": "G3 Global Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7186",
+"name": "SWS Capital Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7187",
+"name": "Chin Hin Group Property Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7188",
+"name": "BTM Resources Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7191",
+"name": "Adventa Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7192",
+"name": "GIIB Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7195",
+"name": "Comintel Corporation Berhad",
+"type": "Common Stock"
+},
+{
+"code": "7197",
+"name": "Ge Shen Corporation Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7198",
+"name": "DPS Resources Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7199",
+"name": "Kein Hing International Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7200",
+"name": "Tek Seng Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7201",
+"name": "Progressive Impact Corporation Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7202",
+"name": "Classic Scenic Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7203",
+"name": "Wang-Zheng Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7204",
+"name": "D O Green Technologies Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7207",
+"name": "Success Transformer Corporation Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7208",
+"name": "Euro Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7209",
+"name": "Cheetah Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7210",
+"name": "FM Global Logistics Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7211",
+"name": "TAFI Industries Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7212",
+"name": "Destini Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7214",
+"name": "A Rank Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7215",
+"name": "Ni Hsin Resources Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7216",
+"name": "Kawan Food Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7217",
+"name": "Eonmetall Group Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7218",
+"name": "Arka Berhad",
+"type": "Common Stock"
+},
+{
+"code": "7219",
+"name": "Minetech Resources Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7221",
+"name": "BSL Corp Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7222",
+"name": "Imaspro Corporation Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7223",
+"name": "Jadi Imaging Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7225",
+"name": "P.A. Resources Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7226",
+"name": "Watta Holding Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7227",
+"name": "UMS-Neiken Group Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7228",
+"name": "T7 Global Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7229",
+"name": "Favelle Favco Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7230",
+"name": "Tomei Consolidated Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7231",
+"name": "Wellcall Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7232",
+"name": "Resintech Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7233",
+"name": "Dufu Tech Corp Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7234",
+"name": "MESB Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7235",
+"name": "Superlon Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7237",
+"name": "Power Root Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7239",
+"name": "Scanwolf Corporation Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7240",
+"name": "Vertice Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7241",
+"name": "Nextgreen Global Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7243",
+"name": "Impiana Hotels Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7245",
+"name": "WZ Satu Berhad",
+"type": "Common Stock"
+},
+{
+"code": "7246",
+"name": "Signature International Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7247",
+"name": "SCGM Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7248",
+"name": "SLP Resources Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7249",
+"name": "Ewein Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7250",
+"name": "Uzma Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7252",
+"name": "Teo Seng Capital Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7253",
+"name": "Handal Resources Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7277",
+"name": "Dialog Group Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7285",
+"name": "Tomypak Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7293",
+"name": "Yinson Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7315",
+"name": "AHB Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7323",
+"name": "Ken Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7374",
+"name": "Tien Wah Press Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7382",
+"name": "Golden Land Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7412",
+"name": "SHH Resources Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7439",
+"name": "Teck Guan Perdana Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7471",
+"name": "Eden Inc Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7498",
+"name": "Ralco Corporation Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7501",
+"name": "Harn Len Corporation Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7528",
+"name": "DKLS Industries Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7544",
+"name": "Quality Concrete Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7579",
+"name": "AWC Berhad",
+"type": "Common Stock"
+},
+{
+"code": "7595",
+"name": "MGB Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7609",
+"name": "Ajiya Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7617",
+"name": "Hallson Group Berhad",
+"type": "Common Stock"
+},
+{
+"code": "7668",
+"name": "Beshom Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7676",
+"name": "G Capital Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7692",
+"name": "MyTech Group Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7757",
+"name": "UPA Corporation Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7765",
+"name": "Rapid Synergy Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7773",
+"name": "EP Manufacturing Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7803",
+"name": "Rubberex Corporation M Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7811",
+"name": "Sapura Industrial Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7854",
+"name": "Timberwell Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7889",
+"name": "Thriven Global Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7935",
+"name": "Milux Corporation Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7943",
+"name": "Sand Nisko Capital Bhd",
+"type": "Common Stock"
+},
+{
+"code": "7986",
+"name": "CN Asia Corporation Bhd",
+"type": "Common Stock"
+},
+{
+"code": "8044",
+"name": "Computer Forms (Malaysia) Bhd",
+"type": "Common Stock"
+},
+{
+"code": "8052",
+"name": "Central Industrial Corp",
+"type": "Common Stock"
+},
+{
+"code": "8079",
+"name": "Lee Swee Kiat Group Bhd",
+"type": "Common Stock"
+},
+{
+"code": "8117",
+"name": "PGF Capital Bhd",
+"type": "Common Stock"
+},
+{
+"code": "8141",
+"name": "Majuperak Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "8176",
+"name": "ATA IMS Bhd",
+"type": "Common Stock"
+},
+{
+"code": "8192",
+"name": "Mercury Industries Bhd",
+"type": "Common Stock"
+},
+{
+"code": "8206",
+"name": "Eco World Develop Group",
+"type": "Common Stock"
+},
+{
+"code": "8273",
+"name": "Public Packages Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "8303",
+"name": "Lotus KFM Bhd",
+"type": "Common Stock"
+},
+{
+"code": "8311",
+"name": "Pesona Metro Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "8338",
+"name": "Dataprep Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "8346",
+"name": "Perak Corporation Bhd",
+"type": "Common Stock"
+},
+{
+"code": "8362",
+"name": "KYM Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "8397",
+"name": "Tiong Nam Logistics Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "8419",
+"name": "Pansar Bhd",
+"type": "Common Stock"
+},
+{
+"code": "8435",
+"name": "Concrete Engineering Products",
+"type": "Common Stock"
+},
+{
+"code": "8443",
+"name": "Hil Industries Bhd",
+"type": "Common Stock"
+},
+{
+"code": "8478",
+"name": "Hwa Tai Industries Bhd",
+"type": "Common Stock"
+},
+{
+"code": "8486",
+"name": "Lion Forest Industries Bhd",
+"type": "Common Stock"
+},
+{
+"code": "8494",
+"name": "LBI Capital Bhd",
+"type": "Common Stock"
+},
+{
+"code": "8524",
+"name": "Taliworks Corporation Bhd",
+"type": "Common Stock"
+},
+{
+"code": "8532",
+"name": "Pertama Digital Berhad",
+"type": "Common Stock"
+},
+{
+"code": "8567",
+"name": "Salcon Engineering Berhad",
+"type": "Common Stock"
+},
+{
+"code": "8583",
+"name": "Mah Sing Group Bhd",
+"type": "Common Stock"
+},
+{
+"code": "8591",
+"name": "Crest Builder Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "8605",
+"name": "Federal International Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "8613",
+"name": "Enra Group Bhd",
+"type": "Common Stock"
+},
+{
+"code": "8621",
+"name": "LPI Capital Bhd",
+"type": "Common Stock"
+},
+{
+"code": "8648",
+"name": "OTEQ Berhad",
+"type": "Common Stock"
+},
+{
+"code": "8664",
+"name": "SP Setia Bhd",
+"type": "Common Stock"
+},
+{
+"code": "8672",
+"name": "Kamdar Group (Malaysia) Bhd",
+"type": "Common Stock"
+},
+{
+"code": "8702",
+"name": "Texchem Resources Bhd",
+"type": "Common Stock"
+},
+{
+"code": "8745",
+"name": "S F Capital Bhd",
+"type": "Common Stock"
+},
+{
+"code": "8869",
+"name": "Press Metal Bhd",
+"type": "Common Stock"
+},
+{
+"code": "8877",
+"name": "Ekovest Bhd",
+"type": "Common Stock"
+},
+{
+"code": "8885",
+"name": "Avillion Bhd",
+"type": "Common Stock"
+},
+{
+"code": "8893",
+"name": "M K Land Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "8907",
+"name": "Eg Industries Bhd",
+"type": "Common Stock"
+},
+{
+"code": "8923",
+"name": "Jiankun International Bhd",
+"type": "Common Stock"
+},
+{
+"code": "8966",
+"name": "Techbase Industries Berhad",
+"type": "Common Stock"
+},
+{
+"code": "8982",
+"name": "Cepatwawasan Group Bhd",
+"type": "Common Stock"
+},
+{
+"code": "9008",
+"name": "Tegra Berhad",
+"type": "Common Stock"
+},
+{
+"code": "9016",
+"name": "Eksons Corp Bhd",
+"type": "Common Stock"
+},
+{
+"code": "9059",
+"name": "TSH Resources Bhd",
+"type": "Common Stock"
+},
+{
+"code": "9075",
+"name": "Theta Edge Bhd",
+"type": "Common Stock"
+},
+{
+"code": "9083",
+"name": "Kumpulan Jetson Bhd",
+"type": "Common Stock"
+},
+{
+"code": "9091",
+"name": "Emico Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "9113",
+"name": "Iconic Worldwide Bhd",
+"type": "Common Stock"
+},
+{
+"code": "9121",
+"name": "KPS Consortium Bhd",
+"type": "Common Stock"
+},
+{
+"code": "9148",
+"name": "Advanced Packaging Tech (Malaysia)",
+"type": "Common Stock"
+},
+{
+"code": "9172",
+"name": "Formosa Prosonic Industries",
+"type": "Common Stock"
+},
+{
+"code": "9199",
+"name": "Lysaght Galvanized Steel Bhd",
+"type": "Common Stock"
+},
+{
+"code": "9237",
+"name": "Sarawak Consolidated Industries Bhd",
+"type": "Common Stock"
+},
+{
+"code": "9261",
+"name": "Gadang Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "9288",
+"name": "Bonia Corporation Bhd",
+"type": "Common Stock"
+},
+{
+"code": "9296",
+"name": "RCE Capital Berhad",
+"type": "Common Stock"
+},
+{
+"code": "9318",
+"name": "Fitters Diversified Bhd",
+"type": "Common Stock"
+},
+{
+"code": "9326",
+"name": "LB Aluminium Bhd",
+"type": "Common Stock"
+},
+{
+"code": "9334",
+"name": "KESM Industries Bhd",
+"type": "Common Stock"
+},
+{
+"code": "9369",
+"name": "Teo Guan Lee Corporation Bhd",
+"type": "Common Stock"
+},
+{
+"code": "9377",
+"name": "FSBM Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "9385",
+"name": "Lay Hong Bhd",
+"type": "Common Stock"
+},
+{
+"code": "9393",
+"name": "Industronics Bhd",
+"type": "Common Stock"
+},
+{
+"code": "9407",
+"name": "Paragon Union Bhd",
+"type": "Common Stock"
+},
+{
+"code": "9423",
+"name": "CWG Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "9431",
+"name": "Seni Jaya Corporation Bhd",
+"type": "Common Stock"
+},
+{
+"code": "9466",
+"name": "KKB Engineering Berhad",
+"type": "Common Stock"
+},
+{
+"code": "9539",
+"name": "Multi-Usage Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "9571",
+"name": "Mitrajaya Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "9598",
+"name": "Pintaras Jaya Bhd",
+"type": "Common Stock"
+},
+{
+"code": "9601",
+"name": "Ho Wah Genting Bhd",
+"type": "Common Stock"
+},
+{
+"code": "9679",
+"name": "WCT Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "9687",
+"name": "Ideal United Bintang Bhd",
+"type": "Common Stock"
+},
+{
+"code": "9695",
+"name": "PLS Plantations Bhd",
+"type": "Common Stock"
+},
+{
+"code": "9717",
+"name": "Sycal Ventures Bhd",
+"type": "Common Stock"
+},
+{
+"code": "9741",
+"name": "Rohas Tecnic Bhd",
+"type": "Common Stock"
+},
+{
+"code": "9776",
+"name": "Rivertree STF Synergies Berhad",
+"type": "Common Stock"
+},
+{
+"code": "9792",
+"name": "SEG International Bhd",
+"type": "Common Stock"
+},
+{
+"code": "9814",
+"name": "Bertam Alliance Bhd",
+"type": "Common Stock"
+},
+{
+"code": "9822",
+"name": "Sam Engineering Equipment",
+"type": "Common Stock"
+},
+{
+"code": "9873",
+"name": "Prestar Resources Bhd",
+"type": "Common Stock"
+},
+{
+"code": "9881",
+"name": "Leader Steel Holdings Bhd",
+"type": "Common Stock"
+},
+{
+"code": "9938",
+"name": "Bright Packaging Industry Bhd",
+"type": "Common Stock"
+},
+{
+"code": "9946",
+"name": "ETA Group Berhad",
+"type": "Common Stock"
+},
+{
+"code": "9954",
+"name": "RGT Bhd",
+"type": "Common Stock"
+},
+{
+"code": "9962",
+"name": "Gromutual Bhd",
+"type": "Common Stock"
+},
+{
+"code": "9997",
+"name": "Pensonic Holdings Bhd",
+"type": "Common Stock"
+}
+]

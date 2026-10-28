@@ -229,6 +229,7 @@ main>.card,main>.alert,main>.grid2,main>.disc,main>.pad,.search,.results{margin-
 /* ---- 5 ISYARAT TERKUAT ---- */
 .t5{display:grid;gap:10px;margin:0 var(--gut)}
 @media (min-width:900px){.t5{grid-template-columns:1fr 1fr}}
+.rbend{font-size:12px;color:var(--gold);font-weight:600}
 .champ{border:1px solid var(--gold);border-radius:14px;background:linear-gradient(180deg,var(--gold2),var(--card));padding:6px 14px 12px}
 .champ .smr:last-of-type{border-bottom:0}
 .smbtn{display:flex;align-items:center;gap:12px;width:100%;padding:14px 16px;border:1px solid var(--gold);border-radius:14px;background:var(--gold2);color:var(--ink);font:14px var(--f);cursor:pointer;text-align:left}
@@ -815,12 +816,12 @@ function rbStats(sum,scale,capital){
 function rbRow(t,scale,live){
   const nm=shortName((S.paper.names&&S.paper.names[t.c])||t.n||nameOf(t.c)||t.c);
   if(live){const m=mk(t.c),now=m&&m.c;const u=now?(now/t.en-1-S.paper.fee)*rbStake():null;
-    return `<button class="rbr" data-code="${esc(t.c)}"><span class="rbm"><b>${esc(nm)}</b> <span class="code">${esc(t.c)}</span><span class="muted">${esc(setupName(t.k))} · masuk ${fmtD(t.d)} @ ${px(t.en)}</span><span class="muted">sasaran ${px(t.tg)} · had ${px(t.sl)}${now?` · kini ${px(now)}`:''}</span></span><b class="${u==null?'':u>=0?'up':'dn'}">${u==null?'-':rmS(u)}</b></button>`;}
+    return `<button class="rbr" data-code="${esc(t.c)}"><span class="rbm"><b>${esc(nm)}</b> <span class="code">${esc(t.c)}</span><span class="muted">${esc(setupName(t.k))} · masuk ${fmtD(t.d)} @ ${px(t.en)}</span><span class="muted">sasaran ${px(t.tg)} · had ${px(t.sl)}${now?` · kini ${px(now)}`:''}</span><span class="rbend">${t.md?`<span>tempoh biasa hingga ${fmtD(addTradingDays(t.d,Math.max(1,Math.round(t.md))))}</span> · `:''}<span>tutup paling lewat ${fmtD(addTradingDays(t.d,BTH().h))}</span></span></span><b class="${u==null?'':u>=0?'up':'dn'}">${u==null?'-':rmS(u)}</b></button>`;}
   const r=RES3[t.res];return `<button class="rbr" data-code="${esc(t.c)}"><span class="rbm"><b>${esc(nm)}</b> <span class="code">${esc(t.c)}</span><span class="muted">${esc(setupName(t.k))} · ${fmtD(t.d)} → ${fmtD(t.exit||t.end)} · ${t.days} hari</span></span><span class="rbres"><span class="badge ${r[2]}">${r[0]}</span><b class="${r[1]}">${rmS(t.ret*rbStake()/100)}</b></span></button>`;
 }
 function rRobot(){
   const P=S.paper;let h=`<div class="card"><div class="row between"><h2 style="margin:0">Robot Auto</h2><span class="badge b-warn">Wang maya</span></div>
-    <p class="muted" style="margin:6px 0 10px">Robot "melabur" nilai maya pada setiap isyarat dalam 5 terkuat dan keluar bila harga sampai paras atas (menang), paras bawah (kalah) atau selepas ${(S.market&&S.market.meta.bt&&S.market.meta.bt.h)||40} hari dagangan. Paling banyak ${P?P.maxOpen:5} kedudukan serentak. Tiada wang sebenar terlibat.</p>
+    <p class="muted" style="margin:6px 0 10px">Robot "melabur" nilai maya pada setiap isyarat dalam 5 terkuat dan keluar bila harga sampai paras atas (menang), paras bawah (kalah) atau selepas ${(S.market&&S.market.meta.bt&&S.market.meta.bt.h)||40} hari dagangan (tarikh "tutup paling lewat"). Paling banyak ${P?P.maxOpen:5} kedudukan serentak. Tiada wang sebenar terlibat.</p>
     <label>Nilai maya setiap isyarat (RM)</label><input id="rbS" inputmode="decimal" value="${rbStake()}"></div>`;
   if(!P){$('#main').innerHTML=h+`<div class="alert a-amber">Data Robot Auto belum diterima. Robot GitHub akan menghasilkannya pada larian seterusnya.</div>`;bindRb();return;}
   const sc=rbScale(),cap=P.maxOpen*rbStake();
@@ -1455,7 +1456,7 @@ EN_RX.unshift(
 [/^📊 Lihat ujian sejarah 12 bulan(?: · ketepatan (\S+)% · (.+))?$/,(m,a,b)=>`📊 View 12-month historical test${a?` · accuracy ${a}% · ${b}`:''}`],
 [/^(.+) – (.+)\. Robot mengulang setiap hari dagangan setahun lepas\. (.*)$/,(m,a,b,c)=>`${a} – ${b}. The robot replays every trading day of the past year. Each day it only uses statistics from trades already closed before that day, so no future information is used.`],
 [/^Lihat semua \((\d+)\)$/,'See all ($1)'],
-[/^Robot "melabur" nilai maya pada setiap isyarat dalam 5 terkuat dan keluar bila harga sampai paras atas \(menang\), paras bawah \(kalah\) atau selepas (\d+) hari dagangan\. Paling banyak (\d+) kedudukan serentak\. Tiada wang sebenar terlibat\.$/,'The robot "invests" a virtual amount in every signal among the 5 strongest and exits when price reaches the upper level (win), the lower level (loss) or after $1 trading days. At most $2 positions at a time. No real money is involved.'],
+[/^Robot "melabur" nilai maya pada setiap isyarat dalam 5 terkuat dan keluar bila harga sampai paras atas \(menang\), paras bawah \(kalah\) atau selepas (\d+) hari dagangan \(tarikh "tutup paling lewat"\)\. Paling banyak (\d+) kedudukan serentak\. Tiada wang sebenar terlibat\.$/,'The robot "invests" a virtual amount in every signal among the 5 strongest and exits when price reaches the upper level (win), the lower level (loss) or after $1 trading days (the "closes at the latest" date). At most $2 positions at a time. No real money is involved.'],
 [/^(\d+) menang · (\d+) kalah · (\d+) tamat masa$/,'$1 won · $2 lost · $3 timed out'],
 [/^daripada (\d+) dagangan maya$/,'from $1 virtual trades'],
 [/^modal maya (.+) \((\d+) × (.+)\)$/,'virtual capital $1 ($2 × $3)'],
@@ -1464,7 +1465,7 @@ EN_RX.unshift(
 [/^\. Ketepatan (\S+)% belum cukup tinggi untuk menampung dagangan yang kalah\.$/,'. Accuracy of $1% is not yet high enough to cover the losing trades.'],
 [/^Sejak (.+)$/,'Since $1'],
 [/^Kedudukan maya terbuka \((\d+)\/(\d+)\)$/,'Open virtual positions ($1/$2)'],
-[/^masuk (.+) @ (\S+)$/,'entered $1 @ $2'],[/^sasaran (\S+)$/,'target $1'],[/^had (\S+)$/,'limit $1'],[/^kini (\S+)$/,'now $1'],
+[/^masuk (.+) @ (\S+)$/,'entered $1 @ $2'],[/^tempoh biasa hingga (.+)$/,'typical period until $1'],[/^tutup paling lewat (.+)$/,'closes at the latest on $1'],[/^sasaran (\S+)$/,'target $1'],[/^had (\S+)$/,'limit $1'],[/^kini (\S+)$/,'now $1'],
 [/^(.+) → (.+)$/,(m,a,b)=>`${trText(a)} → ${trText(b)}`],
 [/^Simulasi menggunakan harga tutup harian dan kos dagangan (\S+)%\. Ujian sejarah menggunakan senarai syariah SC terkini untuk semua tempoh\. Keputusan simulasi bukan jaminan prestasi masa depan dan bukan cadangan beli atau jual\.$/,'The simulation uses daily closing prices and $1% trading costs. The historical test uses the latest SC Shariah list for the whole period. Simulated results are not a guarantee of future performance and not a buy or sell recommendation.'],
 [/^Tertinggi (\S+)$/,'High $1'],[/^Terendah (\S+)$/,'Low $1'],

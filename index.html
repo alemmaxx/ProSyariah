@@ -574,8 +574,9 @@ function probBar(p,be){return `<div class="pbar"><span style="width:${p}%"></spa
 function opCard(code,op,m){
   const be=breakeven(op);const tp=(op.tg/op.en-1)*100,sp=(1-op.sl/op.en)*100;const H=BTH().h;
   const short=(op.md||0)<5;const edge=op.p/100-be;
-  const verdict=op.ev!=null&&op.ev>0&&edge>0.03?['Isyarat kuat (sejarah)','b-ok']:edge>0?['Isyarat sederhana','b-warn']:['Isyarat lemah','b-no'];
+  const verdict=op.ev!=null&&op.ev>0&&edge>0.03?['Rekod sejarah: baik','b-ok']:edge>0?['Rekod sejarah: sederhana','b-warn']:['Rekod sejarah: kurang baik','b-no'];
   return `<div class="opc"><div class="row between"><div><b>${esc(setupName(op.k))}</b><div class="muted">${op.ago?`Isyarat ${op.ago} hari dagangan lalu`:'Isyarat hari ini'}${short?' · jangka pendek':''}</div></div><span class="badge ${verdict[1]}">${verdict[0]}</span></div>
+   <div class="muted" style="font-size:12px;margin-top:6px">Rekod sejarah = seberapa kerap isyarat ini berjaya pada saham ini dahulu. Ia berbeza daripada skor teknikal, yang menunjukkan trend sekarang.</div>
    ${weakNote(code,op.k)?`<div class="wnote" style="margin-top:8px">ℹ️ ${weakNote(code,op.k)}</div>`:''}
    <div class="opp"><span class="big">${op.p}%</span><span class="muted">kali harga sampai paras atas sebelum paras bawah, dalam sejarah saham ini</span></div>
    ${probBar(op.p,be)}<div class="muted" style="font-size:12px">Garis putih = paras neutral ${(be*100).toFixed(0)}%, iaitu kadar yang dijangka jika pergerakan harga rawak. Peratus melepasi garis bermakna isyarat ini pernah lebih kuat daripada rawak.</div>
@@ -797,6 +798,11 @@ function openStatusHelp(){
   const d=document.createElement('div');d.className='help';d.id='help';
   d.innerHTML=`<div class="help-p" role="dialog" aria-modal="true"><div class="shd-top" style="margin-bottom:10px"><h2 style="margin:0">Maksud status</h2><button class="xbtn" id="helpX" aria-label="Tutup">✕</button></div>
     ${rows.map(r=>`<div class="hrow"><span class="hic">${r[0]}</span><div><b>${r[1]}</b><p class="muted">${r[2]}</p></div></div>`).join('')}
+    <h3>Rekod sejarah isyarat</h3>
+    <div class="hrow"><span class="badge b-ok">Rekod sejarah: baik</span><p class="muted" style="margin:4px 0 0">Pada saham ini, isyarat jenis ini selalu sampai paras atas, jelas melebihi kadar rawak.</p></div>
+    <div class="hrow"><span class="badge b-warn">Rekod sejarah: sederhana</span><p class="muted" style="margin:4px 0 0">Sedikit lebih baik daripada rawak.</p></div>
+    <div class="hrow"><span class="badge b-no">Rekod sejarah: kurang baik</span><p class="muted" style="margin:4px 0 0">Tidak lebih baik daripada rawak. Ini bukan ramalan harga akan jatuh atau melantun; ia cuma bermaksud isyarat ini kurang boleh dipercayai untuk saham ini.</p></div>
+    <p class="muted" style="font-size:13px">Saham boleh mempunyai skor teknikal <b>Kuat</b> (trend sekarang naik) tetapi rekod sejarah <b>kurang baik</b> (corak isyarat itu jarang berjaya pada saham itu), atau sebaliknya. Kedua-duanya mengukur perkara yang berbeza.</p>
     <h3>Tahap skor teknikal</h3>${lv.map(r=>`<div class="hrow"><span class="badge ${r[0]}">${r[1]}</span><p class="muted" style="margin:4px 0 0">${r[2]}</p></div>`).join('')}
     <p class="disc">Semua status ialah bacaan indicator berdasarkan sejarah harga, bukan cadangan beli atau jual.</p></div>`;
   document.body.appendChild(d);
@@ -1202,6 +1208,13 @@ const EN_PHRASE=[
 ];
 
 Object.assign(EN_EXACT,{
+'Rekod sejarah: baik':'Track record: good','Rekod sejarah: sederhana':'Track record: moderate','Rekod sejarah: kurang baik':'Track record: poor','Rekod sejarah isyarat':'Signal track record',
+'Rekod sejarah = seberapa kerap isyarat ini berjaya pada saham ini dahulu. Ia berbeza daripada skor teknikal, yang menunjukkan trend sekarang.':'Track record = how often this signal worked on this stock in the past. It is different from the technical score, which shows the current trend.',
+'Pada saham ini, isyarat jenis ini selalu sampai paras atas, jelas melebihi kadar rawak.':'On this stock, this type of signal often reached the upper level, clearly above the random rate.',
+'Sedikit lebih baik daripada rawak.':'Slightly better than random.',
+'Tidak lebih baik daripada rawak. Ini bukan ramalan harga akan jatuh atau melantun; ia cuma bermaksud isyarat ini kurang boleh dipercayai untuk saham ini.':'No better than random. This is not a prediction that price will fall or rebound; it only means this signal is less reliable for this stock.',
+'Saham boleh mempunyai skor teknikal':'A stock can have a technical score of','(trend sekarang naik) tetapi rekod sejarah':'(current trend up) but a','(corak isyarat itu jarang berjaya pada saham itu), atau sebaliknya. Kedua-duanya mengukur perkara yang berbeza.':'track record (that signal pattern rarely worked on that stock), or the other way round. They measure different things.',
+'kurang baik':'poor',
 'Maksud status':'What the statuses mean','Tahap skor teknikal':'Technical score levels',
 'Isyarat aktif · dalam tempoh biasa':'Active signal · within typical period',
 'Ada isyarat teknikal yang masih "segar". Harga belum sampai paras atas atau paras bawah, dan masih dalam tempoh biasa saham ini sampai ke paras atas dalam sejarah. "Hari ke-X daripada ~Y" menunjukkan berapa hari dagangan sudah berlalu sejak isyarat bermula.':'There is a "fresh" technical signal. Price has not reached the upper or lower level and is still within the time this stock typically took to reach the upper level historically. "Day X of ~Y" shows how many trading days have passed since the signal started.',

@@ -156,6 +156,13 @@ def main():
     codes = [s["code"] for s in syms if s.get("type") != "SC"]
     print(f"Tarik harga {len(codes)} kaunter guna {PROVIDER} …")
     px = prices_eodhd(codes) if PROVIDER == "eodhd" and KEY else prices_yf(codes)
+    # Abaikan bar hari ini jika robot berjalan sebelum pasaran Bursa tutup (harga separuh hari)
+    myt = datetime.now(timezone(timedelta(hours=8)))
+    if (myt.hour, myt.minute) < (17, 30):
+        today_myt = myt.date().isoformat()
+        px = {c: [r for r in rows if r[0] < today_myt] for c, rows in px.items()}
+        px = {c: rows for c, rows in px.items() if len(rows) >= 5}
+        print(f"Sebelum pasaran tutup ({myt:%H:%M} MYT) — bar {today_myt} diabaikan")
     if len(px) < max(5, len(codes) * 0.3):
         raise SystemExit(f"GAGAL: hanya {len(px)} kaunter ada harga. Data lama tidak diganti.")
 

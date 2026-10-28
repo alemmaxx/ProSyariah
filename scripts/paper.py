@@ -26,6 +26,17 @@ MAX_OPEN = 5
 HIST_DAYS = 365
 
 
+def grade(edge, n, ev):
+    """Sama seperti app (rateSignal): 0=Kuat(A) 1=B 2=C 3=Lemah(D)."""
+    if edge <= 0 or (ev is not None and ev <= 0):
+        return 3
+    if edge >= 0.10 and (n is None or n >= 8):
+        return 0
+    if edge >= 0.05 and (n is None or n >= 5):
+        return 1
+    return 2
+
+
 def _summary(trades):
     n = len(trades)
     if not n:
@@ -103,12 +114,12 @@ def historical(runs, px, compliant, min_score=0):
         be = (e["sp"] + BT.FEE) / (e["tp"] + e["sp"])
         if p - be <= 0:
             continue
-        cands[e["sd"]].append({**e, "p": round(p * 100), "edge": p - be})
+        cands[e["sd"]].append({**e, "p": round(p * 100), "edge": p - be, "g": grade(p - be, n, rsum / n)})
     open_pos, done = [], []
     for d in sorted(cands):
         open_pos = [x for x in open_pos if x["ed"] > d]
         held = {x["code"] for x in open_pos}
-        for c in sorted(cands[d], key=lambda x: -x["edge"]):
+        for c in sorted(cands[d], key=lambda x: (x["g"], -x["edge"])):
             if len(open_pos) >= MAX_OPEN:
                 break
             if c["code"] in held:
@@ -144,8 +155,8 @@ def live(prices, stocks, asof):
             tp, sp = op["tg"] / op["en"] - 1, 1 - op["sl"] / op["en"]
             edge = op["p"] / 100 - (sp + BT.FEE) / (tp + sp)
             if edge > 0:
-                cands.append((edge, code, v, op))
-    for edge, code, v, op in sorted(cands, key=lambda x: -x[0]):
+                cands.append((grade(edge, op.get("n"), op.get("ev")), edge, code, v, op))
+    for g, edge, code, v, op in sorted(cands, key=lambda x: (x[0], -x[1])):
         if len(still) >= MAX_OPEN:
             break
         if code in held:

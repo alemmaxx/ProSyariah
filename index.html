@@ -59,6 +59,7 @@ label{display:block;font-size:13px;color:var(--muted);margin:10px 0 4px}
 .b-no{background:var(--red2);color:var(--red)}
 .b-na{background:var(--line);color:var(--muted)}
 .b-warn{background:var(--amber2);color:var(--amber)}
+.b-gold{background:var(--gold2);color:var(--gold)}
 .list .item{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--line);cursor:pointer}
 .list .item:last-child{border-bottom:0}
 .code{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
@@ -719,7 +720,7 @@ function top5HTML(){
   if(!L.length)h+=`<div class="emptyrail" style="margin:0">Tiada isyarat teknikal yang melepasi paras neutral pada masa ini.</div>`;
   L.forEach((x,i)=>{const pct=Math.min(100,x.el/x.md*100);
     h+=`<button class="t5r" data-code="${esc(x.code)}"><span class="t5n">${i+1}</span><span class="t5b">
-      <span class="row between"><span><b>${esc(shortName(x.name))}</b> <span class="code">${esc(x.code)}</span>${(S.t5&&S.t5[x.code+':'+x.k+':'+x.start]&&S.t5[x.code+':'+x.k+':'+x.start].ev.in===S.market.meta.asof)?' <span class="badge b-ok">Baharu</span>':''}</span><b class="t5p">${x.p}%</b></span>
+      <span class="row between"><span><b>${esc(shortName(x.name))}</b> <span class="code">${esc(x.code)}</span>${S.paper&&S.paper.live&&S.paper.live.open.some(p=>p.c===x.code)?' <span class="badge b-gold">🤖 Dalam robot</span>':''}${(S.t5&&S.t5[x.code+':'+x.k+':'+x.start]&&S.t5[x.code+':'+x.k+':'+x.start].ev.in===S.market.meta.asof)?' <span class="badge b-ok">Baharu</span>':''}</span><b class="t5p">${x.p}%</b></span>
       <span class="muted">${esc(setupName(x.k))}</span>
       ${rateHTML(x)}
       <span class="t5d"><span>Isyarat bermula <b>${fmtD(x.start)}</b></span><span>Tempoh biasa ${x.md} hari dagangan, hingga <b>${fmtD(x.end)}</b></span></span>
@@ -805,7 +806,7 @@ function rRobot(){
         Object.entries(H.bySetup).map(([k,v])=>`<div><span>${esc(setupName(k))}</span><span>${v.n||0}</span><span>${v.n?v.win+'%':'-'}</span><span class="${(v.pnl||0)>=0?'up':'dn'}">${v.n?rmS(v.pnl*sc):'-'}</span></div>`).join('')+`</div></div>`;
       h+=`<div class="card"><h2>Dagangan maya terkini</h2>${H.recent.slice(0,RB_ALL?60:12).map(t=>rbRow(t,sc)).join('')}${H.recent.length>12?`<button class="btn sm sec" style="margin-top:10px" id="rbAll">${RB_ALL?'Tunjuk kurang':'Lihat semua ('+H.recent.length+')'}</button>`:''}</div>`;}}
   else{const L=P.live;
-    h+=`<div class="card"><h2>Sejak ${fmtD(L.started)}</h2><p class="muted" style="margin-top:0">Pilihan sebenar robot setiap hari bekerja, disemak dengan harga sebenar.</p>${rbStats(L.summary,sc,cap)}</div>`;
+    h+=`<div class="card"><h2>Sejak ${fmtD(L.started)}</h2><p class="muted" style="margin-top:0">Pilihan sebenar robot setiap hari bekerja, disemak dengan harga sebenar. Robot memilih isyarat baharu dengan susunan yang sama seperti 5 isyarat terkuat (Isyarat Kuat dahulu), kemudian memegangnya sehingga paras atas, paras bawah atau 40 hari dagangan — ia tidak bertukar walaupun senarai 5 terkuat berubah esoknya.</p>${rbStats(L.summary,sc,cap)}</div>`;
     h+=`<div class="card"><h2>Kedudukan maya terbuka (${L.open.length}/${P.maxOpen})</h2>${L.open.length?L.open.map(t=>rbRow(t,sc,true)).join(''):'<p class="muted">Tiada kedudukan terbuka. Robot akan masuk bila ada isyarat baharu dalam 5 terkuat.</p>'}</div>`;
     if(L.curve&&L.curve.length>1)h+=`<div class="card"><h2>Untung / rugi terkumpul</h2>${equitySVG(L.curve,sc)}</div>`;
     if(L.recent.length)h+=`<div class="card"><h2>Dagangan maya selesai</h2>${L.recent.slice(0,RB_ALL?60:12).map(t=>rbRow(t,sc)).join('')}${L.recent.length>12?`<button class="btn sm sec" style="margin-top:10px" id="rbAll">${RB_ALL?'Tunjuk kurang':'Lihat semua ('+L.recent.length+')'}</button>`:''}</div>`;}
@@ -855,6 +856,7 @@ function stockStatus(code,name){
     else if(el>md)out.push({ic:'⏳',cls:'s-warn',t:`Isyarat ${sig.p}% · tempoh biasa sudah berlalu (hari ke-${el} daripada ~${md})`});
     else out.push({ic:'🟢',cls:'s-ok',t:`Isyarat aktif ${sig.p}% (${rateSignal({...sig,n:sig.n,w:sig.w}).lbl}) · dalam tempoh biasa (hari ke-${el} daripada ~${md})`});}
   else if(m&&m.va)out.push({ic:'⚪',cls:'s-na',t:`Tiada isyarat teknikal aktif · skor ${m.sc}/${m.va} (${scoreVerdict(m.sc,m.va).lbl})`});
+  const rp=S.paper&&S.paper.live&&S.paper.live.open.find(p=>p.c===code);if(rp){const now=m&&m.c;const u=now?(now/rp.en-1-S.paper.fee)*rbStake():null;out.push({ic:'🤖',cls:'s-warn',t:`Dalam robot sejak ${fmtD(rp.d)} @ ${px(rp.en)}${u!=null?` · ${rmS(u)}`:''}`});}
   if(hd){const lc=lastClose(code);if(lc){const pl=(lc.c-hd.cost)*hd.qty,pct=(lc.c/hd.cost-1)*100;const XP=exitPlan(hd);
     out.push({ic:'💼',cls:pl>=0?'s-up':'s-no',t:`Pegangan anda ${pl>=0?'untung':'rugi'} ${rmS(pl)} (${pct>=0?'+':''}${pct.toFixed(1)}%)${XP?(XP.hit?' · harga tutup di bawah paras sokongan mengekor':' · di atas paras sokongan mengekor'):''}`});}}
   return out.length?out:null;
@@ -1284,6 +1286,8 @@ const EN_PHRASE=[
 ];
 
 Object.assign(EN_EXACT,{
+'🤖 Dalam robot':'🤖 In robot',
+'Pilihan sebenar robot setiap hari bekerja, disemak dengan harga sebenar. Robot memilih isyarat baharu dengan susunan yang sama seperti 5 isyarat terkuat (Isyarat Kuat dahulu), kemudian memegangnya sehingga paras atas, paras bawah atau 40 hari dagangan — ia tidak bertukar walaupun senarai 5 terkuat berubah esoknya.':"The robot's actual picks every working day, checked against real prices. It picks new signals in the same order as the 5 strongest signals (Strong signals first), then holds them until the upper level, lower level or 40 trading days — it does not switch even if the 5 strongest list changes the next day.",
 'Isyarat Kuat':'Strong signal','Isyarat Sederhana':'Moderate signal','Isyarat Lemah':'Weak signal','Kuat':'Strong','Sederhana':'Moderate','Isyarat':'Signal','Tiada isyarat aktif':'No active signal',
 'Sentuh dan seret untuk lihat harga':'Touch and drag to see prices',
 'Dalam sejarah saham ini, isyarat ini jelas lebih kerap berjaya daripada gagal, dan disokong banyak contoh.':"In this stock's history, this signal clearly worked more often than random, backed by many examples.",
@@ -1369,6 +1373,7 @@ Object.assign(EN_EXACT,{
 'Paras ini naik mengikut harga tertinggi sejak tarikh belian dan tidak pernah turun. Harga tutup di bawahnya menandakan momentum menurun.':'This level rises with the highest price since the purchase date and never falls. A close below it signals weakening momentum.',
 });
 EN_RX.unshift(
+[/^Dalam robot sejak (.+) @ (\S+)(.*)$/,'In robot since $1 @ $2$3'],
 [/^Ujian robot 12 bulan \((.+) setiap isyarat, (\d+) dagangan\): (.+) tepat (\S+)% · (untung|rugi) (.+)$/,(m,a,b,c,d,e,f)=>`12-month robot test (${a} per signal, ${b} trades): ${trText(c)} accurate ${d}% · ${e==='untung'?'profit':'loss'} ${f}`],
 [/^Skor teknikal (\d+)\/(\d+)$/,'Technical score $1/$2'],[/^Harga (\S+)$/,'Price $1'],
 [/^Berjaya (\d+) daripada (\d+) kali pada saham ini$/,'Worked $1 out of $2 times on this stock'],

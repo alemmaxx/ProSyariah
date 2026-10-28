@@ -58,6 +58,7 @@ label{display:block;font-size:13px;color:var(--muted);margin:10px 0 4px}
 .b-ok{background:var(--green2);color:var(--green)}
 .b-no{background:var(--red2);color:var(--red)}
 .b-na{background:var(--line);color:var(--muted)}
+.b-warn{background:var(--amber2);color:var(--amber)}
 .list .item{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--line);cursor:pointer}
 .list .item:last-child{border-bottom:0}
 .code{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
@@ -295,6 +296,19 @@ nav button{min-width:0}
 .rate{display:flex;flex-direction:column;gap:3px;align-items:flex-start;margin:4px 0}
 .rate .muted{font-size:12px}
 .rbit{font-size:12px;color:var(--ink);opacity:.85}
+
+.poster .pgr{position:absolute;left:10px;top:52px;z-index:1;font-size:10px;padding:2px 7px}
+.poster.wide .pgr{top:46px}
+.hstat{order:2;display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end;margin:10px 0 2px}
+.hstat>span{display:flex;flex-direction:column;gap:3px}
+.hstat small{font-size:11px;color:var(--muted)}
+.hero h2{order:3}.hero .sub{order:4}.hero .stats{order:5}.hero .hc{order:6}.hero .acts{order:7}
+.hero .hc{touch-action:pan-y;cursor:crosshair}
+.hcline{position:absolute;top:0;bottom:0;width:1px;background:var(--muted);opacity:.7;display:none;pointer-events:none}
+.hctip{position:absolute;transform:translate(-50%,-130%);display:none;flex-direction:column;align-items:center;gap:1px;background:var(--card2);border:1px solid var(--line);border-radius:8px;padding:5px 9px;font-size:11px;white-space:nowrap;pointer-events:none;z-index:2}
+.hctip b{font-size:13px;color:var(--gold)}
+canvas#cv{touch-action:pan-y;cursor:crosshair}
+@media (min-width:820px){.hero .hc{z-index:0}.hero>*:not(.hc):not(.shade){position:relative;z-index:1}}
 </style>
 </head>
 <body translate="no">
@@ -541,7 +555,32 @@ function analyze(rawBars){
   return {tf,bars,c,e20,e50,e200,r,mac,sig,bb,last,checks,score,valid,cross};
 }
 function cssv(n){return getComputedStyle(document.documentElement).getPropertyValue(n).trim();}
-function drawChart(cv,A){
+
+/* ===== Graf interaktif: seret untuk lihat nilai ===== */
+let HC=null;
+function bindHeroChart(){
+  const el=document.querySelector('.hero .hc');if(!el||!HC)return;
+  let tip=el.querySelector('.hctip');if(!tip){tip=document.createElement('div');tip.className='hctip';el.appendChild(tip);}
+  let ln=el.querySelector('.hcline');if(!ln){ln=document.createElement('span');ln.className='hcline';el.appendChild(ln);}
+  const show=e=>{const r=el.getBoundingClientRect();const x=Math.min(Math.max((e.clientX-r.left)/r.width,0),1);const i=Math.round(x*(HC.v.length-1));
+    const v=HC.v[i],y=2+(1-(v-HC.mn)/(HC.mx-HC.mn||1))*(230-4);
+    ln.style.left=(i/(HC.v.length-1)*100)+'%';ln.style.display='block';
+    const chg=(v/HC.v[0]-1)*100;
+    tip.innerHTML=`<b>${px(v)}</b><span>${fmtD(HC.d[i])}</span><span class="${chg>=0?'up':'dn'}">${chg>=0?'+':''}${chg.toFixed(1)}%</span>`;
+    tip.style.display='flex';tip.style.left=Math.min(Math.max(i/(HC.v.length-1)*100,12),88)+'%';tip.style.top=(y/230*100)+'%';};
+  const hide=()=>{tip.style.display='none';ln.style.display='none';};
+  el.onpointerdown=e=>{show(e);};el.onpointermove=e=>{if(e.pointerType==='mouse'||e.buttons||e.pressure)show(e);};
+  el.onpointerleave=hide;el.onpointerup=e=>{if(e.pointerType!=='mouse')setTimeout(hide,1800);};
+}
+function bindCanvasHover(cv,A){
+  const N=Math.min(120,A.c.length),s0=A.c.length-N;
+  const at=e=>{const r=cv.getBoundingClientRect();const padL=4,padR=44;const x=(e.clientX-r.left-padL)/(r.width-padL-padR);return Math.min(Math.max(Math.round(x*(N-1)),0),N-1);};
+  cv.onpointerdown=e=>drawChart(cv,A,at(e));
+  cv.onpointermove=e=>{if(e.pointerType==='mouse'||e.buttons||e.pressure)drawChart(cv,A,at(e));};
+  cv.onpointerleave=()=>drawChart(cv,A);
+  cv.onpointerup=e=>{if(e.pointerType!=='mouse')setTimeout(()=>drawChart(cv,A),2500);};
+}
+function drawChart(cv,A,hi){
   const dpr=window.devicePixelRatio||1,W=cv.clientWidth,H=cv.clientHeight;cv.width=W*dpr;cv.height=H*dpr;
   const g=cv.getContext('2d');g.scale(dpr,dpr);g.clearRect(0,0,W,H);
   const N=Math.min(120,A.c.length),s=A.c.length-N;const sl=a=>a.slice(s);
@@ -564,6 +603,15 @@ function drawChart(cv,A){
   g.strokeStyle=cssv('--line');g.lineWidth=1;[30,70].forEach(l=>{g.beginPath();g.setLineDash([3,3]);g.moveTo(padL,RY(l));g.lineTo(W-padR,RY(l));g.stroke();g.setLineDash([]);g.fillStyle=cssv('--muted');g.fillText(l,W-padR+4,RY(l)+3);});
   g.fillText('RSI',padL+2,ry0+10);
   g.strokeStyle=cssv('--green');g.lineWidth=1.4;g.beginPath();let f=false;r.forEach((v,i)=>{if(v==null)return;if(!f){g.moveTo(X(i),RY(v));f=true;}else g.lineTo(X(i),RY(v));});g.stroke();
+  if(hi!=null&&c[hi]!=null){
+    const x=X(hi);g.strokeStyle=cssv('--muted');g.lineWidth=1;g.setLineDash([3,3]);g.beginPath();g.moveTo(x,4);g.lineTo(x,H-2);g.stroke();g.setLineDash([]);
+    g.fillStyle=cssv('--gold');g.beginPath();g.arc(x,Y(c[hi]),4,0,7);g.fill();
+    const b=A.bars[s+hi];const lines=[fmtD(b.d),'Harga '+px(c[hi]),r[hi]!=null?'RSI '+r[hi].toFixed(1):''].filter(Boolean).map(t=>trText(t));
+    g.font='bold 11px system-ui';const tw=Math.max(...lines.map(t=>g.measureText(t).width))+14,th=lines.length*15+8;
+    let bx=x+8;if(bx+tw>W-padR)bx=x-8-tw;const by=6;
+    g.fillStyle=cssv('--card2');g.strokeStyle=cssv('--line');g.beginPath();g.rect(bx,by,tw,th);g.fill();g.stroke();
+    g.fillStyle=cssv('--ink');lines.forEach((t,i)=>{g.font=(i?'11px':'bold 11px')+' system-ui';g.fillText(t,bx+7,by+17+i*15);});
+  }
 }
 
 /* ================= PELUANG, KEBARANGKALIAN & PELAN JUAL ================= */
@@ -653,14 +701,14 @@ function rateSignal(x){
   else if(edge>=0.10&&(n==null||n>=8))g='A';
   else if(edge>=0.05&&(n==null||n>=5))g='B';
   else g='C';
-  const G={A:['A · Kukuh','b-ok','Melepasi paras neutral dengan jelas dan disokong banyak contoh dalam sejarah.'],
-           B:['B · Baik','b-ok','Melepasi paras neutral dengan baik.'],
-           C:['C · Sederhana','b-warn','Sedikit melepasi paras neutral, atau contoh sejarah masih sedikit.'],
-           D:['D · Tidak meyakinkan','b-no','Tidak melepasi paras neutral dalam sejarah saham ini.']}[g];
+  const G={A:['Isyarat Kuat','b-ok','Dalam sejarah saham ini, isyarat ini jelas lebih kerap berjaya daripada gagal, dan disokong banyak contoh.'],
+           B:['Isyarat Sederhana','b-warn','Dalam sejarah saham ini, isyarat ini sedikit lebih kerap berjaya berbanding kadar rawak.'],
+           C:['Isyarat Sederhana','b-warn','Dalam sejarah saham ini, isyarat ini sedikit lebih kerap berjaya berbanding kadar rawak, tetapi contohnya masih sedikit.'],
+           D:['Isyarat Lemah','b-no','Dalam sejarah saham ini, isyarat ini tidak lebih kerap berjaya berbanding kadar rawak.']}[g];
   const bits=[];
   if(n!=null&&x.w!=null)bits.push(`Berjaya ${x.w} daripada ${n} kali pada saham ini`);
   const H=S.paper&&S.paper.hist&&S.paper.hist.bySetup&&S.paper.hist.bySetup[x.k];
-  if(H&&H.n)bits.push(`Ujian robot 12 bulan: ${setupName(x.k)} ${H.win}% · ${H.pnl>=0?'untung':'rugi'} ${rmS(H.pnl*rbScale())}`);
+  if(H&&H.n)bits.push(`Ujian robot 12 bulan (${rm(rbStake())} setiap isyarat, ${H.n} dagangan): ${setupName(x.k)} tepat ${H.win}% · ${H.pnl>=0?'untung':'rugi'} ${rmS(H.pnl*rbScale())}`);
   return {g,lbl:G[0],cls:G[1],txt:G[2],bits,edge,be};
 }
 function rateHTML(x){const R=rateSignal(x);
@@ -827,11 +875,10 @@ function openStatusHelp(){
   d.innerHTML=`<div class="help-p" role="dialog" aria-modal="true"><div class="shd-top" style="margin-bottom:10px"><h2 style="margin:0">Maksud status</h2><button class="xbtn" id="helpX" aria-label="Tutup">✕</button></div>
     ${rows.map(r=>`<div class="hrow"><span class="hic">${r[0]}</span><div><b>${r[1]}</b><p class="muted">${r[2]}</p></div></div>`).join('')}
     <h3>Penilaian isyarat</h3>
-    <div class="hrow"><span class="badge b-ok">A · Kukuh</span><p class="muted" style="margin:4px 0 0">Kebarangkalian melepasi paras neutral sekurang-kurangnya 10 mata dan disokong sekurang-kurangnya 8 contoh dalam sejarah saham itu.</p></div>
-    <div class="hrow"><span class="badge b-ok">B · Baik</span><p class="muted" style="margin:4px 0 0">Melepasi paras neutral sekurang-kurangnya 5 mata.</p></div>
-    <div class="hrow"><span class="badge b-warn">C · Sederhana</span><p class="muted" style="margin:4px 0 0">Melepasi paras neutral sedikit, atau contoh sejarah masih sedikit.</p></div>
-    <div class="hrow"><span class="badge b-no">D · Tidak meyakinkan</span><p class="muted" style="margin:4px 0 0">Tidak melepasi paras neutral. Bukan ramalan harga akan jatuh; cuma isyarat ini tidak boleh dipercayai untuk saham itu.</p></div>
-    <p class="muted" style="font-size:13px">Penilaian isyarat menilai corak isyarat berdasarkan sejarah saham itu sendiri. Skor teknikal (Kuat / Neutral / Lemah) pula menunjukkan trend sekarang. Untuk isyarat lantunan, skor teknikal memang selalu lemah kerana harga baru jatuh.</p>
+    <div class="hrow"><span class="badge b-ok">Isyarat Kuat</span><p class="muted" style="margin:4px 0 0">Kebarangkalian sejarah jelas melepasi paras neutral (sekurang-kurangnya 10 mata) dan disokong sekurang-kurangnya 8 contoh pada saham itu.</p></div>
+    <div class="hrow"><span class="badge b-warn">Isyarat Sederhana</span><p class="muted" style="margin:4px 0 0">Melepasi paras neutral, tetapi tidak banyak, atau contoh sejarahnya masih sedikit.</p></div>
+    <div class="hrow"><span class="badge b-no">Isyarat Lemah</span><p class="muted" style="margin:4px 0 0">Tidak melepasi paras neutral. Bukan ramalan harga akan jatuh; cuma isyarat ini kurang boleh dipercayai untuk saham itu.</p></div>
+    <p class="muted" style="font-size:13px"><b>Isyarat</b> menilai corak isyarat berdasarkan sejarah saham itu sendiri. <b>Skor teknikal</b> pula menunjukkan trend sekarang. Untuk isyarat lantunan, skor teknikal memang selalu lemah kerana harga baru jatuh — ini normal.</p>
     <h3>Tahap skor teknikal</h3>${lv.map(r=>`<div class="hrow"><span class="badge ${r[0]}">${r[1]}</span><p class="muted" style="margin:4px 0 0">${r[2]}</p></div>`).join('')}
     <p class="disc">Semua status ialah bacaan indicator berdasarkan sejarah harga, bukan cadangan beli atau jual.</p></div>`;
   document.body.appendChild(d);
@@ -1237,6 +1284,16 @@ const EN_PHRASE=[
 ];
 
 Object.assign(EN_EXACT,{
+'Isyarat Kuat':'Strong signal','Isyarat Sederhana':'Moderate signal','Isyarat Lemah':'Weak signal','Kuat':'Strong','Sederhana':'Moderate','Isyarat':'Signal','Tiada isyarat aktif':'No active signal',
+'Sentuh dan seret untuk lihat harga':'Touch and drag to see prices',
+'Dalam sejarah saham ini, isyarat ini jelas lebih kerap berjaya daripada gagal, dan disokong banyak contoh.':"In this stock's history, this signal clearly worked more often than random, backed by many examples.",
+'Dalam sejarah saham ini, isyarat ini sedikit lebih kerap berjaya berbanding kadar rawak.':"In this stock's history, this signal worked slightly more often than random.",
+'Dalam sejarah saham ini, isyarat ini sedikit lebih kerap berjaya berbanding kadar rawak, tetapi contohnya masih sedikit.':"In this stock's history, this signal worked slightly more often than random, but there are few examples.",
+'Dalam sejarah saham ini, isyarat ini tidak lebih kerap berjaya berbanding kadar rawak.':"In this stock's history, this signal did not work more often than random.",
+'Kebarangkalian sejarah jelas melepasi paras neutral (sekurang-kurangnya 10 mata) dan disokong sekurang-kurangnya 8 contoh pada saham itu.':'Historical probability clearly above the neutral level (at least 10 points) and backed by at least 8 examples on that stock.',
+'Melepasi paras neutral, tetapi tidak banyak, atau contoh sejarahnya masih sedikit.':'Above the neutral level, but not by much, or with few past examples.',
+'Tidak melepasi paras neutral. Bukan ramalan harga akan jatuh; cuma isyarat ini kurang boleh dipercayai untuk saham itu.':'Not above the neutral level. Not a prediction that price will fall; only that this signal is less reliable for that stock.',
+'menilai corak isyarat berdasarkan sejarah saham itu sendiri.':"rates the signal pattern using the stock's own history.",'pula menunjukkan trend sekarang. Untuk isyarat lantunan, skor teknikal memang selalu lemah kerana harga baru jatuh — ini normal.':'shows the current trend. For bounce signals the technical score is usually weak because price has just fallen — this is normal.','Skor teknikal':'Technical score',
 'A · Kukuh':'A · Solid','B · Baik':'B · Good','C · Sederhana':'C · Moderate','D · Tidak meyakinkan':'D · Not convincing','Penilaian isyarat':'Signal rating',
 'Melepasi paras neutral dengan jelas dan disokong banyak contoh dalam sejarah.':'Clearly above the neutral level and supported by many past examples.',
 'Melepasi paras neutral dengan baik.':'Comfortably above the neutral level.',
@@ -1312,6 +1369,8 @@ Object.assign(EN_EXACT,{
 'Paras ini naik mengikut harga tertinggi sejak tarikh belian dan tidak pernah turun. Harga tutup di bawahnya menandakan momentum menurun.':'This level rises with the highest price since the purchase date and never falls. A close below it signals weakening momentum.',
 });
 EN_RX.unshift(
+[/^Ujian robot 12 bulan \((.+) setiap isyarat, (\d+) dagangan\): (.+) tepat (\S+)% · (untung|rugi) (.+)$/,(m,a,b,c,d,e,f)=>`12-month robot test (${a} per signal, ${b} trades): ${trText(c)} accurate ${d}% · ${e==='untung'?'profit':'loss'} ${f}`],
+[/^Skor teknikal (\d+)\/(\d+)$/,'Technical score $1/$2'],[/^Harga (\S+)$/,'Price $1'],
 [/^Berjaya (\d+) daripada (\d+) kali pada saham ini$/,'Worked $1 out of $2 times on this stock'],
 [/^Ujian robot 12 bulan: (.+) (\S+)% · (untung|rugi) (.+)$/,(m,a,b,c,d)=>`12-month robot test: ${trText(a)} ${b}% · ${c==='untung'?'profit':'loss'} ${d}`],
 [/^Isyarat aktif (\d+)% \((.+)\) · dalam tempoh biasa \(hari ke-(\d+) daripada ~(\d+)\)$/,(m,a,b,c,d)=>`Active signal ${a}% (${trText(b)}) · within typical period (day ${c} of ~${d})`],
@@ -1462,7 +1521,8 @@ function poster(code,name,wide){
   const st=status(code,name);const P=PAL[st];const [p1,p2]=P[hashN(code||name)%P.length];
   const lc=code&&lastClose(code);const m=mk(code);const up=m&&m.ch!=null?m.ch>=0:true;
   const hideS=S.settings.shariahMode&&st==='no';const bo=!hideS&&bestOp(code);
-  const sc=bo?`<span class="ps pp">${bo.p}%</span>`:m&&m.va&&!hideS?`<span class="ps">${m.sc}/${m.va}</span>`:'';
+  const RG=bo?rateSignal(bo):null;
+  const sc=bo?`<span class="ps pp">${bo.p}%</span><span class="pgr badge ${RG.cls}">${RG.lbl}</span>`:m&&m.va&&!hideS?`<span class="ps">${m.sc}/${m.va}</span>`:'';
   const lbl={ok:'✓ Patuh',no:'✕ Tidak patuh',na:'Belum disaring'}[st];
   return `<button class="poster${wide?' wide':''}" style="--p1:${p1};--p2:${p2}" data-code="${esc(code)}" data-name="${esc(name)}" aria-label="${esc(name)}">
     <span class="pc">${esc(code||'—')}</span>${sc}${code?spark(code,100,40,up?'#d9b44a':'#ef6b5c'):''}
@@ -1494,10 +1554,11 @@ function heroChart(code){
   else if(m&&m.sp&&m.sp.length>=5){v=m.sp.filter(x=>x!=null);d1=m.d;d0=subTradingDays(m.d,v.length-1);}
   else return '';
   const W=400,H=230,mn=Math.min(...v),mx=Math.max(...v),r=mx-mn||1,y=x=>2+(1-(x-mn)/r)*(H-4);
+  {const dd=c&&c.bars.length>=5?c.bars.slice(-90).map(x=>x.d):v.map((_,i)=>subTradingDays(d1,v.length-1-i));HC={v,d:dd,mn,mx};}
   const pts=v.map((x,i)=>`${(i/(v.length-1)*W).toFixed(1)},${y(x).toFixed(1)}`).join(' ');
   const pct=x=>(y(x)/H*100).toFixed(1),last=v[v.length-1],up=last>=v[0];
   const chg=(last/v[0]-1)*100;
-  return `<div class="hc" aria-hidden="true"><svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none"><defs><linearGradient id="hcg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d9b44a" stop-opacity=".32"/><stop offset="1" stop-color="#d9b44a" stop-opacity="0"/></linearGradient></defs>
+  return `<div class="hc" title="Sentuh dan seret untuk lihat harga"><svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none"><defs><linearGradient id="hcg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d9b44a" stop-opacity=".32"/><stop offset="1" stop-color="#d9b44a" stop-opacity="0"/></linearGradient></defs>
     <line x1="0" x2="${W}" y1="${y(mx)}" y2="${y(mx)}" class="hcg"/><line x1="0" x2="${W}" y1="${y(mn)}" y2="${y(mn)}" class="hcg"/>
     <polygon fill="url(#hcg)" points="0,${H} ${pts} ${W},${H}"/><polyline fill="none" stroke="#d9b44a" stroke-width="2" vector-effect="non-scaling-stroke" stroke-linejoin="round" points="${pts}"/></svg>
     <span class="hcl" style="top:${pct(mx)}%">Tertinggi ${px(mx)}</span><span class="hcl" style="top:${pct(mn)}%">Terendah ${px(mn)}</span>
@@ -1517,9 +1578,10 @@ function heroHTML(){
   const inW=S.watch.includes(code);const hide=S.settings.shariahMode&&st==='no';
   return `<section class="hero" style="--hc:${st==='no'?'#5a1f1c':'#0f5a45'}">${heroChart(code)}<div class="shade"></div>
     <span class="tag">✦ <b>${f.tag}</b> ${badge(st)}</span>
+    ${m&&m.va&&!hide?`<div class="hstat">${bestOp(code)?(()=>{const R=rateSignal(bestOp(code));return `<span><small>Isyarat</small><span class="badge ${R.cls}">${R.lbl}</span></span>`;})():`<span><small>Isyarat</small><span class="badge b-na">Tiada isyarat aktif</span></span>`}${(()=>{const V=scoreVerdict(m.sc,m.va);return V?`<span><small>Skor teknikal ${m.sc}/${m.va}</small><span class="badge ${V.cls}">${V.lbl}</span></span>`:'';})()}<button class="sinfo" onclick="openStatusHelp()" aria-label="Maksud status">ⓘ</button></div>`:''}
     <h2>${esc(shortName(nm)||code)}</h2>
     <p class="sub">${esc(code)} di Bursa Malaysia${lc?`, ditutup ${px(lc.c)} pada ${fmtD(lc.d)}${m&&m.ch!=null?` (${m.ch>=0?'+':''}${m.ch.toFixed(2)}%)`:''}.`:'.'}</p>
-    ${m&&m.va&&!hide?`<div class="stats">${bestOp(code)?`<div><b>${bestOp(code).p}%</b>kebarangkalian sejarah</div><div><b>${Math.round(bestOp(code).md||0)} hari</b>tempoh biasa</div>`:''}<div><b>${m.sc}/${m.va}</b>${(scoreVerdict(m.sc,m.va)||{}).lbl||'skor teknikal'}</div><div><b>${m.r!=null?Math.round(m.r):'-'}</b>RSI 14</div><div><b>${m.e2==null?'-':m.e2?'Atas':'Bawah'}</b>EMA200</div></div>`:''}
+    ${m&&m.va&&!hide?`<div class="stats">${bestOp(code)?`<div><b>${bestOp(code).p}%</b>kebarangkalian sejarah</div><div><b>${Math.round(bestOp(code).md||0)} hari</b>tempoh biasa</div>`:''}<div><b>${m.r!=null?Math.round(m.r):'-'}</b>RSI 14</div><div><b>${m.e2==null?'-':m.e2?'Atas':'Bawah'}</b>EMA200</div></div>`:''}
     <div class="acts"><button class="btn" data-open="${esc(code)}">▶ Lihat analisa</button><button class="btn sec" data-wt="${esc(code)}">${inW?'✓ Dalam watchlist':'+ Watchlist'}</button></div></section>`;
 }
 function rSaham(){
@@ -1558,6 +1620,7 @@ function rSaham(){
   document.querySelectorAll('.poster').forEach(p=>p.onclick=()=>stockSheet(p.dataset.code,p.dataset.name));
   document.querySelectorAll('[data-open]').forEach(b=>b.onclick=()=>stockSheet(b.dataset.open,nameOf(b.dataset.open)));
   document.querySelectorAll('[data-wt]').forEach(b=>b.onclick=()=>{const c=b.dataset.wt;if(S.watch.includes(c))S.watch=S.watch.filter(x=>x!==c);else S.watch.push(c);save();render();});
+  bindHeroChart();
   const hf=$('#hFocus');if(hf)hf.onclick=()=>$('#q').focus();
   const hs=$('#hSync');if(hs)hs.onclick=()=>syncData(true);
 }
@@ -1614,7 +1677,7 @@ function showInd(A,blocked){
     h+=`<div class="disc">Isyarat teknikal untuk rujukan sahaja — bukan cadangan beli/jual. Data harga harian bersifat indikatif dan mungkin berbeza sedikit dari harga bursa.</div>`;
   }
   $('#indBody').innerHTML=h;
-  requestAnimationFrame(()=>drawChart($('#cv'),A));
+  requestAnimationFrame(()=>{drawChart($('#cv'),A);bindCanvasHover($('#cv'),A);});
 }
 
 /* ================= TAB: PORTFOLIO (MODUL 2) ================= */

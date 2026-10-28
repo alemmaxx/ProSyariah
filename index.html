@@ -229,6 +229,8 @@ main>.card,main>.alert,main>.grid2,main>.disc,main>.pad,.search,.results{margin-
 /* ---- 5 ISYARAT TERKUAT ---- */
 .t5{display:grid;gap:10px;margin:0 var(--gut)}
 @media (min-width:900px){.t5{grid-template-columns:1fr 1fr}}
+.champ{border:1px solid var(--gold);border-radius:14px;background:linear-gradient(180deg,var(--gold2),var(--card));padding:6px 14px 12px}
+.champ .smr:last-of-type{border-bottom:0}
 .smbtn{display:flex;align-items:center;gap:12px;width:100%;padding:14px 16px;border:1px solid var(--gold);border-radius:14px;background:var(--gold2);color:var(--ink);font:14px var(--f);cursor:pointer;text-align:left}
 .smbtn>span:first-child{font-size:22px}.smbtn>span:nth-child(2){flex:1;display:flex;flex-direction:column}.smbtn small{color:var(--mute);font-size:12px}.smbtn .go{color:var(--gold);font-weight:700}
 .smh{display:flex;align-items:center;gap:8px;margin:14px 0 6px}.smh small{color:var(--mute);font-weight:400}
@@ -727,13 +729,25 @@ function rateSignal(x){
 }
 function rateHTML(x){const R=rateSignal(x);
   return `<span class="rate"><span class="badge ${R.cls}">${R.lbl}</span><span class="muted">${R.txt}</span>${R.bits.map(b=>`<span class="rbit">${esc(b)}</span>`).join('')}</span>`;}
+/* ===== CHAMPION: Isyarat Kuat + Skor teknikal Kuat ===== */
+function isChamp(x,code){const m=mk(code||x.code);if(!m||!m.va||!x)return false;const V=scoreVerdict(m.sc,m.va);return rateSignal(x).g==='A'&&V&&V.lbl==='Kuat';}
+function champList(){return topSignals(60).filter(x=>isChamp(x));}
+function champTestLine(){const C=S.paper&&S.paper.champ&&S.paper.champ.summary;if(!C||!C.n)return '';
+  return `Ujian robot 12 bulan untuk Champion sahaja (${rm(rbStake())} setiap isyarat): ${C.n} dagangan · tepat ${C.win}% · ${C.pnl>=0?'untung':'rugi'} ${rmS(C.pnl*rbScale())}`;}
+function champHTML(){
+  if(!S.market)return '';const L=champList();const held=c=>S.paper&&S.paper.live&&S.paper.live.open.some(p=>p.c===c);
+  let h=`<section class="rowsec"><h3>🏆 Isyarat Champion<small>Isyarat Kuat + Skor teknikal Kuat</small></h3><div class="pad"><div class="champ">`;
+  if(!L.length)h+=`<p class="muted" style="margin:0">Tiada isyarat Champion hari ini. Champion hanya muncul bila isyarat dan skor teknikal kedua-duanya kuat pada saham yang sama.</p>`;
+  else h+=L.map(x=>`<button class="smr" data-code="${esc(x.code)}"><span><b>🏆 ${esc(shortName(x.name))}</b> <span class="code">${esc(x.code)}</span></span><span class="smt">${held(x.code)?'🤖 ':''}${x.passed?'⏳ ':''}<b>${x.p}%</b></span></button>`).join('');
+  const t=champTestLine();if(t)h+=`<p class="muted" style="margin:10px 0 0;font-size:12px">${esc(t)}</p>`;
+  h+=`</div></div></section>`;return h;}
 function top5HTML(){
   const L=topSignals(5);if(!S.market)return '';
   let h=`<section class="rowsec"><h3>5 isyarat teknikal terkuat<small>disusun ikut penilaian & kekuatan sejarah</small></h3><div class="t5">`;
   if(!L.length)h+=`<div class="emptyrail" style="margin:0">Tiada isyarat teknikal yang melepasi paras neutral pada masa ini.</div>`;
   L.forEach((x,i)=>{const pct=Math.min(100,x.el/x.md*100);
     h+=`<button class="t5r" data-code="${esc(x.code)}"><span class="t5n">${i+1}</span><span class="t5b">
-      <span class="row between"><span><b>${esc(shortName(x.name))}</b> <span class="code">${esc(x.code)}</span>${S.paper&&S.paper.live&&S.paper.live.open.some(p=>p.c===x.code)?' <span class="badge b-gold">🤖 Dalam robot</span>':''}${(S.t5&&S.t5[x.code+':'+x.k+':'+x.start]&&S.t5[x.code+':'+x.k+':'+x.start].ev.in===S.market.meta.asof)?' <span class="badge b-ok">Baharu</span>':''}</span><b class="t5p">${x.p}%</b></span>
+      <span class="row between"><span><b>${esc(shortName(x.name))}</b> <span class="code">${esc(x.code)}</span>${isChamp(x)?' <span class="badge b-gold">🏆 Champion</span>':''}${S.paper&&S.paper.live&&S.paper.live.open.some(p=>p.c===x.code)?' <span class="badge b-gold">🤖 Dalam robot</span>':''}${(S.t5&&S.t5[x.code+':'+x.k+':'+x.start]&&S.t5[x.code+':'+x.k+':'+x.start].ev.in===S.market.meta.asof)?' <span class="badge b-ok">Baharu</span>':''}</span><b class="t5p">${x.p}%</b></span>
       <span class="muted">${esc(setupName(x.k))}</span>
       ${rateHTML(x)}
       <span class="t5d"><span>Isyarat bermula <b>${fmtD(x.start)}</b></span><span>Tempoh biasa ${x.md} hari dagangan, hingga <b>${fmtD(x.end)}</b></span></span>
@@ -831,7 +845,7 @@ function openRbHist(all){
   const P=S.paper,H=P&&P.hist;if(!H)return toast('Sejarah belum cukup untuk ujian.');const sc=rbScale(),cap=P.maxOpen*rbStake();
   let h=`<div class="row between"><h2 style="margin:0">Ujian sejarah 12 bulan</h2><button class="btn sm sec" onclick="closeSheet()">Tutup</button></div>
    <p class="muted">${fmtD(H.start)} – ${fmtD(H.end)}. Robot mengulang setiap hari dagangan setahun lepas. Pada setiap hari, ia hanya guna statistik daripada dagangan yang sudah selesai sebelum hari itu, jadi tiada maklumat masa depan digunakan.</p>
-   <div class="card">${rbStats(H.summary,sc,cap)}</div><div class="card"><h2>Untung / rugi terkumpul</h2>${equitySVG(H.curve,sc)}</div>
+   <div class="card">${rbStats(H.summary,sc,cap)}</div>${P.champ&&P.champ.summary&&P.champ.summary.n?`<div class="card"><h2>🏆 Champion sahaja</h2><p class="muted" style="margin-top:0">Ujian yang sama, tetapi robot hanya ambil isyarat yang Isyarat Kuat dan skor teknikal Kuat pada hari isyarat.</p>${rbStats(P.champ.summary,sc,cap)}</div>`:''}<div class="card"><h2>Untung / rugi terkumpul</h2>${equitySVG(H.curve,sc)}</div>
    <div class="card"><h2>Ikut jenis isyarat</h2><div class="bth"><div class="hd"><span>Isyarat</span><span>Dagangan</span><span>Ketepatan</span><span>Untung/rugi</span></div>`+
    Object.entries(H.bySetup).map(([k,v])=>`<div><span>${esc(setupName(k))}</span><span>${v.n||0}</span><span>${v.n?v.win+'%':'-'}</span><span class="${(v.pnl||0)>=0?'up':'dn'}">${v.n?rmS(v.pnl*sc):'-'}</span></div>`).join('')+`</div></div>
    <div class="card"><h2>Dagangan maya terkini</h2>${H.recent.slice(0,all?60:12).map(t=>rbRow(t,sc)).join('')}${H.recent.length>12?`<button class="btn sm sec" style="margin-top:10px" id="rbAllH">${all?'Tunjuk kurang':'Lihat semua ('+H.recent.length+')'}</button>`:''}</div>
@@ -877,8 +891,8 @@ function stockStatus(code,name){
 
 function openSummary(){
   const L=topSignals(60);const held=c=>S.paper&&S.paper.live&&S.paper.live.open.some(p=>p.c===c);
-  const grp=[['A','Isyarat Kuat','b-ok'],['B','Isyarat Sederhana','b-warn']];
-  const by={A:[],B:[]};L.forEach(x=>{const g=rateSignal(x).g;(g==='A'?by.A:g==='D'?null:by.B)?.push(x);});
+  const grp=[['C','🏆 Champion','b-gold'],['A','Isyarat Kuat','b-ok'],['B','Isyarat Sederhana','b-warn']];
+  const by={C:[],A:[],B:[]};L.forEach(x=>{const g=rateSignal(x).g;if(isChamp(x))by.C.push(x);else (g==='A'?by.A:g==='D'?null:by.B)?.push(x);});
   const row=x=>`<button class="smr" data-sc="${esc(x.code)}"><span><b>${esc(shortName(x.name))}</b> <span class="code">${esc(x.code)}</span></span><span class="smt">${held(x.code)?'🤖 ':''}${x.passed?'⏳ ':''}<b>${x.p}%</b></span></button>`;
   let body='';
   grp.forEach(([g,l,c])=>{if(!by[g].length)return;body+=`<h3 class="smh"><span class="badge ${c}">${l}</span> <small>${by[g].length} saham</small></h3>${by[g].map(row).join('')}`;});
@@ -886,7 +900,7 @@ function openSummary(){
   const d=document.createElement('div');d.className='help';d.id='help';document.body.classList.add('ovl');bkEnsure();
   d.innerHTML=`<div class="help-p" role="dialog" aria-modal="true"><div><div class="shd-top" style="margin-bottom:6px"><h2 style="margin:0">Ringkasan isyarat aktif</h2><button class="xbtn" id="helpX" aria-label="Tutup">✕</button></div>
     <p class="muted" style="margin:0 0 6px">Saham patuh syariah yang ada isyarat teknikal aktif hari ini, disusun dari yang terkuat. Tekan nama untuk lihat butiran.</p>
-    <p class="muted" style="margin:0;font-size:12px">🤖 sedang diuji robot · ⏳ tempoh biasa sudah berlalu · % = kebarangkalian sejarah</p></div>
+    <p class="muted" style="margin:0;font-size:12px">🏆 Champion = Isyarat Kuat + Skor teknikal Kuat · 🤖 sedang diuji robot · ⏳ tempoh biasa sudah berlalu · % = kebarangkalian sejarah</p></div>
     ${body}
     <p class="disc" style="margin-top:12px">Ini bacaan indicator, bukan cadangan beli atau jual.</p></div>`;
   document.body.appendChild(d);
@@ -906,6 +920,8 @@ function openStatusHelp(){
   const d=document.createElement('div');d.className='help';d.id='help';document.body.classList.add('ovl');bkEnsure();
   d.innerHTML=`<div class="help-p" role="dialog" aria-modal="true"><div class="shd-top" style="margin-bottom:10px"><h2 style="margin:0">Maksud status</h2><button class="xbtn" id="helpX" aria-label="Tutup">✕</button></div>
     ${rows.map(r=>`<div class="hrow"><span class="hic">${r[0]}</span><div><b>${r[1]}</b><p class="muted">${r[2]}</p></div></div>`).join('')}
+    <h3>🏆 Isyarat Champion</h3>
+    <div class="hrow"><span class="badge b-gold">🏆 Champion</span><p class="muted" style="margin:4px 0 0">Saham yang isyaratnya dinilai <b>Isyarat Kuat</b> dan skor teknikalnya juga <b>Kuat</b> (4–5 daripada 5) pada masa yang sama. Ia jarang muncul.</p></div>
     <h3>Penilaian isyarat</h3>
     <div class="hrow"><span class="badge b-ok">Isyarat Kuat</span><p class="muted" style="margin:4px 0 0">Kebarangkalian sejarah jelas melepasi paras neutral (sekurang-kurangnya 10 mata) dan disokong sekurang-kurangnya 8 contoh pada saham itu.</p></div>
     <div class="hrow"><span class="badge b-warn">Isyarat Sederhana</span><p class="muted" style="margin:4px 0 0">Melepasi paras neutral, tetapi tidak banyak, atau contoh sejarahnya masih sedikit.</p></div>
@@ -1316,6 +1332,11 @@ const EN_PHRASE=[
 ];
 
 Object.assign(EN_EXACT,{
+'🏆 Isyarat Champion':'🏆 Champion signals','Isyarat Kuat + Skor teknikal Kuat':'Strong signal + Strong technical score','🏆 Champion sahaja':'🏆 Champions only',
+'Tiada isyarat Champion hari ini. Champion hanya muncul bila isyarat dan skor teknikal kedua-duanya kuat pada saham yang sama.':'No Champion signal today. A Champion only appears when both the signal and the technical score are strong on the same stock.',
+'Ujian yang sama, tetapi robot hanya ambil isyarat yang Isyarat Kuat dan skor teknikal Kuat pada hari isyarat.':'Same test, but the robot only takes signals that were a Strong signal with a Strong technical score on the signal day.',
+'🏆 Champion = Isyarat Kuat + Skor teknikal Kuat · 🤖 sedang diuji robot · ⏳ tempoh biasa sudah berlalu · % = kebarangkalian sejarah':'🏆 Champion = Strong signal + Strong technical score · 🤖 being tested by robot · ⏳ typical period has passed · % = historical probability',
+'Saham yang isyaratnya dinilai Isyarat Kuat dan skor teknikalnya juga Kuat (4–5 daripada 5) pada masa yang sama. Ia jarang muncul.':'Stocks whose signal is rated Strong signal and whose technical score is also Strong (4–5 of 5) at the same time. They are rare.',
 'Tekan Kembali sekali lagi untuk keluar':'Press Back again to exit',
 'Ringkasan isyarat aktif':'Active signals summary','Buka':'Open',
 'Saham patuh syariah yang ada isyarat teknikal aktif hari ini, disusun dari yang terkuat. Tekan nama untuk lihat butiran.':'Shariah-compliant stocks with an active technical signal today, strongest first. Tap a name for details.',
@@ -1408,6 +1429,8 @@ Object.assign(EN_EXACT,{
 'Paras ini naik mengikut harga tertinggi sejak tarikh belian dan tidak pernah turun. Harga tutup di bawahnya menandakan momentum menurun.':'This level rises with the highest price since the purchase date and never falls. A close below it signals weakening momentum.',
 });
 EN_RX.unshift(
+[/^Ujian robot 12 bulan untuk Champion sahaja \((.+) setiap isyarat\): (\d+) dagangan · tepat (.+)% · (untung|rugi) (.+)$/,(m,a,b,c,d,e)=>`12-month robot test for Champions only (${a} per signal): ${b} trades · ${c}% accurate · ${d==='untung'?'profit':'loss'} ${e}`],
+[/^🏆 (.+)$/,(m,a)=>'🏆 '+trText(a)],
 [/^(\d+) saham · senarai nama sahaja$/,'$1 stocks · names only'],[/^(\d+) saham$/,'$1 stocks'],
 [/^Dalam robot sejak (.+) @ (\S+)(.*)$/,'In robot since $1 @ $2$3'],
 [/^Ujian robot 12 bulan \((.+) setiap isyarat, (\d+) dagangan\): (.+) tepat (\S+)% · (untung|rugi) (.+)$/,(m,a,b,c,d,e,f)=>`12-month robot test (${a} per signal, ${b} trades): ${trText(c)} accurate ${d}% · ${e==='untung'?'profit':'loss'} ${f}`],
@@ -1652,6 +1675,7 @@ function rSaham(){
   if(crit.length)h+=`<button class="urgent" onclick="openAlerts()"><span class="ai">${crit[0].ic}</span><span><b>${esc(crit[0].title)}</b><span class="ab">${crit.length>1?`dan ${crit.length-1} lagi amaran segera`:esc(crit[0].body)}</span></span><span class="go">Lihat</span></button>`;
   const al=scheduleAlerts();if(al)h+=`<div class="pad" style="margin-top:12px">${al}</div>`;
   if(S.market)h+=`<div class="pad" style="margin-top:12px"><button class="smbtn" onclick="openSummary()"><span>📋</span><span><b>Ringkasan isyarat aktif</b><small>${topSignals(60).length} saham · senarai nama sahaja</small></span><span class="go">Buka</span></button></div>`;
+  h+=champHTML();
   h+=top5HTML();
   h+=rail('Watchlist anda',S.watch.length?S.watch.length+' saham':'',S.watch.map(c=>({code:c,name:nameOf(c)})),false,'Belum ada saham. Buka mana-mana saham dan tekan ☆ Tambah watchlist.');
   if(S.holdings.length)h+=rail('Pegangan saya','',S.holdings.map(x=>({code:x.code,name:x.name||nameOf(x.code)})),true,'');
@@ -1678,6 +1702,7 @@ function rSaham(){
   };
   $('#q').oninput=e=>{Q=e.target.value;res();};res();
   document.querySelectorAll('.t5r').forEach(p=>p.onclick=()=>stockSheet(p.dataset.code,nameOf(p.dataset.code)));
+  document.querySelectorAll('.champ .smr').forEach(p=>p.onclick=()=>stockSheet(p.dataset.code,nameOf(p.dataset.code)));
   document.querySelectorAll('.poster').forEach(p=>p.onclick=()=>stockSheet(p.dataset.code,p.dataset.name));
   document.querySelectorAll('[data-open]').forEach(b=>b.onclick=()=>stockSheet(b.dataset.open,nameOf(b.dataset.open)));
   document.querySelectorAll('[data-wt]').forEach(b=>b.onclick=()=>{const c=b.dataset.wt;if(S.watch.includes(c))S.watch=S.watch.filter(x=>x!==c);else S.watch.push(c);save();render();});
@@ -1692,7 +1717,7 @@ function sheetStatHTML(code){
   let so=bestOp(code);
   if(!so){const sg=signalFor(code),now=m.c;if(sg&&now!=null&&now<sg.tg&&now>sg.sl&&tdBetween(sg.start,S.market.meta.asof)<=BTH().h)so=sg;}
   const R=so?rateSignal(so):null,V=scoreVerdict(m.sc,m.va);
-  return `<div class="hstat" style="margin:10px 0 0"><span><small>Isyarat</small>${R?`<span class="badge ${R.cls}">${R.lbl}</span>`:`<span class="badge b-na">Tiada isyarat aktif</span>`}</span>${V?`<span><small>Skor teknikal ${m.sc}/${m.va}</small><span class="badge ${V.cls}">${V.lbl}</span></span>`:''}<button class="sinfo" onclick="openStatusHelp()" aria-label="Maksud status">ⓘ</button></div>`;
+  return `<div class="hstat" style="margin:10px 0 0"><span><small>Isyarat</small>${R?`<span class="badge ${R.cls}">${R.lbl}</span>`:`<span class="badge b-na">Tiada isyarat aktif</span>`}</span>${V?`<span><small>Skor teknikal ${m.sc}/${m.va}</small><span class="badge ${V.cls}">${V.lbl}</span></span>`:''}${so&&isChamp(so,code)?`<span><small>&nbsp;</small><span class="badge b-gold">🏆 Champion</span></span>`:''}<button class="sinfo" onclick="openStatusHelp()" aria-label="Maksud status">ⓘ</button></div>`;
 }
 function stockSheet(code,name){
   name=name||nameOf(code);const st=status(code,name);const L=latestList();

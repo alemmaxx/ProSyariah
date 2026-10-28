@@ -43,6 +43,7 @@ LIST_PAGE = os.environ.get(
 BROWSER_UA = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
               "Chrome/124.0 Safari/537.36")
 DEBUG = []
+FOUND_DATE = [""]
 
 
 def log(msg):
@@ -156,15 +157,21 @@ def from_browser(url):
                     log(f"  muat turun {l['href']} → {r.status} {k} — langkau")
                     continue
                 names, text = parse_pdf(body) if k == "pdf" else parse_xlsx(body)
-                is_list = bool(re.search(r"shariah[- ]compliant securities", text[:4000], re.I))
-                d = find_date(text) if is_list else ""
+                flat = re.sub(r"\s+", " ", text[:20000])
+                ctx_t = l.get("text") or ""
+                is_list = bool(re.search(r"shariah[- ]compliant securities", flat, re.I)) or bool(
+                    re.search(r"list of shariah[- ]compliant securities", ctx_t, re.I))
+                d = find_date(ctx_t) if re.search(rf"\d{{1,2}}\s+(?:{MONTHS})\s+20\d\d", ctx_t, re.I) else find_date(flat)
+                l["date"] = d
                 log(f"  semak {l['href']} → {len(body)} bait, {len(set(names))} nama, senarai SC: {is_list}, tarikh {d or '-'}")
                 if is_list and len(set(names)) >= MIN_NAMES and (not best or d > best[3]):
                     best = (k, body, l["href"], d)
+                    break  # calon disusun dari terkini; dokumen sah pertama ialah yang terbaharu
             except Exception as e:
                 log(f"  gagal {l['href']}: {e}")
         if best:
             b.close()
+            FOUND_DATE[0] = best[3]
             return best[:3]
         b.close()
     return None
@@ -311,7 +318,7 @@ def main():
             f"GAGAL: hanya {len(names)} nama dikesan (< {MIN_NAMES}). Susun atur dokumen SC mungkin berubah. "
             "Senarai lama TIDAK diubah. Semak sc-debug.txt dalam artifact workflow."
         )
-    d = find_date(text)
+    d = FOUND_DATE[0] or find_date(text)
     codes, unmatched = match_codes(names)
     new = {"date": d, "names": names, "codes": codes, "count": len(names)}
     lists = [x for x in state.get("lists", []) if x["date"] != d]
@@ -327,6 +334,8 @@ def main():
     }
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
     json.dump(state, open(OUT, "w"), ensure_ascii=False, indent=1)
+    open("sc-debug.txt", "w").write("\n".join(DEBUG) + f"\n\n---- {len(names)} NAMA ----\n" + "\n".join(names)
+                                    + "\n\n---- TEKS DOKUMEN ----\n" + text[:400000])
     print(f"✓ Senarai SC {d}: {len(names)} nama, {len(codes)} dipadankan dengan kod, {len(unmatched)} belum dipadankan")
 
 

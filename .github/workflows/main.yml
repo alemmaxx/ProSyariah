@@ -64,7 +64,7 @@ jobs:
           git config user.name "prosyariah-bot"
           git config user.email "actions@users.noreply.github.com"
           git add data/sc-list.json data/klse-symbols.json 2>/dev/null || true
-          if [ -f sc-debug.txt ]; then cp sc-debug.txt data/sc-debug.txt; git add data/sc-debug.txt; else git rm -q --ignore-unmatch data/sc-debug.txt || true; fi
+          if [ -f sc-debug.txt ]; then cp sc-debug.txt data/sc-debug.txt; git add data/sc-debug.txt; fi
           if ! git diff --cached --quiet; then
             git commit -m "Data: kemas kini senarai SC / simbol KLSE"
             git push

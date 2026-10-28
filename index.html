@@ -282,6 +282,14 @@ nav button{min-width:0}
 .xbtn:active{transform:scale(.96)}
 .sheet .panel>.row.between:first-child{position:sticky;top:0;z-index:3;background:var(--bg);margin:0 -16px 12px;padding:16px 16px 12px;border-bottom:1px solid var(--line)}
 .verd{margin-top:12px;padding:12px;border-radius:10px;background:var(--card2)}
+
+.sinfo{border:0;background:none;color:var(--muted);font:700 14px var(--f);padding:0 4px;cursor:pointer;vertical-align:middle}
+.help{position:fixed;inset:0;z-index:40;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;padding:16px}
+.help-p{background:var(--bg);border:1px solid var(--line);border-radius:16px;max-width:560px;width:100%;max-height:86vh;overflow:auto;padding:16px;animation:up .25s ease-out}
+.hrow{display:flex;gap:12px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--line)}
+.hrow:last-of-type{border-bottom:0}
+.hrow p{margin:2px 0 0;font-size:13px}
+.hic{font-size:20px;width:26px;flex:none;text-align:center}
 </style>
 </head>
 <body translate="no">
@@ -764,10 +772,30 @@ function stockStatus(code,name){
     out.push({ic:'💼',cls:pl>=0?'s-up':'s-no',t:`Pegangan anda ${pl>=0?'untung':'rugi'} ${rmS(pl)} (${pct>=0?'+':''}${pct.toFixed(1)}%)${XP?(XP.hit?' · harga tutup di bawah paras sokongan mengekor':' · di atas paras sokongan mengekor'):''}`});}}
   return out.length?out:null;
 }
+
+function openStatusHelp(){
+  const rows=[
+    ['🟢','Isyarat aktif · dalam tempoh biasa','Ada isyarat teknikal yang masih "segar". Harga belum sampai paras atas atau paras bawah, dan masih dalam tempoh biasa saham ini sampai ke paras atas dalam sejarah. "Hari ke-X daripada ~Y" menunjukkan berapa hari dagangan sudah berlalu sejak isyarat bermula.'],
+    ['⏳','Tempoh biasa sudah berlalu','Isyarat masih berjalan, tetapi sudah melepasi tempoh biasa. Dalam sejarah, kebanyakan isyarat yang berjaya sampai paras atas lebih awal, jadi peluangnya makin berkurang.'],
+    ['🎯','Sudah sampai paras atas','Harga sudah mencapai paras atas (+2× ATR) sejak isyarat bermula. Isyarat itu telah mencapai sasaran sejarahnya.'],
+    ['🛑','Jatuh ke paras bawah','Harga sudah jatuh ke paras bawah (−1.25× ATR). Isyarat itu gagal.'],
+    ['⌛','Isyarat tamat tanpa keputusan','40 hari dagangan berlalu tanpa harga sampai paras atas atau paras bawah.'],
+    ['⚪','Tiada isyarat teknikal aktif','Tiada isyarat baharu buat masa ini. Skor dan tahap (Kuat / Neutral / Lemah) menunjukkan keadaan indicator sekarang.'],
+    ['💼','Pegangan anda','Untung atau rugi pegangan anda berbanding harga kos yang anda masukkan di Portfolio. "Di bawah paras sokongan mengekor" bermaksud harga tutup jatuh di bawah harga tertinggi sejak tarikh belian tolak 2.5× ATR, iaitu tanda momentum menurun.'],
+    ['✕','Tidak patuh syariah','Saham ini tiada dalam senarai patuh syariah terkini Majlis Penasihat Syariah SC.']];
+  const lv=[['b-ok','Kuat','4–5 daripada 5 indicator positif: trend dan momentum menaik.'],['b-warn','Neutral – tunggu pengesahan','Kira-kira separuh indicator positif: keadaan bercampur.'],['b-no','Lemah','Kebanyakan indicator negatif: trend atau momentum menurun.']];
+  const d=document.createElement('div');d.className='help';d.id='help';
+  d.innerHTML=`<div class="help-p" role="dialog" aria-modal="true"><div class="shd-top" style="margin-bottom:10px"><h2 style="margin:0">Maksud status</h2><button class="xbtn" id="helpX" aria-label="Tutup">✕</button></div>
+    ${rows.map(r=>`<div class="hrow"><span class="hic">${r[0]}</span><div><b>${r[1]}</b><p class="muted">${r[2]}</p></div></div>`).join('')}
+    <h3>Tahap skor teknikal</h3>${lv.map(r=>`<div class="hrow"><span class="badge ${r[0]}">${r[1]}</span><p class="muted" style="margin:4px 0 0">${r[2]}</p></div>`).join('')}
+    <p class="disc">Semua status ialah bacaan indicator berdasarkan sejarah harga, bukan cadangan beli atau jual.</p></div>`;
+  document.body.appendChild(d);
+  const close=()=>d.remove();d.onclick=e=>{if(e.target===d)close();};$('#helpX').onclick=close;
+}
 function statusHTML(code,name,compact){
   const s=stockStatus(code,name);if(!s)return '';
   const arr=Array.isArray(s)?s:[s];
-  return `<div class="sst${compact?' c':''}">${arr.map(x=>`<span class="${x.cls}">${x.ic} ${esc(x.t)}</span>`).join('')}</div>`;
+  return `<div class="sst${compact?' c':''}">${arr.map((x,i)=>`<span class="${x.cls}">${x.ic} ${esc(x.t)}${i===0?` <button class="sinfo" onclick="event.stopPropagation();openStatusHelp()" aria-label="Maksud status">ⓘ</button>`:''}</span>`).join('')}</div>`;
 }
 
 /* ================= KETEPATAN ISYARAT ================= */
@@ -1164,6 +1192,19 @@ const EN_PHRASE=[
 ];
 
 Object.assign(EN_EXACT,{
+'Maksud status':'What the statuses mean','Tahap skor teknikal':'Technical score levels',
+'Isyarat aktif · dalam tempoh biasa':'Active signal · within typical period',
+'Ada isyarat teknikal yang masih "segar". Harga belum sampai paras atas atau paras bawah, dan masih dalam tempoh biasa saham ini sampai ke paras atas dalam sejarah. "Hari ke-X daripada ~Y" menunjukkan berapa hari dagangan sudah berlalu sejak isyarat bermula.':'There is a "fresh" technical signal. Price has not reached the upper or lower level and is still within the time this stock typically took to reach the upper level historically. "Day X of ~Y" shows how many trading days have passed since the signal started.',
+'Isyarat masih berjalan, tetapi sudah melepasi tempoh biasa. Dalam sejarah, kebanyakan isyarat yang berjaya sampai paras atas lebih awal, jadi peluangnya makin berkurang.':'The signal is still running but has passed its typical period. Historically, most successful signals reached the upper level earlier, so the odds are getting lower.',
+'Sudah sampai paras atas':'Reached the upper level','Harga sudah mencapai paras atas (+2× ATR) sejak isyarat bermula. Isyarat itu telah mencapai sasaran sejarahnya.':'Price has reached the upper level (+2× ATR) since the signal started. The signal has hit its historical target.',
+'Jatuh ke paras bawah':'Fell to the lower level','Harga sudah jatuh ke paras bawah (−1.25× ATR). Isyarat itu gagal.':'Price has fallen to the lower level (−1.25× ATR). The signal failed.',
+'Isyarat tamat tanpa keputusan':'Signal expired without a result','40 hari dagangan berlalu tanpa harga sampai paras atas atau paras bawah.':'40 trading days passed without price reaching the upper or lower level.',
+'Tiada isyarat teknikal aktif':'No active technical signal','Tiada isyarat baharu buat masa ini. Skor dan tahap (Kuat / Neutral / Lemah) menunjukkan keadaan indicator sekarang.':'No new signal right now. The score and level (Strong / Neutral / Weak) show the current state of the indicators.',
+'Pegangan anda':'Your holding','Untung atau rugi pegangan anda berbanding harga kos yang anda masukkan di Portfolio. "Di bawah paras sokongan mengekor" bermaksud harga tutup jatuh di bawah harga tertinggi sejak tarikh belian tolak 2.5× ATR, iaitu tanda momentum menurun.':'Profit or loss on your holding versus the cost price you entered in Portfolio. "Below trailing support" means the close fell below the highest price since the purchase date minus 2.5× ATR, a sign of weakening momentum.',
+'Saham ini tiada dalam senarai patuh syariah terkini Majlis Penasihat Syariah SC.':"This stock is not in the latest Shariah-compliant list of the SC's Shariah Advisory Council.",
+'4–5 daripada 5 indicator positif: trend dan momentum menaik.':'4–5 of 5 indicators positive: upward trend and momentum.','Kira-kira separuh indicator positif: keadaan bercampur.':'About half the indicators positive: mixed conditions.',
+'Kebanyakan indicator negatif: trend atau momentum menurun.':'Most indicators negative: downward trend or momentum.',
+'Semua status ialah bacaan indicator berdasarkan sejarah harga, bukan cadangan beli atau jual.':'All statuses are indicator readings based on price history, not buy or sell recommendations.',
 'Kuat':'Strong','Neutral – tunggu pengesahan':'Neutral – wait for confirmation','Lemah':'Weak',
 'Kebanyakan indicator menunjukkan trend dan momentum menaik.':'Most indicators show an upward trend and momentum.',
 'Indicator bercampur. Tunggu lebih banyak indicator menjadi positif sebelum membuat keputusan.':'Indicators are mixed. Wait for more indicators to turn positive before deciding.',

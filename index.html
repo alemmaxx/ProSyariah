@@ -229,6 +229,11 @@ main>.card,main>.alert,main>.grid2,main>.disc,main>.pad,.search,.results{margin-
 /* ---- 5 ISYARAT TERKUAT ---- */
 .t5{display:grid;gap:10px;margin:0 var(--gut)}
 @media (min-width:900px){.t5{grid-template-columns:1fr 1fr}}
+.smbtn{display:flex;align-items:center;gap:12px;width:100%;padding:14px 16px;border:1px solid var(--gold);border-radius:14px;background:var(--gold2);color:var(--ink);font:14px var(--f);cursor:pointer;text-align:left}
+.smbtn>span:first-child{font-size:22px}.smbtn>span:nth-child(2){flex:1;display:flex;flex-direction:column}.smbtn small{color:var(--mute);font-size:12px}.smbtn .go{color:var(--gold);font-weight:700}
+.smh{display:flex;align-items:center;gap:8px;margin:14px 0 6px}.smh small{color:var(--mute);font-weight:400}
+.smr{display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;padding:11px 4px;border:0;border-bottom:1px solid var(--line);background:none;color:var(--ink);font:14px var(--f);text-align:left;cursor:pointer}
+.smr .smt{white-space:nowrap}
 .t5r{display:flex;gap:14px;align-items:flex-start;text-align:left;width:100%;padding:14px;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);font:14px var(--f);cursor:pointer}
 .t5n{flex:none;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--gold);color:#1b1503;font-weight:800;font-size:16px}
 .t5b{flex:1;display:flex;flex-direction:column;gap:5px;min-width:0}
@@ -862,6 +867,23 @@ function stockStatus(code,name){
   return out.length?out:null;
 }
 
+function openSummary(){
+  const L=topSignals(60);const held=c=>S.paper&&S.paper.live&&S.paper.live.open.some(p=>p.c===c);
+  const grp=[['A','Isyarat Kuat','b-ok'],['B','Isyarat Sederhana','b-warn']];
+  const by={A:[],B:[]};L.forEach(x=>{const g=rateSignal(x).g;(g==='A'?by.A:g==='D'?null:by.B)?.push(x);});
+  const row=x=>`<button class="smr" data-sc="${esc(x.code)}"><span><b>${esc(shortName(x.name))}</b> <span class="code">${esc(x.code)}</span></span><span class="smt">${held(x.code)?'🤖 ':''}${x.passed?'⏳ ':''}<b>${x.p}%</b></span></button>`;
+  let body='';
+  grp.forEach(([g,l,c])=>{if(!by[g].length)return;body+=`<h3 class="smh"><span class="badge ${c}">${l}</span> <small>${by[g].length} saham</small></h3>${by[g].map(row).join('')}`;});
+  if(!body)body=`<p class="muted">Tiada isyarat teknikal aktif yang melepasi paras neutral pada masa ini.</p>`;
+  const d=document.createElement('div');d.className='help';d.id='help';
+  d.innerHTML=`<div class="help-p" role="dialog" aria-modal="true"><div class="shd-top" style="margin-bottom:6px"><h2 style="margin:0">Ringkasan isyarat aktif</h2><button class="xbtn" id="helpX" aria-label="Tutup">✕</button></div>
+    <p class="muted" style="margin:0 0 6px">Saham patuh syariah yang ada isyarat teknikal aktif hari ini, disusun dari yang terkuat. Tekan nama untuk lihat butiran.</p>
+    <p class="muted" style="margin:0 0 10px;font-size:12px">🤖 sedang diuji robot · ⏳ tempoh biasa sudah berlalu · % = kebarangkalian sejarah</p>
+    ${body}
+    <p class="disc" style="margin-top:12px">Ini bacaan indicator, bukan cadangan beli atau jual.</p></div>`;
+  document.body.appendChild(d);
+  const close=()=>d.remove();d.onclick=e=>{const b=e.target.closest('[data-sc]');if(b){close();stockSheet(b.dataset.sc,nameOf(b.dataset.sc));return;}if(e.target===d)close();};$('#helpX').onclick=close;
+}
 function openStatusHelp(){
   const rows=[
     ['🟢','Isyarat aktif · dalam tempoh biasa','Ada isyarat teknikal yang masih "segar". Harga belum sampai paras atas atau paras bawah, dan masih dalam tempoh biasa saham ini sampai ke paras atas dalam sejarah. "Hari ke-X daripada ~Y" menunjukkan berapa hari dagangan sudah berlalu sejak isyarat bermula.'],
@@ -1286,6 +1308,10 @@ const EN_PHRASE=[
 ];
 
 Object.assign(EN_EXACT,{
+'Ringkasan isyarat aktif':'Active signals summary','Buka':'Open',
+'Saham patuh syariah yang ada isyarat teknikal aktif hari ini, disusun dari yang terkuat. Tekan nama untuk lihat butiran.':'Shariah-compliant stocks with an active technical signal today, strongest first. Tap a name for details.',
+'🤖 sedang diuji robot · ⏳ tempoh biasa sudah berlalu · % = kebarangkalian sejarah':'🤖 being tested by robot · ⏳ typical period has passed · % = historical probability',
+'Tiada isyarat teknikal aktif yang melepasi paras neutral pada masa ini.':'No active technical signal above the neutral level right now.',
 '🤖 Dalam robot':'🤖 In robot',
 'Pilihan sebenar robot setiap hari bekerja, disemak dengan harga sebenar. Robot memilih isyarat baharu dengan susunan yang sama seperti 5 isyarat terkuat (Isyarat Kuat dahulu), kemudian memegangnya sehingga paras atas, paras bawah atau 40 hari dagangan — ia tidak bertukar walaupun senarai 5 terkuat berubah esoknya.':"The robot's actual picks every working day, checked against real prices. It picks new signals in the same order as the 5 strongest signals (Strong signals first), then holds them until the upper level, lower level or 40 trading days — it does not switch even if the 5 strongest list changes the next day.",
 'Isyarat Kuat':'Strong signal','Isyarat Sederhana':'Moderate signal','Isyarat Lemah':'Weak signal','Kuat':'Strong','Sederhana':'Moderate','Isyarat':'Signal','Tiada isyarat aktif':'No active signal',
@@ -1373,6 +1399,7 @@ Object.assign(EN_EXACT,{
 'Paras ini naik mengikut harga tertinggi sejak tarikh belian dan tidak pernah turun. Harga tutup di bawahnya menandakan momentum menurun.':'This level rises with the highest price since the purchase date and never falls. A close below it signals weakening momentum.',
 });
 EN_RX.unshift(
+[/^(\d+) saham · senarai nama sahaja$/,'$1 stocks · names only'],[/^(\d+) saham$/,'$1 stocks'],
 [/^Dalam robot sejak (.+) @ (\S+)(.*)$/,'In robot since $1 @ $2$3'],
 [/^Ujian robot 12 bulan \((.+) setiap isyarat, (\d+) dagangan\): (.+) tepat (\S+)% · (untung|rugi) (.+)$/,(m,a,b,c,d,e,f)=>`12-month robot test (${a} per signal, ${b} trades): ${trText(c)} accurate ${d}% · ${e==='untung'?'profit':'loss'} ${f}`],
 [/^Skor teknikal (\d+)\/(\d+)$/,'Technical score $1/$2'],[/^Harga (\S+)$/,'Price $1'],
@@ -1596,6 +1623,7 @@ function rSaham(){
   const crit=unread(computeAlerts()).filter(a=>a.lv==='critical');
   if(crit.length)h+=`<button class="urgent" onclick="openAlerts()"><span class="ai">${crit[0].ic}</span><span><b>${esc(crit[0].title)}</b><span class="ab">${crit.length>1?`dan ${crit.length-1} lagi amaran segera`:esc(crit[0].body)}</span></span><span class="go">Lihat</span></button>`;
   const al=scheduleAlerts();if(al)h+=`<div class="pad" style="margin-top:12px">${al}</div>`;
+  if(S.market)h+=`<div class="pad" style="margin-top:12px"><button class="smbtn" onclick="openSummary()"><span>📋</span><span><b>Ringkasan isyarat aktif</b><small>${topSignals(60).length} saham · senarai nama sahaja</small></span><span class="go">Buka</span></button></div>`;
   h+=top5HTML();
   h+=rail('Watchlist anda',S.watch.length?S.watch.length+' saham':'',S.watch.map(c=>({code:c,name:nameOf(c)})),false,'Belum ada saham. Buka mana-mana saham dan tekan ☆ Tambah watchlist.');
   if(S.holdings.length)h+=rail('Pegangan saya','',S.holdings.map(x=>({code:x.code,name:x.name||nameOf(x.code)})),true,'');

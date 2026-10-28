@@ -1,5 +1,6 @@
 {
   "hosting": {
+    "site": "prosyariah",
     "public": "_site",
     "ignore": [
       "firebase.json",

@@ -537,6 +537,7 @@ async function syncData(manual){
   save();
   if(msg)toast(msg);else if(manual&&!S.sync.err)toast(changed?'✓ Data dikemas kini':'Data sudah terkini');
   if(changed||manual)render();
+  try{const need=[...new Set((S.manual||[]).filter(p=>!p.closed).map(p=>p.code))];if(need.length){await Promise.allSettled(need.map(c=>getBars(c)));manRefresh();if(TAB==='robot')rRobot();}}catch(e){}
   updateBell();notifyNew();
 }
 async function loadSymbols(){
@@ -820,7 +821,7 @@ function manEval(p){
   if(after.length>=H){const b=after[H-1];return {res:'T',exit:b.c,end:b.d,days:H};}
   return null;}
 function manPnl(p,exit){return (exit/p.en-1-BTH().fee)*p.stake;}
-function manRefresh(){let ch=false;(S.manual||[]).forEach(p=>{if(p.closed)return;const r=manEval(p);if(r){p.closed=r;ch=true;}});if(ch)save();}
+function manRefresh(){setTimeout(robotStateSync,0);let ch=false;(S.manual||[]).forEach(p=>{if(p.closed)return;const r=manEval(p);if(r){p.closed=r;ch=true;}});if(ch)save();}
 function openManual(code){
   code=code||'';const nm=nameOf(code);const m=mk(code);const P=manOpen(code);
   const d=document.createElement('div');d.className='help';d.id='help';document.body.classList.add('ovl');bkEnsure();
@@ -1056,8 +1057,25 @@ function openTrack(){
 }
 
 /* ================= PUSAT AMARAN ================= */
-const ALERT_DEF={on:{top5:true,syariah:true,harga:true,teknikal:true,ibadah:true,jadual:true},lossPct:10,price:[],seen:{},notified:{},notify:false};
-function AL(){S.alerts=Object.assign(structuredClone(ALERT_DEF),S.alerts||{});S.alerts.on=Object.assign({},ALERT_DEF.on,S.alerts.on);return S.alerts;}
+const ALERT_DEF={on:{robot:true,top5:true,syariah:true,harga:true,teknikal:true,ibadah:true,jadual:true},lossPct:10,price:[],seen:{},notified:{},notify:false};
+function AL(){S.alerts=Object.assign(structuredClone(ALERT_DEF),S.alerts||{});S.alerts.on=Object.assign({},ALERT_DEF.on,S.alerts.on);
+  if(!S.alerts.v2){S.alerts.v2=1;Object.keys(S.alerts.on).forEach(k=>S.alerts.on[k]=k==='robot');}   // amaran hanya untuk Robot Manual (boleh hidupkan lain di Tetapan)
+  return S.alerts;}
+/* Amaran Robot Manual: tutup (sasaran), cut loss, hampir cut loss, tarikh tempoh biasa & tutup paling lewat */
+function robotAlerts(push){
+  const asof=S.market?S.market.meta.asof:today(),H=BTH().h;
+  (S.manual||[]).forEach(p=>{const nm=shortName(p.name||nameOf(p.code));const base='man:'+p.id+':';
+    if(p.closed){const C=p.closed;if(daysBetween(C.end,today())>14)return;const u=manPnl(p,C.exit);
+      if(C.res==='W')push({id:base+'W',lv:'critical',ic:'🎯',cat:'robot',code:p.code,go:'robot',title:`${nm}: sampai paras atas, masa tutup (jual)`,body:`Harga capai ${px(p.tg)} pada ${fmtD(C.end)}. Ujian manual ditutup, ${rmS(u)}.`});
+      else if(C.res==='L')push({id:base+'L',lv:'critical',ic:'🛑',cat:'robot',code:p.code,go:'robot',title:`${nm}: kena cut loss, force close`,body:`Harga jatuh ke had ${px(p.sl)} pada ${fmtD(C.end)}. Ujian manual ditutup, ${rmS(u)}.`});
+      else if(C.res==='T')push({id:base+'T',lv:'critical',ic:'⌛',cat:'robot',code:p.code,go:'robot',title:`${nm}: tarikh tutup sudah sampai`,body:`${H} hari dagangan tamat pada ${fmtD(C.end)}. Ujian manual ditutup pada ${px(C.exit)}, ${rmS(u)}.`});
+      return;}
+    const m=mk(p.code),now=m&&m.c;const last=addTradingDays(p.d,H);const u=now?manPnl(p,now):null;
+    if(now&&now>p.sl&&(now/p.sl-1)*100<=2)push({id:base+'N:'+(m.d||asof),lv:'critical',ic:'⚠️',cat:'robot',code:p.code,go:'robot',title:`${nm}: hampir cut loss`,body:`Harga kini ${px(now)}, had cut loss ${px(p.sl)} (${((now/p.sl-1)*100).toFixed(1)}% lagi).`});
+    if(addTradingDays(p.d,H-1)<=asof)push({id:base+'E',lv:'critical',ic:'📅',cat:'robot',code:p.code,go:'robot',title:`${nm}: tutup esok (tarikh tutup paling lewat)`,body:`Ujian manual akan ditutup pada ${fmtD(last)}${u!=null?`. Untung/rugi kini ${rmS(u)}`:''}.`});
+    else if(p.md&&addTradingDays(p.d,p.md)<=asof)push({id:base+'D',lv:'action',ic:'⏳',cat:'robot',code:p.code,go:'robot',title:`${nm}: tempoh biasa sudah tamat`,body:`Tempoh biasa hingga ${fmtD(addTradingDays(p.d,p.md))}${u!=null?`. Untung/rugi kini ${rmS(u)}`:''}. Pertimbang untuk tutup.`});
+  });
+}
 const LV={critical:{t:'Perlu tindakan segera',c:'a-red'},action:{t:'Perlu perhatian',c:'a-amber'},info:{t:'Untuk makluman',c:'a-green'}};
 function computeAlerts(){
   const A=AL(),out=[],L=latestList(),asof=S.market?S.market.meta.asof:today();
@@ -1098,6 +1116,7 @@ function computeAlerts(){
       if(m.r!=null&&m.r<30)push({id:'rsi:'+c+':'+m.d,lv:'info',ic:'🔻',cat:'teknikal',code:c,title:`${nm}: RSI ${m.r.toFixed(0)}`,body:'Lebih jualan, potensi lantunan.'});
       if(m.r!=null&&m.r>70&&own)push({id:'rsih:'+c+':'+m.d,lv:'info',ic:'🔺',cat:'teknikal',code:c,title:`${nm}: RSI ${m.r.toFixed(0)}`,body:'Lebih belian, berisiko pembetulan.'});});
   }
+  if(A.on.robot)robotAlerts(push);
   if(A.on.top5)top5Alerts(push);
   if(A.on.ibadah){
     const Z=S.zakat;if(Z.haulDate){const dd=daysBetween(today(),Z.haulDate);if(dd>=0&&dd<=30)push({id:'haul:'+Z.haulDate,lv:'action',ic:'🕌',cat:'ibadah',
@@ -1113,12 +1132,30 @@ function computeAlerts(){
 function unread(list){const A=AL();return list.filter(a=>!A.seen[a.id]);}
 function updateBell(){const n=unread(computeAlerts());const b=$('#bellN');if(!b)return;b.textContent=n.length>9?'9+':n.length;b.style.display=n.length?'grid':'none';
   $('#bell').classList.toggle('hot',n.some(a=>a.lv==='critical'));}
+const NOTI_ICON='icons/icon-192.png';
+async function showNoti(title,body,tag){
+  try{if('serviceWorker' in navigator){const r=await navigator.serviceWorker.getRegistration();if(r){await r.showNotification(title,{body,tag,icon:NOTI_ICON,badge:NOTI_ICON,data:{url:'./#robot'}});return;}}}catch(e){}
+  try{new Notification(title,{body,tag,icon:NOTI_ICON});}catch(e){}
+}
 function notifyNew(){
-  const A=AL();if(!A.notify||!('Notification' in window)||Notification.permission!=='granted')return;
-  computeAlerts().filter(a=>a.lv!=='info'&&!A.notified[a.id]&&!A.seen[a.id]).slice(0,3).forEach(a=>{
-    try{new Notification(trText(a.title),{body:trText(a.body),tag:a.id,icon:'data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#d9b44a"/><rect x="16" y="24" width="8" height="18" rx="2" fill="#1b1503"/><rect x="28" y="14" width="8" height="26" rx="2" fill="#0f5a45"/><rect x="40" y="28" width="8" height="14" rx="2" fill="#1b1503"/></svg>')});}catch(e){}
-    A.notified[a.id]=1;});
-  save();
+  const A=AL();robotStateSync();if(!A.notify||!('Notification' in window)||Notification.permission!=='granted')return;
+  computeAlerts().filter(a=>a.lv!=='info'&&!A.notified[a.id]&&!A.seen[a.id]).slice(0,4).forEach(a=>{showNoti(trText(a.title),trText(a.body),a.id);A.notified[a.id]=1;});
+  save();robotStateSync();
+}
+/* Salinan kecil untuk pekerja servis: semakan latar (periodic sync) bila app ditutup */
+async function robotStateSync(){
+  try{if(!('caches' in window))return;const A=AL();const H=BTH().h;
+    const open=(S.manual||[]).filter(p=>!p.closed).map(p=>({id:p.id,code:p.code,name:shortName(p.name||nameOf(p.code)),en:p.en,tg:p.tg,sl:p.sl,stake:p.stake,last:addTradingDays(p.d,H),pre:addTradingDays(p.d,H-1),mdEnd:p.md?addTradingDays(p.d,p.md):null}));
+    const c=await caches.open('prosyariah-state');const old=await c.match('./__robot.json');let sent={};
+    if(old){try{sent=(await old.json()).sent||{};}catch(e){}}
+    Object.keys(sent).forEach(k=>{A.notified[k]=1;});Object.keys(A.notified).filter(k=>k.startsWith('man:')).forEach(k=>sent[k]=1);
+    await c.put('./__robot.json',new Response(JSON.stringify({open,sent,lang:S.settings.lang,on:A.notify&&A.on.robot}),{headers:{'Content-Type':'application/json'}}));
+  }catch(e){}
+}
+async function regPeriodic(){
+  try{const r=await navigator.serviceWorker.ready;if(!('periodicSync' in r))return;
+    const st=await navigator.permissions.query({name:'periodic-background-sync'});
+    if(st.state==='granted')await r.periodicSync.register('robot-check',{minInterval:6*3600*1000});}catch(e){}
 }
 function openAlerts(){
   const list=computeAlerts();const A=AL();
@@ -1137,7 +1174,7 @@ async function enableNotify(){
   const A=AL();
   if(!('Notification' in window)){toast('Peranti ini tidak menyokong notifikasi web. Amaran tetap dipaparkan dalam app.');return;}
   const p=await Notification.requestPermission();
-  if(p==='granted'){A.notify=true;save();toast('✓ Notifikasi dihidupkan');notifyNew();}else toast('Kebenaran notifikasi ditolak');
+  if(p==='granted'){A.notify=true;save();toast('✓ Notifikasi dihidupkan');notifyNew();regPeriodic();}else toast('Kebenaran notifikasi ditolak');
   if($('#sheet').classList.contains('on'))openAlerts();else render();
 }
 function priceAlertForm(code){
@@ -1154,7 +1191,7 @@ function priceAlertForm(code){
   document.querySelectorAll('[data-pd]').forEach(b=>b.onclick=()=>{A.price=A.price.filter(p=>p.id!==b.dataset.pd);save();updateBell();priceAlertForm(code);});
 }
 function alertSettingsHTML(){
-  const A=AL();const lab={top5:'5 isyarat terkuat (masuk, paras atas/bawah, tempoh)',syariah:'Status syariah (pegangan & watchlist)',harga:'Harga (sasaran harga & had penurunan)',teknikal:'Isyarat teknikal (cross, RSI)',ibadah:'Zakat & penyucian',jadual:'Jadual senarai SC'};
+  const A=AL();const lab={robot:'Robot Manual (tutup, cut loss, tarikh tutup)',top5:'5 isyarat terkuat (masuk, paras atas/bawah, tempoh)',syariah:'Status syariah (pegangan & watchlist)',harga:'Harga (sasaran harga & had penurunan)',teknikal:'Isyarat teknikal (cross, RSI)',ibadah:'Zakat & penyucian',jadual:'Jadual senarai SC'};
   return `<div class="card"><h2>Amaran</h2>
    ${Object.entries(lab).map(([k,v])=>`<div class="toggle"><span>${v}</span><input type="checkbox" data-alon="${k}" ${A.on[k]?'checked':''}></div>`).join('')}
    <label>Amaran bila pegangan turun melebihi (% dari kos)</label><input id="alLoss" inputmode="decimal" value="${A.lossPct}">
@@ -1421,6 +1458,7 @@ const EN_PHRASE=[
 ];
 
 Object.assign(EN_EXACT,{
+'Robot Manual (tutup, cut loss, tarikh tutup)':'Manual Robot (close, cut loss, closing date)',
 'Sedang diuji':'Being tested','Untung/rugi kini':'Profit/loss now','Ketepatan':'Accuracy','Untung/rugi selesai':'Closed profit/loss',
 '✍️ Robot Manual':'✍️ Manual Robot','Ditambah ke Robot Manual':'Added to Manual Robot','Dipadam dari senarai':'Removed from list',
 'Belum ada saham. Buka mana-mana saham dan tekan butang ✍️ Manual di atas kanan untuk mula ujian.':'No stocks yet. Open any stock and press the ✍️ Manual button at the top right to start a test.',
@@ -1535,6 +1573,18 @@ Object.assign(EN_EXACT,{
 'Paras ini naik mengikut harga tertinggi sejak tarikh belian dan tidak pernah turun. Harga tutup di bawahnya menandakan momentum menurun.':'This level rises with the highest price since the purchase date and never falls. A close below it signals weakening momentum.',
 });
 EN_RX.unshift(
+[/^(.+): sampai paras atas, masa tutup \(jual\)$/,'$1: reached upper level, time to close (sell)'],
+[/^(.+): kena cut loss, force close$/,'$1: hit cut loss, force close'],
+[/^(.+): tarikh tutup sudah sampai$/,'$1: closing date reached'],
+[/^(.+): hampir cut loss$/,'$1: close to cut loss'],
+[/^(.+): tutup esok \(tarikh tutup paling lewat\)$/,'$1: closes tomorrow (latest closing date)'],
+[/^(.+): tempoh biasa sudah tamat$/,'$1: typical period has ended'],
+[/^Harga capai (\S+) pada (.+)\. Ujian manual ditutup, (.+)\.$/,(m,a,b,c)=>`Price reached ${a} on ${trText(b)}. Manual test closed, ${c}.`],
+[/^Harga jatuh ke had (\S+) pada (.+)\. Ujian manual ditutup, (.+)\.$/,(m,a,b,c)=>`Price fell to the limit ${a} on ${trText(b)}. Manual test closed, ${c}.`],
+[/^(\d+) hari dagangan tamat pada (.+)\. Ujian manual ditutup pada (\S+), (.+)\.$/,(m,a,b,c,d)=>`${a} trading days ended on ${trText(b)}. Manual test closed at ${c}, ${d}.`],
+[/^Harga kini (\S+), had cut loss (\S+) \((.+)% lagi\)\.$/,'Price now $1, cut-loss limit $2 ($3% away).'],
+[/^Ujian manual akan ditutup pada (.+?)(\. Untung\/rugi kini (.+))?\.$/,(m,a,b,c)=>`The manual test will close on ${trText(a)}${c?`. Profit/loss now ${c}`:''}.`],
+[/^Tempoh biasa hingga (.+?)(\. Untung\/rugi kini (.+))?\. Pertimbang untuk tutup\.$/,(m,a,b,c)=>`Typical period until ${trText(a)}${c?`. Profit/loss now ${c}`:''}. Consider closing.`],
 [/^Sedang diuji \((\d+)\)$/,'Being tested ($1)'],
 [/^Ujian maya tanpa wang sebenar, kos dagangan (.+)% diambil kira\. Ini bacaan indicator, bukan cadangan beli atau jual\.$/,'Virtual test with no real money, $1% trading cost included. This is an indicator reading, not a buy or sell recommendation.'],
 [/^(\d+) saham · bermula hari ini$/,'$1 stocks · starting today'],
@@ -2131,8 +2181,11 @@ function rTetapan(){
 
 document.documentElement.lang=S.settings.lang==='en'?'en':'ms';
 if('serviceWorker' in navigator&&location.protocol==='https:')navigator.serviceWorker.register('sw.js').catch(()=>{});
+if('serviceWorker' in navigator)navigator.serviceWorker.addEventListener('message',e=>{if(e.data&&e.data.go)goTab(e.data.go);});
 render();
+if(location.hash==='#robot'){try{history.replaceState(history.state,'',location.pathname+location.search);}catch(e){}goTab('robot');}
 updateLangBtn();startI18N();updateInstallBtn();
+if(S.alerts&&S.alerts.notify)regPeriodic();
 syncData(false);
 </script>
 </body>

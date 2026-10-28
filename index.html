@@ -731,7 +731,7 @@ function rateSignal(x){
   const bits=[];
   if(n!=null&&x.w!=null)bits.push(`Berjaya ${x.w} daripada ${n} kali pada saham ini`);
   const H=S.paper&&S.paper.hist&&S.paper.hist.bySetup&&S.paper.hist.bySetup[x.k];
-  if(H&&H.n)bits.push(`Ujian robot 12 bulan (${rm(rbStake())} setiap isyarat, ${H.n} dagangan): ${setupName(x.k)} tepat ${H.win}% · ${H.pnl>=0?'untung':'rugi'} ${rmS(H.pnl*rbScale())}`);
+  if(false&&H&&H.n)bits.push(`Ujian robot 12 bulan (${rm(rbStake())} setiap isyarat, ${H.n} dagangan): ${setupName(x.k)} tepat ${H.win}% · ${H.pnl>=0?'untung':'rugi'} ${rmS(H.pnl*rbScale())}`);
   return {g,lbl:G[0],cls:G[1],txt:G[2],bits,edge,be};
 }
 function rateHTML(x){const R=rateSignal(x);
@@ -750,7 +750,7 @@ function openChamp(){
   const d=document.createElement('div');d.className='help';d.id='help';document.body.classList.add('ovl');bkEnsure();
   d.innerHTML=`<div class="help-p" role="dialog" aria-modal="true"><div><div class="shd-top" style="margin-bottom:6px"><h2 style="margin:0">🏆 Isyarat Champion</h2><button class="xbtn" id="helpX" aria-label="Tutup">✕</button></div>
     <p class="muted" style="margin:0">Isyarat Kuat + Skor teknikal Kuat, bermula hari ini.</p></div>
-    ${L.map(x=>`<button class="smr" data-sc="${esc(x.code)}"><span><b>${esc(shortName(x.name))}</b> <span class="code">${esc(x.code)}</span></span><span class="smt">${held(x.code)?'🤖 ':''}<b>${x.p}%</b></span></button>`).join('')}
+    ${L.map(x=>`<button class="smr" data-sc="${esc(x.code)}"><span><b>${esc(shortName(x.name))}</b> <span class="code">${esc(x.code)}</span></span><span class="smt"><b>${x.p}%</b></span></button>`).join('')}
     <p class="disc" style="margin-top:12px">Ini bacaan indicator, bukan cadangan beli atau jual.</p></div>`;
   document.body.appendChild(d);
   const close=()=>{d.remove();if(!$('#sheet').classList.contains('on'))document.body.classList.remove('ovl');};
@@ -762,7 +762,7 @@ function top5HTML(){
   if(!L.length)h+=`<div class="emptyrail" style="margin:0">Tiada isyarat teknikal baharu yang bermula hari ini.</div>`;
   L.forEach((x,i)=>{const pct=Math.min(100,x.el/x.md*100);
     h+=`<button class="t5r" data-code="${esc(x.code)}"><span class="t5n">${i+1}</span><span class="t5b">
-      <span class="row between"><span><b>${esc(shortName(x.name))}</b> <span class="code">${esc(x.code)}</span>${isChamp(x)?' <span class="badge b-gold">🏆 Champion</span>':''}${S.paper&&S.paper.live&&S.paper.live.open.some(p=>p.c===x.code)?' <span class="badge b-gold">🤖 Dalam robot</span>':''}${(S.t5&&S.t5[x.code+':'+x.k+':'+x.start]&&S.t5[x.code+':'+x.k+':'+x.start].ev.in===S.market.meta.asof)?' <span class="badge b-ok">Baharu</span>':''}</span><b class="t5p">${x.p}%</b></span>
+      <span class="row between"><span><b>${esc(shortName(x.name))}</b> <span class="code">${esc(x.code)}</span>${isChamp(x)?' <span class="badge b-gold">🏆 Champion</span>':''}${(S.t5&&S.t5[x.code+':'+x.k+':'+x.start]&&S.t5[x.code+':'+x.k+':'+x.start].ev.in===S.market.meta.asof)?' <span class="badge b-ok">Baharu</span>':''}</span><b class="t5p">${x.p}%</b></span>
       <span class="muted">${esc(setupName(x.k))}</span>
       ${rateHTML(x)}
       <span class="t5d"><span>Isyarat bermula <b>${fmtD(x.start)}</b></span><span>Tempoh biasa ${x.md} hari dagangan, hingga <b>${fmtD(x.end)}</b></span></span>
@@ -972,7 +972,7 @@ function stockStatus(code,name){
     else out.push({ic:'🟢',cls:'s-ok',t:`Isyarat aktif ${sig.p}% (${rateSignal({...sig,n:sig.n,w:sig.w}).lbl}) · tempoh indicator trading (hari ke-${el} daripada ~${md}) · bermula ${fmtD(sig.start)} hingga ${fmtD(addTradingDays(sig.start,md))}`});}
   else if(m&&m.va)out.push({ic:'⚪',cls:'s-na',t:`Tiada isyarat teknikal aktif · skor ${m.sc}/${m.va} (${scoreVerdict(m.sc,m.va).lbl})`});
   const mp=manOpen(code);if(mp){const now=m&&m.c;const u=now?manPnl(mp,now):null;out.push({ic:'✍️',cls:'s-warn',t:`Robot manual sejak ${fmtD(mp.d)} @ ${px(mp.en)}${u!=null?` · ${rmS(u)}`:''}`});}
-  const rp=S.paper&&S.paper.live&&S.paper.live.open.find(p=>p.c===code);if(rp){const now=m&&m.c;const u=now?(now/rp.en-1-S.paper.fee)*rbStake():null;out.push({ic:'🤖',cls:'s-warn',t:`Dalam robot sejak ${fmtD(rp.d)} @ ${px(rp.en)}${u!=null?` · ${rmS(u)}`:''}`});}
+  const rp=null;if(rp){const now=m&&m.c;const u=now?(now/rp.en-1-S.paper.fee)*rbStake():null;out.push({ic:'🤖',cls:'s-warn',t:`Dalam robot sejak ${fmtD(rp.d)} @ ${px(rp.en)}${u!=null?` · ${rmS(u)}`:''}`});}
   if(hd){const lc=lastClose(code);if(lc){const pl=(lc.c-hd.cost)*hd.qty,pct=(lc.c/hd.cost-1)*100;const XP=exitPlan(hd);
     out.push({ic:'💼',cls:pl>=0?'s-up':'s-no',t:`Pegangan anda ${pl>=0?'untung':'rugi'} ${rmS(pl)} (${pct>=0?'+':''}${pct.toFixed(1)}%)${XP?(XP.hit?' · harga tutup di bawah paras sokongan mengekor':' · di atas paras sokongan mengekor'):''}`});}}
   return out.length?out:null;
@@ -982,14 +982,14 @@ function openSummary(){
   const L=topSignals(60);const held=c=>S.paper&&S.paper.live&&S.paper.live.open.some(p=>p.c===c);
   const grp=[['C','🏆 Champion','b-gold'],['A','Isyarat Kuat','b-ok'],['B','Isyarat Sederhana','b-warn']];
   const by={C:[],A:[],B:[]};L.forEach(x=>{const g=rateSignal(x).g;if(isChamp(x))by.C.push(x);else (g==='A'?by.A:g==='D'?null:by.B)?.push(x);});
-  const row=x=>`<button class="smr" data-sc="${esc(x.code)}"><span><b>${esc(shortName(x.name))}</b> <span class="code">${esc(x.code)}</span></span><span class="smt">${held(x.code)?'🤖 ':''}${x.passed?'⏳ ':''}<b>${x.p}%</b></span></button>`;
+  const row=x=>`<button class="smr" data-sc="${esc(x.code)}"><span><b>${esc(shortName(x.name))}</b> <span class="code">${esc(x.code)}</span></span><span class="smt">${x.passed?'⏳ ':''}<b>${x.p}%</b></span></button>`;
   let body='';
   grp.forEach(([g,l,c])=>{if(!by[g].length)return;body+=`<h3 class="smh"><span class="badge ${c}">${l}</span> <small>${by[g].length} saham</small></h3>${by[g].map(row).join('')}`;});
   if(!body)body=`<p class="muted">Tiada isyarat teknikal baharu yang bermula hari ini.</p>`;
   const d=document.createElement('div');d.className='help';d.id='help';document.body.classList.add('ovl');bkEnsure();
   d.innerHTML=`<div class="help-p" role="dialog" aria-modal="true"><div><div class="shd-top" style="margin-bottom:6px"><h2 style="margin:0">Ringkasan isyarat aktif</h2><button class="xbtn" id="helpX" aria-label="Tutup">✕</button></div>
     <p class="muted" style="margin:0 0 6px">Saham patuh syariah yang isyarat teknikalnya bermula hari ini (${S.market?fmtD(S.market.meta.asof):''}), disusun dari yang terkuat. Tekan nama untuk lihat butiran.</p>
-    <p class="muted" style="margin:0;font-size:12px">🏆 Champion = Isyarat Kuat + Skor teknikal Kuat · 🤖 sedang diuji robot · ⏳ tempoh biasa sudah berlalu · % = kebarangkalian sejarah</p></div>
+    <p class="muted" style="margin:0;font-size:12px">🏆 Champion = Isyarat Kuat + Skor teknikal Kuat · ⏳ tempoh biasa sudah berlalu · % = kebarangkalian sejarah</p></div>
     ${body}
     <p class="disc" style="margin-top:12px">Ini bacaan indicator, bukan cadangan beli atau jual.</p></div>`;
   document.body.appendChild(d);
@@ -1441,7 +1441,7 @@ Object.assign(EN_EXACT,{
 '🏆 Isyarat Champion':'🏆 Champion signals','Isyarat Kuat + Skor teknikal Kuat':'Strong signal + Strong technical score','🏆 Champion sahaja':'🏆 Champions only',
 'Tiada isyarat Champion hari ini. Champion hanya muncul bila isyarat dan skor teknikal kedua-duanya kuat pada saham yang sama.':'No Champion signal today. A Champion only appears when both the signal and the technical score are strong on the same stock.',
 'Ujian yang sama, tetapi robot hanya ambil isyarat yang Isyarat Kuat dan skor teknikal Kuat pada hari isyarat.':'Same test, but the robot only takes signals that were a Strong signal with a Strong technical score on the signal day.',
-'🏆 Champion = Isyarat Kuat + Skor teknikal Kuat · 🤖 sedang diuji robot · ⏳ tempoh biasa sudah berlalu · % = kebarangkalian sejarah':'🏆 Champion = Strong signal + Strong technical score · 🤖 being tested by robot · ⏳ typical period has passed · % = historical probability',
+'🏆 Champion = Isyarat Kuat + Skor teknikal Kuat · ⏳ tempoh biasa sudah berlalu · % = kebarangkalian sejarah':'🏆 Champion = Strong signal + Strong technical score · ⏳ typical period has passed · % = historical probability',
 'Saham yang isyaratnya dinilai Isyarat Kuat dan skor teknikalnya juga Kuat (4–5 daripada 5) pada masa yang sama. Ia jarang muncul.':'Stocks whose signal is rated Strong signal and whose technical score is also Strong (4–5 of 5) at the same time. They are rare.',
 'Tekan Kembali sekali lagi untuk keluar':'Press Back again to exit',
 'Ringkasan isyarat aktif':'Active signals summary','Buka':'Open',

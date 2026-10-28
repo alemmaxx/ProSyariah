@@ -9,7 +9,7 @@ on:
   workflow_dispatch: {}
   push:
     branches: [main]
-    paths: ["index.html"]
+    paths: ["index.html", "data/sc-upload/**"]
 
 permissions:
   contents: write
@@ -39,7 +39,9 @@ jobs:
           cache: pip
 
       - name: Pasang keperluan
-        run: pip install -r requirements.txt
+        run: |
+          pip install -r requirements.txt
+          python -m playwright install --with-deps chromium
 
       - name: Kemas kini senarai simbol KLSE
         run: python scripts/market.py --symbols-only
@@ -50,7 +52,7 @@ jobs:
         run: python scripts/sc_list.py
 
       - name: Simpan log jika bacaan SC gagal
-        if: steps.sc.outcome == 'failure'
+        if: always() && steps.sc.outcome == 'failure'
         uses: actions/upload-artifact@v4
         with:
           name: sc-debug
@@ -94,5 +96,5 @@ jobs:
       - name: Gagalkan job jika bacaan SC gagal (supaya anda dapat emel)
         if: steps.sc.outcome == 'failure'
         run: |
-          echo "::error::Bacaan senarai SC gagal. Data harga tetap dikemas kini; senarai SC lama dikekalkan. Muat turun artifact sc-debug."
+          echo "::error::Bacaan senarai SC gagal. Data harga tetap dikemas kini; senarai SC lama dikekalkan. Muat turun artifact sc-debug, atau letak PDF senarai SC dalam folder data/sc-upload/."
           exit 1

@@ -10,33 +10,2733 @@ Pelayar: https://www.sc.com.my/development/icm/shariah-compliant-securities/list
   calon: List of Shariah-Compliant Securities as at 24 November 2023 DOWNLOAD PDF → https://www.sc.com.my/api/documentms/download.ashx?id=c39e4960-6720-40da-92f3-633e6c86c36e
   calon: List of Shariah-Compliant Securities as at 26 May 2023 DOWNLOAD PDF → https://www.sc.com.my/api/documentms/download.ashx?id=e6cffd45-ccdc-42f5-ac1c-d10d670e86bd
   calon: List of Shariah-Compliant Securities as at 25 November 2022 DOWNLOAD PDF → https://www.sc.com.my/api/documentms/download.ashx?id=d167b551-2f93-4d28-a08f-e4bf9804b09a
-  semak https://www.sc.com.my/api/documentms/download.ashx?id=9f03c706-607f-4fbe-b4c7-91afc352ee49 → 486522 bait, 726 nama, senarai SC: False, tarikh -
-  semak https://www.sc.com.my/api/documentms/download.ashx?id=5f0bb08b-802c-49a0-b093-d6f0edf6c276 → 533720 bait, 710 nama, senarai SC: False, tarikh -
-  semak https://www.sc.com.my/api/documentms/download.ashx?id=2671e073-8b4c-4291-af90-7cb34ad7715f → 484045 bait, 672 nama, senarai SC: False, tarikh -
-  semak https://www.sc.com.my/api/documentms/download.ashx?id=1920c06f-61e5-46d7-8016-28a918acd4c8 → 729200 bait, 640 nama, senarai SC: False, tarikh -
-  semak https://www.sc.com.my/api/documentms/download.ashx?id=d540937f-6840-41e1-b4ec-b3681b11bedf → 586223 bait, 611 nama, senarai SC: False, tarikh -
-  semak https://www.sc.com.my/api/documentms/download.ashx?id=c39e4960-6720-40da-92f3-633e6c86c36e → 516311 bait, 620 nama, senarai SC: False, tarikh -
-  semak https://www.sc.com.my/api/documentms/download.ashx?id=e6cffd45-ccdc-42f5-ac1c-d10d670e86bd → 548129 bait, 610 nama, senarai SC: False, tarikh -
-  semak https://www.sc.com.my/api/documentms/download.ashx?id=d167b551-2f93-4d28-a08f-e4bf9804b09a → 816533 bait, 644 nama, senarai SC: False, tarikh -
-  semak https://www.sc.com.my/api/documentms/download.ashx?id=f594c8f5-17a1-4007-9334-4db1330e705f → 1265605 bait, 661 nama, senarai SC: False, tarikh -
-  semak https://www.sc.com.my/api/documentms/download.ashx?id=03897690-c1cd-4748-b221-204052582c75 → 1179605 bait, 622 nama, senarai SC: False, tarikh -
-Cuba sumber: pelayar: permalink
-Pelayar: https://www.sc.com.my/development/icm/shariah-compliant-securities/list-of-shariah-compliant-securities · tajuk 'List of Shariah-Compliant Securities - Shariah-Compliant Securities | Securities Commission Malaysia' · 346 pautan
-  calon: List of Shariah-compliant Securities as at 29 May 2026 DOWNLOAD PDF → https://www.sc.com.my/api/documentms/download.ashx?id=9f03c706-607f-4fbe-b4c7-91afc352ee49
-  calon: List of Shariah-compliant Securities as at 28 November 2025 (Updated 3 December 2025) DOWNLOAD PDF → https://www.sc.com.my/api/documentms/download.ashx?id=5f0bb08b-802c-49a0-b093-d6f0edf6c276
-  calon: List of Shariah-compliant Securities as at 30 May 2025 DOWNLOAD PDF → https://www.sc.com.my/api/documentms/download.ashx?id=2671e073-8b4c-4291-af90-7cb34ad7715f
-  calon: List of Shariah Compliant Securities as at 29 November 2024 DOWNLOAD PDF → https://www.sc.com.my/api/documentms/download.ashx?id=1920c06f-61e5-46d7-8016-28a918acd4c8
-  calon: List of Shariah-Compliant Securities as at 31 May 2024 DOWNLOAD PDF → https://www.sc.com.my/api/documentms/download.ashx?id=d540937f-6840-41e1-b4ec-b3681b11bedf
-  calon: List of Shariah-Compliant Securities as at 24 November 2023 DOWNLOAD PDF → https://www.sc.com.my/api/documentms/download.ashx?id=c39e4960-6720-40da-92f3-633e6c86c36e
-  calon: List of Shariah-Compliant Securities as at 26 May 2023 DOWNLOAD PDF → https://www.sc.com.my/api/documentms/download.ashx?id=e6cffd45-ccdc-42f5-ac1c-d10d670e86bd
-  calon: List of Shariah-Compliant Securities as at 25 November 2022 DOWNLOAD PDF → https://www.sc.com.my/api/documentms/download.ashx?id=d167b551-2f93-4d28-a08f-e4bf9804b09a
-  semak https://www.sc.com.my/api/documentms/download.ashx?id=9f03c706-607f-4fbe-b4c7-91afc352ee49 → 486522 bait, 726 nama, senarai SC: False, tarikh -
-  semak https://www.sc.com.my/api/documentms/download.ashx?id=5f0bb08b-802c-49a0-b093-d6f0edf6c276 → 533720 bait, 710 nama, senarai SC: False, tarikh -
-  semak https://www.sc.com.my/api/documentms/download.ashx?id=2671e073-8b4c-4291-af90-7cb34ad7715f → 484045 bait, 672 nama, senarai SC: False, tarikh -
-  semak https://www.sc.com.my/api/documentms/download.ashx?id=1920c06f-61e5-46d7-8016-28a918acd4c8 → 729200 bait, 640 nama, senarai SC: False, tarikh -
-  semak https://www.sc.com.my/api/documentms/download.ashx?id=d540937f-6840-41e1-b4ec-b3681b11bedf → 586223 bait, 611 nama, senarai SC: False, tarikh -
-  semak https://www.sc.com.my/api/documentms/download.ashx?id=c39e4960-6720-40da-92f3-633e6c86c36e → 516311 bait, 620 nama, senarai SC: False, tarikh -
-  semak https://www.sc.com.my/api/documentms/download.ashx?id=e6cffd45-ccdc-42f5-ac1c-d10d670e86bd → 548129 bait, 610 nama, senarai SC: False, tarikh -
-  semak https://www.sc.com.my/api/documentms/download.ashx?id=d167b551-2f93-4d28-a08f-e4bf9804b09a → 816533 bait, 644 nama, senarai SC: False, tarikh -
-  semak https://www.sc.com.my/api/documentms/download.ashx?id=f594c8f5-17a1-4007-9334-4db1330e705f → 1265605 bait, 661 nama, senarai SC: False, tarikh -
-  semak https://www.sc.com.my/api/documentms/download.ashx?id=03897690-c1cd-4748-b221-204052582c75 → 1179605 bait, 622 nama, senarai SC: False, tarikh -
+  semak https://www.sc.com.my/api/documentms/download.ashx?id=9f03c706-607f-4fbe-b4c7-91afc352ee49 → 486522 bait, 726 nama, senarai SC: True, tarikh 2026-05-29
+Dokumen: pdf dari https://www.sc.com.my/api/documentms/download.ashx?id=9f03c706-607f-4fbe-b4c7-91afc352ee49 · 726 nama dikesan
+
+---- 726 NAMA ----
+Securities Bhd
+tersenarai di Bursa Malaysia Securities Bhd
+5E Resources Holdings 19. 7222 Imaspro Corporation
+Adnex Group Bhd
+0451 Inspace Creation Bhd
+Advance Information 21. 0390 ISF Group Bhd
+Marketing Bhd
+Ambest Group Bhd
+3441 Johan Holdings Bhd
+AMS Advanced Material 23. 0392 Kee Ming Group Bhd
+Autocount Dotcom Bhd
+5341 LAC Med Bhd
+Azam Jaya Bhd
+3662 Malayan Flour Mills Bhd
+Industries Bhd
+03069 BIMOffice Group Bhd
+5327 Mega Fortris Bhd
+BMS Holdings Bhd
+03072 Milolo Bhd
+BTM Resources Bhd
+Logistics Bhd
+03066 Croesus IT Holdings Bhd
+03071 Noesis Exed Bhd
+EI Power Bhd
+OGX Group Bhd
+Geohan Corporation
+5348 Orkim Bhd
+Gold Li Holdings Bhd
+0171 PeterLabs Holdings Bhd
+Golden Destinations 35. 0383 PSP Energy Bhd
+Group Bhd
+Hock Soon Capital Bhd
+International Bhd
+SBS Nexus Bhd
+7106 Supermax Corporation
+SkyeChip Bhd
+Teamstar Bhd
+Southern Steel Bhd
+Sunway Healthcare 44. 5343 Wasco Greenergy Bhd
+Holdings Bhd
+03067 Associated Air-Pak 10. 7215 Ni Hsin Group Bhd
+03001 Cloudaron Group Bhd
+0026 Nova MSC Bhd
+Foodie Media Bhd
+7010 PTT Synergy Group Bhd
+Globetronics Technology 13. 0388 Semico Capital Bhd
+Harbour-Link Group Bhd
+7097 Ta Win Holdings Bhd
+Ho Hup Construction 16. 5289 Techbond Group Bhd
+Company Bhd
+ManagePay Systems Bhd
+9369 Teo Guan Lee Bhd
+MCE Holdings Bhd
+03070 Whitman Holdings Bhd
+Holding Bhd
+Chin Hin Group Bhd
+Chin Well Holdings Bhd
+No. Stock code Name of securities Industries Bhd
+Ablegroup Bhd
+Citaglobal Bhd
+ABM Fujiya Bhd
+CME Group Bhd
+Aizo Group Bhd
+Comfort Gloves Bhd
+Ajiya Bhd
+Ancom Nylex Bhd
+Ann Joo Resources Bhd
+Products Bhd
+CPE Technology Bhd
+A-Rank Bhd
+Critical Holdings Bhd
+Asteel Group Bhd
+5094 CSC Steel Holdings Bhd
+Astino Bhd
+CYL Corporation
+AWC Bhd
+Destini Bhd
+AYS Ventures Bhd
+5165 DFCITY Group Bhd
+B.I.G. Industries Bhd
+7114 D’nonce Technology Bhd
+Dominant Enterprise Bhd
+Corporation Bhd
+0269 DS Sigma Holdings Bhd
+Borneo Oil Bhd
+BP Plastics Holding Bhd
+BSL Corporation
+0064 Efficient E-Solutions Bhd
+8907 EG Industries Bhd
+Cahya Mata Sarawak 44. 5208 EITA Resources Bhd
+Engtex Group Bhd
+Eonmetall Group Bhd
+0151 Kelington Group Bhd
+EP Manufacturing Bhd
+6211 Kia Lim Bhd
+Evergreen Fibreboard 80. 5371 Kim Hin Industry Bhd
+KKB Engineering Bhd
+Favelle Favco Bhd
+5035 Knusford Bhd
+Feytech Holdings Bhd
+6971 Kobay Technology Bhd
+Fima Corporation
+7017 Komarkcorp Bhd
+Fitters Diversified Bhd
+9121 KPS Consortium Bhd
+Focus Lumber Bhd
+6491 Kumpulan Fima Bhd
+FoundPac Group Bhd
+Ge-Shen Corporation
+High-Tech Bhd
+Kumpulan Jetson Bhd
+GFM Services Bhd
+GIIB Holdings Bhd
+Selangor Bhd
+Globaltec Formation 90. 8362 KYM Holdings Bhd
+L&P Global Bhd
+Golden Pharos Bhd
+9326 LB Aluminium Bhd
+GUH Holdings Bhd
+HE Group Bhd
+Heveaboard Bhd
+7170 LFE Corporation
+Hextar Global Bhd
+Hextar Industries Bhd
+Hiap Teck Venture Bhd
+8486 Lion Posim Bhd
+HIL Industries Bhd
+5068 Luster Industries Bhd
+Ho Wah Genting Bhd
+5143 Luxchem Corporation
+HPMT Holdings Bhd
+HSS Engineers Bhd
+3794 Malayan Cement Bhd
+Imaspro Corporation
+(KL) Bhd
+Ingenieur Gudang Bhd
+7029 Master-Pack Group Bhd
+JAG Capital Bhd
+7123 Maxland Bhd
+Jentayu Sustainables 104. 7099 Mayu Global Group Bhd
+Mega Fortris Bhd
+Karyon Industries Bhd
+0207 Mestron Holdings Bhd
+Kein Hing International 108. 0043 Metronic Global Bhd
+Mieco Chipboard Bhd
+Minho (M) Bhd
+8745 S & F Capital Bhd
+Equipment (M) Bhd
+Muda Holdings Bhd
+5147 Samchem Holdings Bhd
+Mycron Steel Bhd
+7811 Sapura Industrial Bhd
+Nextgreen Global Bhd
+7239 Scanwolf Corporation
+OKA Corporation
+OM Holdings Ltd
+4731 Scientex Bhd
+Ornapaper Bhd
+7073 Seacera Group Bhd
+P.A. Resources Bhd
+5308 Seng Fong Holdings Bhd
+P.I.E. Industrial Bhd
+Pansar Bhd
+Pantech Global Bhd
+7155 SKP Resources Bhd
+Pantech Group 151. 7248 SLP Resources Bhd
+SMIS Corporation
+Pecca Group Bhd
+5134 Southern Acids (M) Bhd
+(Perstima) Bhd
+5665 Southern Steel Bhd
+PETRONAS Chemicals 157. 5211 Sunway Bhd
+Superlon Holdings Bhd
+PGF Capital Bhd
+8702 Texchem Resources Bhd
+PJBumi Bhd
+PMB Technology Bhd
+PNE PCB Bhd
+Timberwell Bhd
+Press Metal Aluminium 162. 5330 TMK Chemical Bhd
+Tomypak Holdings Bhd
+Prestar Resources Bhd
+5010 Tong Herr Resources Bhd
+QES Group Bhd
+7100 Uchi Technologies Bhd
+Ralco Corporation
+1368 UEM Edgenta Bhd
+Resintech Bhd
+7137 UMS Holdings Bhd
+RGT Bhd
+UMS Integration Ltd
+Rohas Tecnic Bhd
+7227 UMS-Neiken Group Bhd
+Unimech Group Bhd
+5196 Berjaya Food Bhd
+Unique Fire Holdings 12. 5248 Bermaz Auto Bhd
+Bonia Corporation
+United U-Li Corporation
+2828 C.I. Holdings Bhd
+V.S. Industry Bhd
+W T K Holdings Bhd
+7128 CAM Resources Bhd
+Wavefront Bhd
+Capital A Bhd
+Wellcall Holdings Bhd
+White Horse Bhd
+Wong Engineering 19. 7209 Cheetah Holdings Bhd
+5104 Citra Nusa Holdings Bhd
+(MAL) Bhd
+YB Ventures Bhd
+9423 CWG Holdings Bhd
+YLI Holdings Bhd
+DRB-HICOM Bhd
+DXN Holdings Bhd
+Ecomate Holdings Bhd
+Eco-Shop Marketing Bhd
+Emico Holdings Bhd
+Eng Kah Corporation
+Able Global Bhd
+Advance Synergy Bhd
+AEON Co. (M) Bhd
+ETA Group Bhd
+AHB Holdings Bhd
+Euro Holdings Bhd
+AirAsia X Bhd
+Exsim Hospitality Bhd
+Farm Fresh Bhd
+Fiamma Holdings Bhd
+Focus Point Holdings Bhd
+Asia Brands Bhd
+Avillion Bhd
+Fraser & Neave 70. 3662 Malayan Flour Mills Bhd
+G3 Global Bhd
+MBM Resources Bhd
+Enterprises Bhd
+Technology Bhd
+7935 Milux Corporation
+Greenyield Bhd
+0229 Mobilia Holdings Bhd
+Guan Chong Bhd
+HI Mobility Bhd
+Homeritz Corporation
+MST Golf Group Bhd
+Hong Leong Industries 79. 4707 Nestle (Malaysia) Bhd
+NexG Bina Bhd
+Hwa Tai Industries Bhd
+Iconic Worldwide Bhd
+Jadi Imaging Holdings 83. 5066 NTPM Holdings Bhd
+OCB Bhd
+Jaycorp Bhd
+Oceancash Pacific Bhd
+Kamdar Group (M) 86. 5079 One Glove Group Bhd
+Karex Bhd
+Kawan Food Bhd
+Khind Holdings Bhd
+Consolidated Bhd
+7052 Padini Holdings Bhd
+Lay Hong Bhd
+Paos Holdings Bhd
+Life Water Bhd
+9407 Paragon Union Bhd
+Lii Hen Industries Bhd
+5657 Parkson Holdings Bhd
+Lotus Circular Bhd
+9997 Pensonic Holdings Bhd
+Lotus KFM Bhd
+Perak Transit Bhd
+LTKM Bhd
+Permaju Industries Bhd
+Magma Group Bhd
+8532 Pertama Digital Bhd
+Poh Kong Holdings Bhd
+7176 TPC Plus Bhd
+Power Root Bhd
+7757 UPA Corporation
+PPB Group Bhd
+4995 Versatile Creative Bhd
+PRG Holdings Bhd
+7203 Wang-Zheng Bhd
+PWF Corporation
+QL Resources Bhd
+Wegmans Holdings Bhd
+7121 XL Holdings Bhd
+Rivertree STF Synergies 135. 5159 Yoong Onn Corporation
+Salutica Bhd
+YX Precious Metals Bhd
+SaudiGold Group Bhd
+5131 Zhulian Corporation
+SDS Group Bhd
+SEG International Bhd
+Signature International 1. 0258 Agmo Holdings Bhd
+ARB Bhd
+Sime Darby Bhd
+Censof Holdings Bhd
+Solid Automotive Bhd
+Spritzer Bhd
+SWS Capital Bhd
+Cnergenz Bhd
+Tafi Industries Bhd
+CTOS Digital Bhd
+Cuscapi Bhd
+Technologies Bhd
+Dagang Nexchange Bhd
+Dataprep Holdings Bhd
+Edaran Bhd
+Tek Seng Holdings Bhd
+Excel Force MSC Bhd
+Teo Seng Capital Bhd
+Frontken Corporation
+Three-A Resources Bhd
+FSBM Holdings Bhd
+Genetec Technology Bhd
+HeiTech Padu Bhd
+Inari Amertron Bhd
+Industronics Bhd
+Infoline Tec Group Bhd
+ITMAX System Bhd
+7131 ACME Holdings Bhd
+JCY International Bhd
+JF Technology Bhd
+JHM Consolidation 3. 4057 Asian Pac Holdings Bhd
+Avaland Bhd
+KESM Industries Bhd
+7120 Axteria Group Bhd
+Key Asic Bhd
+BCB Bhd
+LGMS Bhd
+BEDI Bhd
+Bertam Alliance Bhd
+Bina Darulaman Bhd
+Mesiniaga Bhd
+Mi Technovation Bhd
+Property Bhd
+Microlink Solutions Bhd
+MMS Ventures Bhd
+NexG Bhd
+Country View Bhd
+Notion VTec Bhd
+Crescendo Corporation
+Omesti Bhd
+OpenSys (M) Bhd
+DPS Resources Bhd
+Revenue Group Bhd
+Encorp Bhd
+Eupe Corporation
+Theta Edge Bhd
+Turiya Bhd
+Unisem (M) Bhd
+UWC Bhd
+Global Oriental Bhd
+ViTrox Corporation
+5020 Glomac Bhd
+Gromutual Bhd
+VSTECS Bhd
+HCK Capital Group Bhd
+Willowglen MSC Bhd
+5062 Hua Yang Bhd
+Zetrix AI Bhd
+I-Bhd
+Ibraco Bhd
+Ideal Capital Bhd
+City Bhd
+Pasdec Holdings Bhd
+Jiankun International 58. 7055 PLB Engineering Bhd
+Plenitude Bhd
+JKG Land Bhd
+Rapid Synergy Bhd
+KSL Holdings Bhd
+8664 S P Setia Bhd
+Lagenda Properties 63. 4596 Sapura Resources Bhd
+SBC Corporation
+Land & General Bhd
+4286 Seal Incorporated Bhd
+LBI Capital Bhd
+2224 Selangor Dredging Bhd
+LBS Bina Group Bhd
+Lien Hoe Corporation
+Skygate Solutions Bhd
+Magna Prima Bhd
+Mah Sing Group Bhd
+Malaysian Resources 71. 3743 Sunsuria Bhd
+1538 Symphony Life Bhd
+Malton Bhd
+Talam Transform Bhd
+Maxim Global Bhd
+2429 Tanco Holdings Bhd
+Menang Corporation
+0230 Teladan Group Bhd
+(M) Bhd
+Titijaya Land Bhd
+Meridian Bhd
+Tropicana Corporation
+MK Land Holdings Bhd
+MKH Bhd
+TWL Holdings Bhd
+MUI Properties Bhd
+5148 UEM Sunrise Bhd
+Naim Holdings Bhd
+NCT Alliance Bhd
+Oriental Interest Bhd
+7003 Y&G Corporation
+Paragon Globe Bhd
+3158 YNH Property Bhd
+Yong Tai Bhd
+Lebtech Bhd
+No. Stock code Name of securities 29. 8192 Mercury Industries Bhd
+Bil. Kod stok Nama sekuriti 30. 7595 MGB Bhd
+Mitrajaya Holdings Bhd
+Ahmad Zaki Resources 32. 5085 Mudajaya Group Bhd
+OCR Group Bhd
+Benalec Holdings Bhd
+Bina Puri Holdings Bhd
+5622 Pimpinan Ehsan Bhd
+Binastra Corporation
+9598 Pintaras Jaya Bhd
+Protasco Bhd
+Central Global Bhd
+DKLS Industries Bhd
+Econpile Holdings Bhd
+9717 Sycal Ventures Bhd
+Ekovest Bhd
+TRC Synergy Bhd
+Epicon Bhd
+TSR Capital Bhd
+Tuju Setia Bhd
+7145 TXCD Bhd
+FBG Holdings Bhd
+5006 Varia Bhd
+Gabungan AQRS Bhd
+7070 Vizione Holdings Bhd
+Gadang Holdings Bhd
+9679 WCT Holdings Bhd
+Gamuda Bhd
+Zecon Bhd
+GDB Holdings Bhd
+2283 Zelan Bhd
+IJM Corporation
+Infraharta Holdings Bhd
+Inta Bina Group Bhd
+JAKS Resources Bhd
+Kimlun Corporation
+Resources Bhd
+Kumpulan Kitacon Bhd
+0168 BM Greentech Bhd
+Bumi Armada Bhd
+Carimin Petroleum Bhd
+Cypark Resources Bhd
+Deleum Bhd
+Dialog Group Bhd
+7054 Astral Asia Bhd
+ENRA Group Bhd
+Batu Kawan Bhd
+Handal Energy Bhd
+5069 BLD Plantation Bhd
+Hibiscus Petroleum Bhd
+Far East Holdings Bhd
+Lianson Fleet Group 7. 7382 Golden Land Bhd
+Gopeng Bhd
+Harn Len Corporation
+Perdana Petroleum Bhd
+Petra Energy Bhd
+Rubber Public Ltd
+IOI Corporation
+Propel Global Bhd
+Samaiden Group Bhd
+Solarvest Holdings Bhd
+T7 Global Bhd
+Techna-X Bhd
+Kretam Holdings Bhd
+Uzma Bhd
+Mentiga Corporation
+Vantris Energy Bhd
+Velesto Energy Bhd
+MHC Plantations Bhd
+Wasco Bhd
+Wasco Greenergy Bhd
+Kalimantan) Bhd
+PLS Plantations Bhd
+Rimbunan Sawit Bhd
+8346 Perak Corporation
+Riverview Rubber 15. 4634 Pos Malaysia Bhd
+Estates Bhd
+Sarawak Oil Palms Bhd
+Sarawak Plantation Bhd
+SD Guthrie Bhd
+Sin Heng Chan (Malaya) 18. 5173 Shin Yang Group Bhd
+Ta Ann Holdings Bhd
+TDM Bhd
+Swift Haulage Bhd
+TH Plantations Bhd
+5149 TAS Offshore Bhd
+TSH Resources Bhd
+5140 Tasco Bhd
+United Malacca Bhd
+United Plantations Bhd
+Xin Hwa Holdings Bhd
+Arka Bhd
+Avangaad Bhd
+Adventa Bhd
+Bintulu Port Holdings 2. 0163 Careplus Group Bhd
+Hartalega Holdings Bhd
+FM Global Logistics 5. 7803 Hextar Healthcare Bhd
+IHH Healthcare Bhd
+G Capital Bhd
+GDEX Bhd
+Hextar Technologies 8. 0002 Kotra Industries Bhd
+Solutions Bhd
+KPJ Healthcare Bhd
+Hubline Bhd
+LAC Med Bhd
+Marine & General Bhd
+MISC Bhd
+MTT Shipping and 12. 0222 Optimax Holdings Bhd
+Pharmaniaga Bhd
+Supermax Corporation
+TMC Life Sciences Bhd
+7471 Eden Inc. Bhd
+Top Glove Corporation
+5209 Gas Malaysia Bhd
+Malakoff Corporation
+UMediC Group Bhd
+Y.S.P. Southeast Asia 4. 3069 Mega First Corporation
+PBA Holdings Bhd
+PETRONAS Gas Bhd
+TTEELLEECCOOMMMMUUNNIICCAATTIIOONNSS AANNDD 7. 5272 Ranhill Utilities Bhd
+Salcon Bhd
+Taliworks Corporation
+Tenaga Nasional Bhd
+Amtel Holdings Bhd
+Axiata Group Bhd
+CelcomDigi Bhd
+Ecobuilt Holdings Bhd
+Green Packet Bhd
+Maxis Bhd
+International Ltd
+Bursa Malaysia Bhd
+MMM Group Bhd
+Johan Holdings Bhd
+OCK Group Bhd
+MBSB Bhd
+RCE Capital Bhd
+REDtone Digital Bhd
+Sasbadi Holdings Bhd
+Malaysia Keluarga Bhd
+Seni Jaya Corporation
+Telekom Malaysia Bhd
+TIME dotCom Bhd
+Eversafe Rubber Bhd
+Fast Energy Holdings Bhd
+BBAARRAANNGGAANN IINNDDUUSSTTRRII DDAANN 28. 0355 Fibromat (M) Bhd
+No. Stock code Name of securities 30. 0284 Glostrext Bhd
+Bil. Kod stok Nama sekuriti 31. 0175 HHRG Bhd
+Hiap Huat Holdings Bhd
+5E Resources Holdings 33. 0188 HLT Global Bhd
+HPP Holdings Bhd
+ACO Group Bhd
+Insights Analytics Bhd
+0390 ISF Group Bhd
+JAG Bhd
+Material Bhd
+Kawan Renergy Bhd
+Artroniq Bhd
+Kee Ming Group Bhd
+Asia Poly Holdings Bhd
+0293 KJTS Group Bhd
+ASM Automation 42. 0266 Leform Bhd
+Master Tec Group Bhd
+Aumas Resources Bhd
+BCM Alliance Bhd
+Betamek Bhd
+Midtown Group Bhd
+BWYS Group Bhd
+MSB Global Group Bhd
+CEKD Bhd
+MTAG Group Bhd
+Chemlite Innovation 49. 0325 Northeast Group Bhd
+Colform Group Bhd
+Coraza Integrated 51. 0368 Oxford Innotech Bhd
+0361 Pan Merchant Bhd
+Crest Group Bhd
+0289 PLYTEC Holding Bhd
+Cropmate Bhd
+PMW International Bhd
+Econframe Bhd
+EPB Group Bhd
+Powertechnic Group Bhd
+Erdasan Group Bhd
+0217 Powerwell Holdings Bhd
+PSP Energy Bhd
+Rekatech Capital Bhd
+Sanichi Technology Bhd
+Scope Industries Bhd
+Sersol Bhd
+Aquawalk Group Bhd
+Tashin Holdings Bhd
+Bioalpha Holdings Bhd
+Carlo Rino Group Bhd
+Topmix Bhd
+Daythree Digital Bhd
+TSA Group Bhd
+DPI Holdings Bhd
+Volcano Bhd
+Waja Konsortium Bhd
+Farmiera Bhd
+West River Bhd
+WTEC Group Bhd
+YBS International Bhd
+Manforce Group Bhd
+Zantat Holdings Bhd
+OB Holdings Bhd
+Ocean Fresh Bhd
+Orgabio Holdings Bhd
+Parlo Bhd
+PEOPLElogy Bhd
+RichTech Digital Bhd
+SBH Marine Holdings 16. 0010 Iris Group Bhd
+Key Alliance Group Bhd
+SCC Holdings Bhd
+0111 K-One Technology Bhd
+SEDANIA Innovator Bhd
+0176 Kronologi Asia Bhd
+Sik Cheong Bhd
+0112 Mikro MSC Bhd
+Sorento Capital Bhd
+0070 MQ Technology Bhd
+Spring Art Holdings 22. 0395 OGX Group Bhd
+Oppstar Bhd
+SSF Home Group Bhd
+0290 Panda ECO System Bhd
+Supreme Consolidated 25. 0202 Radiant Globaltech Bhd
+Ramssol Group Bhd
+Synergy House Bhd
+0203 Securemetric Bhd
+SFP Tech Holdings Bhd
+Vanzo Holdings Bhd
+0117 SMRT Holdings Bhd
+Wellspire Holdings Bhd
+0093 Solution Group Bhd
+Systech Bhd
+TechnoDex Bhd
+TechStore Bhd
+TFP Solutions Bhd
+THMY Holdings Bhd
+TT Vision Holdings Bhd
+VETECE Holdings Bhd
+Aemulus Holdings Bhd
+AIMFLEX Bhd
+Aldrich Resources Bhd
+YGL Convergence Bhd
+Asdion Bhd
+Cabnet Holdings Bhd
+Divfex Bhd
+Solution Bhd
+Edelteq Holdings Bhd
+Eduspec Holdings Bhd
+EVD Bhd
+Go Hub Capital Bhd
+ICT Zone Asia Bhd
+0452 Gold Li Holdings Bhd
+IFCA MSC Bhd
+KTI Landmark Bhd
+Infomina Bhd
+Enproserve Group Bhd
+Cheeding Holdings 3. 0369 JS Solar Holding Bhd
+Pekat Group Bhd
+ES Sunlogy Bhd
+Steel Hawk Bhd
+Gagasan Nadi Cergas 6. 0262 Sunview Group Bhd
+Haily Group Bhd
+Inspace Creation Bhd
+Jati Tinggi Group Bhd
+MN Holdings Bhd
+Nestcon Bhd
+SC Estate Builder Bhd
+AGX Group Bhd
+Ancom Logistics Bhd
+KGW Group Bhd
+Builders Bhd
+MMAG Holdings Bhd
+Taghill Holdings Bhd
+Sin-Kung Logistics Bhd
+UUE Holdings Bhd
+Vestland Bhd
+Widad Group Bhd
+Cengild Medical Bhd
+0011 Brite-Tech Bhd
+Resource Centre Bhd
+Metro Healthcare Bhd
+PMCK Bhd
+Communications Bhd
+Hextar Capital Bhd
+Nexgram Holdings Bhd
+Services Bhd
+Privasia Technology Bhd
+PUC Bhd
+XOX Bhd
+03012 Baba Eco Group Bhd
+03053 CC International Bhd
+BBAARRAANNGGAANN IINNDDUUSSTTRRII DDAANN 6. 03025 Enest Group Bhd
+Solution Holdings Bhd
+No. Stock code Name of securities 8. 03072 Milolo Bhd
+Bil. Kod stok Nama sekuriti 9. 03064 MyAxis Group Bhd
+CE Technology Bhd
+GPP Resources Bhd
+Hydropipes Bhd
+03009 SEERS Bhd
+Jishan Bhd
+MMIS Bhd
+Polydamic Group Bhd
+Supergenics Bhd
+TP Tec Holding Bhd
+03062 TSiC Bhd
+03043 UCI Resources Bhd
+03011 Amlex Holdings Bhd
+03036 Redplanet Bhd
+BBAARRAANNGGAANN PPEENNGGGGUUNNAA DDAANN Holdings Bhd
+PPEERRKKHHIIDDMMAATTAANN 6. 03057 Sancy Bhd
+No. Stock code Name of securities Bhd
+03042 BV Land Holdings Bhd
+03065 LPC Group Bhd
+Global Bhd
+03050 Sunmow Holding Bhd
+03055 DSR Taiko Bhd
+Shariah Status for Companies Seeking Listing on Bursa Malaysia Securities Bhd
+Status Syariah untuk Syarikat yang Memohon Penyenaraian di Bursa Malaysia Securites Bhd
+Prolintas Infra Business Trust
+
+---- TEKS DOKUMEN ----
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                              List of Shariah-            
+                              Compliant   Securities      
+                                                          
+                              by the Shariah  Advisory    
+                              Council  of the Securities  
+                                                          
+                              Commission    Malaysia      
+                                                          
+                                                          
+                              Senarai  Sekuriti Patuh     
+                                                          
+                              Syariah  oleh Majlis        
+                              Penasihat  Syariah          
+                                                          
+                              Suruhanjaya   Sekuriti      
+                                                          
+                              Malaysia                    
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                          29 MAY 2026     
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+      LIST    OF                                          
+                                                          
+      SHARIAH-                                            
+                                                          
+      COMPLIANT                   29 MAY 2026             
+                                                          
+      SECURITIES                                          
+                                                          
+                                                          
+      BY THE SHARIAH ADVISORY COUNCIL OF                  
+      THE SECURITIES COMMISSION MALAYSIA                  
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                          Disclaimer                      
+                                                          
+      This document does not constitute a recommendation to buy or sell the listed Shariah-compliant
+      securities by the Securities Commission Malaysia (SC) Shariah Advisory Council (SAC). It is intended
+      solely for your general information. It does not claim to contain all advice or information on the
+      subject matter, nor is it a substitute for legal or investment advice. If in doubt, you are strongly
+      recommended to seek professional advice.            
+      While care has been taken in the preparation of this booklet, the SC shall not be liable for any
+      inaccuracy or incompleteness of the information contained in this book.
+      This list of Shariah-compliant securities by the SAC of the SC will be updated and made known to
+      the public by the SC.                               
+                                                          
+                                                          
+                                                          
+        Shariah Advisory Council of the Securities Commission Malaysia | Majlis Penasihat Syariah Suruhanjaya Sekuriti Malaysia
+     2                                                    
+        List of Shariah-Compliant Securities • May 2026 | Senarai Sekuriti Patuh Syariah • Mei 2026
+                                                          
+                                                          
+                                                          
+      The Shariah Advisory Council (SAC) of the Securities Commission Malaysia
+      (SC) has approved an updated list of securities which have been classified as
+      Shariah-compliant securities. The updated list of Shariah-compliant securities
+      takes effect from 29 May 2026 (effective date)1.    
+                                                          
+      A total of 44 securities have been classified as Shariah-compliant securities
+      (Table 1), while 18 securities have been classified as Shariah non-compliant
+      securities (Table 2). The breakdown of the Shariah-compliant securities by
+      sector is provided in Table 3.                      
+                                                          
+      In classifying these securities, the SAC received input and support from the SC.
+      The SC obtained information on the companies through, among others, annual
+      reports, Shariah screening disclosures, enquiries made to the companies and
+      other relevant information acceptable by the SAC. The SAC, through the SC,
+      will continue to review the Shariah status of securities listed on Bursa Malaysia
+      Securities Bhd (Bursa Malaysia), on an annual basis, based on the latest available
+      annual audited financial statements of the companies. For this list, the SAC
+      reviewed the audited financial statements released between 1 October 2025
+      and 31 March 2026, as made available on Bursa Malaysia’s website.
+                                                          
+      The SAC adopts a two-tier quantitative approach, which applies the business
+      activity benchmark and financial ratio benchmarks, in determining the Shariah
+      status of the listed securities. Hence, the securities will be classified as Shariah-
+      compliant if their business activities and financial ratios are below these
+      benchmarks.                                         
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+      1 The updated list of Shariah-compliant securities is released on the last Friday of the months of May and
+       November.                                          
+                                                          
+                                                          
+                                                          
+          Shariah Advisory Council of the Securities Commission Malaysia | Majlis Penasihat Syariah Suruhanjaya Sekuriti Malaysia
+                                                    3     
+                   List of Shariah-Compliant Securities • May 2026 | Senarai Sekuriti Patuh Syariah • Mei 2026
+                                                          
+                                                          
+                                                          
+      Business activity benchmark                         
+                                                          
+      In November 2025, the SAC introduced a single business activity benchmark
+      for assessing the contribution of Shariah non-compliant activities to a listed
+      company’s total income. This revised benchmark replaces the previous dual-
+      benchmark approach, which applied 5% and 20% thresholds depending on
+      the nature of the business activities involved.     
+                                                          
+      Under the revised approach, all existing Shariah non-compliant business
+      activities will be assessed against the unified benchmark, now at 5%, reflecting
+      a more consistent and streamlined screening parameter in line with the SAC’s
+      latest resolution. The revised benchmark will take effect for listed companies
+      with financial year ending on or after 31 December 2025.
+                                                          
+      Accordingly, the contribution of Shariah non-compliant activities to the Group’s
+      total income2 will be computed and assessed against the 5% business activity
+      benchmark as follows:                               
+                                                          
+      •   conventional banking and lending;               
+      •   conventional insurance;                         
+      •   gambling;                                       
+      •   liquor and liquor-related activities;           
+      •   pork and pork-related activities;               
+      •   non-halal food and beverages (F&B) including F&B without halal
+          certification3;                                 
+      •   tobacco, cigarette, electronic cigarettes and their related activities and
+          products;                                       
+      •   interest income from conventional accounts and instruments (including
+          interest income awarded arising from a court judgement or arbitrator,
+          late payment charges and penalty charges);      
+      •   dividends from Shariah non-compliant investments;
+      •   Shariah non-compliant entertainment;            
+                                                          
+      2 Including revenue, other income, share of profit etc.
+      3 For listed companies involved in manufacturing, processing and marketing of food products, they shall obtain
+       halal certification from Jabatan Kemajuan Islam Malaysia (JAKIM) or any other halal certification bodies
+       recognised by JAKIM.                               
+                                                          
+                                                          
+        Shariah Advisory Council of the Securities Commission Malaysia | Majlis Penasihat Syariah Suruhanjaya Sekuriti Malaysia
+     4                                                    
+        List of Shariah-Compliant Securities • May 2026 | Senarai Sekuriti Patuh Syariah • Mei 2026
+                                                          
+                                                          
+                                                          
+      •   share trading;                                  
+      •   stockbroking business;                          
+      •   cinema;                                         
+      •   rental received from Shariah non-compliant activities; and
+      •   other activities deemed non-compliant according to Shariah principles as
+          determined by the SAC.                          
+                                                          
+      For the above-mentioned businesses/activities, the contribution of Shariah
+      non-compliant businesses/activities to the Group total income must be less
+      than 5%.                                            
+                                                          
+      Financial ratio benchmarks                          
+                                                          
+      For the financial ratio benchmarks, the SAC takes into account the following:
+                                                          
+      (i) Cash over total assets                          
+                                                          
+          Cash only includes cash placed in conventional accounts and instruments,
+          whereas cash placed in Islamic accounts and instruments is excluded
+          from the calculation.                           
+                                                          
+      (ii) Debt over total assets                         
+                                                          
+          Debt only includes interest-bearing debt whereas Islamic financing or
+          sukuk is excluded from the calculation.         
+                                                          
+      Each ratio, which is intended to measure riba and riba-based elements within a
+      company’s statements of financial position, must be less than 33%.
+                                                          
+      In addition to the above two-tier quantitative criteria, the SAC also takes into
+      account the qualitative aspect which involves public perception or image of the
+      company’s activities from the perspective of Islamic teaching.
+                                                          
+      Shariah-compliant securities include ordinary shares and warrants (issued
+      by the companies themselves). This means that warrants are classified as
+      Shariah-compliant securities provided the underlying shares are also Shariah-
+                                                          
+                                                          
+                                                          
+          Shariah Advisory Council of the Securities Commission Malaysia | Majlis Penasihat Syariah Suruhanjaya Sekuriti Malaysia
+                                                    5     
+                   List of Shariah-Compliant Securities • May 2026 | Senarai Sekuriti Patuh Syariah • Mei 2026
+                                                          
+                                                          
+      compliant. On the other hand, loan stocks and bonds are Shariah non-
+      compliant securities unless they are structured based on the SAC’s approved
+      Shariah rulings, concepts and principles.           
+                                                          
+                                                          
+      Special Purpose Acquisition Companies               
+                                                          
+      In classifying securities of special purpose acquisition companies4 (SPACs), the
+      SAC considers the following criteria:               
+                                                          
+      (i) The proposed business activity should be Shariah-compliant;
+                                                          
+      (ii) The entire proceeds raised from the initial public offering should be
+          placed in Islamic accounts; and                 
+                                                          
+      (iii) In the event that the proceeds are invested, the entire investment should
+          be Shariah-compliant.                           
+                                                          
+                                                          
+      Timing for the disposal of Shariah non-compliant securities
+                                                          
+      As a general guidance to investors, the SAC would like to advise investors on
+      the timing for the disposal of securities which have been classified as Shariah
+      non-compliant.                                      
+                                                          
+      (i) ‘Shariah-compliant securities’ which are subsequently re-classified
+          as ‘Shariah non-compliant’                      
+                                                          
+          These refer to securities which were earlier classified as Shariah-
+          compliant but due to certain factors such as changes in the companies’
+          business operations and financial positions, are subsequently reclassified
+          as Shariah non-compliant.                       
+                                                          
+                                                          
+                                                          
+      4 SPAC is a special company formed to acquire businesses through acquisition or merger with other entities.
+        SPAC is a publicly-traded shell company that raises funds through an IPO. The proceeds are placed with a
+        trustee pending a qualifying acquisition.         
+                                                          
+                                                          
+        Shariah Advisory Council of the Securities Commission Malaysia | Majlis Penasihat Syariah Suruhanjaya Sekuriti Malaysia
+     6                                                    
+        List of Shariah-Compliant Securities • May 2026 | Senarai Sekuriti Patuh Syariah • Mei 2026
+                                                          
+                                                          
+                                                          
+          In this regard, if on the effective date, the respective market price of
+          Shariah non-compliant securities exceeds or is equal to the investment
+          cost, investors who hold such securities must dispose of them. Any
+          dividends received up to the effective date and capital gains arising
+          from the disposal of Shariah non-compliant securities on the effective
+          date can be kept by the investors. However, any dividends received and
+          excess capital gain from the disposal of Shariah non-compliant securities
+          after the effective date should be channelled to baitulmal and/or
+          charitable bodies.5                             
+                                                          
+          On the other hand, investors are allowed to hold their investment in
+          the Shariah non-compliant securities if the market price of the said
+          securities is below the investment cost. It is also permissible for the
+          investors to keep the dividends received during the holding period until
+          such time when the total amount of dividends received and the market
+          value of the Shariah non-compliant securities held equal the investment
+          cost. At this stage, they are advised to dispose of their holding.
+                                                          
+          In addition, during the holding period, investors are allowed to subscribe
+          to:                                             
+                                                          
+          (a) any issue of new securities by a company whose Shariah non-
+              compliant securities are held by the investors, for example rights
+              issues, bonus issues, special issues and warrants (excluding securities
+              whose nature is Shariah non-compliant e.g. loan stocks); and
+                                                          
+          (b) Shariah-compliant securities of other companies offered by the
+              company whose Shariah non-compliant securities are held by the
+              investors,                                  
+                                                          
+          on condition that they expedite the disposal of the Shariah non-compliant
+          securities.                                     
+                                                          
+                                                          
+      5 For Islamic funds such as Islamic unit trust funds, Islamic wholesale funds and others, the gain must be
+        channelled to baitulmal and/or charitable bodies as advised by the Shariah adviser of the fund or the fund
+        management companies.                             
+                                                          
+                                                          
+          Shariah Advisory Council of the Securities Commission Malaysia | Majlis Penasihat Syariah Suruhanjaya Sekuriti Malaysia
+                                                    7     
+                   List of Shariah-Compliant Securities • May 2026 | Senarai Sekuriti Patuh Syariah • Mei 2026
+                                                          
+                                                          
+                                                          
+      (ii) Shariah non-compliant securities               
+                                                          
+          The SAC advises investors who invest based on Shariah principles to
+          dispose of any Shariah non-compliant securities which they presently
+          hold, within a month of knowing the status of the securities. Any gain
+          made in the form of capital gain or dividend received before or after
+          the disposal of the securities must be channelled to baitulmal and/or
+          charitable bodies. The investor has a right to retain only the investment
+          cost.6                                          
+                                                          
+                                                          
+      Note: Investment cost may include brokerage or other related transaction
+      cost.                                               
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+      6 This guidance also applies to Islamic funds such as Islamic unit trust funds, Islamic wholesale funds and
+        others. If the disposal of Shariah non-compliant securities causes losses to the fund, the fund management
+        company must bear the losses by ensuring the loss portion be restored and returned to the fund.
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                     This page is intentionally left blank.
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+      SENARAI                                             
+                                                          
+      SEKURITI                                            
+                                                          
+      PATUH                       29 MEI 2026             
+                                                          
+      SYARIAH                                             
+                                                          
+                                                          
+      OLEH MAJLIS PENASIHAT SYARIAH                       
+      SURUHANJAYA SEKURITI MALAYSIA                       
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                        Penolak Tuntutan                  
+                                                          
+      Buku kecil ini bukan merupakan satu syor untuk membeli atau menjual sekuriti yang diklasifikasikan
+      sebagai sekuriti patuh Syariah oleh Majlis Penasihat Syariah (MPS) Suruhanjaya Sekuriti Malaysia
+      (SC). Tujuannya hanyalah untuk memberikan penerangan am. Buku ini tidak mengandungi nasihat
+      atau maklumat yang menyeluruh berkaitan dengan perkara yang dibincangkan. Ia tidak seharusnya
+      digunakan sebagai pengganti kepada nasihat perundangan atau pelaburan. Sekiranya terdapat
+      sebarang kemusykilan, anda disyorkan supaya mendapatkan nasihat profesional.
+      Walaupun segala usaha telah diambil dalam memastikan ketepatan kandungan buku kecil ini,
+      pihak SC tidak akan dipertanggungjawab bagi mana-mana maklumat yang tidak tepat atau tidak
+      lengkap.                                            
+      Senarai sekuriti patuh Syariah oleh MPS SC akan dikemas kini dan diumumkan kepada orang ramai
+      oleh SC.                                            
+                                                          
+                                                          
+        Shariah Advisory Council of the Securities Commission Malaysia | Majlis Penasihat Syariah Suruhanjaya Sekuriti Malaysia
+     10                                                   
+        List of Shariah-Compliant Securities • May 2026 | Senarai Sekuriti Patuh Syariah • Mei 2026
+                                                          
+                                                          
+                                                          
+      Majlis Penasihat Syariah (MPS) Suruhanjaya Sekuriti Malaysia (SC) telah
+      meluluskan senarai kemas kini sekuriti yang diklasifikasikan sebagai sekuriti
+      patuh Syariah. Senarai kemas kini sekuriti patuh Syariah tersebut, berkuat
+      kuasa mulai 29 Mei 2026 (tarikh kuat kuasa)1.       
+                                                          
+      Sebanyak 44 sekuriti diklasifikasikan sebagai sekuriti patuh Syariah
+      (Jadual 1), manakala 18 sekuriti telah diklasifikasikan sebagai tidak patuh
+      Syariah (Jadual 2). Pecahan senarai sekuriti patuh Syariah mengikut sektor
+      adalah seperti di Jadual 3.                         
+                                                          
+      Dalam mengklasifikasikan sekuriti ini, MPS menerima input dan sokongan
+      daripada SC yang mendapatkan maklumat mengenai syarikat tersebut melalui,
+      antara lainnya, laporan tahunan, penzahiran berkaitan saringan Syariah,
+      pertanyaan yang dibuat kepada pihak syarikat dan maklumat lain yang diterima
+      MPS. MPS melalui SC, akan terus mengkaji status Syariah sekuriti-sekuriti yang
+      tersenarai di Bursa Malaysia Securities Bhd (Bursa Malaysia) pada setiap tahun,
+      berdasarkan penyata kewangan tahunan terkini syarikat yang diaudit. Untuk
+      senarai ini, MPS telah mengkaji penyata kewangan tahunan yang telah diaudit
+      yang dikeluarkan antara 1 Oktober 2025 dan 31 Mac 2026, sebagaimana yang
+      terdapat di laman web Bursa Malaysia.               
+                                                          
+      MPS mengadaptasi pendekatan kuantitatif dua peringkat yang mengguna
+      pakai tanda aras aktiviti perniagaan dan tanda aras nisbah kewangan, dalam
+      menentukan dan mengklasifikasikan status Syariah sekuriti-sekuriti tersenarai.
+      Oleh yang demikian, sekuriti-sekuriti akan diklasifikasikan sebagai patuh
+      Syariah sekiranya nisbah aktiviti perniagaan dan nisbah kewangan mereka
+      berada di bawah tanda aras tersebut.                
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+      1 Senarai terkini sekuriti patuh Syariah, akan dikeluarkan pada hari Jumaat terakhir bulan Mei dan November.
+                                                          
+                                                          
+                                                          
+          Shariah Advisory Council of the Securities Commission Malaysia | Majlis Penasihat Syariah Suruhanjaya Sekuriti Malaysia
+                                                    11    
+                   List of Shariah-Compliant Securities • May 2026 | Senarai Sekuriti Patuh Syariah • Mei 2026
+                                                          
+                                                          
+      Tanda aras aktiviti perniagaan                      
+                                                          
+      Pada November 2025, MPS telah memperkenalkan satu penanda aras tunggal
+      bagi aktiviti perniagaan untuk menilai sumbangan aktiviti tidak patuh
+      Syariah kepada jumlah pendapatan sesebuah syarikat tersenarai. Penanda
+      aras yang disemak semula ini menggantikan pendekatan kuantitatif dua
+      peringkat sebelum ini, yang mengguna pakai tanda aras aktiviti perniagaan
+      5% dan 20% bergantung kepada jenis aktiviti perniagaan yang terlibat.
+                                                          
+      Di bawah pendekatan yang disemak semula ini, semua aktiviti perniagaan
+      tidak patuh Syariah sedia ada akan dinilai berdasarkan penanda aras tunggal
+      5% tersebut yang melambangkan parameter saringan yang lebih konsisten
+      dan teratur selaras dengan resolusi terkini MPS. Penanda aras yang disemak
+      semula ini akan berkuatkuasa bagi syarikat tersenarai dengan tahun kewangan
+      berakhir pada atau selepas 31 Disember 2025.        
+                                                          
+      Sehubungan dengan itu, sumbangan daripada aktiviti-aktiviti tidak patuh
+      Syariah kepada jumlah pendapatan2 Kumpulan sesebuah syarikat akan dikira
+      dan dibandingkan dengan tanda aras aktiviti perniagaan 5% seperti berikut:
+                                                          
+      •   perbankan dan peminjaman konvensional;          
+      •   insurans konvensional;                          
+      •   perjudian;                                      
+      •   arak dan aktiviti-aktiviti berkaitan dengannya; 
+      •   babi dan aktiviti-aktiviti berkaitan dengannya; 
+      •   makanan dan minuman tidak halal termasuk makanan dan minuman
+          tanpa pensijilan halal3;                        
+      •   tembakau, rokok, rokok elektronik dan aktiviti-aktiviti serta produk-
+          produk berkaitan dengannya;                     
+      •   pendapatan faedah daripada akaun dan instrumen konvensional
+          (termasuk pendapatan faedah yang diterima berikutan daripada
+          keputusan mahkamah atau penimbang tara, caj lewat bayar dan caj
+          penalti);                                       
+                                                          
+      2 Termasuk perolehan, lain-lain pendapatan, bahagian keuntungan dan sebagainya.
+      3 Bagi syarikat tersenarai yang terlibat dengan aktiviti pembuatan, pemprosesan serta pemasaran produk
+       makanan, syarikat tersebut hendaklah mendapatkan sijil pengesahan halal daripada Jabatan Kemajuan Islam
+       Malaysia (JAKIM) atau mana-mana badan pengesahan halal yang diiktiraf oleh JAKIM.
+                                                          
+                                                          
+        Shariah Advisory Council of the Securities Commission Malaysia | Majlis Penasihat Syariah Suruhanjaya Sekuriti Malaysia
+     12                                                   
+        List of Shariah-Compliant Securities • May 2026 | Senarai Sekuriti Patuh Syariah • Mei 2026
+                                                          
+                                                          
+                                                          
+      •   dividen daripada pelaburan tidak patuh Syariah; 
+      •   hiburan tidak patuh Syariah;                    
+      •   jual beli saham;                                
+      •   pembrokeran saham;                              
+      •   pawagam;                                        
+      •   sewaan daripada aktiviti-aktiviti tidak patuh Syariah; dan
+      •   aktiviti-aktiviti lain yang diputuskan sebagai tidak mematuhi prinsip-
+          prinsip Syariah sebagaimana yang ditentukan oleh MPS.
+                                                          
+      Bagi perniagaan/aktiviti yang disenaraikan di atas, sumbangan daripada
+      perniagaan/aktiviti tidak patuh Syariah kepada jumlah pendapatan Kumpulan
+      sesebuah syarikat mestilah kurang daripada 5%.      
+                                                          
+      Tanda aras nisbah kewangan                          
+                                                          
+                                                          
+      Bagi tanda aras nisbah kewangan, MPS mengambil kira perkara berikut:
+                                                          
+      (i) Tunai ke atas jumlah aset                       
+                                                          
+          Tunai yang diambil kira ialah tunai yang ditempatkan dalam akaun dan
+          instrumen konvensional, manakala tunai yang ditempatkan dalam akaun
+          dan instrumen Islam tidak diambil kira dalam pengiraan ini.
+                                                          
+      (ii) Hutang ke atas jumlah aset                     
+                                                          
+          Hutang yang diambil kira ialah hutang yang berteraskan faedah,
+          manakala pembiayaan secara Islam ataupun sukuk tidak diambil kira
+          dalam pengiraan ini.                            
+                                                          
+      Setiap nisbah di atas, yang bertujuan untuk menilai riba dan elemen berteraskan
+      riba dalam penyata kedudukan kewangan sesebuah syarikat, mestilah kurang
+      daripada 33%.                                       
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+          Shariah Advisory Council of the Securities Commission Malaysia | Majlis Penasihat Syariah Suruhanjaya Sekuriti Malaysia
+                                                    13    
+                   List of Shariah-Compliant Securities • May 2026 | Senarai Sekuriti Patuh Syariah • Mei 2026
+                                                          
+                                                          
+      Di samping kriteria kuantitatif dua peringkat di atas, MPS juga mengambil kira
+      aspek kualitatif yang melibatkan persepsi masyarakat umum atau imej aktiviti
+      syarikat dari perspektif pengajaran Islam.          
+                                                          
+      Sekuriti-sekuriti patuh Syariah termasuk saham biasa dan waran (diterbitkan
+      oleh pihak syarikat sendiri). Ini bermakna waran diklasifikasikan sebagai
+      sekuriti patuh Syariah dengan syarat saham pendasarnya juga patuh
+      Syariah. Selain itu, stok pinjaman dan bon adalah sekuriti tidak patuh Syariah
+      melainkan ianya distruktur berdasarkan keputusan, konsep dan prinsip Syariah
+      yang diluluskan oleh MPS.                           
+                                                          
+                                                          
+      Syarikat Pemerolehan Kegunaan Khas                  
+                                                          
+      Dalam mengklasifikasikan sekuriti syarikat pemerolehan kegunaan khas4 (SPAC),
+      MPS mempertimbangkan kriteria-kriteria berikut:     
+                                                          
+      (i) Aktiviti perniagaan yang dicadangkan hendaklah patuh Syariah;
+                                                          
+      (ii) Keseluruhan hasil kutipan daripada penerbitan tawaran awam permulaan
+          hendaklah ditempatkan dalam akaun Islam; dan    
+                                                          
+      (iii) Sekiranya hasil kutipan dilaburkan, keseluruhan pelaburan berkenaan
+          hendaklah patuh Syariah.                        
+                                                          
+                                                          
+      Tempoh pelupusan sekuriti tidak patuh Syariah       
+                                                          
+      Sebagai panduan kepada para pelabur, MPS ingin menasihatkan pelabur
+      mengenai tempoh untuk melupuskan sekuriti yang telah diklasifikasikan
+      sebagai tidak patuh Syariah.                        
+                                                          
+                                                          
+                                                          
+      4 SPAC ialah syarikat khas yang ditubuhkan bagi pengambilalihan perniagaan melalui pemerolehan atau
+        penggabungan dengan entiti-entiti lain. SPAC ialah syarikat awam yang belum mempunyai aktiviti perniagaan
+        (shell company) yang memperoleh dana melalui tawaran awam permulaan. Dana berkenaan akan disimpan oleh
+        pemegang amanah sementara menunggu proses pengambilalihan yang layak.
+                                                          
+                                                          
+        Shariah Advisory Council of the Securities Commission Malaysia | Majlis Penasihat Syariah Suruhanjaya Sekuriti Malaysia
+     14                                                   
+        List of Shariah-Compliant Securities • May 2026 | Senarai Sekuriti Patuh Syariah • Mei 2026
+                                                          
+                                                          
+                                                          
+      (i) ‘Sekuriti patuh Syariah’ yang kemudiannya bertukar status
+          kepada ‘tidak patuh Syariah’                    
+                                                          
+          Ini merujuk kepada sekuriti-sekuriti yang sebelum ini diklasifikasikan
+          sebagai patuh Syariah tetapi, disebabkan beberapa faktor seperti
+          perubahan dalam operasi perniagaan syarikat dan kedudukan kewangan,
+          kemudiannya diklasifikasikan sebagai tidak patuh Syariah.
+                                                          
+          Oleh yang demikian, sekiranya pada tarikh berkuat kuasa, harga
+          pasaran sekuriti tersebut melebihi atau bersamaan dengan kos
+          pelaburan, para pelabur yang memegang sekuriti tidak patuh Syariah
+          tersebut mesti melupuskannya. Sebarang dividen yang diterima
+          sehingga tarikh berkuat kuasa serta keuntungan modal hasil daripada
+          pelupusan sekuriti tidak patuh Syariah tersebut pada tarikh berkuat
+          kuasa, boleh disimpan oleh para pelabur. Walau bagaimanapun,
+          sebarang dividen yang diterima dan lebihan keuntungan modal yang
+          diterima hasil daripada pelupusan sekuriti tidak patuh Syariah selepas
+          tarikh kuat kuasa, hendaklah disalurkan kepada baitulmal dan/atau
+          badan-badan kebajikan.5                         
+                                                          
+          Sebaliknya para pelabur dibenarkan untuk memegang pelaburan dalam
+          sekuriti tidak patuh Syariah sekiranya harga pasaran sekuriti tersebut
+          berada di bawah kos pelaburan. Sepanjang tempoh pegangan sekuriti
+          tidak patuh Syariah, para pelabur juga dibenarkan untuk menyimpan
+          dividen yang diterima sehingga jumlah dividen yang diterima dan harga
+          pasaran sekuriti tidak patuh Syariah tersebut bersamaan dengan kos
+          pelaburan. Pada ketika ini, para pelabur dinasihatkan untuk melupuskan
+          pegangan mereka.                                
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+      5 Bagi dana-dana Islam seperti dana unit amanah Islam, dana borong Islam dan sebagainya, keuntungan mestilah
+        disalurkan kepada baitulmal dan/atau badan-badan kebajikan seperti yang dinasihatkan oleh penasihat Syariah
+        dana atau syarikat pengurusan dana.               
+                                                          
+                                                          
+          Shariah Advisory Council of the Securities Commission Malaysia | Majlis Penasihat Syariah Suruhanjaya Sekuriti Malaysia
+                                                    15    
+                   List of Shariah-Compliant Securities • May 2026 | Senarai Sekuriti Patuh Syariah • Mei 2026
+                                                          
+                                                          
+                                                          
+      Di samping itu, sepanjang tempoh pegangan, para pelabur juga dibenarkan
+      untuk melanggan:                                    
+                                                          
+      (a) sebarang terbitan sekuriti baru oleh syarikat yang mana sekuritinya
+          tidak patuh Syariah yang dipegang oleh pelabur, sebagai contoh,
+          terbitan hak, terbitan bonus, terbitan khas dan waran (tidak termasuk
+          sekuriti yang tidak patuh Syariah seperti stok pinjaman); dan
+                                                          
+      (b) sekuriti patuh Syariah syarikat lain yang ditawarkan oleh syarikat yang
+          mana sekuritinya tidak patuh Syariah yang dipegang oleh para pelabur,
+                                                          
+      dengan syarat mereka menyegerakan pelupusan sekuriti tidak patuh Syariah
+      tersebut.                                           
+                                                          
+      (ii) Sekuriti tidak patuh Syariah                   
+                                                          
+          MPS menasihatkan para pelabur yang melabur berdasarkan prinsip
+          Syariah supaya melupuskan sekuriti tidak patuh Syariah yang dipegang,
+          dalam tempoh tidak melebihi satu bulan selepas mengetahui status
+          sekuriti tersebut. Sebarang keuntungan dalam bentuk keuntungan
+          modal atau dividen yang diterima sebelum atau selepas pelupusan
+          sekuriti tersebut mesti disalurkan kepada baitulmal dan/atau badan
+          kebajikan. Para pelabur hanya berhak untuk mengambil kos pelaburan
+          sahaja.6                                        
+                                                          
+                                                          
+      Perhatian: Kos pelaburan termasuk kos pembrokeran atau transaksi
+      yang berkaitan.                                     
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+      6 Panduan ini juga terpakai kepada dana-dana Islam seperti dana unit amanah Islam, dana borong Islam
+        dan sebagainya. Jika pelupusan tersebut menyebabkan kerugian kepada dana, syarikat pengurusan dana
+        berkenaan hendaklah menanggung kerugian dengan memastikan nilai kerugian tersebut dikembalikan
+        semula kepada dana.                               
+                                                          
+                                                          
+        Shariah Advisory Council of the Securities Commission Malaysia | Majlis Penasihat Syariah Suruhanjaya Sekuriti Malaysia
+     16                                                   
+        List of Shariah-Compliant Securities • May 2026 | Senarai Sekuriti Patuh Syariah • Mei 2026
+                                                          
+                                                          
+                                                          
+      Table 1: Securities classified as Shariah-compliant 
+      Jadual 1: Sekuriti yang diklasifikasikan sebagai sekuriti patuh Syariah
+       No. Stock Name of securities No. Stock Name of securities
+          code                   code                     
+       Bil. Kod stok Nama sekuriti Bil. Kod stok Nama sekuriti
+       1.  0397 5E Resources Holdings 19. 7222 Imaspro Corporation
+                Bhd                    Bhd                
+       2.  0396 Adnex Group Bhd 20. 0451 Inspace Creation Bhd
+       3.  0122 Advance Information 21. 0390 ISF Group Bhd
+                Marketing Bhd                             
+       4.  0391 Ambest Group Bhd 22. 3441 Johan Holdings Bhd
+       5.  0399 AMS Advanced Material 23. 0392 Kee Ming Group Bhd
+                Bhd                                       
+       6.  0276 Autocount Dotcom Bhd 24. 5341 LAC Med Bhd 
+       7.  5329 Azam Jaya Bhd 25. 3662 Malayan Flour Mills Bhd
+                                                          
+       8.  03068 Bentley Music Group 26. 3891 Malayan United
+                Bhd                    Industries Bhd     
+       9.  03069 BIMOffice Group Bhd 27. 5327 Mega Fortris Bhd
+       10. 0385 BMS Holdings Bhd 28. 03072 Milolo Bhd     
+       11. 7188 BTM Resources Bhd 29. 5352 MTT Shipping and
+                                       Logistics Bhd      
+       12. 03066 Croesus IT Holdings Bhd 30. 03071 Noesis Exed Bhd
+                                                          
+       13. 0453 EI Power Bhd  31. 0395 OGX Group Bhd      
+       14. 5351 Empire Premium Food 32. 0389 One Gasmaster Holdings
+                Bhd                    Bhd                
+       15. 5345 Geohan Corporation 33. 5348 Orkim Bhd     
+                Bhd                                       
+       16. 0452 Gold Li Holdings Bhd 34. 0171 PeterLabs Holdings Bhd
+       17. 0398 Golden Destinations 35. 0383 PSP Energy Bhd
+                Group Bhd                                 
+       18. 5346 Hock Soon Capital Bhd 36. 7006 Rhong Khen 
+                                       International Bhd  
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+          Shariah Advisory Council of the Securities Commission Malaysia | Majlis Penasihat Syariah Suruhanjaya Sekuriti Malaysia
+                                                    17    
+                   List of Shariah-Compliant Securities • May 2026 | Senarai Sekuriti Patuh Syariah • Mei 2026
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+       No. Stock Name of securities No. Stock Name of securities
+          code                   code                     
+       Bil. Kod stok Nama sekuriti Bil. Kod stok Nama sekuriti
+       37. 0386 SBS Nexus Bhd 41. 7106 Supermax Corporation
+                                       Bhd                
+       38. 5357 SkyeChip Bhd 42.  0393 Teamstar Bhd       
+       39. 5665 Southern Steel Bhd 43. 0120 VisDynamics Holdings
+                                       Bhd                
+       40. 5555 Sunway Healthcare 44. 5343 Wasco Greenergy Bhd
+                Holdings Bhd                              
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+        Shariah Advisory Council of the Securities Commission Malaysia | Majlis Penasihat Syariah Suruhanjaya Sekuriti Malaysia
+     18                                                   
+        List of Shariah-Compliant Securities • May 2026 | Senarai Sekuriti Patuh Syariah • Mei 2026
+                                                          
+      Table 2: Securities classified as Shariah non-compliant
+      Jadual 2: Sekuriti yang diklasifikasikan sebagai sekuriti tidak patuh Syariah
+                                                          
+       No. Stock Name of securities No. Stock Name of securities
+          code                    code                    
+       Bil. Kod stok Nama sekuriti Bil. Kod stok Nama sekuriti
+       1.  03067 Associated Air-Pak 10. 7215 Ni Hsin Group Bhd
+                Industries Bhd                            
+       2.  03001 Cloudaron Group Bhd 11. 0026 Nova MSC Bhd
+       3.  0382 Foodie Media Bhd 12. 7010 PTT Synergy Group Bhd
+       4.  7022 Globetronics Technology 13. 0388 Semico Capital Bhd
+                Bhd                                       
+       5.  0387 Guan Huat Seng 14. 5163 Seremban Engineering
+                Holdings Bhd           Bhd                
+       6.  2062 Harbour-Link Group Bhd 15. 7097 Ta Win Holdings Bhd
+       7.  5169 Ho Hup Construction 16. 5289 Techbond Group Bhd
+                Company Bhd                               
+       8.  0156 ManagePay Systems Bhd 17. 9369 Teo Guan Lee Bhd
+       9.  7004 MCE Holdings Bhd 18. 03070 Whitman Holdings Bhd
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+          Shariah Advisory Council of the Securities Commission Malaysia | Majlis Penasihat Syariah Suruhanjaya Sekuriti Malaysia
+                                                    19    
+                   List of Shariah-Compliant Securities • May 2026 | Senarai Sekuriti Patuh Syariah • Mei 2026
+                                                          
+      Table 3                                             
+      Jadual 3                                            
+       Main / ACE / LEAP Number of Shariah- Total Percentage of
+       Markets by sector compliant securities securities* Shariah-compliant
+                                            securities (%)
+      Pasaran Utama / ACE / LEAP Bilangan sekuriti Jumlah Peratus sekuriti
+       mengikut sektor   patuh Syariah sekuriti* patuh Syariah (%)
+       Industrial products and services                   
+       Barangan industri dan 271      320      85         
+       perkhidmatan                                       
+       Consumer products and services                     
+       Barangan pengguna dan 184      240      77         
+       perkhidmatan                                       
+       Technology                                         
+                            98        125      78         
+       Teknologi                                          
+       Property                                           
+                            86        100      86         
+       Hartanah                                           
+       Construction                                       
+                            75        79       95         
+       Pembinaan                                          
+       Energy                                             
+                            37        43       86         
+       Tenaga                                             
+       Plantation                                         
+                            35        41       85         
+       Perladangan                                        
+       Transportation and logistics                       
+                            31        36       86         
+       Pengangkutan dan logistik                          
+       Healthcare                                         
+                            27        30       90         
+       Penjagaan kesihatan                                
+       Telecommunications and media                       
+                            24        33       73         
+       Telekomunikasi dan media                           
+       Utilities                                          
+                            11        13       85         
+       Utiliti                                            
+       Financial services                                 
+                             7        38       18         
+       Perkhidmatan kewangan                              
+       Closed-end fund      Nil                Nil        
+                                      1                   
+       Dana tertutup        Tiada              Tiada      
+       Total                                              
+                            886      1,099     81         
+      Jumlah                                              
+      * As at 21 May 2026                                 
+      * Pada 21 Mei 2026                                  
+                                                          
+        Shariah Advisory Council of the Securities Commission Malaysia | Majlis Penasihat Syariah Suruhanjaya Sekuriti Malaysia
+     20                                                   
+        List of Shariah-Compliant Securities • May 2026 | Senarai Sekuriti Patuh Syariah • Mei 2026
+                                                          
+      LIST OF SHARIAH-COMPLIANT SECURITIES – MAY 2026     
+                                                          
+      SENARAI SEKURITI PATUH SYARIAH – MEI 2026           
+                                                          
+                                                          
+      MAIN MARKET                                         
+      PASARAN UTAMA                                       
+                                                          
+      INDUSTRIAL PRODUCTS AND 21. 7076  CB Industrial Product
+      SERVICES                          Holding Bhd       
+      BARANGAN INDUSTRI DAN   22. 5273  Chin Hin Group Bhd
+      PERKHIDMATAN            23. 5007  Chin Well Holdings Bhd
+                              24. 5797  Choo Bee Metal    
+      No. Stock code Name of securities Industries Bhd    
+      Bil. Kod stok Nama sekuriti 25. 7016 Chuan Huat Resources
+                                        Bhd               
+      1.  7086 Ablegroup Bhd  26. 7245  Citaglobal Bhd    
+      2.  5198 ABM Fujiya Bhd 27. 7018  CME Group Bhd     
+      3.  7219 Aizo Group Bhd 28. 2127  Comfort Gloves Bhd
+      4.  7609 Ajiya Bhd      29. 5037  Compugates Holdings
+      5.  4758 Ancom Nylex Bhd          Bhd               
+      6.  6556 Ann Joo Resources Bhd 30. 8435 Concrete Engineering
+      7.  5015 APM Automotive           Products Bhd      
+               Holdings Bhd   31. 5317  CPE Technology Bhd
+      8.  7214 A-Rank Bhd     32. 0291  Critical Holdings Bhd
+      9.  7020 Asteel Group Bhd 33. 5094 CSC Steel Holdings Bhd
+      10. 7162 Astino Bhd     34. 7157  CYL Corporation Bhd
+      11. 5302 Aurelius Technologies 35. 5276 Dancomech Holdings
+               Bhd                      Bhd               
+      12. 7579 AWC Bhd        36. 7212  Destini Bhd       
+      13. 5021 AYS Ventures Bhd 37. 5165 DFCITY Group Bhd 
+      14. 7005 B.I.G. Industries Bhd 38. 7114 D’nonce Technology Bhd
+      15. 6998 Bintai Kinden  39. 7169  Dominant Enterprise Bhd
+               Corporation Bhd 40. 0269 DS Sigma Holdings Bhd
+      16. 7036 Borneo Oil Bhd 41. 7233  Dufu Technology Corp.
+      17. 5100 BP Plastics Holding Bhd  Bhd               
+      18. 7221 BSL Corporation Bhd 42. 0064 Efficient E-Solutions Bhd
+      19. 7188 BTM Resources Bhd 43. 8907 EG Industries Bhd
+      20. 2852 Cahya Mata Sarawak 44. 5208 EITA Resources Bhd
+               Bhd            45. 5056  Engtex Group Bhd  
+                                                          
+          Shariah Advisory Council of the Securities Commission Malaysia | Majlis Penasihat Syariah Suruhanjaya Sekuriti Malaysia
+                                                    21    
+                   List of Shariah-Compliant Securities • May 2026 | Senarai Sekuriti Patuh Syariah • Mei 2026
+                                                          
+                                                          
+      46. 7217  Eonmetall Group Bhd 78. 0151 Kelington Group Bhd
+      47. 7773  EP Manufacturing Bhd 79. 6211 Kia Lim Bhd 
+      48. 5101  Evergreen Fibreboard 80. 5371 Kim Hin Industry Bhd
+                Bhd           81. 9466  KKB Engineering Bhd
+      49. 7229  Favelle Favco Bhd 82. 5035 Knusford Bhd   
+      50. 5322  Feytech Holdings Bhd 83. 6971 Kobay Technology Bhd
+      51. 3107  Fima Corporation Bhd 84. 7017 Komarkcorp Bhd
+      52. 9318  Fitters Diversified Bhd 85. 9121 KPS Consortium Bhd
+      53. 5197  Focus Lumber Bhd 86. 6491 Kumpulan Fima Bhd
+      54. 5277  FoundPac Group Bhd 87. 7033 Kumpulan H & L
+      55. 7197  Ge-Shen Corporation     High-Tech Bhd     
+                Bhd           88. 9083  Kumpulan Jetson Bhd
+      56. 0039  GFM Services Bhd 89. 5843 Kumpulan Perangsang
+      57. 7192  GIIB Holdings Bhd       Selangor Bhd      
+      58. 5220  Globaltec Formation 90. 8362 KYM Holdings Bhd
+                Bhd           91. 0268  L&P Global Bhd    
+      59. 5649  Golden Pharos Bhd 92. 9326 LB Aluminium Bhd
+      60. 3247  GUH Holdings Bhd 93. 9881 Leader Steel Holdings
+      61. 0296  HE Group Bhd            Bhd               
+      62. 5095  Heveaboard Bhd 94. 7170 LFE Corporation Bhd
+      63. 5151  Hextar Global Bhd 95. 4235 Lion Industries
+      64. 0161  Hextar Industries Bhd   Corporation Bhd   
+      65. 5072  Hiap Teck Venture Bhd 96. 8486 Lion Posim Bhd
+      66. 8443  HIL Industries Bhd 97. 5068 Luster Industries Bhd
+      67. 9601  Ho Wah Genting Bhd 98. 5143 Luxchem Corporation
+      68. 5291  HPMT Holdings Bhd       Bhd               
+      69. 0185  HSS Engineers Bhd 99. 3794 Malayan Cement Bhd
+      70. 5000  Hume Cement   100. 5916 Malaysia Smelting 
+                Industries Bhd          Corporation Bhd   
+      71. 7222  Imaspro Corporation 101. 5098 Malaysia Steel Works
+                Bhd                     (KL) Bhd          
+      72. 5178  Ingenieur Gudang Bhd 102. 7029 Master-Pack Group Bhd
+      73. 6874  JAG Capital Bhd 103. 7123 Maxland Bhd     
+      74. 5673  Jentayu Sustainables 104. 7099 Mayu Global Group Bhd
+                Bhd           105. 5327 Mega Fortris Bhd  
+      75. 5192  K. Seng Seng  106. 3778 Melewar Industrial
+                Corporation Bhd         Group Bhd         
+      76. 0054  Karyon Industries Bhd 107. 0207 Mestron Holdings Bhd
+      77. 7199  Kein Hing International 108. 0043 Metronic Global Bhd
+                Bhd           109. 5001 Mieco Chipboard Bhd
+                                                          
+        Shariah Advisory Council of the Securities Commission Malaysia | Majlis Penasihat Syariah Suruhanjaya Sekuriti Malaysia
+     22                                                   
+        List of Shariah-Compliant Securities • May 2026 | Senarai Sekuriti Patuh Syariah • Mei 2026
+                                                          
+                                                          
+      110. 5576 Minho (M) Bhd 140. 8745 S & F Capital Bhd 
+      111. 5152 Muar Ban Lee Group 141. 9822 SAM Engineering &
+                Bhd                     Equipment (M) Bhd 
+      112. 3883 Muda Holdings Bhd 142. 5147 Samchem Holdings Bhd
+      113. 5087 Mycron Steel Bhd 143. 7811 Sapura Industrial Bhd
+      114. 0270 NationGate Holdings 144. 9237 Sarawak Consolidated
+                Bhd                     Industries Bhd    
+      115. 7241 Nextgreen Global Bhd 145. 7239 Scanwolf Corporation
+      116. 7140 OKA Corporation Bhd     Bhd               
+      117. 5298 OM Holdings Ltd 146. 4731 Scientex Bhd    
+      118. 5065 Ornapaper Bhd 147. 7073 Seacera Group Bhd 
+      119. 7225 P.A. Resources Bhd 148. 5308 Seng Fong Holdings Bhd
+      120. 7095 P.I.E. Industrial Bhd 149. 7115 SKB Shutters
+      121. 8419 Pansar Bhd              Corporation Bhd   
+      122. 5331 Pantech Global Bhd 150. 7155 SKP Resources Bhd
+      123. 5125 Pantech Group 151. 7248 SLP Resources Bhd 
+                Holdings Bhd  152. 7132 SMIS Corporation Bhd
+      124. 5271 Pecca Group Bhd 153. 5134 Southern Acids (M) Bhd
+      125. 5436 Perusahaan Sadur 154. 0225 Southern Cable Group
+                Timah Malaysia          Bhd               
+                (Perstima) Bhd 155. 5665 Southern Steel Bhd
+      126. 5219 Pestec International 156. 7207 Success Transformer
+                Bhd                     Corporation Bhd   
+      127. 5183 PETRONAS Chemicals 157. 5211 Sunway Bhd   
+                Group Bhd     158. 7235 Superlon Holdings Bhd
+      128. 8117 PGF Capital Bhd 159. 8702 Texchem Resources Bhd
+      129. 7163 PJBumi Bhd    160. 7034 Thong Guan Industries
+      130. 7172 PMB Technology Bhd      Bhd               
+      131. 6637 PNE PCB Bhd   161. 7854 Timberwell Bhd    
+      132. 8869 Press Metal Aluminium 162. 5330 TMK Chemical Bhd
+                Holdings Bhd  163. 7285 Tomypak Holdings Bhd
+      133. 9873 Prestar Resources Bhd 164. 5010 Tong Herr Resources Bhd
+      134. 7201 Progressive Impact 165. 7173 Toyo Ventures Holdings
+                Corporation Bhd         Bhd               
+      135. 0196 QES Group Bhd 166. 7100 Uchi Technologies Bhd
+      136. 7498 Ralco Corporation Bhd 167. 1368 UEM Edgenta Bhd
+      137. 7232 Resintech Bhd 168. 7137 UMS Holdings Bhd  
+      138. 9954 RGT Bhd       169. 5340 UMS Integration Ltd
+      139. 9741 Rohas Tecnic Bhd 170. 7227 UMS-Neiken Group Bhd
+                                                          
+          Shariah Advisory Council of the Securities Commission Malaysia | Majlis Penasihat Syariah Suruhanjaya Sekuriti Malaysia
+                                                    23    
+                   List of Shariah-Compliant Securities • May 2026 | Senarai Sekuriti Patuh Syariah • Mei 2026
+                                                          
+                                                          
+      171. 7091 Unimech Group Bhd 11. 5196 Berjaya Food Bhd
+      172. 0257 Unique Fire Holdings 12. 5248 Bermaz Auto Bhd
+               Bhd            13. 9288  Bonia Corporation Bhd
+      173. 7133 United U-Li Corporation 14. 2828 C.I. Holdings Bhd
+               Bhd            15. 7174  CAB Cakaran       
+      174. 6963 V.S. Industry Bhd       Corporation Bhd   
+      175. 4243 W T K Holdings Bhd 16. 7128 CAM Resources Bhd
+      176. 8176 Wavefront Bhd 17. 5099  Capital A Bhd     
+      177. 7231 Wellcall Holdings Bhd 18. 7035 CCK Consolidated
+      178. 5009 White Horse Bhd         Holdings Bhd      
+      179. 7050 Wong Engineering 19. 7209 Cheetah Holdings Bhd
+               Corporation Bhd 20. 5104 Citra Nusa Holdings Bhd
+      180. 7025 Woodlandor Holdings 21. 5336 CUCKOO International
+               Bhd                      (MAL) Bhd         
+      181. 5048 YB Ventures Bhd 22. 9423 CWG Holdings Bhd 
+      182. 7014 YLI Holdings Bhd 23. 5166 Cyberjaya Education
+                                        Group Bhd         
+                              24. 1619  DRB-HICOM Bhd     
+      CONSUMER PRODUCTS AND   25. 3026  Dutch Lady Milk   
+      SERVICES                          Industries Bhd    
+                              26. 5318  DXN Holdings Bhd  
+      BARANGAN PENGGUNA DAN                               
+                              27. 0239  Ecomate Holdings Bhd
+      PERKHIDMATAN                                        
+                              28. 5337  Eco-Shop Marketing Bhd
+                              29. 9091  Emico Holdings Bhd
+      No. Stock code Name of securities                   
+                              30. 5351  Empire Premium Food
+      Bil. Kod stok Nama sekuriti                         
+                                        Bhd               
+                              31. 7149  Eng Kah Corporation Bhd
+      1.  7167 Able Global Bhd                            
+                              32. 5081  Esthetics International
+      2.  1481 Advance Synergy Bhd                        
+                                        Group Bhd         
+      3.  6599 AEON Co. (M) Bhd                           
+                              33. 9946  ETA Group Bhd     
+      4.  7315 AHB Holdings Bhd                           
+                              34. 7208  Euro Holdings Bhd 
+      5.  5238 AirAsia X Bhd                              
+                              35. 1287  Exsim Hospitality Bhd
+      6.  2658 Ajinomoto (Malaysia)                       
+                              36. 5306  Farm Fresh Bhd    
+               Bhd                                        
+                              37. 8605  Federal International
+      7.  6351 Amway (Malaysia)                           
+                                        Holdings Bhd      
+               Holdings Bhd                               
+                              38. 6939  Fiamma Holdings Bhd
+      8.  6432 Apollo Food Holdings                       
+                              39. 0157  Focus Point Holdings Bhd
+               Bhd                                        
+                              40. 9172  Formosa Prosonic  
+      9.  7722 Asia Brands Bhd                            
+                                        Industries Bhd    
+      10. 8885 Avillion Bhd                               
+                                                          
+        Shariah Advisory Council of the Securities Commission Malaysia | Majlis Penasihat Syariah Suruhanjaya Sekuriti Malaysia
+     24                                                   
+        List of Shariah-Compliant Securities • May 2026 | Senarai Sekuriti Patuh Syariah • Mei 2026
+                                                          
+                                                          
+      41. 3689  Fraser & Neave 70. 3662 Malayan Flour Mills Bhd
+                Holdings Bhd  71. 3891  Malayan United    
+      42. 7184  G3 Global Bhd           Industries Bhd    
+      43. 5592  Grand Central 72. 5983  MBM Resources Bhd 
+                Enterprises Bhd 73. 2097 Meta Bright Group
+      44. 7943  Greentronics            Bhd               
+                Technology Bhd 74. 7935 Milux Corporation Bhd
+      45. 0136  Greenyield Bhd 75. 0229 Mobilia Holdings Bhd
+      46. 5102  Guan Chong Bhd 76. 5296 Mr D.I.Y. Group (M)
+      47. 5335  HI Mobility Bhd         Bhd               
+      48. 5346  Hock Soon Capital Bhd 77. 5202 MSM Malaysia
+      49. 5160  Homeritz Corporation    Holdings Bhd      
+                Bhd           78. 5316  MST Golf Group Bhd
+      50. 3301  Hong Leong Industries 79. 4707 Nestle (Malaysia) Bhd
+                Bhd           80. 7060  New Hoong Fatt    
+      51. 5024  Hup Seng Industries     Holdings Bhd      
+                Bhd           81. 7154  NexG Bina Bhd     
+      52. 8478  Hwa Tai Industries Bhd 82. 7139 Niche Capital Emas
+      53. 9113  Iconic Worldwide Bhd    Holdings Bhd      
+      54. 7223  Jadi Imaging Holdings 83. 5066 NTPM Holdings Bhd
+                Bhd           84. 5533  OCB Bhd           
+      55. 7152  Jaycorp Bhd   85. 0049  Oceancash Pacific Bhd
+      56. 8672  Kamdar Group (M) 86. 5079 One Glove Group Bhd
+                Bhd           87. 5260  Only World Group  
+      57. 5247  Karex Bhd               Holdings Bhd      
+      58. 7216  Kawan Food Bhd 88. 7107 Oriental Food     
+      59. 7062  Khind Holdings Bhd      Industries Holdings
+      60. 0180  Kim Teck Cheong         Bhd               
+                Consolidated Bhd 89. 7052 Padini Holdings Bhd
+      61. 9385  Lay Hong Bhd  90. 4081  Pan Malaysia      
+      62. 8079  Lee Swee Kiat Group     Corporation Bhd   
+                Bhd           91. 5022  Paos Holdings Bhd 
+      63. 5328  Life Water Bhd 92. 9407 Paragon Union Bhd 
+      64. 7089  Lii Hen Industries Bhd 93. 5657 Parkson Holdings Bhd
+      65. 7234  Lotus Circular Bhd 94. 9997 Pensonic Holdings Bhd
+      66. 8303  Lotus KFM Bhd 95. 0186  Perak Transit Bhd 
+      67. 7085  LTKM Bhd      96. 7080  Permaju Industries Bhd
+      68. 7243  Magma Group Bhd 97. 8532 Pertama Digital Bhd
+      69. 7087  Magni-Tech Industries 98. 5681 PETRONAS Dagangan
+                Bhd                     Bhd               
+                                                          
+          Shariah Advisory Council of the Securities Commission Malaysia | Majlis Penasihat Syariah Suruhanjaya Sekuriti Malaysia
+                                                    25    
+                   List of Shariah-Compliant Securities • May 2026 | Senarai Sekuriti Patuh Syariah • Mei 2026
+                                                          
+                                                          
+      99. 5080  Poh Kong Holdings Bhd 128. 7176 TPC Plus Bhd
+      100. 7237 Power Root Bhd 129. 7757 UPA Corporation Bhd
+      101. 4065 PPB Group Bhd 130. 4995 Versatile Creative Bhd
+      102. 7168 PRG Holdings Bhd 131. 7203 Wang-Zheng Bhd 
+      103. 7134 PWF Corporation Bhd 132. 5016 Warisan TC Holdings
+      104. 7084 QL Resources Bhd        Bhd               
+      105. 7006 Rhong Khen    133. 0197 Wegmans Holdings Bhd
+                International Bhd 134. 7121 XL Holdings Bhd
+      106. 9776 Rivertree STF Synergies 135. 5159 Yoong Onn Corporation
+                Bhd                     Bhd               
+      107. 0183 Salutica Bhd  136. 0250 YX Precious Metals Bhd
+      108. 5157 SaudiGold Group Bhd 137. 5131 Zhulian Corporation Bhd
+      109. 0212 SDS Group Bhd                             
+      110. 9792 SEG International Bhd                     
+      111. 5305 Senheng New Retail TECHNOLOGY             
+                Bhd           TEKNOLOGI                   
+      112. 7180 Sern Kou Resources                        
+                Bhd           No. Stock code Name of securities
+      113. 7412 SHH Resources Bil. Kod stok Nama sekuriti 
+                Holdings Bhd                              
+      114. 7246 Signature International 1. 0258 Agmo Holdings Bhd
+                Bhd           2.  7181  ARB Bhd           
+                              3.  0276  Autocount Dotcom Bhd
+      115. 4197 Sime Darby Bhd                            
+                              4.  5204  AwanBiru Technology
+      116. 5172 Sinaran Advance                           
+                                        Bhd               
+                Group Bhd                                 
+                              5.  5195  Censof Holdings Bhd
+      117. 5242 Solid Automotive Bhd                      
+                              6.  0277  Cloudpoint Technology
+      118. 7103 Spritzer Bhd                              
+                                        Bhd               
+      119. 7186 SWS Capital Bhd                           
+                              7.  0246  Cnergenz Bhd      
+      120. 7211 Tafi Industries Bhd                       
+                              8.  5301  CTOS Digital Bhd  
+      121. 4405 Tan Chong Motor                           
+                              9.  0051  Cuscapi Bhd       
+                Holdings Bhd                              
+                              10. 7204  D & O Green       
+      122. 8966 Techbase Industries                       
+                                        Technologies Bhd  
+                Bhd                                       
+                              11. 4456  Dagang Nexchange Bhd
+      123. 7439 Teck Guan Perdana                         
+                              12. 8338  Dataprep Holdings Bhd
+                Bhd                                       
+                              13. 5036  Edaran Bhd        
+      124. 7200 Tek Seng Holdings Bhd                     
+                              14. 0065  Excel Force MSC Bhd
+      125. 7252 Teo Seng Capital Bhd                      
+                              15. 0128  Frontken Corporation
+      126. 0012 Three-A Resources Bhd                     
+                                        Bhd               
+      127. 7230 Tomei Consolidated                        
+                              16. 9377  FSBM Holdings Bhd 
+                Bhd                                       
+                              17. 0104  Genetec Technology Bhd
+                                                          
+        Shariah Advisory Council of the Securities Commission Malaysia | Majlis Penasihat Syariah Suruhanjaya Sekuriti Malaysia
+     26                                                   
+        List of Shariah-Compliant Securities • May 2026 | Senarai Sekuriti Patuh Syariah • Mei 2026
+                                                          
+                                                          
+      18. 0208  Greatech Technology PROPERTY              
+                Bhd           HARTANAH                    
+      19. 5028  HeiTech Padu Bhd                          
+      20. 0166  Inari Amertron Bhd No. Stock code Name of securities
+      21. 9393  Industronics Bhd Bil. Kod stok Nama sekuriti
+      22. 0253  Infoline Tec Group Bhd                    
+      23. 5309  ITMAX System Bhd 1. 7131 ACME Holdings Bhd
+      24. 5161  JCY International Bhd 2. 7007 ARK Resources Holdings
+      25. 0146  JF Technology Bhd       Bhd               
+      26. 0127  JHM Consolidation 3. 4057 Asian Pac Holdings Bhd
+                Bhd           4.  5182  Avaland Bhd       
+      27. 9334  KESM Industries Bhd 5. 7120 Axteria Group Bhd
+      28. 0143  Key Asic Bhd  6.  6602  BCB Bhd           
+      29. 0249  LGMS Bhd                                  
+                              7.  6378  BEDI Bhd          
+      30. 3867  Malaysian Pacific                         
+                              8.  9814  Bertam Alliance Bhd
+                Industries Bhd                            
+                              9.  6173  Bina Darulaman Bhd
+      31. 5011  Mesiniaga Bhd                             
+                              10. 7187  Chin Hin Group    
+      32. 5286  Mi Technovation Bhd                       
+                                        Property Bhd      
+      33. 0126  Microlink Solutions Bhd                   
+                              11. 5738  Country Heights   
+      34. 0113  MMS Ventures Bhd                          
+                                        Holdings Bhd      
+      35. 5216  NexG Bhd                                  
+                              12. 5049  Country View Bhd  
+      36. 0083  Notion VTec Bhd                           
+                              13. 6718  Crescendo Corporation
+      37. 9008  Omesti Bhd                                
+                                        Bhd               
+      38. 0040  OpenSys (M) Bhd                           
+                              14. 7198  DPS Resources Bhd 
+      39. 7160  Pentamaster                               
+                              15. 8206  Eco World Development
+                Corporation Bhd                           
+                                        Group Bhd         
+      40. 0200  Revenue Group Bhd                         
+                              16. 3557  Ecofirst Consolidated
+      41. 5357  SkyeChip Bhd                              
+                                        Bhd               
+      42. 0259  SNS Network                               
+                              17. 6076  Encorp Bhd        
+                Technology Bhd                            
+                              18. 6815  Eupe Corporation Bhd
+      43. 9075  Theta Edge Bhd                            
+                              19. 6041  Farlim Group (Malaysia)
+      44. 4359  Turiya Bhd                                
+                                        Bhd               
+      45. 5005  Unisem (M) Bhd                            
+      46. 5292  UWC Bhd       20. 1147  Global Oriental Bhd
+      47. 0097  ViTrox Corporation 21. 5020 Glomac Bhd    
+                Bhd           22. 9962  Gromutual Bhd     
+      48. 5162  VSTECS Bhd    23. 7105  HCK Capital Group Bhd
+      49. 0008  Willowglen MSC Bhd 24. 5062 Hua Yang Bhd  
+      50. 0138  Zetrix AI Bhd 25. 4251  I-Bhd             
+                              26. 5084  Ibraco Bhd        
+                                                          
+          Shariah Advisory Council of the Securities Commission Malaysia | Majlis Penasihat Syariah Suruhanjaya Sekuriti Malaysia
+                                                    27    
+                   List of Shariah-Compliant Securities • May 2026 | Senarai Sekuriti Patuh Syariah • Mei 2026
+                                                          
+                                                          
+      27. 9687  Ideal Capital Bhd 55. 1724 Paramount      
+      28. 5249  IOI Properties Group    Corporation Bhd   
+                Bhd           56. 2682  Parkwood Holdings 
+      29. 1589  Iskandar Waterfront     Bhd               
+                City Bhd      57. 6912  Pasdec Holdings Bhd
+      30. 8923  Jiankun International 58. 7055 PLB Engineering Bhd
+                Bhd           59. 5075  Plenitude Bhd     
+      31. 6769  JKG Land Bhd  60. 5313  Radium Development
+      32. 7077  Kerjaya Prospek         Bhd               
+                Property Bhd  61. 7765  Rapid Synergy Bhd 
+      33. 5038  KSL Holdings Bhd 62. 8664 S P Setia Bhd   
+      34. 7179  Lagenda Properties 63. 4596 Sapura Resources Bhd
+                Bhd           64. 5207  SBC Corporation Bhd
+      35. 3174  Land & General Bhd 65. 4286 Seal Incorporated Bhd
+      36. 8494  LBI Capital Bhd 66. 2224 Selangor Dredging Bhd
+      37. 5789  LBS Bina Group Bhd 67. 5288 Sime Darby Property
+      38. 3573  Lien Hoe Corporation    Bhd               
+                Bhd           68. 7249  Skygate Solutions Bhd
+      39. 7617  Magna Prima Bhd 69. 5315 Skyworld Development
+      40. 8583  Mah Sing Group Bhd      Bhd               
+      41. 8141  Majuperak Holdings 70. 4375 South Malaysia
+                Bhd                     Industries Bhd    
+      42. 1651  Malaysian Resources 71. 3743 Sunsuria Bhd 
+                Corporation Bhd 72. 1538 Symphony Life Bhd
+      43. 6181  Malton Bhd    73. 2259  Talam Transform Bhd
+      44. 5236  Matrix Concepts 74. 5191 Tambun Indah Land
+                Holdings Bhd            Bhd               
+      45. 4022  Maxim Global Bhd 75. 2429 Tanco Holdings Bhd
+      46. 1694  Menang Corporation 76. 0230 Teladan Group Bhd
+                (M) Bhd       77. 5239  Titijaya Land Bhd 
+      47. 5040  Meridian Bhd  78. 5401  Tropicana Corporation
+      48. 8893  MK Land Holdings Bhd    Bhd               
+      49. 6114  MKH Bhd       79. 7079  TWL Holdings Bhd  
+      50. 3913  MUI Properties Bhd 80. 5148 UEM Sunrise Bhd
+      51. 5073  Naim Holdings Bhd 81. 5200 UOA Development
+      52. 0056  NCT Alliance Bhd        Bhd               
+      53. 5827  Oriental Interest Bhd 82. 7003 Y&G Corporation Bhd
+      54. 3611  Paragon Globe Bhd 83. 3158 YNH Property Bhd
+                              84. 7066  Yong Tai Bhd      
+                                                          
+        Shariah Advisory Council of the Securities Commission Malaysia | Majlis Penasihat Syariah Suruhanjaya Sekuriti Malaysia
+     28                                                   
+        List of Shariah-Compliant Securities • May 2026 | Senarai Sekuriti Patuh Syariah • Mei 2026
+                                                          
+                                                          
+      CONSTRUCTION            27. 9628  Lebtech Bhd       
+      PEMBINAAN               28. 5129  Melati Ehsan Holdings
+                                        Bhd               
+      No. Stock code Name of securities 29. 8192 Mercury Industries Bhd
+      Bil. Kod stok Nama sekuriti 30. 7595 MGB Bhd        
+                              31. 9571  Mitrajaya Holdings Bhd
+      1.  7078  Ahmad Zaki Resources 32. 5085 Mudajaya Group Bhd
+                Bhd           33. 5703  Muhibbah Engineering
+      2.  5293  AME Elite Consortium    (M) Bhd           
+                Bhd           34. 7071  OCR Group Bhd     
+      3.  5329  Azam Jaya Bhd 35. 8311  Pesona Metro Holdings
+      4.  5190  Benalec Holdings Bhd    Bhd               
+      5.  5932  Bina Puri Holdings Bhd 36. 5622 Pimpinan Ehsan Bhd
+      6.  7195  Binastra Corporation 37. 9598 Pintaras Jaya Bhd
+                Bhd           38. 5070  Protasco Bhd      
+      7.  8052  Central Global Bhd 39. 6807 Puncak Niaga Holdings
+      8.  8591  Crest Builder Holdings  Bhd               
+                Bhd           40. 5263  Sunway Construction
+      9.  7528  DKLS Industries Bhd     Group Bhd         
+      10. 5253  Econpile Holdings Bhd 41. 9717 Sycal Ventures Bhd
+      11. 8877  Ekovest Bhd   42. 5054  TRC Synergy Bhd   
+      12. 4847  Epicon Bhd    43. 5042  TSR Capital Bhd   
+      13. 5205  Eversendai    44. 5297  Tuju Setia Bhd    
+                Corporation Bhd 45. 7145 TXCD Bhd         
+      14. 7047  FBG Holdings Bhd 46. 5006 Varia Bhd       
+      15. 5226  Gabungan AQRS Bhd 47. 7070 Vizione Holdings Bhd
+      16. 9261  Gadang Holdings Bhd 48. 9679 WCT Holdings Bhd
+      17. 5398  Gamuda Bhd    49. 7028  Zecon Bhd         
+      18. 0198  GDB Holdings Bhd 50. 2283 Zelan Bhd       
+      19. 5345  Geohan Corporation                        
+                Bhd                                       
+      20. 3336  IJM Corporation Bhd EENNEERGYY            
+      21. 7240  Infraharta Holdings Bhd TTEENNAAGGAA      
+      22. 0192  Inta Bina Group Bhd                       
+      23. 4723  JAKS Resources Bhd No. Stock code Name of securities
+      24. 7161  Kerjaya Prospek Group Bil. Kod stok Nama sekuriti
+                Bhd                                       
+      25. 5171  Kimlun Corporation 1. 5115 Alam Maritim   
+                Bhd                     Resources Bhd     
+      26. 5310  Kumpulan Kitacon Bhd 2. 0168 BM Greentech Bhd
+                                                          
+          Shariah Advisory Council of the Securities Commission Malaysia | Majlis Penasihat Syariah Suruhanjaya Sekuriti Malaysia
+                                                    29    
+                   List of Shariah-Compliant Securities • May 2026 | Senarai Sekuriti Patuh Syariah • Mei 2026
+                                                          
+                                                          
+      3.  5210  Bumi Armada Bhd PPLLAANNTAATTIIOONN       
+      4.  5257  Carimin Petroleum Bhd PPEERRLLAADDAANNGGAANN
+      5.  5184  Cypark Resources Bhd                      
+      6.  5141  Dayang Enterprise                         
+                              No. Stock code Name of securities
+                Holdings Bhd  Bil. Kod stok Nama sekuriti 
+      7.  5132  Deleum Bhd                                
+      8.  7277  Dialog Group Bhd 1. 7054 Astral Asia Bhd  
+      9.  8613  ENRA Group Bhd 2. 1899  Batu Kawan Bhd    
+      10. 7253  Handal Energy Bhd 3. 5069 BLD Plantation Bhd
+      11. 5199  Hibiscus Petroleum Bhd 4. 8982 Cepatwawasan Group
+      12. 5321  Keyfield International  Bhd               
+                Bhd           5.  5029  Far East Holdings Bhd
+      13. 0193  Kinergy Advancement 6. 2291 Genting Plantations
+                Bhd                     Bhd               
+      14. 5255  Lianson Fleet Group 7. 7382 Golden Land Bhd
+                Bhd           8.  2135  Gopeng Bhd        
+      15. 5186  Malaysia Marine and 9. 5138 Hap Seng Plantations
+                Heavy Engineering       Holdings Bhd      
+                Holdings Bhd  10. 7501  Harn Len Corporation
+      16. 7108  Perdana Petroleum Bhd   Bhd               
+      17. 5133  Petra Energy Bhd 11. 2607 Inch Kenneth Kajang
+      18. 3042  Petron Malaysia         Rubber Public Ltd Co
+                Refining & Marketing 12. 6262 Innoprise Plantations
+                Bhd                     Bhd               
+                              13. 1961  IOI Corporation Bhd
+      19. 0091  Propel Global Bhd                         
+                              14. 4383  Jaya Tiasa Holdings
+      20. 0219  Reservoir Link Energy                     
+                                        Bhd               
+                Bhd                                       
+                              15. 5323  Johor Plantations 
+      21. 0223  Samaiden Group Bhd                        
+                                        Group Bhd         
+      22. 0215  Solarvest Holdings Bhd                    
+                              16. 5027  Kim Loong Resources
+      23. 7228  T7 Global Bhd                             
+                                        Bhd               
+      24. 2739  Techna-X Bhd                              
+                              17. 1996  Kretam Holdings Bhd
+      25. 0118  Trive Property Group                      
+                              18. 2445  Kuala Lumpur Kepong
+                Bhd                                       
+                                        Bhd               
+      26. 7250  Uzma Bhd                                  
+                              19. 5223  Mentiga Corporation
+      27. 5218  Vantris Energy Bhd                        
+                                        Bhd               
+      28. 5243  Velesto Energy Bhd                        
+                              20. 5026  MHC Plantations Bhd
+      29. 5142  Wasco Bhd                                 
+                              21. 5319  MKH Oil Palm (East
+      30. 5343  Wasco Greenergy Bhd                       
+                                        Kalimantan) Bhd   
+                                                          
+        Shariah Advisory Council of the Securities Commission Malaysia | Majlis Penasihat Syariah Suruhanjaya Sekuriti Malaysia
+     30                                                   
+        List of Shariah-Compliant Securities • May 2026 | Senarai Sekuriti Patuh Syariah • Mei 2026
+                                                          
+                                                          
+      22. 9695  PLS Plantations Bhd 13. 5348 Orkim Bhd    
+      23. 5113  Rimbunan Sawit Bhd 14. 8346 Perak Corporation Bhd
+      24. 2542  Riverview Rubber 15. 4634 Pos Malaysia Bhd
+                Estates Bhd   16. 5145  Sealink International
+      25. 5126  Sarawak Oil Palms Bhd   Bhd               
+      26. 5135  Sarawak Plantation Bhd 17. 7053 See Hup Consolidated
+      27. 5285  SD Guthrie Bhd          Bhd               
+      28. 4316  Sin Heng Chan (Malaya) 18. 5173 Shin Yang Group Bhd
+                Bhd           19. 6521  Suria Capital Holdings
+      29. 5012  Ta Ann Holdings Bhd     Bhd               
+      30. 2054  TDM Bhd       20. 5303  Swift Haulage Bhd 
+      31. 5112  TH Plantations Bhd 21. 5149 TAS Offshore Bhd
+      32. 9059  TSH Resources Bhd 22. 5140 Tasco Bhd      
+      33. 2593  United Malacca Bhd 23. 5246 Westports Holdings
+      34. 2089  United Plantations Bhd  Bhd               
+                              24. 5267  Xin Hwa Holdings Bhd
+      TTRRAANNSSPPOORRTTAATTIIOONN AANNDD LLOOGGIISSTTIICCSS
+      PPEENNGGAANNGGKKUUTTAANN DDAANN LLOOGGIISSTTIIKK HHEEAALLTTHHCCAARREE
+                              PPEENNJJAAGGAAAANN KKEESSIIHHAATTAANN
+      No. Stock code Name of securities                   
+      Bil. Kod stok Nama sekuriti No. Stock code Name of securities
+                              Bil. Kod stok Nama sekuriti 
+      1.  7218  Arka Bhd                                  
+      2.  5259  Avangaad Bhd  1.  7191  Adventa Bhd       
+      3.  5032  Bintulu Port Holdings 2. 0163 Careplus Group Bhd
+                Bhd           3.  7148  Duopharma Biotech 
+      4.  7117  CJ Century Logistics    Bhd               
+                Holdings Bhd  4.  5168  Hartalega Holdings Bhd
+      5.  7210  FM Global Logistics 5. 7803 Hextar Healthcare Bhd
+                Holdings Bhd  6.  5225  IHH Healthcare Bhd
+      6.  7676  G Capital Bhd 7.  7153  Kossan Rubber     
+      7.  0078  GDEX Bhd                Industries Bhd    
+      8.  5136  Hextar Technologies 8. 0002 Kotra Industries Bhd
+                Solutions Bhd 9.  5878  KPJ Healthcare Bhd
+      9.  7013  Hubline Bhd   10. 5341  LAC Med Bhd       
+      10. 5078  Marine & General Bhd 11. 0201 Nova Wellness Group
+      11. 3816  MISC Bhd                Bhd               
+      12. 5352  MTT Shipping and 12. 0222 Optimax Holdings Bhd
+                Logistics Bhd 13. 7081  Pharmaniaga Bhd   
+                                                          
+          Shariah Advisory Council of the Securities Commission Malaysia | Majlis Penasihat Syariah Suruhanjaya Sekuriti Malaysia
+                                                    31    
+                   List of Shariah-Compliant Securities • May 2026 | Senarai Sekuriti Patuh Syariah • Mei 2026
+                                                          
+                                                          
+      14. 5555  Sunway Healthcare UUTTIILLIITTIIEESS      
+                Holdings Bhd                              
+                              UUTTIILLIITTII              
+      15. 0001  Supercomnet                               
+                Technologies Bhd No. Stock code Name of securities
+      16. 7106  Supermax Corporation Bil. Kod stok Nama sekuriti
+                Bhd                                       
+      17. 0101  TMC Life Sciences Bhd 1. 7471 Eden Inc. Bhd
+      18. 7113  Top Glove Corporation 2. 5209 Gas Malaysia Bhd
+                Bhd           3.  5264  Malakoff Corporation
+      19. 0256  UMediC Group Bhd        Bhd               
+      20. 7178  Y.S.P. Southeast Asia 4. 3069 Mega First Corporation
+                Holding Bhd             Bhd               
+                              5.  5041  PBA Holdings Bhd  
+                              6.  6033  PETRONAS Gas Bhd  
+      TTEELLEECCOOMMMMUUNNIICCAATTIIOONNSS AANNDD 7. 5272 Ranhill Utilities Bhd
+      MMEEDDIIAA              8.  8567  Salcon Bhd        
+                              9.  8524  Taliworks Corporation
+      TTEELLEEKKOOMMUUNNIIKKAASSII DDAANN MMEEDDIIAA      
+                                        Bhd               
+                              10. 5347  Tenaga Nasional Bhd
+      No. Stock code Name of securities                   
+      Bil. Kod stok Nama sekuriti                         
+                              PPEERRKKHHIIDDMMAATTAANN KKEEWWAANNGGAANN
+      1.  7031  Amtel Holdings Bhd                        
+                              FFIINNAANNCCIIAALL SSEERRVVIICCEESS
+      2.  6888  Axiata Group Bhd                          
+      3.  6947  CelcomDigi Bhd                            
+                              No. Stock code Name of securities
+      4.  0059  Ecobuilt Holdings Bhd                     
+                              Bil. Kod stok Nama sekuriti 
+      5.  0082  Green Packet Bhd                          
+      6.  6012  Maxis Bhd                                 
+                              1.  5258  Bank Islam Malaysia
+      7.  5090  Media Chinese                             
+                                        Bhd               
+                International Ltd                         
+                              2.  1818  Bursa Malaysia Bhd
+      8.  0159  MMM Group Bhd                             
+                              3.  3441  Johan Holdings Bhd
+      9.  0172  OCK Group Bhd                             
+                              4.  1171  MBSB Bhd          
+      10. 5332  Reach Ten Holdings                        
+                              5.  9296  RCE Capital Bhd   
+                Bhd                                       
+      11. 0032  REDtone Digital Bhd 6. 6139 Syarikat Takaful
+      12. 5252  Sasbadi Holdings Bhd    Malaysia Keluarga Bhd
+      13. 9431  Seni Jaya Corporation                     
+                Bhd                                       
+      14. 4863  Telekom Malaysia Bhd                      
+      15. 5031  TIME dotCom Bhd                           
+                                                          
+        Shariah Advisory Council of the Securities Commission Malaysia | Majlis Penasihat Syariah Suruhanjaya Sekuriti Malaysia
+     32                                                   
+        List of Shariah-Compliant Securities • May 2026 | Senarai Sekuriti Patuh Syariah • Mei 2026
+                                                          
+                                                          
+      ACE MARKET                                          
+                              24. 0100  ES Ceramics Technology
+      PASARAN ACE                       Bhd               
+                              25. 0190  Eversafe Rubber Bhd
+                              26. 0370  Express Powerr Solutions
+      IINNDDUUSSTTRRIIAALL PPRRODUUCCTTSS AANNDD          
+                                        (M) Bhd           
+      SSEERRVVIICCEESS                                    
+                              27. 0084  Fast Energy Holdings Bhd
+      BBAARRAANNGGAANN IINNDDUUSSTTRRII DDAANN 28. 0355 Fibromat (M) Bhd
+      PPEERRKKHHIIDDMMAATTAANN 29. 0231 Flexidynamic Holdings
+                                        Bhd               
+      No. Stock code Name of securities 30. 0284 Glostrext Bhd
+      Bil. Kod stok Nama sekuriti 31. 0175 HHRG Bhd       
+                              32. 0160  Hiap Huat Holdings Bhd
+      1.  0397  5E Resources Holdings 33. 0188 HLT Global Bhd
+                Bhd           34. 0228  HPP Holdings Bhd  
+      2.  0218  ACO Group Bhd 35. 0366  Icents Group Holdings
+      3.  0122  Advance Information     Bhd               
+                Marketing Bhd 36. 0376  Insights Analytics Bhd
+      4.  0391  Ambest Group Bhd 37. 0390 ISF Group Bhd   
+      5.  0399  AMS Advanced  38. 0024  JAG Bhd           
+                Material Bhd  39. 0307  Kawan Renergy Bhd 
+      6.  0038  Artroniq Bhd  40. 0392  Kee Ming Group Bhd
+      7.  0105  Asia Poly Holdings Bhd 41. 0293 KJTS Group Bhd
+      8.  0362  ASM Automation 42. 0266 Leform Bhd        
+                Group Bhd     43. 0295  Master Tec Group Bhd
+      9.  0098  Aumas Resources Bhd 44. 0167 MClean Technologies
+      10. 0187  BCM Alliance Bhd        Bhd               
+      11. 0263  Betamek Bhd   45. 0177  Midtown Group Bhd 
+      12. 0313  BWYS Group Bhd 46. 0288 Minox International
+      13. 0339  CBH Engineering         Group Bhd         
+                Holding Bhd   47. 0350  MSB Global Group Bhd
+      14. 0238  CEKD Bhd      48. 0213  MTAG Group Bhd    
+      15. 0348  Chemlite Innovation 49. 0325 Northeast Group Bhd
+                Bhd           50. 0389  One Gasmaster Holdings
+      16. 0341  Colform Group Bhd       Bhd               
+      17. 0240  Coraza Integrated 51. 0368 Oxford Innotech Bhd
+                Technology Bhd 52. 0361 Pan Merchant Bhd  
+      18. 0323  Crest Group Bhd 53. 0289 PLYTEC Holding Bhd
+      19. 0331  Cropmate Bhd  54. 0379  PMW International Bhd
+      20. 0227  Econframe Bhd 55. 0381  Polymer Link Holdings
+      21. 0453  EI Power Bhd            Bhd               
+      22. 0317  EPB Group Bhd 56. 0377  Powertechnic Group Bhd
+      23. 0072  Erdasan Group Bhd 57. 0217 Powerwell Holdings Bhd
+                                                          
+          Shariah Advisory Council of the Securities Commission Malaysia | Majlis Penasihat Syariah Suruhanjaya Sekuriti Malaysia
+                                                    33    
+                   List of Shariah-Compliant Securities • May 2026 | Senarai Sekuriti Patuh Syariah • Mei 2026
+                                                          
+                                                          
+      58. 0383  PSP Energy Bhd CONSUMMEER PRODUCTS AND    
+      59. 0081  Rekatech Capital Bhd SERVICES             
+      60. 0133  Sanichi Technology Bhd BARANGAN PENGGUNA DAN
+      61. 0028  Scope Industries Bhd                      
+                              PERKHIDMATAN                
+      62. 0055  Sersol Bhd                                
+      63. 0306  Smart Asia Chemical                       
+                              No. Stock code Name of securities
+                Bhd                                       
+                              Bil. Kod stok Nama sekuriti 
+      64. 0321  Solar District Cooling                    
+                Group Bhd                                 
+                              1.  0365  A1 A.K. Koh Group 
+      65. 0349  Sumisaujana Group                         
+                                        Bhd               
+                Bhd                                       
+                              2.  0309  Agricore CS Holdings
+      66. 0337  Swift Energy                              
+                                        Bhd               
+                Technology Bhd                            
+                              3.  0380  Aquawalk Group Bhd
+      67. 0211  Tashin Holdings Bhd                       
+                              4.  0179  Bioalpha Holdings Bhd
+      68. 0089  Tex Cycle Technology                      
+                              5.  0385  BMS Holdings Bhd  
+                (M) Bhd                                   
+                              6.  0335  Carlo Rino Group Bhd
+      69. 0302  Topmix Bhd                                
+                              7.  0281  Daythree Digital Bhd
+      70. 0297  TSA Group Bhd                             
+                              8.  0205  DPI Holdings Bhd  
+      71. 0232  Volcano Bhd                               
+                              9.  0304  Farm Price Holdings
+      72. 0102  Waja Konsortium Bhd                       
+                                        Bhd               
+      73. 0298  Wentel Engineering                        
+                              10. 0378  Farmiera Bhd      
+                Holdings Bhd                              
+                              11. 0398  Golden Destinations
+      74. 0353  West River Bhd                            
+                                        Group Bhd         
+      75. 0352  WTEC Group Bhd                            
+                              12. 0170  Kanger International
+      76. 0025  YBS International Bhd                     
+                                        Bhd               
+      77. 0248  Yew Lee Pacific Group                     
+                              13. 0450  Manforce Group Bhd
+                Bhd                                       
+                              14. 0357  Oasis Home Holding
+      78. 0301  Zantat Holdings Bhd                       
+                                        Bhd               
+                              15. 0327  OB Holdings Bhd   
+                              16. 0312  Ocean Fresh Bhd   
+                              17. 0252  Orgabio Holdings Bhd
+                              18. 0338  Oriental Kopi Holdings
+                                        Bhd               
+                              19. 0022  Parlo Bhd         
+                              20. 0356  PEOPLElogy Bhd    
+                              21. 0171  PeterLabs Holdings
+                                        Bhd               
+                              22. 0260  PT Resources Holdings
+                                        Bhd               
+                              23. 0342  RichTech Digital Bhd
+                                                          
+        Shariah Advisory Council of the Securities Commission Malaysia | Majlis Penasihat Syariah Suruhanjaya Sekuriti Malaysia
+     34                                                   
+        List of Shariah-Compliant Securities • May 2026 | Senarai Sekuriti Patuh Syariah • Mei 2026
+                                                          
+                                                          
+      24. 0300  SBH Marine Holdings 16. 0010 Iris Group Bhd
+                Bhd           17. 0036  Key Alliance Group Bhd
+      25. 0158  SCC Holdings Bhd 18. 0111 K-One Technology Bhd
+      26. 0178  SEDANIA Innovator Bhd 19. 0176 Kronologi Asia Bhd
+      27. 0316  Sik Cheong Bhd 20. 0112 Mikro MSC Bhd     
+      28. 0326  Sorento Capital Bhd 21. 0070 MQ Technology Bhd
+      29. 0216  Spring Art Holdings 22. 0395 OGX Group Bhd
+                Bhd           23. 0275  Oppstar Bhd       
+      30. 0287  SSF Home Group Bhd 24. 0290 Panda ECO System Bhd
+      31. 0330  Supreme Consolidated 25. 0202 Radiant Globaltech Bhd
+                Resources Bhd 26. 0236  Ramssol Group Bhd 
+      32. 0279  Synergy House Bhd 27. 0203 Securemetric Bhd
+      33. 0393  Teamstar Bhd  28. 0251  SFP Tech Holdings Bhd
+      34. 0333  Vanzo Holdings Bhd 29. 0117 SMRT Holdings Bhd
+      35. 0271  Wellspire Holdings Bhd 30. 0093 Solution Group Bhd
+                              31. 0050  Systech Bhd       
+                              32. 0132  TechnoDex Bhd     
+      TTEECCHHNNOOLLOOGGYY    33. 0343  TechStore Bhd     
+      TTEEKKNNOOLLOOGGII      34. 0145  TFP Solutions Bhd 
+                              35. 0375  THMY Holdings Bhd 
+                              36. 0272  TT Vision Holdings Bhd
+      No. Stock code Name of securities                   
+                              37. 0319  VETECE Holdings Bhd
+      Bil. Kod stok Nama sekuriti                         
+                              38. 0069  Vinvest Capital Holdings
+                                        Bhd               
+      1.  0181  Aemulus Holdings Bhd                      
+                              39. 0120  VisDynamics Holdings
+      2.  0209  AIMFLEX Bhd                               
+                                        Bhd               
+      3.  0079  Aldrich Resources Bhd                     
+                              40. 0086  YGL Convergence Bhd
+      4.  0068  Asdion Bhd                                
+                              41. 0094  Zen Tech International
+      5.  0191  Cabnet Holdings Bhd                       
+                                        Bhd               
+      6.  0131  Divfex Bhd                                
+      7.  0267  ECA Integrated                            
+                Solution Bhd                              
+                              PPRROOPPEERRTTYY            
+      8.  0278  Edelteq Holdings Bhd                      
+      9.  0107  Eduspec Holdings Bhd HHAARRTTAANNAAHH     
+      10. 0174  EVD Bhd                                   
+      11. 0311  Go Hub Capital Bhd No. Stock code Name of securities
+      12. 0060  Harvest Miracle Capital Bil. Kod stok Nama sekuriti
+                Bhd                                       
+      13. 0358  ICT Zone Asia Bhd 1 0452 Gold Li Holdings Bhd
+      14. 0023  IFCA MSC Bhd  2   0308  KTI Landmark Bhd  
+      15. 0265  Infomina Bhd                              
+                                                          
+          Shariah Advisory Council of the Securities Commission Malaysia | Majlis Penasihat Syariah Suruhanjaya Sekuriti Malaysia
+                                                    35    
+                   List of Shariah-Compliant Securities • May 2026 | Senarai Sekuriti Patuh Syariah • Mei 2026
+                                                          
+                                                          
+      CCOONNSSTTRRUUCCTTIIOONN EENNEERRGGYY               
+      PPEEMMBBIINNAAAANN      TTEENNAAGGAA                
+                                                          
+      No. Stock code Name of securities No. Stock code Name of securities
+      Bil. Kod stok Nama sekuriti Bil. Kod stok Nama sekuriti
+                                                          
+      1.  0396  Adnex Group Bhd 1. 0318 Elridge Energy    
+      2.  0226  Aneka Jaringan          Holdings Bhd      
+                Holdings Bhd  2.  0367  Enproserve Group Bhd
+      3.  0372  Cheeding Holdings 3. 0369 JS Solar Holding Bhd
+                Bhd           4.  0233  Pekat Group Bhd   
+      4.  0345  ES Sunlogy Bhd 5. 0320  Steel Hawk Bhd    
+      5.  0206  Gagasan Nadi Cergas 6. 0262 Sunview Group Bhd
+                Bhd           7.  0373  Verdant Solar Holdings
+      6.  0237  Haily Group Bhd         Bhd               
+      7.  0359  Hartanah Kenyalang                        
+                Bhd                                       
+      8.  0451  Inspace Creation Bhd TRANSPORTATION AND   
+      9.  0292  Jati Tinggi Group Bhd LOGISTICS           
+      10. 0351  Lim Seong Hai Capital                     
+                              PPEENNGGAANNGGKKUUTTAANN DDAANN LLOOGGIISSTTIIKK
+                Bhd                                       
+      11. 0245  MN Holdings Bhd                           
+                              No. Stock code Name of securities
+      12. 0235  Nestcon Bhd                               
+                              Bil. Kod stok Nama sekuriti 
+      13. 0109  SC Estate Builder Bhd                     
+      14. 0360  Signature Alliance                        
+                              1.  0299  AGX Group Bhd     
+                Group Bhd                                 
+                              2.  0048  Ancom Logistics Bhd
+      15. 0045  Southern Score                            
+                              3.  0282  KGW Group Bhd     
+                Builders Bhd                              
+                              4.  0034  MMAG Holdings Bhd 
+      16. 0241  Taghill Holdings Bhd                      
+                              5.  0305  Sin-Kung Logistics Bhd
+      17. 0221  TCS Group Holdings                        
+                              6.  0080  Straits Energy    
+                Bhd                                       
+                                        Resources Bhd     
+      18. 0310  UUE Holdings Bhd                          
+                              7.  0199  Tri-Mode System (M)
+      19. 0273  Vestland Bhd                              
+                                        Bhd               
+      20. 0347  Wawasan Dengkil                           
+                Holdings Bhd                              
+      21. 0162  Widad Group Bhd                           
+                                                          
+        Shariah Advisory Council of the Securities Commission Malaysia | Majlis Penasihat Syariah Suruhanjaya Sekuriti Malaysia
+     36                                                   
+        List of Shariah-Compliant Securities • May 2026 | Senarai Sekuriti Patuh Syariah • Mei 2026
+                                                          
+                                                          
+      HHEEAALLTTHHCCAARREE    UUTTIILLIITTII              
+      PPEENNJJAAGGAAAANN KKEESSIIHHAATTAANN UUTTIILLIITTIIEESS
+                                                          
+      No. Stock code Name of securities No. Stock code Name of securities
+      Bil. Kod stok Nama sekuriti Bil. Kod stok Nama sekuriti
+                                                          
+      1.  0243  Cengild Medical Bhd 1. 0011 Brite-Tech Bhd
+      2.  0283  DC Healthcare Holdings                    
+                Bhd                                       
+      3.  0155  Malaysian Genomics                        
+                Resource Centre Bhd                       
+      4.  0329  Metro Healthcare Bhd                      
+      5.  0363  PMCK Bhd                                  
+      6.  0332  Topvision Eye Specialist                  
+                Bhd                                       
+      TELECOMMUNICATIONS AND                              
+      MEDIA                                               
+      TTEELLEEKKOOMMUUNNIIKKAASSII DDAANN MMEEDDIIAA      
+                                                          
+      No. Stock code Name of securities                   
+      Bil. Kod stok Nama sekuriti                         
+                                                          
+      1.  0195  Binasat                                   
+                Communications Bhd                        
+      2.  0035  Hextar Capital Bhd                        
+      3.  0096  Nexgram Holdings Bhd                      
+      4.  0017  Nova Technology                           
+                Services Bhd                              
+      5.  0123  Privasia Technology Bhd                   
+      6.  0007  PUC Bhd                                   
+      7.  0386  SBS Nexus Bhd                             
+      8.  0129  Silver Ridge Holdings                     
+                Bhd                                       
+      9.  0165  XOX Bhd                                   
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+          Shariah Advisory Council of the Securities Commission Malaysia | Majlis Penasihat Syariah Suruhanjaya Sekuriti Malaysia
+                                                    37    
+                   List of Shariah-Compliant Securities • May 2026 | Senarai Sekuriti Patuh Syariah • Mei 2026
+                                                          
+                                                          
+      LEAP MARKET*            2.  03037 Aurora Italia     
+      PASARAN LEAP*                     International Bhd 
+                              3.  03012 Baba Eco Group Bhd
+                              4.  03068 Bentley Music Group
+      IINNDDUUSSTTRRIIAALL PPRROODDUUCCTTSS AANNDD        
+                                        Bhd               
+      SSEERRVVIICCEESS                                    
+                              5.  03053 CC International Bhd
+      BBAARRAANNGGAANN IINNDDUUSSTTRRII DDAANN 6. 03025 Enest Group Bhd
+      PPEERRKKHHIIDDMMAATTAANN 7. 03019 Matrix Parking    
+                                        Solution Holdings Bhd
+      No. Stock code Name of securities 8. 03072 Milolo Bhd
+      Bil. Kod stok Nama sekuriti 9. 03064 MyAxis Group Bhd
+                              10. 03071 Noesis Exed Bhd   
+      1. 03024  CE Technology Bhd 11. 03063 Ping Edge Technology
+      2. 03029  GPP Resources Bhd       Bhd               
+      3. 03060  Hydropipes Bhd 12. 03009 SEERS Bhd        
+      4. 03040  Jishan Bhd                                
+      5. 03027  MMIS Bhd                                  
+      6. 03031  Polydamic Group Bhd TTEECCHHNNOOLLOOGGYY  
+      7. 03052  Ray Go Solar Holdings TTEEKKNNOOLLOOGGII  
+                Bhd                                       
+      8. 03033  Supergenics Bhd                           
+                              No. Stock code Name of securities
+      9. 03061  TP Tec Holding Bhd                        
+                              Bil. Kod stok Nama sekuriti 
+      10. 03062 TSiC Bhd                                  
+      11. 03043 UCI Resources Bhd                         
+                              1.  03011 Amlex Holdings Bhd
+                              2.  03069 BIMOffice Group Bhd
+                              3.  03066 Croesus IT Holdings Bhd
+      CCOONNSSUUMMEERR PPRROODDUUCCTTSS AANNDD            
+                              4.  03036 Redplanet Bhd     
+      SSEERRVVIICCEESS                                    
+                              5.  03039 RTS Technology    
+      BBAARRAANNGGAANN PPEENNGGGGUUNNAA DDAANN Holdings Bhd
+      PPEERRKKHHIIDDMMAATTAANN 6. 03057 Sancy Bhd         
+                              7.  03008 SL Innovation Capital
+      No. Stock code Name of securities Bhd               
+      Bil. Kod stok Nama sekuriti                         
+      1.  03051 Alpha Ocean                               
+                Resources Bhd                             
+      * For Sophisticated Investors as prescribed under the Capital Markets and Services Act 2007
+       Untuk pelabur sofistikated sepertimana yang telah diperuntukkan di bawah Akta Pasaran Modal dan Perkhidmatan
+       2007                                               
+                                                          
+        Shariah Advisory Council of the Securities Commission Malaysia | Majlis Penasihat Syariah Suruhanjaya Sekuriti Malaysia
+     38                                                   
+        List of Shariah-Compliant Securities • May 2026 | Senarai Sekuriti Patuh Syariah • Mei 2026
+                                                          
+                                                          
+                                                          
+      CCOONNSSTTRRUUCCTTIIOONN HHEEAALLTTHHCCAARREE       
+      PPEEMMBBIINNAAAANN      PPEENNJJAAGGAAAANN KKEESSIIHHAATTAANN
+                                                          
+      No. Stock code Name of securities No. Stock code Name of securities
+      Bil. Kod stok Nama sekuriti Bil. Kod stok Nama sekuriti
+      1.  03042 BV Land Holdings Bhd 1. 03023 Smile-Link Healthcare
+      2.  03065 LPC Group Bhd           Global Bhd        
+      3.  03050 Sunmow Holding Bhd                        
+      4.  03017 Uni Wall Aps Holdings                     
+                Bhd           PPEERRKKHHIIDDMMAATTAANN KKEEWWAANNGGAANN
+                              FFIINNAANNCCIIAALL SSEERRVVIICCEESS
+                                                          
+      PPLLAANNTTAATTIIOONN                                
+                              No. Stock code Name of securities
+      PPEERRLLAADDAANNGGAANN                              
+                              Bil. Kod stok Nama sekuriti 
+      No. Stock code Name of securities 1. 03059 Autoris Group
+      Bil. Kod stok Nama sekuriti       Holdings Bhd      
+      1.  03055 DSR Taiko Bhd                             
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+          Shariah Advisory Council of the Securities Commission Malaysia | Majlis Penasihat Syariah Suruhanjaya Sekuriti Malaysia
+                                                    39    
+                   List of Shariah-Compliant Securities • May 2026 | Senarai Sekuriti Patuh Syariah • Mei 2026
+                                                          
+      ADDITIONAL LIST: OTHER SHARIAH-COMPLIANT CAPITAL    
+      MARKET INSTRUMENTS                                  
+      SENARAI TAMBAHAN: INSTRUMEN PASARAN MODAL LAIN YANG PATUH SYARIAH
+                                                          
+                                                          
+      Please refer to the Securities Commission Malaysia’s website as follows:
+      Sila rujuk laman web Suruhanjaya Sekuriti Malaysia seperti berikut:
+                                                          
+      Shariah Status for Companies Seeking Listing on Bursa Malaysia Securities Bhd
+      Status Syariah untuk Syarikat yang Memohon Penyenaraian di Bursa Malaysia Securites Bhd
+      https://www.sc.com.my/development/icm/shariah-compliant-securities/shariah-status-for-
+      companies-seeking-listing-on-bursa-malaysia-securities-berhad
+      Islamic unit trust funds                            
+      Dana unit amanah Islam                              
+      https://www.sc.com.my/api/documentms/download.ashx?id=6f6277b6-a139-419d-b4bc-
+      52b01b12b09d                                        
+      Islamic wholesale funds                             
+      Dana borong Islam                                   
+      https://esubmissions.seccom.com.my/LOLA/public/wfpublicinfo
+      Islamic exchange-traded funds                       
+      Dana dagangan bursa Islam                           
+      https://www.sc.com.my/api/documentms/download.ashx?id=8cbd12fb-1f7a-4497-8f75-
+      27b20cba6be2                                        
+      Islamic private retirement scheme funds             
+      Dana skim persaraan swasta Islam                    
+      https://www.sc.com.my/analytics/fund-management-products/list-of-schemes-approved-for-
+      sale-for-private-retirement-scheme                  
+      Islamic real estate investment trusts               
+      Amanah pelaburan hartanah Islam                     
+      https://www.sc.com.my/api/documentms/download.ashx?id=bf905fdd-b9c5-4a95-bdf3-
+      6c953d7d43c0                                        
+      Islamic business trust                              
+      Amanah perniagaan Islam                             
+       No.   Stock code     Name                          
+       Bil.   Kod stok      Nama                          
+        1.     5320   Prolintas Infra Business Trust      
+                                                          
+      The list is updated monthly.                        
+      Senarai ini dikemaskini pada setiap bulan.          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+                                                          
+         Securities Commission Malaysia / Suruhanjaya Sekuriti Malaysia
+                  3 Persiaran Bukit Kiara, Bukit Kiara    
+                   50490 Kuala Lumpur, Malaysia           
+                Tel: 603 - 6204 8000 Fax: 603 - 6204 1818 
+         Websites / Laman web: www.sc.com.my www.investsmartsc.my
+                              @SecComMalaysia             
+                                                          

@@ -4,6 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="theme-color" content="#0a1210">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="ProSyariah">
+<meta name="application-name" content="ProSyariah">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>ProSyariah</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&display=swap" rel="stylesheet">
@@ -125,6 +133,9 @@ details summary{cursor:pointer}
 @media (min-width:700px){.poster{width:160px}.poster.wide{width:260px}}
 
 /* ---- AMARAN ---- */
+.instb{margin-left:auto;height:40px;border:0;border-radius:10px;padding:0 12px;background:var(--gold);color:#1b1503;font:800 13px var(--f);cursor:pointer;white-space:nowrap}
+.instb+.langb{margin-left:0}
+.ins{padding-left:20px;line-height:1.7}
 .langb{margin-left:auto;display:flex;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:none;padding:0;cursor:pointer;height:40px}
 .langb span{display:grid;place-items:center;padding:0 10px;font:700 12px var(--f);color:var(--muted)}
 .langb span.on{background:var(--ink);color:var(--bg)}
@@ -225,10 +236,24 @@ main>.card,main>.alert,main>.grid2,main>.disc,main>.pad,.search,.results{margin-
 .t5bar span{display:block;height:100%;background:var(--green);border-radius:999px}
 .t5bar.over span{background:var(--amber)}
 .t5s{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+
+/* ---- GRAF HERO DENGAN BACAAN ---- */
+.hero .tag{order:1}.hero h2{order:2}.hero .sub{order:3}.hero .stats{order:4}.hero .hc{order:5}.hero .acts{order:6}
+.hero .hc{position:relative;height:150px;margin:18px 62px 26px 0;z-index:0}
+.hero .hc svg{position:absolute;inset:0;width:100%;height:100%;opacity:.7}
+.hero .hc .hcg{stroke:var(--muted);stroke-width:1;stroke-dasharray:3 4;vector-effect:non-scaling-stroke;opacity:.5}
+.hcl{position:absolute;right:4px;transform:translateY(-120%);font-size:11px;color:var(--muted);background:rgba(10,18,16,.55);padding:1px 6px;border-radius:5px;font-variant-numeric:tabular-nums}
+.hcdot{position:absolute;right:-5px;width:10px;height:10px;border-radius:50%;background:var(--gold);transform:translateY(-50%);box-shadow:0 0 0 4px rgba(217,180,74,.25)}
+.hcnow{position:absolute;left:calc(100% + 10px);transform:translateY(-50%);font-size:12px;font-weight:800;padding:2px 6px;border-radius:6px;background:var(--gold);color:#1b1503;font-variant-numeric:tabular-nums}
+.hcd{position:absolute;bottom:-18px;font-size:11px;color:var(--muted)}
+.hcd.l{left:4px}.hcd.r{right:0}
+@media (min-width:820px){.hero .hc{position:absolute;margin:0;left:40%;right:80px;height:300px;bottom:130px;z-index:-1}}
+
+@media (max-width:430px){header{gap:7px;padding-left:12px;padding-right:12px}header h1{font-size:18px}.instb{padding:0 11px}.instb .lbl{display:none}.langb span{padding:0 8px}.bell{width:38px}}
 </style>
 </head>
 <body>
-<header><div class="mark" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M3 20h18" stroke="#1b1503" stroke-width="1.6" stroke-linecap="round"/><path d="M6 6v12M12 3v14M18 8v9" stroke="#1b1503" stroke-width="1.4" stroke-linecap="round"/><rect x="4.4" y="9" width="3.2" height="6" rx=".8" fill="#1b1503"/><rect x="10.4" y="5.5" width="3.2" height="8" rx=".8" fill="#0f5a45"/><rect x="16.4" y="10" width="3.2" height="5" rx=".8" fill="#1b1503"/></svg></div><h1>ProSyariah</h1><button id="langB" class="langb" aria-label="Bahasa / Language" onclick="setLang(S.settings.lang==='en'?'bm':'en')"></button><button id="bell" class="bell" aria-label="Amaran" onclick="openAlerts()">🔔<span id="bellN"></span></button></header>
+<header><div class="mark" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M3 20h18" stroke="#1b1503" stroke-width="1.6" stroke-linecap="round"/><path d="M6 6v12M12 3v14M18 8v9" stroke="#1b1503" stroke-width="1.4" stroke-linecap="round"/><rect x="4.4" y="9" width="3.2" height="6" rx=".8" fill="#1b1503"/><rect x="10.4" y="5.5" width="3.2" height="8" rx=".8" fill="#0f5a45"/><rect x="16.4" y="10" width="3.2" height="5" rx=".8" fill="#1b1503"/></svg></div><h1>ProSyariah</h1><button id="instB" class="instb" onclick="installApp()" style="display:none" aria-label="Pasang app">⬇<span class="lbl"> Pasang</span></button><button id="langB" class="langb" aria-label="Bahasa / Language" onclick="setLang(S.settings.lang==='en'?'bm':'en')"></button><button id="bell" class="bell" aria-label="Amaran" onclick="openAlerts()">🔔<span id="bellN"></span></button></header>
 <main id="main"></main>
 <nav id="nav">
   <button data-tab="saham" class="on"><span class="ic">📈</span>Saham</button>
@@ -998,6 +1023,11 @@ const EN_PHRASE=[
 ];
 
 Object.assign(EN_EXACT,{
+'⬇ Pasang':'⬇ Install','Pasang':'Install','Pasang app':'Install app','Pasang ProSyariah':'Install ProSyariah','✓ ProSyariah dipasang':'✓ ProSyariah installed',
+'App dibuka dalam tetingkap sendiri tanpa bar alamat, dan sentiasa memuat data terkini.':'The app opens in its own window without an address bar, and always loads the latest data.',
+'Tekan menu':'Tap the menu','di atas kanan Chrome.':'at the top right of Chrome.','Pilih':'Choose','atau':'or','Pasang aplikasi':'Install app','Tambah ke skrin utama':'Add to Home screen','Tekan':'Tap','Pasang':'Install','. Ikon ProSyariah akan muncul dalam senarai app.':'. The ProSyariah icon will appear in your app list.',
+'Tekan butang':'Tap the','Kongsi':'Share','(petak dengan anak panah ke atas) di bawah skrin Safari.':'button (square with an up arrow) at the bottom of Safari.','Tambah ke Skrin Utama':'Add to Home Screen','Pastikan nama':'Make sure the name is',', kemudian tekan':', then tap','Tambah':'Add',
+
 '5 isyarat terkuat (masuk, paras atas/bawah, tempoh)':'5 strongest signals (entry, upper/lower level, period)','Baharu':'New',
 '5 isyarat teknikal terkuat':'5 strongest technical signals','disusun ikut kekuatan sejarah':'ranked by historical strength',
 'Tiada isyarat teknikal yang melepasi paras neutral pada masa ini.':'No technical signal is above the neutral level right now.',
@@ -1019,6 +1049,7 @@ Object.assign(EN_EXACT,{
 'Paras ini naik mengikut harga tertinggi sejak tarikh belian dan tidak pernah turun. Harga tutup di bawahnya menandakan momentum menurun.':'This level rises with the highest price since the purchase date and never falls. A close below it signals weakening momentum.',
 });
 EN_RX.unshift(
+[/^Tertinggi (\S+)$/,'High $1'],[/^Terendah (\S+)$/,'Low $1'],
 [/^(.+) masuk 5 isyarat terkuat \((\d+)%\)$/,'$1 entered the 5 strongest signals ($2%)'],
 [/^(.+), bermula (.+)\. Tempoh biasa (\d+) hari dagangan, hingga (.+)\.$/,(m,a,b,c,d)=>`${trText(a)}, started ${b}. Typical period ${c} trading days, until ${d}.`],
 [/^(.+) sampai paras atas$/,'$1 reached the upper level'],[/^(.+) jatuh ke paras bawah$/,'$1 fell to the lower level'],
@@ -1088,6 +1119,23 @@ function setLang(l){
 function updateLangBtn(){const b=$('#langB');if(!b)return;b.innerHTML=`<span class="notr ${S.settings.lang!=='en'?'on':''}">BM</span><span class="notr ${S.settings.lang==='en'?'on':''}">EN</span>`;}
 const _confirm=window.confirm.bind(window);window.confirm=m=>_confirm(trText(m));
 
+
+/* ================= PASANG APP ================= */
+let INSTALL_EVT=null;
+const isStandalone=()=>matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
+const isIOS=()=>/iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();INSTALL_EVT=e;updateInstallBtn();});
+window.addEventListener('appinstalled',()=>{INSTALL_EVT=null;updateInstallBtn();toast('✓ ProSyariah dipasang');});
+function canOfferInstall(){return !isStandalone()&&(INSTALL_EVT||isIOS()||/android/i.test(navigator.userAgent));}
+function updateInstallBtn(){const b=$('#instB');if(b)b.style.display=canOfferInstall()?'':'none';}
+async function installApp(){
+  if(INSTALL_EVT){INSTALL_EVT.prompt();const r=await INSTALL_EVT.userChoice;INSTALL_EVT=null;updateInstallBtn();if(r.outcome==='accepted')toast('✓ ProSyariah dipasang');return;}
+  openSheet(`<div class="row between"><h2 style="margin:0">Pasang ProSyariah</h2><button class="btn sm sec" onclick="closeSheet()">Tutup</button></div>
+    ${isIOS()?`<ol class="ins"><li>Tekan butang <b>Kongsi</b> (petak dengan anak panah ke atas) di bawah skrin Safari.</li><li>Pilih <b>Tambah ke Skrin Utama</b>.</li><li>Pastikan nama <b>ProSyariah</b>, kemudian tekan <b>Tambah</b>.</li></ol>`
+    :`<ol class="ins"><li>Tekan menu <b>⋮</b> di atas kanan Chrome.</li><li>Pilih <b>Pasang aplikasi</b> atau <b>Tambah ke skrin utama</b>.</li><li>Tekan <b>Pasang</b>. Ikon ProSyariah akan muncul dalam senarai app.</li></ol>`}
+    <p class="muted">App dibuka dalam tetingkap sendiri tanpa bar alamat, dan sentiasa memuat data terkini.</p>`);
+}
+
 /* ================= NAV ================= */
 let TAB='saham';
 document.querySelectorAll('#nav button').forEach(b=>b.onclick=()=>goTab(b.dataset.tab));
@@ -1145,6 +1193,23 @@ function featured(){
   const any=S.watch[0]||(S.holdings[0]&&S.holdings[0].code);
   return any?{code:any,tag:'Dari senarai anda'}:null;
 }
+
+function heroChart(code){
+  const c=S.cache[code],m=mk(code);let v,d0,d1;
+  if(c&&c.bars.length>=5){const b=c.bars.slice(-90);v=b.map(x=>x.c);d0=b[0].d;d1=b[b.length-1].d;}
+  else if(m&&m.sp&&m.sp.length>=5){v=m.sp.filter(x=>x!=null);d1=m.d;d0=subTradingDays(m.d,v.length-1);}
+  else return '';
+  const W=400,H=230,mn=Math.min(...v),mx=Math.max(...v),r=mx-mn||1,y=x=>2+(1-(x-mn)/r)*(H-4);
+  const pts=v.map((x,i)=>`${(i/(v.length-1)*W).toFixed(1)},${y(x).toFixed(1)}`).join(' ');
+  const pct=x=>(y(x)/H*100).toFixed(1),last=v[v.length-1],up=last>=v[0];
+  const chg=(last/v[0]-1)*100;
+  return `<div class="hc" aria-hidden="true"><svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none"><defs><linearGradient id="hcg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d9b44a" stop-opacity=".32"/><stop offset="1" stop-color="#d9b44a" stop-opacity="0"/></linearGradient></defs>
+    <line x1="0" x2="${W}" y1="${y(mx)}" y2="${y(mx)}" class="hcg"/><line x1="0" x2="${W}" y1="${y(mn)}" y2="${y(mn)}" class="hcg"/>
+    <polygon fill="url(#hcg)" points="0,${H} ${pts} ${W},${H}"/><polyline fill="none" stroke="#d9b44a" stroke-width="2" vector-effect="non-scaling-stroke" stroke-linejoin="round" points="${pts}"/></svg>
+    <span class="hcl" style="top:${pct(mx)}%">Tertinggi ${px(mx)}</span><span class="hcl" style="top:${pct(mn)}%">Terendah ${px(mn)}</span>
+    <span class="hcdot" style="top:${pct(last)}%"></span><span class="hcnow ${up?'up':'dn'}" style="top:${pct(last)}%">${px(last)}</span>
+    <span class="hcd l">${fmtD(d0)}</span><span class="hcd r">${fmtD(d1)} · ${chg>=0?'+':''}${chg.toFixed(1)}%</span></div>`;
+}
 function heroHTML(){
   const L=latestList();
   if(!L&&!S.market)return `<section class="hero" style="--hc:#0f5a45"><span class="tag">✦ <b>${S.sync.err?'Tiada sambungan':'Menyediakan data'}</b></span>
@@ -1156,7 +1221,7 @@ function heroHTML(){
     <div class="acts"><button class="btn" id="hFocus">Cari saham</button></div></section>`;
   const code=f.code;const nm=nameOf(code);const st=status(code,nm);const m=mk(code);const lc=lastClose(code);
   const inW=S.watch.includes(code);const hide=S.settings.shariahMode&&st==='no';
-  return `<section class="hero" style="--hc:${st==='no'?'#5a1f1c':'#0f5a45'}">${spark(code,400,230,'#d9b44a',true).replace('<svg','<svg class="bd"')}<div class="shade"></div>
+  return `<section class="hero" style="--hc:${st==='no'?'#5a1f1c':'#0f5a45'}">${heroChart(code)}<div class="shade"></div>
     <span class="tag">✦ <b>${f.tag}</b> ${badge(st)}</span>
     <h2>${esc(shortName(nm)||code)}</h2>
     <p class="sub">${esc(code)} di Bursa Malaysia${lc?`, ditutup ${px(lc.c)} pada ${fmtD(lc.d)}${m&&m.ch!=null?` (${m.ch>=0?'+':''}${m.ch.toFixed(2)}%)`:''}.`:'.'}</p>
@@ -1512,8 +1577,9 @@ function rTetapan(){
 }
 
 document.documentElement.lang=S.settings.lang==='en'?'en':'ms';
+if('serviceWorker' in navigator&&location.protocol==='https:')navigator.serviceWorker.register('sw.js').catch(()=>{});
 render();
-updateLangBtn();startI18N();
+updateLangBtn();startI18N();updateInstallBtn();
 syncData(false);
 </script>
 </body>

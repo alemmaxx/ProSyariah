@@ -9,7 +9,7 @@ on:
   workflow_dispatch: {}
   push:
     branches: [main]
-    paths: ["index.html", "data/sc-upload/**"]
+    paths: ["index.html", "manifest.webmanifest", "sw.js", "icons/**", "data/sc-upload/**"]
 
 permissions:
   contents: write
@@ -84,7 +84,8 @@ jobs:
 
       - name: Sediakan laman
         run: |
-          cp index.html _site/index.html
+          cp index.html manifest.webmanifest sw.js _site/
+          cp -r icons _site/icons
           touch _site/.nojekyll
 
       - uses: actions/configure-pages@v5

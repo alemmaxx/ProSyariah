@@ -290,6 +290,7 @@ nav button{min-width:0}
 .hrow:last-of-type{border-bottom:0}
 .hrow p{margin:2px 0 0;font-size:13px}
 .hic{font-size:20px;width:26px;flex:none;text-align:center}
+.wnote{font-size:12px;color:var(--gold);line-height:1.4}
 </style>
 </head>
 <body translate="no">
@@ -575,6 +576,7 @@ function opCard(code,op,m){
   const short=(op.md||0)<5;const edge=op.p/100-be;
   const verdict=op.ev!=null&&op.ev>0&&edge>0.03?['Isyarat kuat (sejarah)','b-ok']:edge>0?['Isyarat sederhana','b-warn']:['Isyarat lemah','b-no'];
   return `<div class="opc"><div class="row between"><div><b>${esc(setupName(op.k))}</b><div class="muted">${op.ago?`Isyarat ${op.ago} hari dagangan lalu`:'Isyarat hari ini'}${short?' · jangka pendek':''}</div></div><span class="badge ${verdict[1]}">${verdict[0]}</span></div>
+   ${weakNote(code,op.k)?`<div class="wnote" style="margin-top:8px">ℹ️ ${weakNote(code,op.k)}</div>`:''}
    <div class="opp"><span class="big">${op.p}%</span><span class="muted">kali harga sampai paras atas sebelum paras bawah, dalam sejarah saham ini</span></div>
    ${probBar(op.p,be)}<div class="muted" style="font-size:12px">Garis putih = paras neutral ${(be*100).toFixed(0)}%, iaitu kadar yang dijangka jika pergerakan harga rawak. Peratus melepasi garis bermakna isyarat ini pernah lebih kuat daripada rawak.</div>
    <div class="plan">
@@ -627,6 +629,13 @@ function topSignals(n=5){
   const best={};out.forEach(x=>{if(!best[x.code]||x.edge>best[x.code].edge)best[x.code]=x;});
   return Object.values(best).sort((a,b)=>b.edge-a.edge||b.p-a.p).slice(0,n);
 }
+
+function weakNote(code,k){
+  const m=mk(code);if(!m||!m.va)return '';const V=scoreVerdict(m.sc,m.va);if(!V||V.lbl==='Kuat')return '';
+  if(k==='os')return 'Skor teknikal '+V.lbl.split(' –')[0].toLowerCase()+' adalah biasa untuk isyarat lantunan: harga baru jatuh dengan banyak dan sedang dipantau untuk melantun.';
+  if(k==='pb')return 'Skor teknikal '+V.lbl.split(' –')[0].toLowerCase()+' adalah biasa untuk isyarat koreksi: harga baru turun sementara dalam trend menaik.';
+  return '';
+}
 function top5HTML(){
   const L=topSignals(5);if(!S.market)return '';
   let h=`<section class="rowsec"><h3>5 isyarat teknikal terkuat<small>disusun ikut kekuatan sejarah</small></h3><div class="t5">`;
@@ -634,7 +643,8 @@ function top5HTML(){
   L.forEach((x,i)=>{const pct=Math.min(100,x.el/x.md*100);
     h+=`<button class="t5r" data-code="${esc(x.code)}"><span class="t5n">${i+1}</span><span class="t5b">
       <span class="row between"><span><b>${esc(shortName(x.name))}</b> <span class="code">${esc(x.code)}</span>${(S.t5&&S.t5[x.code+':'+x.k+':'+x.start]&&S.t5[x.code+':'+x.k+':'+x.start].ev.in===S.market.meta.asof)?' <span class="badge b-ok">Baharu</span>':''}</span><b class="t5p">${x.p}%</b></span>
-      <span class="muted">${esc(setupName(x.k))}</span>
+      <span class="muted">${esc(setupName(x.k))}${(()=>{const m=mk(x.code);const V=m&&scoreVerdict(m.sc,m.va);return V?` · skor ${m.sc}/${m.va} <span class="badge ${V.cls}" style="font-size:11px">${V.lbl}</span>`:''})()}</span>
+      ${weakNote(x.code,x.k)?`<span class="wnote">ℹ️ ${weakNote(x.code,x.k)}</span>`:''}
       <span class="t5d"><span>Isyarat bermula <b>${fmtD(x.start)}</b></span><span>Tempoh biasa ${x.md} hari dagangan, hingga <b>${fmtD(x.end)}</b></span></span>
       <span class="t5bar${x.passed?' over':''}"><span style="width:${pct}%"></span></span>
       <span class="t5s"><span class="badge ${x.passed?'b-warn':'b-ok'}">${x.passed?`Tempoh biasa sudah berlalu`:`Masih dalam tempoh biasa`}</span><span class="muted">hari dagangan ke-${x.el} daripada ~${x.md}</span></span>
@@ -1250,6 +1260,9 @@ Object.assign(EN_EXACT,{
 'Paras ini naik mengikut harga tertinggi sejak tarikh belian dan tidak pernah turun. Harga tutup di bawahnya menandakan momentum menurun.':'This level rises with the highest price since the purchase date and never falls. A close below it signals weakening momentum.',
 });
 EN_RX.unshift(
+[/^(?:ℹ️ )?Skor teknikal (lemah|neutral) adalah biasa untuk isyarat lantunan: harga baru jatuh dengan banyak dan sedang dipantau untuk melantun\.$/,(m,a)=>`${m.startsWith('ℹ️')?'ℹ️ ':''}A ${a==='lemah'?'weak':'neutral'} technical score is normal for a bounce signal: price has just fallen sharply and is being watched for a rebound.`],
+[/^(?:ℹ️ )?Skor teknikal (lemah|neutral) adalah biasa untuk isyarat koreksi: harga baru turun sementara dalam trend menaik\.$/,(m,a)=>`${m.startsWith('ℹ️')?'ℹ️ ':''}A ${a==='lemah'?'weak':'neutral'} technical score is normal for a pullback signal: price has dipped temporarily within an uptrend.`],
+[/^skor (\d+)\/(\d+)$/,'score $1/$2'],
 [/^(.+) Skor ialah bilangan indicator \(daripada (\d+)\) yang positif sekarang\.$/,(m,a,b)=>`${trText(a)} The score is the number of indicators (out of ${b}) that are positive now.`],
 [/^Tiada isyarat teknikal aktif · skor (\d+)\/(\d+) \((.+)\)$/,(m,a,b,c)=>`No active technical signal · score ${a}/${b} (${trText(c)})`],
 [/^Sudah sampai paras atas (\S+) \(isyarat (.+)\)$/,'Already reached upper level $1 (signal $2)'],

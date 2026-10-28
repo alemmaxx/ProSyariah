@@ -84,7 +84,23 @@ def run(o, h, l, c, v):
     e12, e26 = ema(c, 12), ema(c, 26)
     mac = [e12[i] - e26[i] if e12[i] is not None and e26[i] is not None else None for i in range(n)]
     sig = ema_sparse(mac, 9)
+    e20 = ema(c, 20)
     A = atr(h, l, c)
+
+    def score_at(t):
+        """Skor teknikal (0-5) pada hari t — sama logik dengan app."""
+        chk = []
+        chk.append(c[t] > e200[t] if e200[t] is not None else (c[t] > e50[t] if e50[t] is not None else None))
+        chk.append(e20[t] > e50[t] if e20[t] is not None and e50[t] is not None else None)
+        chk.append(mac[t] > sig[t] if mac[t] is not None and sig[t] is not None else None)
+        chk.append(None if r[t] is None else (True if r[t] < 30 else False if r[t] > 70 else r[t] >= 50))
+        if t >= 20:
+            av = sum(v[t - 20:t]) / 20
+            chk.append(v[t] / av > 1.2 and c[t] > c[t - 1] if av else None)
+        else:
+            chk.append(None)
+        return sum(1 for x in chk if x is True)
+
     trades = {k: [] for k in SETUPS}
     last_t = {k: -999 for k in SETUPS}
     active = []
@@ -100,6 +116,7 @@ def run(o, h, l, c, v):
                 active.append({"k": k, "t": n - 1 - t, "tp": tp, "sp": sp})
             sim = simulate(t, o, h, l, c, A[t])
             if sim:
+                sim["sc"] = score_at(t)
                 trades[k].append(sim)
     return {"trades": trades, "active": active, "atr": A[-1], "close": c[-1]}
 

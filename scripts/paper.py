@@ -51,7 +51,7 @@ def _curve(trades):
     return out
 
 
-def historical(runs, px, compliant):
+def historical(runs, px, compliant, min_score=0):
     """Simulasi walk-forward 5 terkuat sepanjang HIST_DAYS lalu."""
     events = []
     for code, R in runs.items():
@@ -63,9 +63,10 @@ def historical(runs, px, compliant):
                 t = tr["t"]
                 if t + tr["days"] >= len(dates):
                     continue
+                score = tr.get("sc", 0)
                 events.append({"code": code, "k": k, "sd": dates[t], "ed": dates[t + tr["days"]],
                                "res": tr["res"], "ret": tr["ret"] * 100, "days": tr["days"],
-                               "tp": tr["tp"], "sp": tr["sp"]})
+                               "tp": tr["tp"], "sp": tr["sp"], "sc": score})
     if not events:
         return None
     # indeks untuk kira statistik "setakat semalam"
@@ -91,7 +92,7 @@ def historical(runs, px, compliant):
     start = (date.fromisoformat(end) - timedelta(days=HIST_DAYS)).isoformat()
     cands = defaultdict(list)
     for e in events:
-        if e["sd"] < start:
+        if e["sd"] < start or e["sc"] < min_score:
             continue
         n, w, rsum = stats_before(IK[(e["code"], e["k"])], e["sd"])
         gn, gw, _ = stats_before(IG[e["k"]], e["sd"])
@@ -162,12 +163,14 @@ def live(prices, stocks, asof):
 def build(runs, px, stocks, asof, out_dir):
     compliant = {c for c, v in stocks.items() if v.get("s") == "ok"}
     hist = historical(runs, px, compliant)
+    hist3 = historical(runs, px, compliant, min_score=3)
     lv = live(px, stocks, asof)
-    out = {"asof": asof, "stake": STAKE, "maxOpen": MAX_OPEN, "fee": BT.FEE, "hist": hist, "live": lv,
+    out = {"asof": asof, "stake": STAKE, "maxOpen": MAX_OPEN, "fee": BT.FEE, "hist": hist, "hist3": hist3, "live": lv,
            "names": {c: stocks[c]["n"] for c in {t["c"] for t in (hist["recent"] if hist else [])} | {p["c"] for p in lv["open"]} if c in stocks}}
     json.dump(out, open(os.path.join(out_dir, "paper.json"), "w"), ensure_ascii=False, separators=(",", ":"))
     # ringkasan kecil dalam repo (untuk semakan tanpa membuka laman)
     json.dump({"asof": asof, "stake": STAKE, "hist": {k: hist[k] for k in ("start", "end", "summary", "bySetup")} if hist else None,
+               "histScore3": {k: hist3[k] for k in ("summary", "bySetup")} if hist3 else None,
                "live": lv["summary"], "liveOpen": len(lv["open"])},
               open(os.path.join(ROOT, "data", "paper-summary.json"), "w"), ensure_ascii=False, indent=1)
     h = hist["summary"] if hist else {"n": 0}

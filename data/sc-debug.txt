@@ -10,736 +10,897 @@ Pelayar: https://www.sc.com.my/development/icm/shariah-compliant-securities/list
   calon: List of Shariah-Compliant Securities as at 24 November 2023 DOWNLOAD PDF → https://www.sc.com.my/api/documentms/download.ashx?id=c39e4960-6720-40da-92f3-633e6c86c36e
   calon: List of Shariah-Compliant Securities as at 26 May 2023 DOWNLOAD PDF → https://www.sc.com.my/api/documentms/download.ashx?id=e6cffd45-ccdc-42f5-ac1c-d10d670e86bd
   calon: List of Shariah-Compliant Securities as at 25 November 2022 DOWNLOAD PDF → https://www.sc.com.my/api/documentms/download.ashx?id=d167b551-2f93-4d28-a08f-e4bf9804b09a
-  semak https://www.sc.com.my/api/documentms/download.ashx?id=9f03c706-607f-4fbe-b4c7-91afc352ee49 → 486522 bait, 726 nama, senarai SC: True, tarikh 2026-05-29
-Dokumen: pdf dari https://www.sc.com.my/api/documentms/download.ashx?id=9f03c706-607f-4fbe-b4c7-91afc352ee49 · 726 nama dikesan
+  semak https://www.sc.com.my/api/documentms/download.ashx?id=9f03c706-607f-4fbe-b4c7-91afc352ee49 → 486522 bait, 887 saham (ikut kod), senarai SC: True, tarikh 2026-05-29
+Dokumen: pdf dari https://www.sc.com.my/api/documentms/download.ashx?id=9f03c706-607f-4fbe-b4c7-91afc352ee49 · 887 saham dikesan (ikut kod)
 
----- 726 NAMA ----
-Securities Bhd
-tersenarai di Bursa Malaysia Securities Bhd
-5E Resources Holdings 19. 7222 Imaspro Corporation
-Adnex Group Bhd
-0451 Inspace Creation Bhd
-Advance Information 21. 0390 ISF Group Bhd
-Marketing Bhd
-Ambest Group Bhd
-3441 Johan Holdings Bhd
-AMS Advanced Material 23. 0392 Kee Ming Group Bhd
-Autocount Dotcom Bhd
-5341 LAC Med Bhd
-Azam Jaya Bhd
-3662 Malayan Flour Mills Bhd
-Industries Bhd
-03069 BIMOffice Group Bhd
-5327 Mega Fortris Bhd
-BMS Holdings Bhd
-03072 Milolo Bhd
-BTM Resources Bhd
-Logistics Bhd
-03066 Croesus IT Holdings Bhd
-03071 Noesis Exed Bhd
-EI Power Bhd
-OGX Group Bhd
-Geohan Corporation
-5348 Orkim Bhd
-Gold Li Holdings Bhd
-0171 PeterLabs Holdings Bhd
-Golden Destinations 35. 0383 PSP Energy Bhd
-Group Bhd
-Hock Soon Capital Bhd
-International Bhd
-SBS Nexus Bhd
-7106 Supermax Corporation
-SkyeChip Bhd
-Teamstar Bhd
-Southern Steel Bhd
-Sunway Healthcare 44. 5343 Wasco Greenergy Bhd
-Holdings Bhd
-03067 Associated Air-Pak 10. 7215 Ni Hsin Group Bhd
-03001 Cloudaron Group Bhd
-0026 Nova MSC Bhd
-Foodie Media Bhd
-7010 PTT Synergy Group Bhd
-Globetronics Technology 13. 0388 Semico Capital Bhd
-Harbour-Link Group Bhd
-7097 Ta Win Holdings Bhd
-Ho Hup Construction 16. 5289 Techbond Group Bhd
-Company Bhd
-ManagePay Systems Bhd
-9369 Teo Guan Lee Bhd
-MCE Holdings Bhd
-03070 Whitman Holdings Bhd
-Holding Bhd
-Chin Hin Group Bhd
-Chin Well Holdings Bhd
-No. Stock code Name of securities Industries Bhd
-Ablegroup Bhd
-Citaglobal Bhd
-ABM Fujiya Bhd
-CME Group Bhd
-Aizo Group Bhd
-Comfort Gloves Bhd
-Ajiya Bhd
-Ancom Nylex Bhd
-Ann Joo Resources Bhd
-Products Bhd
-CPE Technology Bhd
-A-Rank Bhd
-Critical Holdings Bhd
-Asteel Group Bhd
+---- 887 SAHAM ----
+7076 CB Industrial Product Holding
+5273 Chin Hin Group Bhd
+5007 Chin Well Holdings Bhd
+5797 Choo Bee Metal Industries Bhd
+7016 Chuan Huat Resources Bhd
+7086 AbleGroup Bhd
+7245 WZ Satu Berhad
+5198 ABM Fujiya Bhd
+7018 CME Group Bhd
+7219 Minetech Resources Bhd
+2127 Comfort Gloves Bhd
+7609 Ajiya Bhd
+5037 Compugates Holdings Bhd
+4758 Ancom Berhad
+6556 Ann Joo Resources Bhd
+8435 Concrete Engineering Products
+5015 APM Automotive Holdings Bhd
+5317 CPE Technology Berhad
+7214 A Rank Bhd
+0291 Critical Holdings Berhad
+7020 YKGI Holdings Bhd
 5094 CSC Steel Holdings Bhd
-Astino Bhd
-CYL Corporation
-AWC Bhd
-Destini Bhd
-AYS Ventures Bhd
-5165 DFCITY Group Bhd
-B.I.G. Industries Bhd
-7114 D’nonce Technology Bhd
-Dominant Enterprise Bhd
-Corporation Bhd
-0269 DS Sigma Holdings Bhd
-Borneo Oil Bhd
-BP Plastics Holding Bhd
-BSL Corporation
-0064 Efficient E-Solutions Bhd
-8907 EG Industries Bhd
-Cahya Mata Sarawak 44. 5208 EITA Resources Bhd
-Engtex Group Bhd
-Eonmetall Group Bhd
+7162 Astino Bhd
+7157 CYL Corporation Bhd
+5302 Aurelius Technologies Bhd
+5276 Dancomech Holdings Bhd
+7579 AWC Berhad
+7212 Destini Bhd
+5021 AYS Ventures Bhd
+5165 Dfcity Group Bhd
+7005 BIG Industries Bhd
+7114 Dnonce Tech Bhd
+6998 Bintai Kinden Corporation Bhd
+7169 Dominant Enterprise Bhd
+0269 DS Sigma Holdings Berhad
+7036 Borneo Oil Bhd
+7233 Dufu Tech Corp Bhd
+5100 BP Plastics Holding Bhd
+7221 BSL Corp Bhd
+0064 Efficient E Solutions Bhd
+7188 BTM Resources Bhd
+8907 Eg Industries Bhd
+2852 Cahya Mata Sarawak Bhd
+5208 EITA Resources Bhd
+5056 Engtex Group Bhd
+7217 Eonmetall Group Bhd
 0151 Kelington Group Bhd
-EP Manufacturing Bhd
+7773 EP Manufacturing Bhd
 6211 Kia Lim Bhd
-Evergreen Fibreboard 80. 5371 Kim Hin Industry Bhd
-KKB Engineering Bhd
-Favelle Favco Bhd
+5101 Evergreen Fibreboard Bhd
+5371 Kim Hin Industry Bhd
+9466 KKB Engineering Berhad
+7229 Favelle Favco Bhd
 5035 Knusford Bhd
-Feytech Holdings Bhd
-6971 Kobay Technology Bhd
-Fima Corporation
+5322 Feytech Holdings Berhad
+6971 Kobay Tech Bhd
+3107 Fima Corporation Bhd
 7017 Komarkcorp Bhd
-Fitters Diversified Bhd
+9318 Fitters Diversified Bhd
 9121 KPS Consortium Bhd
-Focus Lumber Bhd
+5197 Focus Lumber Bhd
 6491 Kumpulan Fima Bhd
-FoundPac Group Bhd
-Ge-Shen Corporation
-High-Tech Bhd
-Kumpulan Jetson Bhd
-GFM Services Bhd
-GIIB Holdings Bhd
-Selangor Bhd
-Globaltec Formation 90. 8362 KYM Holdings Bhd
-L&P Global Bhd
-Golden Pharos Bhd
+5277 FoundPac Group Bhd
+7033 Kumpulan H & L High-Tech Bhd
+7197 Ge Shen Corporation Bhd
+9083 Kumpulan Jetson Bhd
+0039 GFM Services Bhd
+5843 Kumpulan Perangsang Selangor
+7192 GIIB Holdings Bhd
+5220 Globaltec Formation Bhd
+8362 KYM Holdings Bhd
+0268 L&P Global Berhad
+5649 Golden Pharos Bhd
 9326 LB Aluminium Bhd
-GUH Holdings Bhd
-HE Group Bhd
-Heveaboard Bhd
-7170 LFE Corporation
-Hextar Global Bhd
-Hextar Industries Bhd
-Hiap Teck Venture Bhd
-8486 Lion Posim Bhd
-HIL Industries Bhd
+3247 GUH Holdings Bhd
+9881 Leader Steel Holdings Bhd
+0296 HE Group Berhad
+5095 HeveaBoard Bhd
+7170 LFE Corporation Bhd
+5151 Hextar Global Bhd
+4235 Lion Industries Corporation Bhd
+0161 SCH Group Bhd
+5072 Hiap Teck Venture Bhd
+8486 Lion Forest Industries Bhd
+8443 Hil Industries Bhd
 5068 Luster Industries Bhd
-Ho Wah Genting Bhd
-5143 Luxchem Corporation
-HPMT Holdings Bhd
-HSS Engineers Bhd
-3794 Malayan Cement Bhd
-Imaspro Corporation
-(KL) Bhd
-Ingenieur Gudang Bhd
-7029 Master-Pack Group Bhd
-JAG Capital Bhd
-7123 Maxland Bhd
-Jentayu Sustainables 104. 7099 Mayu Global Group Bhd
-Mega Fortris Bhd
-Karyon Industries Bhd
-0207 Mestron Holdings Bhd
-Kein Hing International 108. 0043 Metronic Global Bhd
-Mieco Chipboard Bhd
-Minho (M) Bhd
-8745 S & F Capital Bhd
-Equipment (M) Bhd
-Muda Holdings Bhd
+9601 Ho Wah Genting Bhd
+5143 Luxchem Corporation Bhd
+5291 HPMT Holdings Bhd
+0185 HSS Engineers Bhd
+3794 Lafarge Malayan Cement Bhd
+5000 Hume Industries Berhad
+5916 Malaysia Smelting Corporation Bhd
+7222 Imaspro Corporation Bhd
+5098 Malaysia Steel Works KL Bhd
+5178 Dynaciate Group Bhd
+7029 Master Pack Group Bhd
+6874 JAG Capital Berhad
+7123 Priceworth International Bhd
+5673 Jentayu Sustainables Bhd
+7099 Atta Global Group Bhd
+5327 Mega Fortris Berhad
+5192 EC Excel Holdings Berhad
+3778 Melewar Industrial Group Bhd
+0054 Karyon Industries Bhd
+0207 Mestron Holdings
+7199 Kein Hing International Bhd
+0043 Metronic Global Bhd
+5001 Mieco Berhad
+5576 Minho M Bhd
+8745 S F Capital Bhd
+5152 Muar Ban Lee Group Bhd
+9822 Sam Engineering Equipment
+3883 Muda Holdings Bhd
 5147 Samchem Holdings Bhd
-Mycron Steel Bhd
+5087 Mycron Steel Bhd
 7811 Sapura Industrial Bhd
-Nextgreen Global Bhd
-7239 Scanwolf Corporation
-OKA Corporation
-OM Holdings Ltd
+0270 NationGate Holdings Berhad
+9237 Sarawak Consolidated Industries Bhd
+7241 Nextgreen Global Bhd
+7239 Scanwolf Corporation Bhd
+7140 Oka Corporation Bhd
+5298 OM Holdings Ltd
 4731 Scientex Bhd
-Ornapaper Bhd
+5065 Ornapaper Bhd
 7073 Seacera Group Bhd
-P.A. Resources Bhd
-5308 Seng Fong Holdings Bhd
-P.I.E. Industrial Bhd
-Pansar Bhd
-Pantech Global Bhd
+7225 P.A. Resources Bhd
+5308 SENFONG
+7095 PIE Industrial Bhd
+7115 SKB Shutters Corporation Bhd
+8419 Pansar Bhd
+5331 PANTECH GLOBAL BERHAD
 7155 SKP Resources Bhd
-Pantech Group 151. 7248 SLP Resources Bhd
-SMIS Corporation
-Pecca Group Bhd
+5125 Pantech Group Holdings Bhd
+7248 SLP Resources Bhd
+7132 SMIS Corporation Bhd
+5271 Pecca Group Bhd
 5134 Southern Acids (M) Bhd
-(Perstima) Bhd
+5436 Perusahaan Sadur Timah Malaysia Perstima Bhd
+0225 Southern Cable Group Bhd
 5665 Southern Steel Bhd
-PETRONAS Chemicals 157. 5211 Sunway Bhd
-Superlon Holdings Bhd
-PGF Capital Bhd
+5219 PESTECH International Bhd
+7207 Success Transformer Corporation Bhd
+5183 Petronas Chemicals Group Bhd
+5211 Sunway Bhd
+7235 Superlon Holdings Bhd
+8117 PGF Capital Bhd
 8702 Texchem Resources Bhd
-PJBumi Bhd
-PMB Technology Bhd
-PNE PCB Bhd
-Timberwell Bhd
-Press Metal Aluminium 162. 5330 TMK Chemical Bhd
-Tomypak Holdings Bhd
-Prestar Resources Bhd
+7163 PJBumi Bhd
+7034 Thong Guan Industries Bhd
+7172 PMB Technology Bhd
+6637 PNE PCB Bhd
+7854 Timberwell Bhd
+8869 Press Metal Bhd
+5330 TMK
+7285 Tomypak Holdings Bhd
+9873 Prestar Resources Bhd
 5010 Tong Herr Resources Bhd
-QES Group Bhd
+7201 Progressive Impact Corporation Bhd
+7173 Toyo Ventures Holdings Bhd
+0196 QES Group Bhd
 7100 Uchi Technologies Bhd
-Ralco Corporation
+7498 Ralco Corporation Bhd
 1368 UEM Edgenta Bhd
-Resintech Bhd
+7232 Resintech Bhd
 7137 UMS Holdings Bhd
-RGT Bhd
-UMS Integration Ltd
-Rohas Tecnic Bhd
+9954 RGT Bhd
+5340 UMS Integration Limited
+9741 Rohas Tecnic Bhd
 7227 UMS-Neiken Group Bhd
-Unimech Group Bhd
+7091 Unimech Group Berhad
 5196 Berjaya Food Bhd
-Unique Fire Holdings 12. 5248 Bermaz Auto Bhd
-Bonia Corporation
-United U-Li Corporation
-2828 C.I. Holdings Bhd
-V.S. Industry Bhd
-W T K Holdings Bhd
+0257 UNIQUE
+5248 Bermaz Auto Bhd
+9288 Bonia Corporation Bhd
+7133 United U Li Corporation Bhd
+2828 CI Holdings Bhd
+7174 CAB Cakaran Corporation Bhd
+6963 VS Industry Bhd
+4243 WTK Holdings Bhd
 7128 CAM Resources Bhd
-Wavefront Bhd
-Capital A Bhd
-Wellcall Holdings Bhd
-White Horse Bhd
-Wong Engineering 19. 7209 Cheetah Holdings Bhd
+8176 ATA IMS Bhd
+5099 Capital A Berhad
+7231 Wellcall Holdings Bhd
+7035 CCK Consolidated Holdings Bhd
+5009 White Horse Bhd
+7050 Wong Engineering Corporation Bhd
+7209 Cheetah Holdings Bhd
 5104 Citra Nusa Holdings Bhd
-(MAL) Bhd
-YB Ventures Bhd
+7025 Woodlandor Holdings Bhd
+5336 CUCKOO International (MAL) Berhad
+5048 YB Ventures Bhd
 9423 CWG Holdings Bhd
-YLI Holdings Bhd
-DRB-HICOM Bhd
-DXN Holdings Bhd
-Ecomate Holdings Bhd
-Eco-Shop Marketing Bhd
-Emico Holdings Bhd
-Eng Kah Corporation
-Able Global Bhd
-Advance Synergy Bhd
-AEON Co. (M) Bhd
-ETA Group Bhd
-AHB Holdings Bhd
-Euro Holdings Bhd
-AirAsia X Bhd
-Exsim Hospitality Bhd
-Farm Fresh Bhd
-Fiamma Holdings Bhd
-Focus Point Holdings Bhd
-Asia Brands Bhd
-Avillion Bhd
-Fraser & Neave 70. 3662 Malayan Flour Mills Bhd
-G3 Global Bhd
-MBM Resources Bhd
-Enterprises Bhd
-Technology Bhd
-7935 Milux Corporation
-Greenyield Bhd
+7014 YLI Holdings Bhd
+5166 Minda Global Bhd
+1619 DRB - Hicom Bhd
+3026 Dutch Lady Milk Industries Bhd
+5318 DXN HOLDINGS BHD.
+0239 Ecomate Holdings Bhd
+5337 Eco-Shop Marketing Berhad
+9091 Emico Holdings Bhd
+5351 EMPIRE
+7149 Eng Kah Corporation Bhd
+7167 Able Global Bhd
+5081 Esthetics International Group
+1481 Advance Synergy Bhd
+6599 AEON Co (Malaysia) Bhd
+9946 ETA Group Berhad
+7315 AHB Holdings Bhd
+7208 Euro Holdings Bhd
+5238 AirAsia Group Berhad
+1287 Pan Malaysia Holdings Bhd
+2658 Ajinomoto Malaysia Bhd
+5306 FARM FRESH BERHAD
+8605 Federal International Holdings Bhd
+6351 Amway (Malaysia) Holdings Bhd
+6939 Fiamma Holdings Bhd
+6432 Apollo Food Holdings Bhd
+0157 Focus Point Holdings Bhd
+9172 Formosa Prosonic Industries
+7722 Asia Brands Bhd
+8885 Avillion Bhd
+3689 Fraser Neave Holdings Bhd
+3662 Malayan Flour Mills Bhd
+3891 Malayan United Industries Bhd
+7184 G3 Global Bhd
+5592 Grand Central Enterprises Bhd
+5983 MBM Resources Bhd
+2097 Eastland Equity Bhd
+7943 Sand Nisko Capital Bhd
+7935 Milux Corporation Bhd
+0136 Greenyield Bhd
 0229 Mobilia Holdings Bhd
-Guan Chong Bhd
-HI Mobility Bhd
-Homeritz Corporation
-MST Golf Group Bhd
-Hong Leong Industries 79. 4707 Nestle (Malaysia) Bhd
-NexG Bina Bhd
-Hwa Tai Industries Bhd
-Iconic Worldwide Bhd
-Jadi Imaging Holdings 83. 5066 NTPM Holdings Bhd
-OCB Bhd
-Jaycorp Bhd
-Oceancash Pacific Bhd
-Kamdar Group (M) 86. 5079 One Glove Group Bhd
-Karex Bhd
-Kawan Food Bhd
-Khind Holdings Bhd
-Consolidated Bhd
+5102 Guan Chong Bhd
+5296 Mr D I Y Group M Bhd
+5335 HI Mobility Berhad
+5346 HOCK SOON CAPITAL BERHAD
+5202 MSM Malaysia Holdings Bhd
+5160 Homeritz Corporation Bhd
+5316 MST GOLF GROUP BERHAD
+3301 Hong Leong Industries Bhd
+4707 Nestle (Malaysia) Bhd
+7060 New Hoong Fatt Holdings Bhd
+5024 Hup Seng Industries Bhd
+7154 Caely Holdings Bhd
+8478 Hwa Tai Industries Bhd
+7139 Niche Capital Emas Holdings
+9113 Iconic Worldwide Bhd
+7223 Jadi Imaging Holdings Bhd
+5066 NTPM Holdings Bhd
+5533 OCB Bhd
+7152 Jaycorp Bhd
+0049 Oceancash Pacific Bhd
+8672 Kamdar Group (Malaysia) Bhd
+5079 GETS Global Bhd
+5260 Only World Group Holdings Bhd
+5247 Karex Berhad
+7216 Kawan Food Bhd
+7107 Oriental Food Industries Hold
+7062 Khind Holdings Bhd
+0180 Kim Teck Cheong Consolidated Bhd
 7052 Padini Holdings Bhd
-Lay Hong Bhd
-Paos Holdings Bhd
-Life Water Bhd
+9385 Lay Hong Bhd
+4081 Pan Malaysia Corporation Bhd
+8079 Lee Swee Kiat Group Bhd
+5022 Paos Holdings Bhd
+5328 LWSABAH 
 9407 Paragon Union Bhd
-Lii Hen Industries Bhd
+7089 Lii Hen Industries Bhd
 5657 Parkson Holdings Bhd
-Lotus Circular Bhd
+7234 MESB Bhd
 9997 Pensonic Holdings Bhd
-Lotus KFM Bhd
-Perak Transit Bhd
-LTKM Bhd
-Permaju Industries Bhd
-Magma Group Bhd
-8532 Pertama Digital Bhd
-Poh Kong Holdings Bhd
+8303 Lotus KFM Bhd
+0186 Perak Transit Bhd
+7085 LTKM Bhd
+7080 Permaju Industries Bhd
+7243 Impiana Hotels Bhd
+8532 Pertama Digital Berhad
+7087 Magni Tech Industries Bhd
+5681 Petronas Dagangan Bhd
+5080 Poh Kong Holdings Bhd
 7176 TPC Plus Bhd
-Power Root Bhd
-7757 UPA Corporation
-PPB Group Bhd
+7237 Power Root Bhd
+7757 UPA Corporation Bhd
+4065 PPB Group Bhd
 4995 Versatile Creative Bhd
-PRG Holdings Bhd
+7168 Prg Holdings Bhd
 7203 Wang-Zheng Bhd
-PWF Corporation
-QL Resources Bhd
-Wegmans Holdings Bhd
+7134 PW Consolidated Bhd
+5016 Warisan TC Holdings Bhd
+7084 QL Resources Bhd
+7006 Latitude Tree Holdings Bhd
+0197 Wegmans Holdings Berhad
 7121 XL Holdings Bhd
-Rivertree STF Synergies 135. 5159 Yoong Onn Corporation
-Salutica Bhd
-YX Precious Metals Bhd
-SaudiGold Group Bhd
-5131 Zhulian Corporation
-SDS Group Bhd
-SEG International Bhd
-Signature International 1. 0258 Agmo Holdings Bhd
-ARB Bhd
-Sime Darby Bhd
-Censof Holdings Bhd
-Solid Automotive Bhd
-Spritzer Bhd
-SWS Capital Bhd
-Cnergenz Bhd
-Tafi Industries Bhd
-CTOS Digital Bhd
-Cuscapi Bhd
-Technologies Bhd
-Dagang Nexchange Bhd
-Dataprep Holdings Bhd
-Edaran Bhd
-Tek Seng Holdings Bhd
-Excel Force MSC Bhd
-Teo Seng Capital Bhd
-Frontken Corporation
-Three-A Resources Bhd
-FSBM Holdings Bhd
-Genetec Technology Bhd
-HeiTech Padu Bhd
-Inari Amertron Bhd
-Industronics Bhd
-Infoline Tec Group Bhd
-ITMAX System Bhd
-7131 ACME Holdings Bhd
-JCY International Bhd
-JF Technology Bhd
-JHM Consolidation 3. 4057 Asian Pac Holdings Bhd
-Avaland Bhd
-KESM Industries Bhd
+9776 Rivertree STF Synergies Berhad
+5159 Yoong Onn Corporation Bhd
+0183 Salutica Bhd
+0250 YX Precious Metals Bhd
+5157 Saudee Group Bhd
+5131 Zhulian Corporation Bhd
+0212 SDS Group Bhd
+9792 SEG International Bhd
+5305 Senheng New Retail Bhd
+7180 Sern Kou Resources Bhd
+7412 SHH Resources Holdings Bhd
+7246 Signature International Bhd
+0258 AGMO
+7181 Arb Bhd
+0276 Autocount Dotcom Berhad
+4197 Sime Darby Bhd
+5204 Awanbiru Technology Bhd
+5172 Sinaran Advance Group Bhd
+5195 Censof Holdings Bhd
+5242 Solid Automotive Bhd
+0277 Cloudpoint Technology Berhad
+7103 Spritzer Bhd
+7186 SWS Capital Bhd
+0246 Cnergenz Bhd
+7211 TAFI Industries Bhd
+5301 CTOS Digital Bhd
+4405 Tan Chong Motor Holdings Bhd
+0051 Cuscapi Berhad
+7204 D O Green Technologies Bhd
+8966 Techbase Industries Berhad
+4456 Dagang Nexchange Bhd
+7439 Teck Guan Perdana Bhd
+8338 Dataprep Holdings Bhd
+5036 Edaran Bhd
+7200 Tek Seng Holdings Bhd
+0065 Excel Force MSC Bhd
+7252 Teo Seng Capital Bhd
+0128 Frontken Corporation Bhd
+0012 Three A Resources Bhd
+7230 Tomei Consolidated Bhd
+9377 FSBM Holdings Bhd
+0104 Genetec Technology Bhd
+0208 Greatech Technology Bhd
+5028 HeiTech Padu Bhd
+0166 Inari Amertron Bhd
+9393 Industronics Bhd
+0253 Infoline Tec Holdings Bhd
+5309 ITMAX System Berhad
+7131 Land 33 Berhad
+5161 JCY International Bhd
+7007 ARK Resources Bhd
+0146 JF Technology BHD
+0127 JHM Consolidation Bhd
+4057 Asian Pac Holdings Bhd
+5182 MCT Bhd
+9334 KESM Industries Bhd
 7120 Axteria Group Bhd
-Key Asic Bhd
-BCB Bhd
-LGMS Bhd
-BEDI Bhd
-Bertam Alliance Bhd
-Bina Darulaman Bhd
-Mesiniaga Bhd
-Mi Technovation Bhd
-Property Bhd
-Microlink Solutions Bhd
-MMS Ventures Bhd
-NexG Bhd
-Country View Bhd
-Notion VTec Bhd
-Crescendo Corporation
-Omesti Bhd
-OpenSys (M) Bhd
-DPS Resources Bhd
-Revenue Group Bhd
-Encorp Bhd
-Eupe Corporation
-Theta Edge Bhd
-Turiya Bhd
-Unisem (M) Bhd
-UWC Bhd
-Global Oriental Bhd
-ViTrox Corporation
+0143 Key ASIC Bhd
+6602 BCB Bhd
+0249 LGMS Berhad
+6378 WMG Holdings Bhd
+3867 Malaysian Pacific Industries
+9814 Bertam Alliance Bhd
+6173 Bina Darulaman Bhd
+5011 Mesiniaga Bhd
+7187 Chin Hin Group Property Bhd
+5286 MI Technovation Bhd
+0126 Microlink Solutions Bhd
+5738 Country Heights Holdings Bhd
+0113 MMS Ventures Bhd
+5216 Datasonic Group Berhad
+5049 Country View Bhd
+0083 Notion Vtec Bhd
+6718 Crescendo Corporation Bhd
+9008 Tegra Berhad
+0040 OpenSys M Bhd
+7198 DPS Resources Bhd
+7160 Pentamaster Corporation Bhd
+8206 Eco World Develop Group
+0200 Revenue IF Berhad
+3557 EcoFirst Consolidated Bhd
+5357 SkyeChip Berhad
+0259 SNS
+6076 Encorp Bhd
+6815 Eupe Corporation Bhd
+9075 Theta Edge Bhd
+6041 Farlim Group (Malaysia) Bhd
+4359 Turiya Bhd
+5005 Unisem M Bhd
+5292 Uwc Bhd
+1147 Global Oriental Bhd
+0097 ViTrox Corporation Bhd
 5020 Glomac Bhd
-Gromutual Bhd
-VSTECS Bhd
-HCK Capital Group Bhd
-Willowglen MSC Bhd
+9962 Gromutual Bhd
+5162 ECS ICT Bhd
+7105 HCK Capital Group Bhd
+0008 Willowglen MSC Bhd
 5062 Hua Yang Bhd
-Zetrix AI Bhd
-I-Bhd
-Ibraco Bhd
-Ideal Capital Bhd
-City Bhd
-Pasdec Holdings Bhd
-Jiankun International 58. 7055 PLB Engineering Bhd
-Plenitude Bhd
-JKG Land Bhd
-Rapid Synergy Bhd
-KSL Holdings Bhd
-8664 S P Setia Bhd
-Lagenda Properties 63. 4596 Sapura Resources Bhd
-SBC Corporation
-Land & General Bhd
-4286 Seal Incorporated Bhd
-LBI Capital Bhd
+0138 Zetrix AI Berhad
+4251 I-Berhad
+5084 Ibraco Bhd
+9687 Ideal United Bintang Bhd
+1724 Paramount Corporation Bhd
+5249 IOI Properties Group Bhd
+2682 Amalgamated Industrial Steel Berhad
+1589 Iskandar Waterfront City Bhd
+6912 Pasdec Holdings Bhd
+8923 Jiankun International Bhd
+7055 PLB Engineering Bhd
+5075 Plenitude Bhd
+6769 JKG Land Bhd
+5313 Radium Development Berhad
+7077 Kerjaya Prospek Property Bhd
+7765 Rapid Synergy Bhd
+5038 KSL Holdings Bhd
+8664 SP Setia Bhd
+7179 Lagenda Properties Bhd
+4596 Sapura Resources Bhd
+5207 SBC Corp Bhd
+3174 Land General Bhd
+4286 SEAL Incorporated Bhd
+8494 LBI Capital Bhd
 2224 Selangor Dredging Bhd
-LBS Bina Group Bhd
-Lien Hoe Corporation
-Skygate Solutions Bhd
-Magna Prima Bhd
-Mah Sing Group Bhd
-Malaysian Resources 71. 3743 Sunsuria Bhd
+5789 LBS Bina Group Bhd
+5288 Sime Darby Property Bhd
+3573 Lien Hoe Corporation Bhd
+7249 Ewein Bhd
+7617 Hallson Group Berhad
+5315 SkyWorld Development Berhad
+8583 Mah Sing Group Bhd
+8141 Majuperak Holdings Bhd
+4375 South Malaysia Industries Bhd
+1651 Malaysian Resources Corporation
+3743 Sunsuria Bhd
 1538 Symphony Life Bhd
-Malton Bhd
-Talam Transform Bhd
-Maxim Global Bhd
+6181 Malton Bhd
+2259 Talam Transform Bhd
+5236 Matrix Concepts Holdings Bhd
+5191 Tambun Indah Land Bhd
+4022 Tadmax Resources Berhad
 2429 Tanco Holdings Bhd
-Menang Corporation
-0230 Teladan Group Bhd
-(M) Bhd
-Titijaya Land Bhd
-Meridian Bhd
-Tropicana Corporation
-MK Land Holdings Bhd
-MKH Bhd
-TWL Holdings Bhd
-MUI Properties Bhd
+1694 Menang Corporation (Malaysia) Bhd
+0230 Teladan Setia Group Bhd
+5239 Titijaya Land Bhd
+5040 Meridian Bhd
+5401 Tropicana Corporation Bhd
+8893 M K Land Holdings Bhd
+6114 MKH Bhd
+7079 TWL Holdings Bhd
+3913 MUI Properties Bhd
 5148 UEM Sunrise Bhd
-Naim Holdings Bhd
-NCT Alliance Bhd
-Oriental Interest Bhd
-7003 Y&G Corporation
-Paragon Globe Bhd
+5073 Naim Holdings Bhd
+5200 UOA Development Bhd
+0056 NCT Alliance Bhd
+5827 Oriental Interest Bhd
+7003 Y&G Corp Bhd
+3611 Paragon Globe Bhd
 3158 YNH Property Bhd
-Yong Tai Bhd
-Lebtech Bhd
-No. Stock code Name of securities 29. 8192 Mercury Industries Bhd
-Bil. Kod stok Nama sekuriti 30. 7595 MGB Bhd
-Mitrajaya Holdings Bhd
-Ahmad Zaki Resources 32. 5085 Mudajaya Group Bhd
-OCR Group Bhd
-Benalec Holdings Bhd
-Bina Puri Holdings Bhd
+7066 Yong Tai Bhd
+9628 Lebtech Bhd
+5129 Melati Ehsan Holdings Bhd
+8192 Mercury Industries Bhd
+7595 MGB Bhd
+9571 Mitrajaya Holdings Bhd
+7078 Ahmad Zaki Resources Bhd
+5085 Mudajaya Group Bhd
+5703 Muhibbah Engineering M Bhd
+5293 AME Elite Consortium Bhd
+7071 OCR Group Bhd
+5329 Azam Jaya Berhad
+8311 Pesona Metro Holdings Bhd
+5190 Benalec Holdings Bhd
+5932 Bina Puri Holdings Bhd
 5622 Pimpinan Ehsan Bhd
-Binastra Corporation
+7195 Comintel Corporation Berhad
 9598 Pintaras Jaya Bhd
-Protasco Bhd
-Central Global Bhd
-DKLS Industries Bhd
-Econpile Holdings Bhd
+5070 Protasco Bhd
+8052 Central Industrial Corp
+6807 Puncak Niaga Holdings Bhd
+8591 Crest Builder Holdings Bhd
+5263 Sunway Construction Group Bhd
+7528 DKLS Industries Bhd
+5253 Econpile Holdings Bhd
 9717 Sycal Ventures Bhd
-Ekovest Bhd
-TRC Synergy Bhd
-Epicon Bhd
-TSR Capital Bhd
-Tuju Setia Bhd
-7145 TXCD Bhd
-FBG Holdings Bhd
-5006 Varia Bhd
-Gabungan AQRS Bhd
+8877 Ekovest Bhd
+5054 TRC Synergy Bhd
+4847 Konsortium Transnasional Bhd
+5042 TSR Capital Bhd
+5205 Eversendai Corporation Bhd
+5297 Tuju Setia Bhd
+7145 Ageson Bhd
+7047 Fajarbaru Builder Group Bhd
+5006 Stella Holdings Bhd
+5226 Gabungan AQRS Bhd
 7070 Vizione Holdings Bhd
-Gadang Holdings Bhd
+9261 Gadang Holdings Bhd
 9679 WCT Holdings Bhd
-Gamuda Bhd
-Zecon Bhd
-GDB Holdings Bhd
+5398 Gamuda Bhd
+7028 ZECON Bhd
+0198 GDB Holdings Bhd
 2283 Zelan Bhd
-IJM Corporation
-Infraharta Holdings Bhd
-Inta Bina Group Bhd
-JAKS Resources Bhd
-Kimlun Corporation
-Resources Bhd
-Kumpulan Kitacon Bhd
-0168 BM Greentech Bhd
-Bumi Armada Bhd
-Carimin Petroleum Bhd
-Cypark Resources Bhd
-Deleum Bhd
-Dialog Group Bhd
+5345 Geohan Corporation Berhad
+3336 IJM Corporation Bhd
+7240 Vertice Bhd
+0192 Inta Bina Group Bhd
+4723 JAKS Resources Bhd
+7161 Kerjaya Prospek Group Bhd
+5171 Kimlun Corporation Bhd
+5115 Alam Maritim Resources Bhd
+5310 Kumpulan Kitacon Berhad
+0168 Boilermech Holdings Bhd
+5210 Bumi Armada Bhd
+5257 Carimin Petroleum Bhd
+5184 Cypark Resources Berhad
+5141 Dayang Enterprise Holdings Bhd
+5132 Deleum Bhd
+7277 Dialog Group Bhd
 7054 Astral Asia Bhd
-ENRA Group Bhd
-Batu Kawan Bhd
-Handal Energy Bhd
+8613 Enra Group Bhd
+1899 Batu Kawan Bhd
+7253 Handal Resources Bhd
 5069 BLD Plantation Bhd
-Hibiscus Petroleum Bhd
-Far East Holdings Bhd
-Lianson Fleet Group 7. 7382 Golden Land Bhd
-Gopeng Bhd
-Harn Len Corporation
-Perdana Petroleum Bhd
-Petra Energy Bhd
-Rubber Public Ltd
-IOI Corporation
-Propel Global Bhd
-Samaiden Group Bhd
-Solarvest Holdings Bhd
-T7 Global Bhd
-Techna-X Bhd
-Kretam Holdings Bhd
-Uzma Bhd
-Mentiga Corporation
-Vantris Energy Bhd
-Velesto Energy Bhd
-MHC Plantations Bhd
-Wasco Bhd
-Wasco Greenergy Bhd
-Kalimantan) Bhd
-PLS Plantations Bhd
-Rimbunan Sawit Bhd
-8346 Perak Corporation
-Riverview Rubber 15. 4634 Pos Malaysia Bhd
-Estates Bhd
-Sarawak Oil Palms Bhd
-Sarawak Plantation Bhd
-SD Guthrie Bhd
-Sin Heng Chan (Malaya) 18. 5173 Shin Yang Group Bhd
-Ta Ann Holdings Bhd
-TDM Bhd
-Swift Haulage Bhd
-TH Plantations Bhd
+5199 Hibiscus Petroleum BHD
+8982 Cepatwawasan Group Bhd
+5321 Keyfield International Berhad
+5029 Far East Holdings Bhd
+0193 Kinergy Advancement Berhad
+2291 Genting Plantations Bhd
+5255 Lianson Fleet Group Berhad
+7382 Golden Land Bhd
+2135 Gopeng Bhd
+5186 Malaysia Marine and Heavy Engineering Holdings Bhd
+5138 Hap Seng Plantations Holdings Bhd
+7501 Harn Len Corporation Bhd
+7108 Perdana Petroleum Bhd
+5133 Petra Energy Bhd
+2607 Inch Kenneth Kajang Rubber PLC
+3042 Petron Malaysia Refining Marketing
+6262 Innoprise Plantations Bhd
+1961 IOI Corporation Bhd
+0091 Daya Materials Bhd
+4383 Jaya Tiasa Holdings Bhd
+0219 Reservoir Link Energy Bhd
+5323 JPG
+0223 Samaiden Group Bhd
+0215 Solarvest Holdings Bhd
+5027 Kim Loong Resources Bhd
+7228 T7 Global Bhd
+2739 Sino Hua-An International Bhd
+1996 Kretam Holdings Bhd
+0118 Trive Property Group Bhd
+2445 Kuala Lumpur Kepong Bhd
+7250 Uzma Bhd
+5223 Mentiga Corporation Bhd
+5218 Vantris Energy Berhad
+5243 Velesto Energy Bhd
+5026 MHC Plantations Bhd
+5142 Wah Seong Corporation Bhd
+5319 MKH Oil Palm (East Kalimantan) Berhad
+5343 Wasco Greenergy Berhad
+9695 PLS Plantations Bhd
+5348 Orkim Berhad
+5113 Rimbunan Sawit Bhd
+8346 Perak Corporation Bhd
+2542 Riverview Rubber Estates Bhd
+4634 POS Malaysia&Services Holdings Bhd
+5145 Sealink International Bhd
+5126 Sarawak Oil Palms Bhd
+5135 Sarawak Plantation Bhd
+7053 See Hup Consolidated Bhd
+5285 Sime Darby Plantation Bhd
+4316 Sin Heng Chan (Malaya) Bhd
+5173 Shin Yang Shipping Corporation Bhd
+6521 Suria Capital Holdings Bhd
+5012 Ta Ann Holdings Bhd
+2054 TDM Berhad
+5303 Swift Haulage Bhd
+5112 TH Plantations Bhd
 5149 TAS Offshore Bhd
-TSH Resources Bhd
+9059 TSH Resources Bhd
 5140 Tasco Bhd
-United Malacca Bhd
-United Plantations Bhd
-Xin Hwa Holdings Bhd
-Arka Bhd
-Avangaad Bhd
-Adventa Bhd
-Bintulu Port Holdings 2. 0163 Careplus Group Bhd
-Hartalega Holdings Bhd
-FM Global Logistics 5. 7803 Hextar Healthcare Bhd
-IHH Healthcare Bhd
-G Capital Bhd
-GDEX Bhd
-Hextar Technologies 8. 0002 Kotra Industries Bhd
-Solutions Bhd
-KPJ Healthcare Bhd
-Hubline Bhd
-LAC Med Bhd
-Marine & General Bhd
-MISC Bhd
-MTT Shipping and 12. 0222 Optimax Holdings Bhd
-Pharmaniaga Bhd
-Supermax Corporation
-TMC Life Sciences Bhd
-7471 Eden Inc. Bhd
-Top Glove Corporation
+2593 United Malacca Bhd
+5246 Westports Holdings Bhd
+2089 United Plantations Bhd
+5267 Xin Hwa Holdings Bhd
+7218 Arka Berhad
+5259 EA Technique M Bhd
+7191 Adventa Bhd
+5032 Bintulu Port Holdings Bhd
+0163 Careplus Group Bhd
+7148 Duopharma Biotech Bhd
+7117 CJ Century Logistics Holdings Bhd
+5168 Hartalega Holdings Bhd
+7210 FM Global Logistics Holdings Bhd
+7803 Rubberex Corporation M Bhd
+5225 IHH Healthcare Bhd
+7676 G Capital Bhd
+7153 Kossan Rubber Industries Bhd
+0078 GD Express Carrier Bhd
+5136 Complete Logistic Services Bhd
+0002 Kotra Industries Bhd
+5878 KPJ Healthcare Bhd
+7013 HUBLine Bhd
+5341 LACMED
+5078 Marine & General Bhd
+0201 Nova Wellness Group Bhd
+3816 MISC Bhd
+5352 MTT Shipping and Logistics Berhad
+0222 Optimax Holdings Sdn Bhd
+7081 Pharmaniaga Bhd
+5555 Sunway Healthcare Holdings Berhad
+0001 Supercomnet Technologies Bhd
+7106 Supermax Corporation Bhd
+0101 TMC Life Sciences Bhd
+7471 Eden Inc Bhd
+7113 Top Glove Corporation Bhd
 5209 Gas Malaysia Bhd
-Malakoff Corporation
-UMediC Group Bhd
-Y.S.P. Southeast Asia 4. 3069 Mega First Corporation
-PBA Holdings Bhd
-PETRONAS Gas Bhd
-TTEELLEECCOOMMMMUUNNIICCAATTIIOONNSS AANNDD 7. 5272 Ranhill Utilities Bhd
-Salcon Bhd
-Taliworks Corporation
-Tenaga Nasional Bhd
-Amtel Holdings Bhd
-Axiata Group Bhd
-CelcomDigi Bhd
-Ecobuilt Holdings Bhd
-Green Packet Bhd
-Maxis Bhd
-International Ltd
-Bursa Malaysia Bhd
-MMM Group Bhd
-Johan Holdings Bhd
-OCK Group Bhd
-MBSB Bhd
-RCE Capital Bhd
-REDtone Digital Bhd
-Sasbadi Holdings Bhd
-Malaysia Keluarga Bhd
-Seni Jaya Corporation
-Telekom Malaysia Bhd
-TIME dotCom Bhd
-Eversafe Rubber Bhd
-Fast Energy Holdings Bhd
-BBAARRAANNGGAANN IINNDDUUSSTTRRII DDAANN 28. 0355 Fibromat (M) Bhd
-No. Stock code Name of securities 30. 0284 Glostrext Bhd
-Bil. Kod stok Nama sekuriti 31. 0175 HHRG Bhd
-Hiap Huat Holdings Bhd
-5E Resources Holdings 33. 0188 HLT Global Bhd
-HPP Holdings Bhd
-ACO Group Bhd
-Insights Analytics Bhd
-0390 ISF Group Bhd
-JAG Bhd
-Material Bhd
-Kawan Renergy Bhd
-Artroniq Bhd
-Kee Ming Group Bhd
-Asia Poly Holdings Bhd
-0293 KJTS Group Bhd
-ASM Automation 42. 0266 Leform Bhd
-Master Tec Group Bhd
-Aumas Resources Bhd
-BCM Alliance Bhd
-Betamek Bhd
-Midtown Group Bhd
-BWYS Group Bhd
-MSB Global Group Bhd
-CEKD Bhd
-MTAG Group Bhd
-Chemlite Innovation 49. 0325 Northeast Group Bhd
-Colform Group Bhd
-Coraza Integrated 51. 0368 Oxford Innotech Bhd
-0361 Pan Merchant Bhd
-Crest Group Bhd
-0289 PLYTEC Holding Bhd
-Cropmate Bhd
-PMW International Bhd
-Econframe Bhd
-EPB Group Bhd
-Powertechnic Group Bhd
-Erdasan Group Bhd
-0217 Powerwell Holdings Bhd
-PSP Energy Bhd
-Rekatech Capital Bhd
-Sanichi Technology Bhd
-Scope Industries Bhd
-Sersol Bhd
-Aquawalk Group Bhd
-Tashin Holdings Bhd
-Bioalpha Holdings Bhd
-Carlo Rino Group Bhd
-Topmix Bhd
-Daythree Digital Bhd
-TSA Group Bhd
-DPI Holdings Bhd
-Volcano Bhd
-Waja Konsortium Bhd
-Farmiera Bhd
-West River Bhd
-WTEC Group Bhd
-YBS International Bhd
-Manforce Group Bhd
-Zantat Holdings Bhd
-OB Holdings Bhd
-Ocean Fresh Bhd
-Orgabio Holdings Bhd
-Parlo Bhd
-PEOPLElogy Bhd
-RichTech Digital Bhd
-SBH Marine Holdings 16. 0010 Iris Group Bhd
-Key Alliance Group Bhd
-SCC Holdings Bhd
+5264 Malakoff Corporation Bhd
+0256 UMediC Group Berhad
+7178 YSP Southeast Asia Holding Bhd
+3069 Mega First Corporation Bhd
+5041 PBA Holdings Bhd
+6033 Petronas Gas Bhd
+5272 Ranhill Holdings Ltd
+8567 Salcon Engineering Berhad
+8524 Taliworks Corporation Bhd
+5347 Tenaga Nasional Bhd
+7031 Amtel Holdings Bhd
+6888 Axiata Group Bhd
+6947 CelcomDigi Berhad
+0059 Ecobuilt Holdings Bhd
+0082 Green Packet Bhd
+6012 Maxis Bhd
+5258 Bank Islam Malaysia Bhd
+5090 Media Chinese International Ltd
+1818 Bursa Malaysia Bhd
+0159 MMM Group Bhd
+3441 Johan Holdings Bhd
+0172 OCK Group Bhd
+1171 Malaysia Building Society Bhd
+5332 Reach Ten Holdings Berhad
+9296 RCE Capital Berhad
+0032 Redtone International Bhd
+6139 Syarikat Takaful Malaysia Bhd
+5252 Sasbadi Holdings Bhd
+9431 Seni Jaya Corporation Bhd
+4863 Telekom Malaysia Bhd
+5031 TIME Dotcom Bhd
+0100 ES Ceramics Technology Bhd
+0190 Eversafe Rubber Bhd
+0370 XPB
+0084 Techfast Holdings Bhd
+0355 Fibromat (M) Berhad
+0231 Flexidynamic Holdings Bhd
+0284 Glostrext Berhad
+0175 Heng Huat Resources Group Bhd
+0160 Hiap Huat Holdings Bhd
+0397 5E Resources Holdings Berhad
+0188 HLT Global Bhd
+0228 HPP Holdings Bhd
+0218 Aco Group Bhd
+0366 iCents Group Holdings Berhad
+0122 Advance Information Marketing Bhd
+0376 Insights Analytics Bhd
+0391 Ambest Group Berhad
+0390 ISF Group Berhad
+0399 AMS Advanced Material Berhad
+0024 JAG Bhd
+0307 KENERGY
+0038 Artroniq Berhad
+0392 Kee Ming Group Berhad
+0105 Asia Poly Holdings Bhd
+0293 KJTS
+0362 ASM Automation Group Berhad
+0266 LEFORM
+0295 Master Tec Group Berhad
+0098 Bahvest Resources Bhd
+0167 MClean Technologies Bhd
+0187 BCM Alliance Bhd
+0263 Betamek Bhd 
+0177 Midtown Group Berhad
+0313 BWYS Group Berhad
+0288 Minox International Group Berhad
+0339 CBH Engineering Holding Berhad
+0350 MSB Global Group Berhad
+0238 CEKD Bhd
+0213 Mtag Group Berhad
+0348 Chemlite Innovation Berhad
+0325 Northeast Group Berhad
+0389 One Gasmaster Holdings Berhad
+0341 Colform Group Berhad
+0240 Coraza Integrated Technology Bhd
+0368 OXB
+0361 Pan Merchant Berhad
+0323 Crest Group Berhad
+0289 PLYTEC Holding Berhad
+0331 Cropmate Berhad
+0379 PMW International Bhd
+0227 Econframe Bhd
+0381 Polymer Link Holdings Berhad
+0453 EI Power Berhad
+0317 EPB Group Berhad
+0377 Powertechnic Group Berhad
+0072 AT Systematization Bhd
+0217 Powerwell Holdings Bhd
+0383 PSP Energy Berhad
+0081 Mega Sun City Holdings Bhd
+0133 Sanichi Technology Bhd
+0028 Scope Industries Bhd
+0055 Sersol Bhd
+0306 SMART 
+0321 Solar District Cooling Group Berhad
+0365 A1 A.K. Koh Group Berhad
+0349 Sumisaujana Group Berhad
+0309 Agricore CS Holdings Berhad
+0337 SWIFT ENERGY TECHNOLOGY BERHAD
+0380 Aquawalk Group Berhad
+0211 Tashin Holdings Bhd
+0179 Bioalpha Holdings Bhd
+0089 Tex Cycle Technology M Bhd
+0385 BMS Holdings Berhad
+0335 Carlo Rino Group Bhd
+0302 Topmix Berhad
+0281 DAYTHREE DIGITAL BERHAD
+0297 TSA
+0205 Dpi Holdings Berhad
+0232 Volcano Bhd
+0304 Farm Price Holdings Berhad
+0102 Waja Konsortium Bhd
+0298 Wentel Engineering Holdings Berhad
+0378 Farmiera Berhad
+0398 Golden Destinations Group Berhad
+0353 West River Berhad
+0352 WTEC Group Berhad
+0170 Kanger International Bhd
+0025 YBS International Bhd
+0248 Yew Lee Pacific Group Berhad
+0450 Manforce Group Bhd
+0357 Oasis Home Holding Berhad
+0301 Zantat Holdings Berhad
+0327 OB Holdings Berhad
+0312 Ocean Fresh Berhad
+0252 Orgabio Holdings Bhd
+0338 Oriental Kopi Holdings Berhad
+0022 Parlo Bhd
+0356 Peoplelogy Berhad
+0171 PeterLabs Holdings Bhd
+0260 PTRB
+0342 RichTech Digital Berhad
+0300 SBH Marine Holdings Berhad
+0010 IRIS Corporation Bhd
+0036 Key Alliance Group Bhd
+0158 SCC Holdings Bhd
 0111 K-One Technology Bhd
-SEDANIA Innovator Bhd
+0178 Sedania Innovator Bhd
 0176 Kronologi Asia Bhd
-Sik Cheong Bhd
+0316 Sik Cheong Berhad
 0112 Mikro MSC Bhd
-Sorento Capital Bhd
+0326 Sorento Capital Berhad
 0070 MQ Technology Bhd
-Spring Art Holdings 22. 0395 OGX Group Bhd
-Oppstar Bhd
-SSF Home Group Bhd
-0290 Panda ECO System Bhd
-Supreme Consolidated 25. 0202 Radiant Globaltech Bhd
-Ramssol Group Bhd
-Synergy House Bhd
-0203 Securemetric Bhd
-SFP Tech Holdings Bhd
-Vanzo Holdings Bhd
+0216 Spring Art Holdings Bhd
+0395 OGX GROUP BERHAD
+0275 OPPSTAR
+0287 SSF Home Group Berhad
+0290 Panda Eco System Berhad
+0330 SUPREME
+0202 Radiant Globaltech Bhd
+0236 Ramssol Group Bhd
+0279 Synergy House Berhad
+0203 Securemetric Berhad
+0393 TEAMSTAR BERHAD
+0251 SFP Tech Holdings Bhd
+0333 VANZO
 0117 SMRT Holdings Bhd
-Wellspire Holdings Bhd
-0093 Solution Group Bhd
-Systech Bhd
-TechnoDex Bhd
-TechStore Bhd
-TFP Solutions Bhd
-THMY Holdings Bhd
-TT Vision Holdings Bhd
-VETECE Holdings Bhd
-Aemulus Holdings Bhd
-AIMFLEX Bhd
-Aldrich Resources Bhd
-YGL Convergence Bhd
-Asdion Bhd
-Cabnet Holdings Bhd
-Divfex Bhd
-Solution Bhd
-Edelteq Holdings Bhd
-Eduspec Holdings Bhd
-EVD Bhd
-Go Hub Capital Bhd
-ICT Zone Asia Bhd
-0452 Gold Li Holdings Bhd
-IFCA MSC Bhd
-KTI Landmark Bhd
-Infomina Bhd
-Enproserve Group Bhd
-Cheeding Holdings 3. 0369 JS Solar Holding Bhd
-Pekat Group Bhd
-ES Sunlogy Bhd
-Steel Hawk Bhd
-Gagasan Nadi Cergas 6. 0262 Sunview Group Bhd
-Haily Group Bhd
-Inspace Creation Bhd
-Jati Tinggi Group Bhd
-MN Holdings Bhd
-Nestcon Bhd
-SC Estate Builder Bhd
-AGX Group Bhd
-Ancom Logistics Bhd
-KGW Group Bhd
-Builders Bhd
-MMAG Holdings Bhd
-Taghill Holdings Bhd
-Sin-Kung Logistics Bhd
-UUE Holdings Bhd
-Vestland Bhd
-Widad Group Bhd
-Cengild Medical Bhd
-0011 Brite-Tech Bhd
-Resource Centre Bhd
-Metro Healthcare Bhd
-PMCK Bhd
-Communications Bhd
-Hextar Capital Bhd
-Nexgram Holdings Bhd
-Services Bhd
-Privasia Technology Bhd
-PUC Bhd
-XOX Bhd
+0271 Wellspire Holdings Berhad
+0093 Solution Engineering Holdings Bhd
+0050 WTS Capital Berhad
+0132 TechnoDex Bhd
+0343 TechStore Berhad
+0145 TFP Group Berhad
+0375 THMY Holdings Berhad
+0272 TT Vision Holdings Berhad
+0319 VETECE Holdings Berhad
+0069 Vinvest Capital Holdings Bhd
+0181 Aemulus Holdings Bhd
+0120 VisDynamics Holdings Bhd
+0209 Aimflex Bhd
+0079 Aldrich Resources Bhd
+0086 YGL Convergence Bhd
+0068 Asdion Bhd
+0094 Inix Technologies Holdings Bhd
+0191 Cabnet Holdings Bhd
+0131 Diversified Gateway Solutions Bhd
+0267 ECA
+0278 Edelteq Holdings Berhad
+0107 Eduspec Holdings Bhd
+0174 iDimension Consolidated Bhd
+0311 Go Hub Capital Berhad
+0060 Vortex Consolidated Bhd
+0358 ICT Zone Asia Berhad
+0452 Gold Li Holdings Berhad
+0023 IFCA MSC Bhd
+0308 KTI
+0265 INFOM
+0396 ADNEX GROUP BERHAD
+0318 Elridge Energy Holdings Berhad
+0226 Aneka Jaringan Holdings Bhd
+0367 Enproserve Group Berhad
+0372 Cheeding Holdings Berhad
+0369 JS Solar Holding Berhad
+0233 Pekat Group Bhd
+0345 ES SUNLOGY BERHAD
+0320 Steel Hawk Berhad
+0206 Gagasan Nadi Cergas Berhad
+0262 Sunview Group Bhd
+0373 VERDANT
+0237 Haily Group Bhd
+0359 Hartanah Kenyalang Berhad
+0451 Inspace Creation Bhd TRANSPORTATION AND
+0292 Jati Tinggi Group Berhad
+0351 Lim Seong Hai Capital Berhad
+0245 MN Holdings Berhad
+0235 Nestcon Bhd
+0109 SC Estate Builder Bhd
+0360 Signature Alliance Group Berhad
+0299 AGX Group Berhad
+0048 Ancom Logistics Bhd
+0045 Southern Score Builders Berhad
+0282 KGW Group Berhad
+0034 MMAG Holdings Bhd
+0241 Siab Holdings Bhd
+0305 Sin-Kung Logistics Berhad
+0221 TCS Group Holdings Bhd
+0080 Straits Inter Logistics Bhd
+0310 UUE Holdings Berhad
+0199 Tri-Mode System M Bhd
+0273 Vestland Berhad
+0347 Wawasan Dengkil Holdings Berhad
+0162 Widad Group Bhd
+0243 Cengild Medical Berhad
+0011 Brite Tech Bhd
+0283 DC HEALTHCARE HOLDINGS BERHAD
+0155 Malaysian Genomics Resource
+0329 Metro Healthcare Berhad
+0363 PMCK Berhad
+0332 Topvision Eye Specialist Berhad
+0195 Binasat Communications Bhd
+0035 OPCOM Holdings Bhd
+0096 Nexgram Holdings Bhd
+0017 Nova Technology Services Berhad
+0123 Privasia Technology Bhd
+0007 PUC Bhd
+0386 SBS NEXUS BERHAD
+0129 Silver Ridge Holdings Bhd
+0165 XOX Bhd
+03037 Aurora Italia
 03012 Baba Eco Group Bhd
+03068 Bentley Music Group
 03053 CC International Bhd
-BBAARRAANNGGAANN IINNDDUUSSTTRRII DDAANN 6. 03025 Enest Group Bhd
-Solution Holdings Bhd
-No. Stock code Name of securities 8. 03072 Milolo Bhd
-Bil. Kod stok Nama sekuriti 9. 03064 MyAxis Group Bhd
-CE Technology Bhd
-GPP Resources Bhd
-Hydropipes Bhd
+03025 Enest Group Bhd
+03019 Matrix Parking
+03072 Milolo Bhd
+03064 MyAxis Group Bhd
+03071 Noesis Exed Bhd
+03024 CE Technology Bhd
+03063 Ping Edge Technology
+03029 GPP Resources Bhd
+03060 Hydropipes Industries Sdn. Bhd.
 03009 SEERS Bhd
-Jishan Bhd
-MMIS Bhd
-Polydamic Group Bhd
-Supergenics Bhd
-TP Tec Holding Bhd
+03040 Jishan Bhd
+03027 MMIS Bhd
+03031 Polydamic Group Bhd TTEECCHHNNOOLLOOGGYY
+03052 Ray Go Solar Holdings TTEEKKNNOOLLOOGGII
+03033 Supergenics Bhd
+03061 TP TEC Holding Berhad
 03062 TSiC Bhd
 03043 UCI Resources Bhd
 03011 Amlex Holdings Bhd
+03069 BIMOffice Group Bhd
+03066 Croesus IT Holdings Bhd
 03036 Redplanet Bhd
-BBAARRAANNGGAANN PPEENNGGGGUUNNAA DDAANN Holdings Bhd
-PPEERRKKHHIIDDMMAATTAANN 6. 03057 Sancy Bhd
-No. Stock code Name of securities Bhd
+03039 RTS Technology
+03057 Sancy Bhd
+03008 SL Innovation Capital
+03051 Alpha Ocean
 03042 BV Land Holdings Bhd
+03023 Smile-Link Healthcare
 03065 LPC Group Bhd
-Global Bhd
 03050 Sunmow Holding Bhd
+03017 Uni Wall Aps Holdings
+03059 Autoris Group
 03055 DSR Taiko Bhd
-Shariah Status for Companies Seeking Listing on Bursa Malaysia Securities Bhd
-Status Syariah untuk Syarikat yang Memohon Penyenaraian di Bursa Malaysia Securites Bhd
-Prolintas Infra Business Trust
+5320 PLINTAS
 
 ---- TEKS DOKUMEN ----
                                                           

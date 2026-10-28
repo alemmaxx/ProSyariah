@@ -233,6 +233,9 @@ main>.card,main>.alert,main>.grid2,main>.disc,main>.pad,.search,.results{margin-
 .champ{border:1px solid var(--gold);border-radius:14px;background:linear-gradient(180deg,var(--gold2),var(--card));padding:6px 14px 12px}
 .champ .smr:last-of-type{border-bottom:0}
 .rbseg{width:100%}.rbseg button{flex:1;padding:11px 8px;font:600 14px var(--f)}
+.mstat{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.mstat>div{background:var(--card2);border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:2px}.mstat b{font-size:18px}.mstat span{font-size:12px;color:var(--muted)}
+@media(min-width:640px){.mstat{grid-template-columns:repeat(4,1fr)}}
+.mdel{border:1px solid var(--line);background:var(--card2);color:var(--ink);border-radius:8px;width:34px;height:30px;font-size:14px;cursor:pointer}
 .mbtn{flex:none;height:46px;padding:0 12px;border-radius:12px;border:1px solid var(--gold);background:var(--gold2);color:var(--gold);font:700 14px var(--f);cursor:pointer;white-space:nowrap}
 .smbtn.off{border-color:var(--line);background:var(--card)}.smbtn.off>span:first-child{opacity:.6}
 .smbtn{display:flex;align-items:center;gap:12px;width:100%;padding:14px 16px;border:1px solid var(--gold);border-radius:14px;background:var(--gold2);color:var(--ink);font:14px var(--f);cursor:pointer;text-align:left}
@@ -846,29 +849,29 @@ function openManual(code){
   else $('#mGo').onclick=()=>{const st=num($('#mS').value),en=num($('#mE').value),tg=num($('#mT').value),sl=num($('#mL').value),dt=$('#mD').value;
     if(!(st>0&&en>0))return toast('Masukkan nilai maya dan harga masuk');if(!(tg>en&&sl<en&&sl>0))return toast('Paras atas mesti lebih tinggi dan paras bawah lebih rendah daripada harga masuk');
     const sg=signalFor(code);S.manual=S.manual||[];S.manual.push({id:uid(),code,name:nm,d:dt||today(),en,stake:st,tg,sl,md:sg&&sg.md?Math.round(sg.md):null});
-    if(!S.watch.includes(code))S.watch.push(code);save();toast('Ditambah ke Robot manual & favorite');getBars(code).catch(()=>{});after();};
+    if(!S.watch.includes(code))S.watch.push(code);save();toast('Ditambah ke Robot Manual');getBars(code).catch(()=>{});close();closeSheet();goTab('robot');};
 }
 function manRow(p){const nm=shortName(p.name||nameOf(p.code));
   if(p.closed){const r=RES3[p.closed.res];const u=manPnl(p,p.closed.exit);
-    return `<div class="rbr" role="button" data-code="${esc(p.code)}"><span class="rbm"><b>${esc(nm)}</b> <span class="code">${esc(p.code)}</span><span class="muted">${fmtD(p.d)} → ${fmtD(p.closed.end)} · ${p.closed.days} hari · ${rm(p.stake)}</span></span><span class="rbres"><span class="badge ${r[2]}">${r[0]}</span><b class="${u>=0?'up':'dn'}">${rmS(u)}</b></span></div>`;}
+    return `<div class="rbr" role="button" data-code="${esc(p.code)}"><span class="rbm"><b>${esc(nm)}</b> <span class="code">${esc(p.code)}</span><span class="muted">${fmtD(p.d)} → ${fmtD(p.closed.end)} · ${p.closed.days} hari · ${rm(p.stake)}</span></span><span class="rbres"><span class="badge ${r[2]}">${r[0]}</span><b class="${u>=0?'up':'dn'}">${rmS(u)}</b><button class="mdel" data-md="${esc(p.id)}" aria-label="Padam">🗑</button></span></div>`;}
   const m=mk(p.code),now=m&&m.c,u=now?manPnl(p,now):null;
-  return `<div class="rbr" role="button" data-code="${esc(p.code)}"><span class="rbm"><b>${esc(nm)}</b> <span class="code">${esc(p.code)}</span><span class="muted">masuk ${fmtD(p.d)} @ ${px(p.en)} · ${rm(p.stake)}</span><span class="muted">sasaran ${px(p.tg)} · had ${px(p.sl)}${now?` · kini ${px(now)}`:''}</span><span class="rbend">${p.md?`<span>tempoh biasa hingga ${fmtD(addTradingDays(p.d,p.md))}</span> · `:''}<span>tutup paling lewat ${fmtD(addTradingDays(p.d,BTH().h))}</span></span></span><span class="rbres"><b class="${u==null?'':u>=0?'up':'dn'}">${u==null?'-':rmS(u)}</b><button class="btn sm sec" data-mx="${esc(p.code)}">Urus</button></span></div>`;}
+  return `<div class="rbr" role="button" data-code="${esc(p.code)}"><span class="rbm"><b>${esc(nm)}</b> <span class="code">${esc(p.code)}</span>${statusHTML(p.code,nameOf(p.code),true).replace(/<span class="s-warn">(✍️|🤖)[^]*?<\/span>/g,'')}<span class="muted">masuk ${fmtD(p.d)} @ ${px(p.en)} · ${rm(p.stake)}</span><span class="muted">sasaran ${px(p.tg)} · had ${px(p.sl)}${now?` · kini ${px(now)}`:''}</span><span class="rbend">${p.md?`<span>tempoh biasa hingga ${fmtD(addTradingDays(p.d,p.md))}</span> · `:''}<span>tutup paling lewat ${fmtD(addTradingDays(p.d,BTH().h))}</span></span></span><span class="rbres"><b class="${u==null?'':u>=0?'up':'dn'}">${u==null?'-':rmS(u)}</b><span class="row" style="gap:6px"><button class="btn sm sec" data-mx="${esc(p.code)}">Urus</button><button class="mdel" data-md="${esc(p.id)}" aria-label="Padam">🗑</button></span></span></div>`;}
 function rManual(){
-  manRefresh();const M=S.manual||[];const op=M.filter(p=>!p.closed),cl=M.filter(p=>p.closed).sort((a,b)=>b.closed.end.localeCompare(a.closed.end));
+  manRefresh();const M=(S.manual||[]).slice();const op=M.filter(p=>!p.closed),cl=M.filter(p=>p.closed).sort((a,b)=>b.closed.end.localeCompare(a.closed.end));
   const w=cl.filter(p=>p.closed.res==='W').length,pnl=cl.reduce((t,p)=>t+manPnl(p,p.closed.exit),0),opn=op.reduce((t,p)=>{const m=mk(p.code);return t+(m&&m.c?manPnl(p,m.c):0);},0);
-  let h=`<div class="card"><h2>✍️ Robot manual</h2><p class="muted" style="margin-top:0">Anda pilih sendiri saham dan harga masuk maya. Buka mana-mana saham dan tekan butang ✍️ di atas kanan. Robot semak setiap hari dan tutup bila sampai paras atas (menang), paras bawah (kalah) atau ${BTH().h} hari dagangan.</p>
-    <div class="stats"><div><b>${op.length}</b>terbuka</div><div><b class="${opn>=0?'up':'dn'}">${rmS(opn)}</b>terbuka kini</div><div><b>${cl.length?Math.round(w/cl.length*100)+'%':'-'}</b>ketepatan</div><div><b class="${pnl>=0?'up':'dn'}">${cl.length?rmS(pnl):'-'}</b>selesai</div></div></div>`;
-  h+=`<div class="card"><h2>Kedudukan manual terbuka (${op.length})</h2>${op.length?op.map(manRow).join(''):'<p class="muted">Belum ada. Buka saham kegemaran anda dan tekan ✍️ untuk mula ujian manual.</p>'}</div>`;
-  const fav=S.watch.filter(c=>!manOpen(c));
-  h+=`<div class="card"><h2>⭐ Favorite saya (${S.watch.length})</h2>${fav.length?fav.map(c=>`<div class="rbr" role="button" data-code="${esc(c)}"><span class="rbm"><b>${esc(shortName(nameOf(c)))}</b> <span class="code">${esc(c)}</span>${statusHTML(c,nameOf(c),true)}</span><span class="rbres"><button class="btn sm gold" data-mn="${esc(c)}">✍️ Manual</button></span></div>`).join(''):`<p class="muted">${S.watch.length?'Semua favorite sedang diuji secara manual.':'Belum ada favorite. Buka saham dan tekan ☆ Tambah watchlist.'}</p>`}</div>`;
-  if(cl.length)h+=`<div class="card"><h2>Selesai (${cl.length})</h2>${cl.slice(0,40).map(manRow).join('')}</div>`;
+  let h=`<div class="card"><h2>✍️ Robot Manual</h2><p class="muted" style="margin-top:0">Senarai saham yang anda uji. Untuk tambah, buka mana-mana saham dan tekan ✍️ Manual. Robot semak harga setiap hari dan tutup bila sampai paras atas, paras bawah atau ${BTH().h} hari dagangan.</p>
+    <div class="mstat"><div><b>${op.length}</b><span>Sedang diuji</span></div><div><b class="${opn>=0?'up':'dn'}">${rmS(opn)}</b><span>Untung/rugi kini</span></div><div><b>${cl.length?Math.round(w/cl.length*100)+'%':'-'}</b><span>Ketepatan</span></div><div><b class="${pnl>=0?'up':'dn'}">${cl.length?rmS(pnl):'-'}</b><span>Untung/rugi selesai</span></div></div></div>`;
+  if(!M.length)h+=`<div class="card"><p class="muted" style="margin:0">Belum ada saham. Buka mana-mana saham dan tekan butang ✍️ Manual di atas kanan untuk mula ujian.</p></div>`;
+  if(op.length)h+=`<div class="card"><h2>Sedang diuji (${op.length})</h2>${op.map(manRow).join('')}</div>`;
+  if(cl.length)h+=`<div class="card"><h2>Selesai (${cl.length})</h2>${cl.map(manRow).join('')}</div>`;
+  if(M.length)h+=`<p class="disc" style="margin:6px var(--gut) 0">Ujian maya tanpa wang sebenar, kos dagangan ${(BTH().fee*100).toFixed(1)}% diambil kira. Ini bacaan indicator, bukan cadangan beli atau jual.</p>`;
   return h;}
 function bindManual(){
   document.querySelectorAll('#main .rbr[data-code]').forEach(b=>b.onclick=()=>stockSheet(b.dataset.code,nameOf(b.dataset.code)));
   document.querySelectorAll('[data-mx]').forEach(b=>b.onclick=e=>{e.stopPropagation();openManual(b.dataset.mx);});
-  document.querySelectorAll('[data-mn]').forEach(b=>b.onclick=e=>{e.stopPropagation();openManual(b.dataset.mn);});
+  document.querySelectorAll('[data-md]').forEach(b=>b.onclick=e=>{e.stopPropagation();const x=(S.manual||[]).find(p=>p.id===b.dataset.md);if(!x)return;S.manual=S.manual.filter(p=>p!==x);save();rRobot();toast('Dipadam dari senarai');});
   const need=(S.manual||[]).filter(p=>!p.closed&&!(S.cache[p.code]&&S.cache[p.code].asof===(mk(p.code)||{}).d)).map(p=>p.code);
-  if(need.length&&!bindManual._busy){bindManual._busy=true;Promise.allSettled([...new Set(need)].map(c=>getBars(c))).then(()=>{bindManual._busy=false;manRefresh();if(TAB==='robot'&&RB_MODE==='manual')rRobot();});}
+  if(need.length&&!bindManual._busy){bindManual._busy=true;Promise.allSettled([...new Set(need)].map(c=>getBars(c))).then(()=>{bindManual._busy=false;manRefresh();if(TAB==='robot')rRobot();});}
 }
 function rbStake(){return num(S.settings.paperStake)||20;}
 function rbScale(){return rbStake()/((S.paper&&S.paper.stake)||20);}
@@ -899,7 +902,8 @@ function rbRow(t,scale,live){
     return `<button class="rbr" data-code="${esc(t.c)}"><span class="rbm"><b>${esc(nm)}</b> <span class="code">${esc(t.c)}</span><span class="muted">${esc(setupName(t.k))} · masuk ${fmtD(t.d)} @ ${px(t.en)}</span><span class="muted">sasaran ${px(t.tg)} · had ${px(t.sl)}${now?` · kini ${px(now)}`:''}</span><span class="rbend">${t.md?`<span>tempoh biasa hingga ${fmtD(addTradingDays(t.d,Math.max(1,Math.round(t.md))))}</span> · `:''}<span>tutup paling lewat ${fmtD(addTradingDays(t.d,BTH().h))}</span></span></span><b class="${u==null?'':u>=0?'up':'dn'}">${u==null?'-':rmS(u)}</b></button>`;}
   const r=RES3[t.res];return `<button class="rbr" data-code="${esc(t.c)}"><span class="rbm"><b>${esc(nm)}</b> <span class="code">${esc(t.c)}</span><span class="muted">${esc(setupName(t.k))} · ${fmtD(t.d)} → ${fmtD(t.exit||t.end)} · ${t.days} hari</span></span><span class="rbres"><span class="badge ${r[2]}">${r[0]}</span><b class="${r[1]}">${rmS(t.ret*rbStake()/100)}</b></span></button>`;
 }
-function rRobot(){
+function rRobot(){$('#main').innerHTML=rManual();bindManual();}
+function rRobotAutoOld(){
   const seg=`<div class="pad" style="margin:0 var(--gut) 12px"><div class="seg rbseg"><button data-rbm="auto" class="${RB_MODE!=='manual'?'on':''}">🤖 Robot Auto</button><button data-rbm="manual" class="${RB_MODE==='manual'?'on':''}">✍️ Robot Manual</button></div></div>`;
   if(RB_MODE==='manual'){$('#main').innerHTML=seg+rManual();bindRbSeg();bindManual();return;}
   const P=S.paper;let h=seg+`<div class="card"><div class="row between"><h2 style="margin:0">Robot Auto</h2><span class="badge b-warn">Wang maya</span></div>
@@ -1417,6 +1421,10 @@ const EN_PHRASE=[
 ];
 
 Object.assign(EN_EXACT,{
+'Sedang diuji':'Being tested','Untung/rugi kini':'Profit/loss now','Ketepatan':'Accuracy','Untung/rugi selesai':'Closed profit/loss',
+'✍️ Robot Manual':'✍️ Manual Robot','Ditambah ke Robot Manual':'Added to Manual Robot','Dipadam dari senarai':'Removed from list',
+'Belum ada saham. Buka mana-mana saham dan tekan butang ✍️ Manual di atas kanan untuk mula ujian.':'No stocks yet. Open any stock and press the ✍️ Manual button at the top right to start a test.',
+'Senarai saham yang anda uji. Untuk tambah, buka mana-mana saham dan tekan ✍️ Manual. Robot semak harga setiap hari dan tutup bila sampai paras atas, paras bawah atau 40 hari dagangan.':'The stocks you are testing. To add one, open any stock and press ✍️ Manual. The robot checks prices every day and closes when price reaches the upper level, the lower level or 40 trading days.',
 'Isyarat Champion':'Champion signals','Tiada isyarat Champion hari ini':'No Champion signal today','Isyarat Kuat + Skor teknikal Kuat, bermula hari ini.':'Strong signal + Strong technical score, starting today.',
 'Tiada isyarat teknikal baharu yang bermula hari ini.':'No new technical signal starting today.',
 '🤖 Robot Auto':'🤖 Robot Auto','✍️ Robot Manual':'✍️ Robot Manual','✍️ Robot manual':'✍️ Manual robot','✍️ Manual':'✍️ Manual','✍️ Urus':'✍️ Manage','Urus':'Manage',
@@ -1527,6 +1535,8 @@ Object.assign(EN_EXACT,{
 'Paras ini naik mengikut harga tertinggi sejak tarikh belian dan tidak pernah turun. Harga tutup di bawahnya menandakan momentum menurun.':'This level rises with the highest price since the purchase date and never falls. A close below it signals weakening momentum.',
 });
 EN_RX.unshift(
+[/^Sedang diuji \((\d+)\)$/,'Being tested ($1)'],
+[/^Ujian maya tanpa wang sebenar, kos dagangan (.+)% diambil kira\. Ini bacaan indicator, bukan cadangan beli atau jual\.$/,'Virtual test with no real money, $1% trading cost included. This is an indicator reading, not a buy or sell recommendation.'],
 [/^(\d+) saham · bermula hari ini$/,'$1 stocks · starting today'],
 [/^Kedudukan manual terbuka \((\d+)\)$/,'Open manual positions ($1)'],[/^⭐ Favorite saya \((\d+)\)$/,'⭐ My favorites ($1)'],[/^Selesai \((\d+)\)$/,'Closed ($1)'],
 [/^Robot manual sejak (.+) @ (\S+)(.*)$/,'Manual robot since $1 @ $2$3'],[/^(.+) · (\d+) hari · (RM .+)$/,'$1 · $2 days · $3'],

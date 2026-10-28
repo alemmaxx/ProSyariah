@@ -166,6 +166,10 @@ def build(runs, px, stocks, asof, out_dir):
     out = {"asof": asof, "stake": STAKE, "maxOpen": MAX_OPEN, "fee": BT.FEE, "hist": hist, "live": lv,
            "names": {c: stocks[c]["n"] for c in {t["c"] for t in (hist["recent"] if hist else [])} | {p["c"] for p in lv["open"]} if c in stocks}}
     json.dump(out, open(os.path.join(out_dir, "paper.json"), "w"), ensure_ascii=False, separators=(",", ":"))
+    # ringkasan kecil dalam repo (untuk semakan tanpa membuka laman)
+    json.dump({"asof": asof, "stake": STAKE, "hist": {k: hist[k] for k in ("start", "end", "summary", "bySetup")} if hist else None,
+               "live": lv["summary"], "liveOpen": len(lv["open"])},
+              open(os.path.join(ROOT, "data", "paper-summary.json"), "w"), ensure_ascii=False, indent=1)
     h = hist["summary"] if hist else {"n": 0}
     print(f"✓ Robot Auto: sejarah {h.get('n', 0)} dagangan maya, ketepatan {h.get('win', '-')}%, "
           f"untung/rugi RM{h.get('pnl', 0)} (RM{STAKE:.0f} setiap isyarat); langsung {len(lv['open'])} terbuka")

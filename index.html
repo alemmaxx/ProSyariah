@@ -268,6 +268,10 @@ main>.card,main>.alert,main>.grid2,main>.disc,main>.pad,.search,.results{margin-
 .rbm{display:flex;flex-direction:column;gap:2px;min-width:0}
 .rbres{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex:none}
 nav button{min-width:0}
+
+.sst{display:flex;flex-direction:column;gap:3px;margin-top:6px;font-size:13px}
+.sst.c{font-size:12px;margin-top:3px}
+.sst .s-ok{color:var(--green)}.sst .s-up{color:var(--green)}.sst .s-no{color:var(--red)}.sst .s-warn{color:var(--amber)}.sst .s-na{color:var(--muted)}
 </style>
 </head>
 <body translate="no">
@@ -650,7 +654,7 @@ function top5Alerts(push){
 }
 
 /* ================= TAB ROBOT AUTO (akaun latihan maya) ================= */
-let RB_MODE='hist',RB_ALL=false;
+let RB_MODE='live',RB_ALL=false;
 const RES3={W:['Menang','up','b-ok'],L:['Kalah','dn','b-no'],T:['Tamat masa','','b-na']};
 function rbStake(){return num(S.settings.paperStake)||20;}
 function rbScale(){return rbStake()/((S.paper&&S.paper.stake)||20);}
@@ -687,8 +691,8 @@ function rRobot(){
     <label>Nilai maya setiap isyarat (RM)</label><input id="rbS" inputmode="decimal" value="${rbStake()}"></div>`;
   if(!P){$('#main').innerHTML=h+`<div class="alert a-amber">Data Robot Auto belum diterima. Robot GitHub akan menghasilkannya pada larian seterusnya.</div>`;bindRb();return;}
   const sc=rbScale(),cap=P.maxOpen*rbStake();
-  h+=`<div class="seg" style="margin:0 var(--gut) 12px"><button data-rb="hist" class="${RB_MODE==='hist'?'on':''}">Ujian sejarah 12 bulan</button><button data-rb="live" class="${RB_MODE==='live'?'on':''}">Ujian langsung</button></div>`;
-  if(RB_MODE==='hist'){const H=P.hist;
+  h+=`<div class="pad" style="margin:0 var(--gut) 12px"><button class="btn sec" style="width:100%" id="rbHist">📊 Lihat ujian sejarah 12 bulan${P.hist&&P.hist.summary.n?` · ketepatan ${P.hist.summary.win}% · ${rmS(P.hist.summary.pnl*sc)}`:''}</button></div>`;
+  if(false){const H=P.hist;
     if(!H){h+=`<div class="alert a-amber">Sejarah belum cukup untuk ujian.</div>`;}
     else{h+=`<div class="card"><h2>${fmtD(H.start)} – ${fmtD(H.end)}</h2><p class="muted" style="margin-top:0">Robot mengulang setiap hari dagangan setahun lepas. Pada setiap hari, ia hanya guna statistik daripada dagangan yang sudah selesai sebelum hari itu, jadi tiada maklumat masa depan digunakan.</p>${rbStats(H.summary,sc,cap)}</div>`;
       h+=`<div class="card"><h2>Untung / rugi terkumpul</h2>${equitySVG(H.curve,sc)}</div>`;
@@ -703,11 +707,57 @@ function rRobot(){
   h+=`<p class="disc" style="margin:6px var(--gut) 0">Simulasi menggunakan harga tutup harian dan kos dagangan ${(P.fee*100).toFixed(1)}%. Ujian sejarah menggunakan senarai syariah SC terkini untuk semua tempoh. Keputusan simulasi bukan jaminan prestasi masa depan dan bukan cadangan beli atau jual.</p>`;
   $('#main').innerHTML=h;bindRb();
 }
+
+function openRbHist(all){
+  const P=S.paper,H=P&&P.hist;if(!H)return toast('Sejarah belum cukup untuk ujian.');const sc=rbScale(),cap=P.maxOpen*rbStake();
+  let h=`<div class="row between"><h2 style="margin:0">Ujian sejarah 12 bulan</h2><button class="btn sm sec" onclick="closeSheet()">Tutup</button></div>
+   <p class="muted">${fmtD(H.start)} – ${fmtD(H.end)}. Robot mengulang setiap hari dagangan setahun lepas. Pada setiap hari, ia hanya guna statistik daripada dagangan yang sudah selesai sebelum hari itu, jadi tiada maklumat masa depan digunakan.</p>
+   <div class="card">${rbStats(H.summary,sc,cap)}</div><div class="card"><h2>Untung / rugi terkumpul</h2>${equitySVG(H.curve,sc)}</div>
+   <div class="card"><h2>Ikut jenis isyarat</h2><div class="bth"><div class="hd"><span>Isyarat</span><span>Dagangan</span><span>Ketepatan</span><span>Untung/rugi</span></div>`+
+   Object.entries(H.bySetup).map(([k,v])=>`<div><span>${esc(setupName(k))}</span><span>${v.n||0}</span><span>${v.n?v.win+'%':'-'}</span><span class="${(v.pnl||0)>=0?'up':'dn'}">${v.n?rmS(v.pnl*sc):'-'}</span></div>`).join('')+`</div></div>
+   <div class="card"><h2>Dagangan maya terkini</h2>${H.recent.slice(0,all?60:12).map(t=>rbRow(t,sc)).join('')}${H.recent.length>12?`<button class="btn sm sec" style="margin-top:10px" id="rbAllH">${all?'Tunjuk kurang':'Lihat semua ('+H.recent.length+')'}</button>`:''}</div>
+   <p class="disc">Ujian sejarah menggunakan senarai syariah SC terkini untuk semua tempoh. Keputusan simulasi bukan jaminan prestasi masa depan.</p>`;
+  openSheet(h);const b=$('#rbAllH');if(b)b.onclick=()=>openRbHist(!all);
+  document.querySelectorAll('#sheetBody .rbr').forEach(b=>b.onclick=()=>stockSheet(b.dataset.code,nameOf(b.dataset.code)));
+}
 function bindRb(){
   const i=$('#rbS');if(i)i.onchange=e=>{S.settings.paperStake=Math.max(1,num(e.target.value)||20);save();rRobot();};
   document.querySelectorAll('[data-rb]').forEach(b=>b.onclick=()=>{RB_MODE=b.dataset.rb;RB_ALL=false;rRobot();});
   const ra=$('#rbAll');if(ra)ra.onclick=()=>{RB_ALL=!RB_ALL;rRobot();};
+  const rh=$('#rbHist');if(rh)rh.onclick=()=>openRbHist(false);
   document.querySelectorAll('.rbr').forEach(b=>b.onclick=()=>stockSheet(b.dataset.code,nameOf(b.dataset.code)));
+}
+
+/* ================= STATUS ISYARAT SETIAP SAHAM ================= */
+function signalFor(code){
+  // isyarat terkini untuk saham ini: aktif sekarang, atau yang sedang dipantau robot/5 terkuat
+  const M=S.market;if(!M)return null;const m=mk(code);if(!m)return null;let best=null;
+  (m.op||[]).forEach(o=>{if(o.ev>0){const x={k:o.k,p:o.p,start:subTradingDays(m.d,o.ago||0),en:o.en,tg:o.tg,sl:o.sl,md:o.md};if(!best||x.p>best.p)best=x;}});
+  const more=[...((S.track&&S.track.openList)||[]).filter(s=>s.c===code).map(s=>({k:s.k,p:s.p,start:s.d,en:s.en,tg:s.tg,sl:s.sl,md:s.md})),
+    ...Object.values(S.t5||{}).filter(t=>t.code===code).map(t=>({k:t.k,p:t.p,start:t.start,en:t.en,tg:t.tg,sl:t.sl,md:t.md}))];
+  more.forEach(x=>{if(!best||x.start>best.start)best=x;});
+  return best;
+}
+function stockStatus(code,name){
+  const st=status(code,name),m=mk(code);
+  if(st==='no')return {ic:'✕',cls:'s-no',t:'Tidak patuh syariah'};
+  const hd=S.holdings.find(h=>h.code===code);const out=[];
+  const sig=signalFor(code);const now=m&&m.c;
+  if(sig&&now!=null){const md=Math.max(1,Math.round(sig.md||0)),el=tdBetween(sig.start,S.market.meta.asof);
+    if(now>=sig.tg)out.push({ic:'🎯',cls:'s-up',t:`Sudah sampai paras atas ${px(sig.tg)} (isyarat ${fmtD(sig.start)})`});
+    else if(now<=sig.sl)out.push({ic:'🛑',cls:'s-no',t:`Jatuh ke paras bawah ${px(sig.sl)} (isyarat ${fmtD(sig.start)})`});
+    else if(el>BTH().h)out.push({ic:'⌛',cls:'s-na',t:`Isyarat ${fmtD(sig.start)} tamat tanpa keputusan`});
+    else if(el>md)out.push({ic:'⏳',cls:'s-warn',t:`Isyarat ${sig.p}% · tempoh biasa sudah berlalu (hari ke-${el} daripada ~${md})`});
+    else out.push({ic:'🟢',cls:'s-ok',t:`Isyarat aktif ${sig.p}% · dalam tempoh biasa (hari ke-${el} daripada ~${md})`});}
+  else if(m&&m.va)out.push({ic:'⚪',cls:'s-na',t:`Tiada isyarat teknikal aktif · skor ${m.sc}/${m.va}`});
+  if(hd){const lc=lastClose(code);if(lc){const pl=(lc.c-hd.cost)*hd.qty,pct=(lc.c/hd.cost-1)*100;const XP=exitPlan(hd);
+    out.push({ic:'💼',cls:pl>=0?'s-up':'s-no',t:`Pegangan anda ${pl>=0?'untung':'rugi'} ${rmS(pl)} (${pct>=0?'+':''}${pct.toFixed(1)}%)${XP?(XP.hit?' · harga tutup di bawah paras sokongan mengekor':' · di atas paras sokongan mengekor'):''}`});}}
+  return out.length?out:null;
+}
+function statusHTML(code,name,compact){
+  const s=stockStatus(code,name);if(!s)return '';
+  const arr=Array.isArray(s)?s:[s];
+  return `<div class="sst${compact?' c':''}">${arr.map(x=>`<span class="${x.cls}">${x.ic} ${esc(x.t)}</span>`).join('')}</div>`;
 }
 
 /* ================= KETEPATAN ISYARAT ================= */
@@ -1104,6 +1154,8 @@ const EN_PHRASE=[
 ];
 
 Object.assign(EN_EXACT,{
+'Tidak patuh syariah':'Not Shariah-compliant','Ujian sejarah 12 bulan':'12-month historical test',
+'Ujian sejarah menggunakan senarai syariah SC terkini untuk semua tempoh. Keputusan simulasi bukan jaminan prestasi masa depan.':'The historical test uses the latest SC Shariah list for the whole period. Simulated results are not a guarantee of future performance.',
 'Tunjuk kurang':'Show less',
 'Robot':'Robot','Robot Auto':'Auto Robot','Wang maya':'Virtual money','Nilai maya setiap isyarat (RM)':'Virtual amount per signal (RM)',
 'Ujian sejarah 12 bulan':'12-month historical test','Ujian langsung':'Live test','Ketepatan':'Accuracy','Untung / rugi':'Profit / loss',
@@ -1143,6 +1195,15 @@ Object.assign(EN_EXACT,{
 'Paras ini naik mengikut harga tertinggi sejak tarikh belian dan tidak pernah turun. Harga tutup di bawahnya menandakan momentum menurun.':'This level rises with the highest price since the purchase date and never falls. A close below it signals weakening momentum.',
 });
 EN_RX.unshift(
+[/^Sudah sampai paras atas (\S+) \(isyarat (.+)\)$/,'Already reached upper level $1 (signal $2)'],
+[/^Jatuh ke paras bawah (\S+) \(isyarat (.+)\)$/,'Fell to lower level $1 (signal $2)'],
+[/^Isyarat (.+) tamat tanpa keputusan$/,'Signal $1 expired without a result'],
+[/^Isyarat (\d+)% · tempoh biasa sudah berlalu \(hari ke-(\d+) daripada ~(\d+)\)$/,'Signal $1% · typical period has passed (day $2 of ~$3)'],
+[/^Isyarat aktif (\d+)% · dalam tempoh biasa \(hari ke-(\d+) daripada ~(\d+)\)$/,'Active signal $1% · within typical period (day $2 of ~$3)'],
+[/^Tiada isyarat teknikal aktif · skor (\d+)\/(\d+)$/,'No active technical signal · score $1/$2'],
+[/^Pegangan anda (untung|rugi) (\S+ ?\S*) \((\S+)%\)(.*)$/,(m,a,b,c,d)=>`Your holding is ${a==='untung'?'up':'down'} ${b} (${c}%)${d.replace(' · harga tutup di bawah paras sokongan mengekor',' · closed below trailing support').replace(' · di atas paras sokongan mengekor',' · above trailing support')}`],
+[/^📊 Lihat ujian sejarah 12 bulan(?: · ketepatan (\S+)% · (.+))?$/,(m,a,b)=>`📊 View 12-month historical test${a?` · accuracy ${a}% · ${b}`:''}`],
+[/^(.+) – (.+)\. Robot mengulang setiap hari dagangan setahun lepas\. (.*)$/,(m,a,b,c)=>`${a} – ${b}. The robot replays every trading day of the past year. Each day it only uses statistics from trades already closed before that day, so no future information is used.`],
 [/^Lihat semua \((\d+)\)$/,'See all ($1)'],
 [/^Robot "melabur" nilai maya pada setiap isyarat dalam 5 terkuat dan keluar bila harga sampai paras atas \(menang\), paras bawah \(kalah\) atau selepas (\d+) hari dagangan\. Paling banyak (\d+) kedudukan serentak\. Tiada wang sebenar terlibat\.$/,'The robot "invests" a virtual amount in every signal among the 5 strongest and exits when price reaches the upper level (win), the lower level (loss) or after $1 trading days. At most $2 positions at a time. No real money is involved.'],
 [/^(\d+) menang · (\d+) kalah · (\d+) tamat masa$/,'$1 won · $2 lost · $3 timed out'],
@@ -1192,6 +1253,7 @@ function trText(t){
   const lead=t.match(/^\s*/)[0],trail=t.match(/\s*$/)[0],k=t.trim();if(!k)return t;
   const wrap=v=>lead+v+trail;
   if(EN_EXACT[k]!==undefined)return wrap(EN_EXACT[k]);
+  const pre=k.match(/^([^\p{L}\p{N}("“]+\s)(\S.*)$/u);if(pre){const r=trText(pre[2]);if(r!==pre[2])return wrap(pre[1]+r);}
   for(const [rx,rep] of EN_RX){if(rx.test(k)){const v=k.replace(rx,rep);if(v!==k)return wrap(v);}}
   if(k.includes(' · ')){const parts=k.split(' · ');const tp=parts.map(p=>trText(p));if(tp.some((p,i)=>p!==parts[i]))return wrap(tp.join(' · '));}
   let v=k,ch=false;for(const [a,b] of EN_PHRASE){if(v.includes(a)){v=v.split(a).join(b);ch=true;}}
@@ -1363,7 +1425,7 @@ function rSaham(){
     const q=Q.trim().toUpperCase();if(!q){$('#res').innerHTML='';return;}
     const nq=normName(q);
     const hits=U.filter(x=>x.code.toUpperCase().startsWith(q)||normName(x.name).includes(nq)).slice(0,30);
-    $('#res').innerHTML=hits.length?hits.map(x=>{const m=mk(x.code);return `<div class="item" data-code="${esc(x.code)}" data-name="${esc(x.name)}"><div><b>${esc(x.name)}</b><div class="code">${esc(x.code||'tiada kod')}${m&&m.c!=null?` · ${px(m.c)}`:''}</div></div>${badge(status(x.code,x.name))}</div>`;}).join(''):`<div class="muted" style="padding:10px 0">${U.length?'Tiada padanan. Cuba kod 4 digit atau sebahagian nama.':'Data sedang dimuat.'}</div>`;
+    $('#res').innerHTML=hits.length?hits.map(x=>{const m=mk(x.code);return `<div class="item" data-code="${esc(x.code)}" data-name="${esc(x.name)}"><div><b>${esc(x.name)}</b><div class="code">${esc(x.code||'tiada kod')}${m&&m.c!=null?` · ${px(m.c)}`:''}</div>${x.code?statusHTML(x.code,x.name,true):''}</div>${badge(status(x.code,x.name))}</div>`;}).join(''):`<div class="muted" style="padding:10px 0">${U.length?'Tiada padanan. Cuba kod 4 digit atau sebahagian nama.':'Data sedang dimuat.'}</div>`;
     $('#res').querySelectorAll('.item').forEach(el=>el.onclick=()=>stockSheet(el.dataset.code,el.dataset.name));
   };
   $('#q').oninput=e=>{Q=e.target.value;res();};res();
@@ -1380,7 +1442,7 @@ function stockSheet(code,name){
   name=name||nameOf(code);const st=status(code,name);const L=latestList();
   const blocked=S.settings.shariahMode&&st==='no';
   const inW=code&&S.watch.includes(code);
-  let h=`<div class="row between"><div><h2 style="margin:0">${esc(name||code)}</h2><div class="code">${esc(code||'tiada kod')} · KLSE</div></div><button class="btn sm sec" onclick="closeSheet()">Tutup</button></div>
+  let h=`<div class="row between"><div><h2 style="margin:0">${esc(name||code)}</h2><div class="code">${esc(code||'tiada kod')} · KLSE</div>${code?statusHTML(code,name):''}</div><button class="btn sm sec" onclick="closeSheet()">Tutup</button></div>
     <div style="margin:10px 0">${badge(st)} ${L?`<span class="muted">Senarai SC ${fmtD(L.date)}</span>`:''}</div>`;
   if(st==='no')h+=`<div class="alert a-red">Saham ini <b>tiada</b> dalam senarai patuh syariah SC terkini.${blocked?' Isyarat teknikal disembunyikan kerana Mod Patuh Syariah ON.':''}</div>`;
   if(st==='na')h+=`<div class="alert a-amber">Senarai SC belum diimport — status tidak dapat ditentukan.</div>`;
@@ -1401,7 +1463,7 @@ function stockSheet(code,name){
   $('#cBtn').onclick=()=>{navigator.clipboard&&navigator.clipboard.writeText(code);toast('Kod '+code+' disalin');};
   const run=async force=>{
     $('#indBody').innerHTML='Memuatkan…';
-    try{const A=analyze(await getBars(code,force));showInd(A,blocked);const bh=$('#btHist');if(bh&&!blocked)bh.innerHTML=btHistHTML(S.cache[code]&&S.cache[code].bt);}catch(e){$('#indBody').innerHTML=`<div class="alert a-red">${esc(e.message)}</div>`;}
+    try{const A=analyze(await getBars(code,force));showInd(A,blocked);const ss=document.querySelector('#sheetBody .sst');if(ss)ss.outerHTML=statusHTML(code,name);const bh=$('#btHist');if(bh&&!blocked)bh.innerHTML=btHistHTML(S.cache[code]&&S.cache[code].bt);}catch(e){$('#indBody').innerHTML=`<div class="alert a-red">${esc(e.message)}</div>`;}
   };
   $('#ldBtn').onclick=()=>run(true);
   if(mk(code)||S.cache[code])run(false);
@@ -1453,7 +1515,7 @@ function rPortfolio(){
     const I=holdingInfo(hd);const st=I.kind==='ok'?'ok':I.kind==='na'?'na':'no';
     const pl=I.price!=null?(I.price-hd.cost)*hd.qty:null;
     h+=`<div style="border-top:1px solid var(--line);padding:10px 0;margin-top:8px">
-      <div class="row between"><div><b>${esc(hd.name||hd.code)}</b><div class="code">${esc(hd.code)} · ${hd.qty} unit @ ${px(hd.cost)}</div></div>${badge(st)}</div>
+      <div class="row between"><div><b>${esc(hd.name||hd.code)}</b><div class="code">${esc(hd.code)} · ${hd.qty} unit @ ${px(hd.cost)}</div>${statusHTML(hd.code,hd.name,true)}</div>${badge(st)}</div>
       <div class="muted">Harga terakhir: ${I.price!=null?px(I.price)+' ('+fmtD(I.lcDate)+')':'belum dimuat'}${pl!=null?` · Untung/Rugi: <b style="color:${pl>=0?'var(--green)':'var(--red)'}">${rm(pl)}</b>`:''}</div>`;
     if(I.kind==='reclass'){
       const ref=refPriceFor(hd,L.date);

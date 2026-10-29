@@ -241,6 +241,10 @@ main>.card,main>.alert,main>.grid2,main>.disc,main>.pad,.search,.results{margin-
 .poster .ppf{position:absolute;left:8px;right:6px;bottom:7px;z-index:2;font-size:9.5px;font-weight:700;color:var(--gold);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .poster .ppf .pfl-t{display:none}.poster .ppf .pfc{padding:0 2px;border:0;background:none;font-size:9.5px}
 .poster .pn.up2{bottom:42px}.poster .pb.up2{bottom:23px}
+.anbtn{display:block;width:100%;margin-top:10px;padding:10px 12px;border-radius:10px;border:1px solid var(--gold);background:var(--gold2);color:var(--gold);font:700 14px var(--f);cursor:pointer;text-align:left}
+.nrow{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);color:var(--ink);text-decoration:none}.nrow:last-child{border-bottom:0}
+.nrow>span:last-child{display:flex;flex-direction:column;gap:2px;min-width:0}.nrow b{font-weight:600;font-size:14px;line-height:1.35}.nrow .muted{font-size:12px}
+.ntone{flex:none;width:20px;text-align:center;font-weight:800}.ntone.tp{color:var(--green)}.ntone.tn{color:var(--red)}.ntone.tz{color:var(--muted)}
 .mrow{padding:14px 0;border-bottom:1px solid var(--line);cursor:pointer}.mrow:last-child{border-bottom:0}
 .mhd{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
 .mnow{display:flex;flex-direction:column;align-items:flex-end}.mnow small{font-size:11px;color:var(--muted)}.mnow b{font-size:22px}
@@ -544,6 +548,7 @@ async function syncData(manual){
           S.lists=conv;changed=true;S.sync.scAuto=true;
           if(isNew)msg=`Senarai syariah SC baharu (${fmtD(newLatest.date)}) diterima`;}}}
     try{const r4=await fetch(DATA_BASE+'paper.json?t='+Math.floor(Date.now()/36e5),{cache:'no-cache'});if(r4.ok){const t=await r4.json();if(!S.paper||S.paper.asof!==t.asof||!S.paper.hist!==!t.hist){S.paper=t;changed=true;}}}catch(e){}
+    try{const r5=await fetch(DATA_BASE+'news.json?t='+Math.floor(Date.now()/36e5),{cache:'no-cache'});if(r5.ok){S.news=await r5.json();}}catch(e){}
     try{const r3=await fetch(DATA_BASE+'track.json?t='+Math.floor(Date.now()/36e5),{cache:'no-cache'});if(r3.ok){const t=await r3.json();if(!S.track||S.track.asof!==t.asof){S.track=t;changed=true;}}}catch(e){}
     updateTop5Track();
     S.sync.at=new Date().toISOString();S.sync.err='';
@@ -1484,6 +1489,17 @@ const EN_PHRASE=[
 ];
 
 Object.assign(EN_EXACT,{
+'📝 Ringkasan analisa':'📝 Analysis summary','Kesimpulan':'Conclusion','Isyarat':'Signal','Jenis':'Type','Kebarangkalian sejarah':'Historical probability','Rekod pada saham ini':'Record on this stock',
+'Berita terkini':'Latest news','Positif':'Positive','Negatif':'Negative','Atas':'Above','Bawah':'Below',
+'Saham ini tidak patuh syariah dalam senarai SC terkini. Bacaan teknikal tidak berkaitan untuk pelaburan patuh syariah.':'This stock is not Shariah-compliant in the latest SC list. Technical readings are not relevant for Shariah-compliant investing.',
+'🏆 Champion: isyarat sejarah kuat dan trend semasa juga kuat. Ini gabungan bacaan terbaik dalam app.':'🏆 Champion: strong historical signal and a strong current trend. This is the best combination of readings in the app.',
+'Isyarat lantunan: harga baru jatuh dan trend masih lemah. Peluang lantunan ada, tetapi risiko lebih tinggi. Pantau paras cut loss.':'Bounce signal: price has just fallen and the trend is still weak. A rebound is possible, but the risk is higher. Watch the cut-loss level.',
+'Ada isyarat, tetapi trend semasa lemah. Tunggu pengesahan trend.':'There is a signal, but the current trend is weak. Wait for trend confirmation.',
+'Tiada isyarat baharu, tetapi trend semasa kuat. Tunggu isyarat seterusnya.':'No new signal, but the current trend is strong. Wait for the next signal.',
+'Tiada isyarat aktif dan trend semasa tidak kuat. Tiada bacaan positif buat masa ini.':'No active signal and the current trend is not strong. No positive reading for now.',
+'▲ nada positif · ▼ nada negatif · • neutral. Nada dikira dari kata kunci tajuk sahaja; baca berita penuh untuk konteks.':'▲ positive tone · ▼ negative tone · • neutral. Tone is based on headline keywords only; read the full article for context.',
+'Tiada berita dalam 30 hari lepas. Berita dipantau untuk saham yang ada isyarat aktif atau skor teknikal tinggi.':'No news in the last 30 days. News is tracked for stocks with an active signal or a high technical score.',
+'Ringkasan ini ialah bacaan indicator dan tajuk berita awam, bukan cadangan beli atau jual.':'This summary is an indicator reading and public news headlines, not a buy or sell recommendation.',
 '📲 Labur di:':'📲 Invest via:','Platform saham utama anda (dipaparkan pada isyarat)':'Your main stock platform (shown on signals)','Semua (moomoo, Rakuten Trade, Webull)':'All (moomoo, Rakuten Trade, Webull)','✓ Disimpan':'✓ Saved',
 'Platform pelaburan':'Investment platforms','Beli saham sendiri':'Buy stocks yourself','Diurus untuk anda':'Managed for you','Buka ↗':'Open ↗','Buka di platform':'Open in a platform',
 'Saham Bursa & AS':'Bursa & US stocks','Robo-advisor patuh syariah':'Shariah-compliant robo-advisor','Robo-advisor (ada portfolio syariah)':'Robo-advisor (has Shariah portfolio)','Simpanan dana (ada Versa Save Shariah)':'Fund savings (has Versa Save Shariah)',
@@ -1608,6 +1624,12 @@ Object.assign(EN_EXACT,{
 'Paras ini naik mengikut harga tertinggi sejak tarikh belian dan tidak pernah turun. Harga tutup di bawahnya menandakan momentum menurun.':'This level rises with the highest price since the purchase date and never falls. A close below it signals weakening momentum.',
 });
 EN_RX.unshift(
+[/^📝 Ringkasan analisa · 📰 (\d+) berita$/,'📝 Analysis summary · 📰 $1 news'],
+[/^Berjaya (\d+) daripada (\d+) kali$/,'Succeeded $1 of $2 times'],[/^(.+) \(~(\d+) hari\)$/,(m,a,b)=>`${trText(a)} (~${b} days)`],
+[/^Skor (\d+)\/(\d+) · (.+)$/,(m,a,b,c)=>`Score ${a}/${b} · ${trText(c)}`],[/^Bacaan teknikal \((harian|mingguan)\)$/,(m,a)=>`Technical readings (${a==='harian'?'daily':'weekly'})`],[/^Bacaan teknikal$/,'Technical readings'],
+[/^(.+) dan trend semasa kuat\. Kedua-dua bacaan positif\.$/,(m,a)=>`${trText(a)} and the current trend is strong. Both readings are positive.`],
+[/^(.+), trend semasa bercampur\. Pantau tempoh biasa dan paras cut loss\.$/,(m,a)=>`${trText(a)}, the current trend is mixed. Watch the typical period and the cut-loss level.`],
+[/^Berita 30 hari: (\d+) tajuk \((\d+) positif, (\d+) negatif\)\.$/,'30-day news: $1 headlines ($2 positive, $3 negative).'],
 [/^kod (\S+) akan disalin$/,'code $1 will be copied'],[/^Kod (\S+) disalin — tampal dalam carian (.+)$/,'Code $1 copied — paste it into $2 search'],
 [/^Isyarat aktif (\d+)% \((.+)\) · tempoh indicator trading \(hari ke-(\d+) daripada ~(\d+)\)$/,(m,a,b,c,d)=>`Active signal ${a}% (${trText(b)}) · trading indicator period (day ${c} of ~${d})`],
 [/^Isyarat (\d+)% · tempoh indicator trading sudah berlalu \(hari ke-(\d+) daripada ~(\d+)\)$/,'Signal $1% · trading indicator period has passed (day $2 of ~$3)'],
@@ -1942,6 +1964,55 @@ function platformHTML(){
     <label>Platform saham utama anda (dipaparkan pada isyarat)</label><select id="pfMain"><option value="all"${(S.settings.platform==null||S.settings.platform==='all')?' selected':''}>Semua (moomoo, Rakuten Trade, Webull)</option>${PLATFORMS.map((P,i)=>P.g==='saham'?`<option value="${i}"${String(S.settings.platform)===String(i)?' selected':''}>${esc(P.n)}</option>`:'').join('')}</select>
     ${grp('saham','Beli saham sendiri')}${grp('urus','Diurus untuk anda')}
     <div class="disc">ProSyariah tiada kaitan dengan platform ini dan tidak menerima bayaran. Semak lesen SC, yuran dan pilihan akaun Islamik sebelum membuka akaun.</div></div>`;}
+/* ===== RINGKASAN ANALISA: semua bacaan penting + berita dalam satu pop up ===== */
+function newsFor(code){return (S.news&&S.news.items&&S.news.items[code])||[];}
+async function openAnalysis(code){
+  const nm=nameOf(code);const d=document.createElement('div');d.className='help';d.id='help';document.body.classList.add('ovl');bkEnsure();
+  d.innerHTML=`<div class="help-p" role="dialog" aria-modal="true"><div><div class="shd-top"><div class="shd-name"><h2 style="margin:0">📝 Ringkasan analisa</h2><div class="code">${esc(shortName(nm))} · ${esc(code)}</div></div><button class="xbtn" id="helpX" aria-label="Tutup">✕</button></div></div><div id="anBody"><p class="muted">Memuatkan…</p></div></div>`;
+  document.body.appendChild(d);
+  const close=()=>{d.remove();if(!$('#sheet').classList.contains('on'))document.body.classList.remove('ovl');};
+  d.onclick=e=>{if(e.target===d)close();};$('#helpX').onclick=close;
+  let A=null;try{A=analyze(await getBars(code));}catch(e){}
+  const B=$('#anBody');if(!B)return;try{B.innerHTML=analysisHTML(code,A);}catch(e){B.innerHTML=`<p class="muted">Ringkasan tidak dapat dipaparkan.</p>`;}
+}
+function analysisHTML(code,A){
+  const nm=nameOf(code),st=status(code,nm),m=mk(code);
+  let so=bestOp(code);if(!so){const sg=signalFor(code);if(sg&&m&&m.c!=null&&m.c<sg.tg&&m.c>sg.sl&&tdBetween(sg.start,S.market.meta.asof)<=BTH().h)so=sg;}
+  if(so&&!so.start&&m)so={...so,start:subTradingDays(m.d,so.ago||0)};
+  const R=so?rateSignal(so):null,V=m&&m.va?scoreVerdict(m.sc,m.va):null,champ=so&&isChamp(so,code);
+  const N=newsFor(code),np=N.filter(x=>x.x==='+').length,nn=N.filter(x=>x.x==='-').length;
+  // Kesimpulan
+  let ks;
+  if(st==='no')ks='Saham ini tidak patuh syariah dalam senarai SC terkini. Bacaan teknikal tidak berkaitan untuk pelaburan patuh syariah.';
+  else if(champ)ks='🏆 Champion: isyarat sejarah kuat dan trend semasa juga kuat. Ini gabungan bacaan terbaik dalam app.';
+  else if(R&&V&&V.lbl==='Kuat')ks=`${R.lbl} dan trend semasa kuat. Kedua-dua bacaan positif.`;
+  else if(R&&V&&V.lbl==='Lemah')ks=(so.k==='os'||so.k==='pb')?'Isyarat lantunan: harga baru jatuh dan trend masih lemah. Peluang lantunan ada, tetapi risiko lebih tinggi. Pantau paras cut loss.':'Ada isyarat, tetapi trend semasa lemah. Tunggu pengesahan trend.';
+  else if(R)ks=`${R.lbl}, trend semasa bercampur. Pantau tempoh biasa dan paras cut loss.`;
+  else if(V&&V.lbl==='Kuat')ks='Tiada isyarat baharu, tetapi trend semasa kuat. Tunggu isyarat seterusnya.';
+  else ks='Tiada isyarat aktif dan trend semasa tidak kuat. Tiada bacaan positif buat masa ini.';
+  const ns=N.length?`Berita 30 hari: ${N.length} tajuk (${np} positif, ${nn} negatif).`:'';
+  let h=`<div class="verd" style="margin-top:0"><b>Kesimpulan</b><p style="margin:4px 0 0">${esc(ks)}</p>${ns?`<p style="margin:4px 0 0">${esc(ns)}</p>`:''}</div>`;
+  h+=`<div class="hstat" style="margin:12px 0 4px">${badge(st)}${st==='no'?'':R?`<span class="badge ${R.cls}">${R.lbl}</span>`:'<span class="badge b-na">Tiada isyarat aktif</span>'}${V&&st!=='no'?`<span class="badge ${V.cls}">Skor ${m.sc}/${m.va} · ${V.lbl.split(' –')[0]}</span>`:''}${champ&&st!=='no'?'<span class="badge b-gold">🏆 Champion</span>':''}</div>`;
+  // Isyarat
+  if(so&&st!=='no'){const md=Math.max(1,Math.round(so.md||0)),tp=(so.tg/so.en-1)*100,sp=(1-so.sl/so.en)*100;
+    h+=`<h3>Isyarat</h3><div class="card" style="margin:0">
+      <div class="kv"><span>Jenis</span><b>${esc(setupName(so.k))}</b></div>
+      <div class="kv"><span>Kebarangkalian sejarah</span><b>${so.p}%</b></div>
+      ${so.n!=null&&so.w!=null?`<div class="kv"><span>Rekod pada saham ini</span><b>Berjaya ${so.w} daripada ${so.n} kali</b></div>`:''}
+      <div class="kv"><span>Tarikh mula</span><b>${fmtD(entryDate(so.start))}</b></div>
+      <div class="kv"><span>Tamat tempoh biasa</span><b>${fmtD(endFor(so.start,md))} (~${md} hari)</b></div>
+      <div class="kv"><span>Sasaran</span><b class="up">${px(so.tg)} (+${tp.toFixed(1)}%)</b></div>
+      <div class="kv"><span>Cut loss</span><b class="dn">${px(so.sl)} (−${sp.toFixed(1)}%)</b></div></div>`;}
+  // Teknikal
+  if(A&&st!=='no'){h+=`<h3>Bacaan teknikal (${A.tf==='Mingguan'?'mingguan':'harian'})</h3><div class="card" style="margin:0">${A.checks.map(c=>`<div class="hrow"><span class="hic">${c.ok===true?'✅':c.ok===false?'❌':'➖'}</span><div><b>${esc(c.title)}</b><p class="muted">${esc(c.txt)}</p></div></div>`).join('')}${A.cross?`<p style="margin:8px 0 0">${esc(A.cross)}</p>`:''}</div>`;}
+  else if(m&&m.va&&st!=='no')h+=`<h3>Bacaan teknikal</h3><div class="card" style="margin:0"><div class="kv"><span>RSI 14</span><b>${m.r!=null?Math.round(m.r):'-'}</b></div><div class="kv"><span>EMA200</span><b>${m.e2==null?'-':m.e2?'Atas':'Bawah'}</b></div><div class="kv"><span>MACD</span><b>${m.m==null?'-':m.m?'Positif':'Negatif'}</b></div></div>`;
+  // Berita
+  h+=`<h3>Berita terkini</h3>`;
+  if(N.length)h+=`<div class="card" style="margin:0">${N.map(x=>`<a class="nrow" href="${esc(x.u)}" target="_blank" rel="noopener"><span class="ntone t${x.x==='+'?'p':x.x==='-'?'n':'z'}">${x.x==='+'?'▲':x.x==='-'?'▼':'•'}</span><span><b>${esc(x.t)}</b><span class="muted">${fmtD(x.d)}${x.s?' · '+esc(x.s):''}</span></span></a>`).join('')}</div>
+    <p class="muted" style="font-size:12px;margin:6px 0 0">▲ nada positif · ▼ nada negatif · • neutral. Nada dikira dari kata kunci tajuk sahaja; baca berita penuh untuk konteks.</p>`;
+  else h+=`<p class="muted">Tiada berita dalam 30 hari lepas. Berita dipantau untuk saham yang ada isyarat aktif atau skor teknikal tinggi.</p>`;
+  h+=`<p class="disc" style="margin-top:12px">Ringkasan ini ialah bacaan indicator dan tajuk berita awam, bukan cadangan beli atau jual.</p>`;
+  return h;}
 function stockSheet(code,name){
   name=name||nameOf(code);const st=status(code,name);const L=latestList();
   const blocked=S.settings.shariahMode&&st==='no';
@@ -1949,6 +2020,7 @@ function stockSheet(code,name){
   let h=`<div class="shd"><div class="shd-top"><div class="shd-name"><h2 style="margin:0">${esc(name||code)}</h2><div class="code">${esc(code||'tiada kod')} · KLSE</div></div><div class="row" style="gap:8px;flex:none;flex-wrap:nowrap">${code&&st!=='no'&&mk(code)&&mk(code).c?`<button class="mbtn" onclick="openManual('${esc(code)}')" aria-label="Robot manual">✍️ ${manOpen(code)?'Urus':'Manual'}</button>`:''}<button class="xbtn" onclick="closeSheet()" aria-label="Tutup">✕</button></div></div>
     ${code?statusHTML(code,name):''}
     ${code&&st!=='no'?sheetStatHTML(code):''}
+    ${code&&mk(code)?`<button class="anbtn" onclick="openAnalysis('${esc(code)}')">📝 Ringkasan analisa${newsFor(code).length?` · 📰 ${newsFor(code).length} berita`:''}</button>`:''}
     <div style="margin:10px 0 0">${badge(st)} ${L?`<span class="muted">Senarai SC ${fmtD(L.date)}</span>`:''}</div></div>`;
   if(st==='no')h+=`<div class="alert a-red">Saham ini <b>tiada</b> dalam senarai patuh syariah SC terkini.${blocked?' Isyarat teknikal disembunyikan kerana Mod Patuh Syariah ON.':''}</div>`;
   if(st==='na')h+=`<div class="alert a-amber">Senarai SC belum diimport — status tidak dapat ditentukan.</div>`;

@@ -706,7 +706,7 @@ function opCard(code,op,m){
     <div><span>Paras bawah (−1.25× ATR)</span><b class="dn">${px(op.sl)} <small>−${sp.toFixed(1)}%</small></b></div>
     <div><span>Tempoh biasa ke paras atas</span><b>${op.md!=null?`${Math.round(op.md)} hari dagangan`:'-'}</b><small>${op.d25!=null?`biasanya ${op.d25}–${op.d75} hari · sekitar ${fmtD(addTradingDays(m.d,Math.round(op.md)))}`:''}</small></div>
     <div><span>Tempoh ujian</span><b>${H} hari</b><small>isyarat tamat jika tiada paras dicapai menjelang ${fmtD(addTradingDays(m.d,H))}</small></div>
-    <div><span>Bukti sejarah</span><b>${op.w}/${op.n} kali ke paras atas</b><small>keyakinan ${op.cf}${op.ev!=null?` · purata pergerakan ${op.ev>0?'+':''}${op.ev}% setiap isyarat`:''}</small></div>
+    <div><span>Bukti sejarah</span><b>Muncul ${op.n} kali; ${op.w} kali sampai sasaran dahulu</b><small>keyakinan ${op.cf}${op.ev!=null?` · purata pergerakan ${op.ev>0?'+':''}${op.ev}% setiap isyarat`:''}</small></div>
    </div></div>`;
 }
 function oppSection(code,blocked){
@@ -779,7 +779,7 @@ function rateSignal(x){
            C:['Isyarat Sederhana','b-warn','Dalam sejarah saham ini, isyarat ini sedikit lebih kerap berjaya berbanding kadar rawak, tetapi contohnya masih sedikit.'],
            D:['Isyarat Lemah','b-no','Dalam sejarah saham ini, isyarat ini tidak lebih kerap berjaya berbanding kadar rawak.']}[g];
   const bits=[];
-  if(n!=null&&x.w!=null)bits.push(`Berjaya ${x.w} daripada ${n} kali pada saham ini`);
+  if(n!=null&&x.w!=null)bits.push(`Isyarat ini muncul ${n} kali dalam 5 tahun; ${x.w} kali harga sampai sasaran dahulu`);
   const H=S.paper&&S.paper.hist&&S.paper.hist.bySetup&&S.paper.hist.bySetup[x.k];
   if(false&&H&&H.n)bits.push(`Ujian robot 12 bulan (${rm(rbStake())} setiap isyarat, ${H.n} dagangan): ${setupName(x.k)} tepat ${H.win}% · ${H.pnl>=0?'untung':'rugi'} ${rmS(H.pnl*rbScale())}`);
   return {g,lbl:G[0],cls:G[1],txt:G[2],bits,edge,be};
@@ -1666,6 +1666,9 @@ Object.assign(EN_EXACT,{
 'Paras ini naik mengikut harga tertinggi sejak tarikh belian dan tidak pernah turun. Harga tutup di bawahnya menandakan momentum menurun.':'This level rises with the highest price since the purchase date and never falls. A close below it signals weakening momentum.',
 });
 EN_RX.unshift(
+[/^Muncul (\d+) kali; (\d+) kali sampai sasaran dahulu$/,'Appeared $1 times; reached the target first $2 times'],
+[/^Isyarat ini muncul (\d+) kali dalam 5 tahun; (\d+) kali harga sampai sasaran dahulu$/,'This signal appeared $1 times in 5 years; price reached the target first $2 times'],
+[/^Muncul (\d+) kali dalam 5 tahun; (\d+) kali sampai sasaran dahulu$/,'Appeared $1 times in 5 years; reached the target first $2 times'],
 [/^([+-]?[\d.]+)% sejak ditutup$/,'$1% since closed'],[/^(.+) \((\d+) hari\)$/,(m,a,b)=>`${trText(a)} (${b} days)`],
 [/^(RM [\d.,]+) nilai maya · sasaran (\S+) · cut loss (\S+)$/,'$1 virtual · target $2 · cut loss $3'],
 [/^(\d+)\/100 ⓘ$/,'$1/100 ⓘ'],
@@ -2094,7 +2097,7 @@ function analysisHTML(code,A){
     h+=`<h3>Isyarat</h3><div class="card" style="margin:0">
       <div class="kv"><span>Jenis</span><b>${esc(setupName(so.k))}</b></div>
       <div class="kv"><span>Kebarangkalian sejarah</span><b>${so.p}%</b></div>
-      ${so.n!=null&&so.w!=null?`<div class="kv"><span>Rekod pada saham ini</span><b>Berjaya ${so.w} daripada ${so.n} kali</b></div>`:''}
+      ${so.n!=null&&so.w!=null?`<div class="kv"><span>Rekod pada saham ini</span><b>Muncul ${so.n} kali dalam 5 tahun; ${so.w} kali sampai sasaran dahulu</b></div>`:''}
       <div class="kv"><span>Tarikh mula</span><b>${fmtD(entryDate(so.start))}</b></div>
       <div class="kv"><span>Tamat tempoh biasa</span><b>${fmtD(endFor(so.start,md))} (~${md} hari)</b></div>
       <div class="kv"><span>Sasaran</span><b class="up">${px(so.tg)} (+${tp.toFixed(1)}%)</b></div>

@@ -250,6 +250,7 @@ main>.card,main>.alert,main>.grid2,main>.disc,main>.pad,.search,.results{margin-
 .meter.big{justify-content:center;margin:0 0 10px}.meter.big b{font-size:22px}
 .mrow{padding:14px 0;border-bottom:1px solid var(--line);cursor:pointer}.mrow:last-child{border-bottom:0}
 .mhd{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
+.mrow.mc{padding:12px 0}.help-p .mrow{border-bottom:0;cursor:default}
 .mnow{display:flex;flex-direction:column;align-items:flex-end}.mnow em{font-style:normal;font-weight:700;font-size:13px}.mnow small{font-size:11px;color:var(--muted)}.mnow b{font-size:22px}
 .mgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}.mgrid>div{background:var(--card2);border-radius:8px;padding:8px 10px;display:flex;flex-direction:column;gap:2px}
 .mgrid>.mw{grid-column:1/-1}
@@ -906,7 +907,22 @@ function openManual(code){
     const sg=signalFor(code);S.manual=S.manual||[];S.manual.push({id:uid(),inc:1,at:new Date().toISOString(),code,name:nm,d:dt||today(),en,stake:st,tg,sl,md:sg&&sg.md?Math.round(sg.md):null});
     if(!S.watch.includes(code))S.watch.push(code);save();toast('Ditambah ke Robot Manual');getBars(code).catch(()=>{});close();closeSheet();goTab('robot');};
 }
-function manRow(p){const nm=shortName(p.name||nameOf(p.code));
+function manRow(p){const nm=shortName(p.name||nameOf(p.code));const m=mk(p.code),now=m&&m.c;
+  if(p.closed){const C=p.closed,r=RES3[C.res],u=manPnl(p,C.exit),xp=(C.exit/p.en-1)*100;
+    return `<div class="mrow mc" data-mid="${esc(p.id)}" role="button"><div class="mhd" style="margin:0"><span><b>${esc(nm)}</b> <span class="code">${esc(p.code)}</span><br><span class="badge ${r[2]}" style="margin-top:4px">${r[0]}</span></span><span class="mnow"><small>Harga kini</small><b>${now?px(now):'-'}</b><em class="${u>=0?'up':'dn'}">${rmS(u)} (${xp>0?'+':''}${xp.toFixed(1)}%)</em></span></div></div>`;}
+  let pct=now?(now/p.en-1)*100:null;if(pct!=null&&Math.abs(pct)<0.05)pct=0;const pc=pct==null||pct===0?'':pct>0?'up':'dn',u=now?manPnl(p,now):null;
+  return `<div class="mrow mc" data-mid="${esc(p.id)}" role="button"><div class="mhd" style="margin:0"><span><b>${esc(nm)}</b> <span class="code">${esc(p.code)}</span></span><span class="mnow"><small>Harga kini</small><b class="${pc}">${now?px(now):'-'}</b>${u==null?'':`<em class="${u>=0?'up':'dn'}">${rmS(u)} (${pct>0?'+':''}${pct.toFixed(1)}%)</em>`}</span></div></div>`;}
+function openManDetail(id){const p=(S.manual||[]).find(x=>x.id===id);if(!p)return;
+  const d=document.createElement('div');d.className='help';d.id='help';document.body.classList.add('ovl');bkEnsure();
+  d.innerHTML=`<div class="help-p" role="dialog" aria-modal="true"><div><div class="shd-top"><div class="shd-name"><h2 style="margin:0">✍️ ${esc(shortName(p.name||nameOf(p.code)))}</h2><div class="code">${esc(p.code)} · Robot Manual</div></div><button class="xbtn" id="helpX" aria-label="Tutup">✕</button></div></div>
+    ${manFull(p)}<button class="btn sec" style="width:100%;margin-top:12px" id="mdView">Lihat analisa saham ↗</button></div>`;
+  document.body.appendChild(d);const close=()=>{d.remove();if(!$('#sheet').classList.contains('on'))document.body.classList.remove('ovl');};
+  d.onclick=e=>{const mx=e.target.closest('[data-mx]'),md=e.target.closest('[data-md]');
+    if(mx){close();openManual(mx.dataset.mx);return;}
+    if(md){S.manual=S.manual.filter(x=>x.id!==md.dataset.md);save();close();rRobot();toast('Dipadam dari senarai');return;}
+    if(e.target===d)close();};
+  $('#helpX').onclick=close;$('#mdView').onclick=()=>{close();stockSheet(p.code,nameOf(p.code));};}
+function manFull(p){const nm=shortName(p.name||nameOf(p.code));
   if(p.closed){const C=p.closed,r=RES3[C.res];const u=manPnl(p,C.exit),xp=(C.exit/p.en-1)*100;
     const m=mk(p.code),now=m&&m.c,since=now?(now/C.exit-1)*100:null,sc=since==null||Math.abs(since)<0.05?'':since>0?'up':'dn';
     const cell=(l,v,c='')=>`<div><span>${l}</span><b class="${c}">${v}</b></div>`;
@@ -932,7 +948,7 @@ function rManual(){
   if(M.length)h+=`<p class="disc" style="margin:6px var(--gut) 0">Ujian maya tanpa wang sebenar, kos dagangan ${(BTH().fee*100).toFixed(1)}% diambil kira. Ini bacaan indicator, bukan cadangan beli atau jual.</p>`;
   return h;}
 function bindManual(){
-  document.querySelectorAll('#main .rbr[data-code],#main .mrow[data-code]').forEach(b=>b.onclick=()=>stockSheet(b.dataset.code,nameOf(b.dataset.code)));
+  document.querySelectorAll('#main .mrow[data-mid]').forEach(b=>b.onclick=()=>openManDetail(b.dataset.mid));
   document.querySelectorAll('[data-mx]').forEach(b=>b.onclick=e=>{e.stopPropagation();openManual(b.dataset.mx);});
   document.querySelectorAll('[data-md]').forEach(b=>b.onclick=e=>{e.stopPropagation();const x=(S.manual||[]).find(p=>p.id===b.dataset.md);if(!x)return;S.manual=S.manual.filter(p=>p!==x);save();rRobot();toast('Dipadam dari senarai');});
   const need=(S.manual||[]).filter(p=>!p.closed&&!(S.cache[p.code]&&S.cache[p.code].asof===(mk(p.code)||{}).d)).map(p=>p.code);
@@ -1523,6 +1539,7 @@ const EN_PHRASE=[
 ];
 
 Object.assign(EN_EXACT,{
+'Lihat analisa saham ↗':'View stock analysis ↗',
 'Masa beli':'Buy time','Masa tutup':'Close time','Harga tutup (ubah jika anda tutup pada harga lain)':'Close price (change it if you closed at a different price)',
 'Harga tutup':'Close price','Tarikh tutup':'Close date','Keputusan':'Result',
 '12J':'12H','Carta 30 minit / 1 jam / 12 jam hanya untuk saham yang dipantau (isyarat aktif atau skor tinggi).':'30-minute / 1-hour / 12-hour charts are only for tracked stocks (active signal or high score).',
@@ -1666,6 +1683,7 @@ Object.assign(EN_EXACT,{
 'Paras ini naik mengikut harga tertinggi sejak tarikh belian dan tidak pernah turun. Harga tutup di bawahnya menandakan momentum menurun.':'This level rises with the highest price since the purchase date and never falls. A close below it signals weakening momentum.',
 });
 EN_RX.unshift(
+[/^(\S+) · Robot Manual$/,'$1 · Manual Robot'],
 [/^Muncul (\d+) kali; (\d+) kali sampai sasaran dahulu$/,'Appeared $1 times; reached the target first $2 times'],
 [/^Isyarat ini muncul (\d+) kali dalam 5 tahun; (\d+) kali harga sampai sasaran dahulu$/,'This signal appeared $1 times in 5 years; price reached the target first $2 times'],
 [/^Muncul (\d+) kali dalam 5 tahun; (\d+) kali sampai sasaran dahulu$/,'Appeared $1 times in 5 years; reached the target first $2 times'],

@@ -744,7 +744,7 @@ function endFor(sd,md){return addTradingDays(entryDate(sd),Math.max(0,Math.round
 function dayNo(sd){const e=entryDate(sd),t=today();return t<e?0:tdBetween(e,t)+(parseD(t).getDay()%6?1:0);}
 function tdBetween(a,b){if(!a||!b||b<=a)return 0;const x=parseD(a),y=parseD(b);let n=0;while(x<y){x.setDate(x.getDate()+1);if(x.getDay()%6)n++;}return n;}
 function subTradingDays(d,n){const x=parseD(d);let k=0;while(k<n){x.setDate(x.getDate()-1);if(x.getDay()%6)k++;}return isoD(x);}
-const DIS_SETUP=new Set(['pb']);
+const DIS_SETUP=new Set();
 function topSignals(n=5){
   const M=S.market;if(!M)return [];const asof=M.meta.asof;const fee=BTH().fee;const out=[],seen=new Set();
   const add=x=>{const m=mk(x.code);if(!m||m.s!=='ok'||!x.en||!x.tg||!x.sl||DIS_SETUP.has(x.k))return;

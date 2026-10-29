@@ -28,8 +28,8 @@ SETUPS = {
 
 
 # Isyarat yang dihentikan: tidak dipaparkan & tidak diuji robot (masih dikira untuk statistik pasaran).
-# "pb" (koreksi dalam trend) rugi dalam ujian robot 12 bulan — ketepatan 27% selepas penapis kecairan.
-DISABLED = {"pb"}
+# (Kosong) — "pb" diaktifkan semula selepas ujian 3 tahun menunjukkan ia tidak lebih teruk daripada isyarat lain.
+DISABLED = set()
 
 
 def atr(h, l, c, n=14):

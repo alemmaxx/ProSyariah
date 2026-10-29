@@ -840,7 +840,7 @@ function top5HTML(){
       ${platChips(x.code)}
       <span class="muted" style="font-size:12px">Harga kini ${px(x.now)} · paras atas ${px(x.tg)} · paras bawah ${px(x.sl)} · isyarat tamat ${fmtD(x.limitEnd)}</span>
     </span></button>`;});
-  h+=`</div><p class="disc" style="margin:8px var(--gut) 0">Kekuatan = kebarangkalian sejarah berbanding paras neutral. "Tempoh biasa" ialah median masa harga sampai paras atas dalam sejarah saham ini. Ini bacaan indicator, bukan cadangan beli atau jual.</p><div class="pad" style="margin-top:10px"><button class="smbtn off" onclick="openAccuracy()"><span>📊</span><span><b>Ketepatan isyarat</b><small>Keputusan ujian robot 3 tahun</small></span><span class="go">Buka</span></button></div></section>`;
+  h+=`</div><p class="disc" style="margin:8px var(--gut) 0">Kekuatan = kebarangkalian sejarah berbanding paras neutral. "Tempoh biasa" ialah median masa harga sampai paras atas dalam sejarah saham ini. Ini bacaan indicator, bukan cadangan beli atau jual.</p><div style="margin:10px var(--gut) 0"><button class="smbtn off" onclick="openAccuracy()"><span>📊</span><span><b>Ketepatan isyarat</b><small>Keputusan ujian robot 3 tahun</small></span><span class="go">Buka</span></button></div></section>`;
   return h;
 }
 async function openAccuracy(){
@@ -1187,7 +1187,7 @@ function openTrack(){
 
 /* ================= PUSAT AMARAN ================= */
 const ALERT_DEF={on:{isyarat:true,robot:true,top5:true,syariah:true,harga:true,teknikal:true,ibadah:true,jadual:true},lossPct:10,price:[],seen:{},notified:{},notify:false};
-function AL(){S.alerts=Object.assign(structuredClone(ALERT_DEF),S.alerts||{});S.alerts.on=Object.assign({},ALERT_DEF.on,S.alerts.on);
+function AL(){if(!S.alerts)S.alerts={};const a=S.alerts;const D=structuredClone(ALERT_DEF);Object.keys(D).forEach(k=>{if(a[k]===undefined)a[k]=D[k];});if(!a.on)a.on={};Object.keys(D.on).forEach(k=>{if(a.on[k]===undefined)a.on[k]=D.on[k];});
   if(!S.alerts.v2){S.alerts.v2=1;Object.keys(S.alerts.on).forEach(k=>S.alerts.on[k]=k==='robot'||k==='isyarat');}   // amaran hanya untuk Robot Manual (boleh hidupkan lain di Tetapan)
   return S.alerts;}
 /* Amaran Robot Manual: tutup (sasaran), cut loss, hampir cut loss, tarikh tempoh biasa & tutup paling lewat */
@@ -1346,7 +1346,7 @@ function bindAlertSettings(){
   $('#alScope').onchange=e=>{A.sigScope=e.target.value;save();updateBell();};
   $('#alTime').onchange=e=>{A.pushTime=e.target.value;save();toast('✓ Disimpan');};
   $('#alLoss').onchange=e=>{A.lossPct=Math.abs(num(e.target.value))||10;save();updateBell();};
-  const on=$('#alOn');if(on)on.onclick=enableNotify;const off=$('#alOff');if(off)off.onclick=()=>{A.notify=false;save();render();};
+  const on=$('#alOn');if(on)on.onclick=enableNotify;const off=$('#alOff');if(off)off.onclick=()=>{A.notify=false;save();unregPush();render();};
 }
 
 /* ================= DWIBAHASA EN | BM =================
@@ -2542,11 +2542,13 @@ async function cloudPull(){if(!FBU)return;try{const d=await FB.db.collection('us
 async function cloudPush(now){if(!FBU)return;clearTimeout(cloudT);
   const go=async()=>{try{S.cloudAt=Date.now();save0();
     const D={manual:S.manual||[],watch:S.watch||[],manDel:S.manDel||[],settings:{lang:S.settings.lang,platform:S.settings.platform??null,paperStake:S.settings.paperStake??null},updatedAt:S.cloudAt};
-    await FB.db.collection('users').doc(FBU.uid).set({data:JSON.stringify(D),email:FBU.email||'',lang:S.settings.lang||'bm',notify:!!(S.alerts&&S.alerts.notify),sig:!!(S.alerts&&S.alerts.on&&S.alerts.on.isyarat!==false),sigWatch:!!(S.alerts&&S.alerts.sigScope==='watch'),pushAm:!!(S.alerts&&S.alerts.pushTime==='am'),updatedAt:S.cloudAt},{merge:true});}catch(e){}};
+    await FB.db.collection('users').doc(FBU.uid).set({data:JSON.stringify(D),email:FBU.email||'',lang:S.settings.lang||'bm',sig:!!(S.alerts&&S.alerts.on&&S.alerts.on.isyarat!==false),sigWatch:!!(S.alerts&&S.alerts.sigScope==='watch'),pushAm:!!(S.alerts&&S.alerts.pushTime==='am'),updatedAt:S.cloudAt},{merge:true});}catch(e){}};
   if(now)return go();cloudT=setTimeout(go,2500);}
 async function regPush(){try{if(!FBU||!FB_VAPID||!('serviceWorker' in navigator)||!('Notification' in window)||Notification.permission!=='granted')return;
   const reg=await navigator.serviceWorker.ready;const tok=await firebase.messaging().getToken({vapidKey:FB_VAPID,serviceWorkerRegistration:reg});
   if(tok)await FB.db.collection('users').doc(FBU.uid).set({tokens:firebase.firestore.FieldValue.arrayUnion(tok),notify:true},{merge:true});}catch(e){}}
+async function unregPush(){try{if(!FBU||!FB_VAPID)return;const reg=await navigator.serviceWorker.ready;const tok=await firebase.messaging().getToken({vapidKey:FB_VAPID,serviceWorkerRegistration:reg});
+  if(tok)await FB.db.collection('users').doc(FBU.uid).set({tokens:firebase.firestore.FieldValue.arrayRemove(tok)},{merge:true});}catch(e){}}
 function accountHTML(){if(!FB_CONFIG)return '';
   if(!FBU)return `<div class="card"><h2>Akaun</h2><p class="muted" style="margin-top:0">Log masuk supaya senarai Robot Manual, watchlist dan tetapan anda disimpan dengan selamat dan sama di semua phone. Notifikasi Robot Manual juga boleh sampai walaupun app ditutup.</p><button class="btn gold" style="width:100%" id="acIn">Log masuk dengan Google</button></div>`;
   return `<div class="card"><h2>Akaun</h2><div class="kv"><span>Log masuk sebagai</span><b>${esc(FBU.email||FBU.displayName||'-')}</b></div><div class="kv"><span>Simpanan awan</span><b class="up">Aktif</b></div>

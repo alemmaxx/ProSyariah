@@ -167,7 +167,7 @@ def main():
     for d in docs:
         f = d.get("fields", {})
         tokens = [x.get("stringValue") for x in f.get("tokens", {}).get("arrayValue", {}).get("values", []) if x.get("stringValue")]
-        if not tokens or not f.get("notify", {}).get("booleanValue"):
+        if not tokens:  # setiap phone yang hidupkan notifikasi mendaftar token sendiri
             continue
         try:
             data = json.loads(f.get("data", {}).get("stringValue") or "{}")
@@ -213,7 +213,7 @@ def main():
                 mask.append("tokens")
             http.patch(f"https://firestore.googleapis.com/v1/{d['name']}", params=[("updateMask.fieldPaths", m) for m in mask],
                        json={"fields": fields})
-    print(f"✓ Notifikasi push: {len(docs)} akaun dalam Firestore, {users} dengan notifikasi aktif, {sent_n} notifikasi dihantar")
+    print(f"✓ Notifikasi push: {len(docs)} akaun dalam Firestore, {users} dengan phone berdaftar, {sent_n} notifikasi dihantar")
 
 
 if __name__ == "__main__":

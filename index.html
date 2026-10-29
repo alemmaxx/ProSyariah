@@ -261,9 +261,11 @@ main>.card,main>.alert,main>.grid2,main>.disc,main>.pad,.search,.results{margin-
 .pnr{border-bottom:1px solid var(--line);padding-bottom:8px}.pnl{display:flex;gap:8px;color:var(--ink);text-decoration:none;font-size:13px;line-height:1.4;padding:0 4px}
 .mtag{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:6px;font:800 11px var(--f);margin-right:6px;vertical-align:1px}.mtag.m{background:var(--card2);color:var(--ink);border:1px solid var(--line)}.mtag.a{background:var(--gold);color:#1b1503}
 .sw{position:relative;display:inline-block;width:46px;height:26px}.sw input{opacity:0;width:0;height:0}.sw span{position:absolute;inset:0;border-radius:99px;background:var(--line);transition:.2s;cursor:pointer}.sw span::before{content:"";position:absolute;width:20px;height:20px;left:3px;top:3px;border-radius:50%;background:#fff;transition:.2s}.sw input:checked+span{background:var(--gold)}.sw input:checked+span::before{transform:translateX(20px)}
-.alleg{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--mut);background:var(--card2);border-radius:10px;padding:8px 10px;margin:4px 0 8px}.altg{align-items:flex-start}.altg>div{flex:1;padding-right:10px}.altg small{display:block;color:var(--mut);font-size:12px;line-height:1.35;margin-top:2px}.altag{font-size:12px}
+.alleg{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--muted);background:var(--card2);border-radius:10px;padding:8px 10px;margin:4px 0 8px}.altg{align-items:flex-start}.altg>div{flex:1;padding-right:10px}.altg small{display:block;color:var(--muted);font-size:12px;line-height:1.35;margin-top:2px}.altag{font-size:12px}
 input,textarea,[contenteditable]{-webkit-user-select:text;user-select:text}
-.autob{display:flex;align-items:center;gap:12px;width:calc(100% - 2*var(--gut));text-align:left;cursor:pointer;font:inherit;color:inherit}.autob-ic{font-size:26px}.autob-t{flex:1}.autob-t small{display:block;color:var(--mut);font-size:12.5px}
+.autob{display:flex;align-items:center;gap:12px;width:calc(100% - 2*var(--gut));text-align:left;cursor:pointer;font:inherit;color:inherit}.autob-ic{font-size:26px}.autob-t{flex:1}.autob-t small{display:block;color:var(--muted);font-size:12.5px}
+.klb small .up,.klb small .dn{font-weight:600}
+.plink{display:block;text-align:center;margin-top:10px;font-size:13px;color:var(--muted);text-decoration:underline}
 .auopt.off{opacity:.45;pointer-events:none}
 .mrow{padding:14px 0;border-bottom:1px solid var(--line);cursor:pointer}.mrow:last-child{border-bottom:0}
 .mhd{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
@@ -402,7 +404,8 @@ let S;
 function load(){try{const r=localStorage.getItem(KEY);S=r?Object.assign(structuredClone(DEF),JSON.parse(r)):structuredClone(DEF);}catch(e){S=structuredClone(DEF);}
   S.settings=Object.assign({},DEF.settings,S.settings); S.zakat=Object.assign({},DEF.zakat,S.zakat);}
 function save0(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){toast('Storan penuh — buang cache harga di Tetapan');}}
-function save(){save0();if(typeof FBU!=='undefined'&&FBU)cloudPush();}
+function pfHash(){try{return JSON.stringify([S.holdings,S.tathir,S.zakat]);}catch(e){return '';}}
+function save(){const h=pfHash();if(h!==S._pfH){S._pfH=h;S.pfAt=Date.now();}save0();if(typeof FBU!=='undefined'&&FBU)cloudPush();}
 load();
 
 /* ================= UTIL ================= */
@@ -767,8 +770,31 @@ function dataStatusHTML(){const asof=S.market.meta.asof,now=new Date(),t=today()
   if(asof>=lastTD)nxt=(isTD(now)&&hm<1110&&asof<t)?'hari ini, selepas 6.30 petang':`${fmtD(nextTradingDay(asof>=t?t:lastTD))}, selepas 6.30 petang`;
   else if(isTD(now)&&hm>=1110&&hm<1260&&asof>=subTradingDays(t,1))nxt='sebentar lagi (robot sedang berjalan)';
   else{nxt='data lewat — robot akan cuba semula (paling lewat 9.15 pagi)';warn=true;}
+  const lag=asof<lastTD?tdBetween(asof,lastTD):0;
   const n=topSignals(60).length,e=fmtD(entryDate(asof));
-  return `<div class="dstat${warn?' warn':''}"><span>📅 Data harga tutup ${fmtD(asof)} · ${n?`${n} isyarat untuk ${e}`:`tiada Isyarat Kuat untuk ${e}`}${(o=>o?` · ${o} dalam pemerhatian`:'')(topSignals(60,'obs').length)}</span><span>🔄 Kemas kini seterusnya: ${nxt}</span></div>`;}
+  return `${lag>=2?`<div class="alert a-red" style="margin:10px var(--gut) 0">⚠️ Data harga lewat ${lag} hari dagangan. Isyarat mungkin tidak tepat sehingga data dikemas kini.</div>`:''}<div class="dstat${warn?' warn':''}"><span>📅 Data harga tutup ${fmtD(asof)} · ${n?`${n} isyarat untuk ${e}`:`tiada Isyarat Kuat untuk ${e}`}${(o=>o?` · ${o} dalam pemerhatian`:'')(topSignals(60,'obs').length)}</span><span>🔄 Kemas kini seterusnya: ${nxt}</span></div>`;}
+/* ===== KLCI: keadaan pasaran keseluruhan ===== */
+function klciWord(u){return u===1?'Menaik':u===-1?'Menurun':'Mendatar';}
+function klciHTML(){const K=S.market&&S.market.meta&&S.market.meta.klci;if(!K)return '';
+  const cls=K.ch>=0?'up':'dn';
+  return `<div class="pad" style="margin-top:12px"><button class="smbtn klb" onclick="openKlci()"><span>📊</span><span><b>FBM KLCI ${K.c.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})} <span class="${cls}">${K.ch>0?'+':''}${K.ch}%</span></b><small>Pasaran: ${klciWord(K.up)}${K.m1!=null?` · 1 bulan ${K.m1>0?'+':''}${K.m1}%`:''}</small></span><span class="go">Carta</span></button></div>`;}
+let KLCI=null,KLR=260;
+async function openKlci(){const K=S.market.meta.klci;
+  if(!KLCI){openSheet('<p class="muted">Memuatkan carta KLCI…</p>');try{const r=await fetch(DATA_BASE+'klci.json?t='+Math.floor(Date.now()/36e5),{cache:'no-cache'});if(r.ok)KLCI=await r.json();}catch(e){}}
+  const B=(KLCI&&KLCI.bars)||[];const rng=[[22,'1B'],[130,'6B'],[260,'1T'],[1300,'5T']];
+  const v=B.slice(-KLR);let svg='<p class="muted">Carta tidak tersedia.</p>';
+  if(v.length>2){const W=340,H=170,ys=v.map(x=>x[1]),lo=Math.min(...ys),hi=Math.max(...ys),sp=(hi-lo)||1;
+    const pt=v.map((x,i)=>`${(i/(v.length-1)*W).toFixed(1)},${(H-8-(x[1]-lo)/sp*(H-24)).toFixed(1)}`).join(' ');
+    const up=ys[ys.length-1]>=ys[0],col=up?'var(--green)':'var(--red)',chg=((ys[ys.length-1]/ys[0]-1)*100).toFixed(1);
+    svg=`<div class="row between" style="font-size:12.5px;color:var(--muted)"><span>${fmtD(v[0][0])}</span><b class="${up?'up':'dn'}">${chg>0?'+':''}${chg}%</b><span>${fmtD(v[v.length-1][0])}</span></div>
+      <svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block;margin-top:4px"><polyline points="0,${H} ${pt} ${W},${H}" fill="${col}" opacity=".12"/><polyline points="${pt}" fill="none" stroke="${col}" stroke-width="2"/></svg>
+      <div class="row between" style="font-size:12px;color:var(--muted)"><span>Rendah ${lo.toFixed(0)}</span><span>Tinggi ${hi.toFixed(0)}</span></div>`;}
+  openSheet(`<div class="row between" style="align-items:center"><h2 style="margin:0">📊 FBM KLCI</h2><button class="xbtn" onclick="closeSheet()" aria-label="Tutup">✕</button></div>
+    <p style="margin:6px 0 2px"><b style="font-size:22px">${K.c.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</b> <span class="${K.ch>=0?'up':'dn'}">${K.ch>0?'+':''}${K.ch}% hari ini</span></p>
+    <p class="muted" style="margin:0 0 10px;font-size:13px">Pasaran ${klciWord(K.up).toLowerCase()} · data ${fmtD(K.d)}</p>
+    <div class="tfs" style="display:flex;gap:6px;margin-bottom:8px">${rng.map(([n,l])=>`<button class="btn sm ${n===KLR?'gold':'sec'}" data-kr="${n}">${l}</button>`).join('')}</div>${svg}
+    <div class="disc">KLCI ialah indeks 30 syarikat terbesar Bursa (bukan semuanya patuh syariah). Ia tunjuk keadaan pasaran secara umum. Menaik = harga atas purata 50 dan 200 hari. Menurun = bawah kedua-duanya. Selain itu Mendatar.</div>`);
+  document.querySelectorAll('[data-kr]').forEach(b=>b.onclick=()=>{KLR=+b.dataset.kr;openKlci();});}
 function champHTML(){
   if(!S.market)return '';const n=champList().length;
   return `<div class="pad" style="margin-top:10px"><button class="smbtn${n?'':' off'}" onclick="openChamp()"><span>🏆</span><span><b>Isyarat Champion</b><small>${n?`${n} saham · bermula hari ini`:'Tiada isyarat Champion hari ini'}</small></span>${n?'<span class="go">Buka</span>':''}</button></div>`;}
@@ -1476,6 +1502,11 @@ const EN_EXACT={
 '🔔 Senarai syariah SC baharu dijangka':'🔔 New SC Shariah list expected','🔔 Tarikh haul anda':'🔔 Your haul date',
 };
 const EN_RX=[
+[/^Pasaran: (Menaik|Menurun|Mendatar)( · 1 bulan (.*))?$/,(m,a,b,c)=>'Market: '+({Menaik:'Rising',Menurun:'Falling',Mendatar:'Sideways'}[a])+(b?' · 1 month '+c:'')],
+[/^(.*)% hari ini$/,(m,a)=>a+'% today'],
+[/^Rendah (\d+)$/,(m,a)=>'Low '+a],[/^Tinggi (\d+)$/,(m,a)=>'High '+a],
+[/^Pasaran (menaik|menurun|mendatar) · data (.*)$/,(m,a,b)=>'Market '+({menaik:'rising',menurun:'falling',mendatar:'sideways'}[a])+' · data '+b],
+[/^⚠️ Data harga lewat (\d+) hari dagangan\. Isyarat mungkin tidak tepat sehingga data dikemas kini\.$/,(m,a)=>'⚠️ Price data is '+a+' trading days late. Signals may be inaccurate until the data updates.'],
 [/^Hidup · (.*) · RM([\d.]+)$/,(m,a,b)=>'On · '+(a==='tiada jenis dipilih'?'no type chosen':a)+' · RM'+b],
 [/^✓ Nilai maya RM([\d.]+) disimpan$/,(m,a)=>'✓ Virtual amount RM'+a+' saved'],
 [/^Harga (\S+) (di atas|di bawah) EMA200 \((\S+)\)$/,(m,a,b,c)=>`Price ${a} ${b==='di atas'?'above':'below'} EMA200 (${c})`],
@@ -1560,6 +1591,8 @@ const EN_PHRASE=[
 ];
 
 Object.assign(EN_EXACT,{
+'Memuatkan carta KLCI…':'Loading KLCI chart…','Carta tidak tersedia.':'Chart not available.','Carta':'Chart','Mendatar':'Sideways','1B':'1M','6B':'6M','1T':'1Y','5T':'5Y','KLCI ialah indeks 30 syarikat terbesar Bursa (bukan semuanya patuh syariah). Ia tunjuk keadaan pasaran secara umum. Menaik = harga atas purata 50 dan 200 hari. Menurun = bawah kedua-duanya. Selain itu Mendatar.':'KLCI is the index of the 30 largest Bursa companies (not all Shariah-compliant). It shows the overall market condition. Rising = price above the 50 and 200-day averages. Falling = below both. Otherwise Sideways.',
+'Log masuk supaya Watchlist, Robot, Portfolio, Tathir, Zakat dan tetapan anda disimpan dengan selamat dan sama di semua phone. Notifikasi juga boleh sampai walaupun app ditutup.':'Sign in so your Watchlist, Robot, Portfolio, Purify, Zakat and settings are saved safely and match on every phone. Notifications can also reach you when the app is closed.','🔒 Privasi & Terma':'🔒 Privacy & Terms','Padam data akaun':'Delete account data','Tekan lagi: padam semua':'Tap again: delete all','✓ Data akaun dipadam':'✓ Account data deleted',
 '☪️ ETF Islam':'☪️ Islamic ETF','☪️ REIT Islam':'☪️ Islamic REIT',
 'Mati · tekan untuk hidupkan':'Off · tap to turn on','Siap':'Done','tiada jenis dipilih':'no type chosen',
 'Untuk 📱, log masuk dan tekan Hidupkan pada Notifikasi telefon.':'For 📱, log in and tap Turn on under Phone notifications.',
@@ -1736,7 +1769,7 @@ Object.assign(EN_EXACT,{
 'Tiada isyarat teknikal yang melepasi paras neutral pada masa ini.':'No technical signal is above the neutral level right now.',
 'Tempoh biasa sudah berlalu':'Typical period has passed','Masih dalam tempoh biasa':'Still within typical period',
 'Kekuatan = kebarangkalian sejarah berbanding paras neutral. "Tempoh biasa" ialah median masa harga sampai paras atas dalam sejarah saham ini. Ini bacaan indicator, bukan cadangan beli atau jual.':'Strength = historical probability versus the neutral level. "Typical period" is the median time for price to reach the upper level in this stock\'s history. This is an indicator reading, not a buy or sell recommendation.',
-'ProSyariah · Versi Percuma v1.0 · Watchlist, Robot Manual & Robot Auto disimpan dalam akaun Google anda bila log masuk. Portfolio, Tathir & Zakat disimpan dalam peranti ini sahaja.':'ProSyariah · Free Version v1.0 · Watchlist, Manual Robot & Auto Robot are saved in your Google account when signed in. Portfolio, Purify & Zakat are stored on this device only.',
+'ProSyariah · Versi Percuma v1.0 · Bila log masuk, Watchlist, Robot, Portfolio, Tathir & Zakat disimpan dalam akaun Google anda dan sama di semua phone. Tanpa log masuk, Portfolio, Tathir & Zakat disimpan dalam phone ini sahaja.':'ProSyariah · Free Version v1.0 · When signed in, Watchlist, Robot, Portfolio, Purify & Zakat are saved in your Google account and match on every phone. Without signing in, Portfolio, Purify & Zakat stay on this phone only.',
 'Kebarangkalian dijangka berbanding kadar sebenar harga sampai paras atas. Bar emas sepatutnya hampir sama panjang dengan garis.':'Expected probability versus the actual rate at which price reached the upper level. The gold bar should be about as long as the line.',
 'Salin kod saham':'Copy stock code',
 'kali harga sampai paras atas sebelum paras bawah, dalam sejarah saham ini':"of the time price reached the upper level before the lower level, in this stock's history",
@@ -2072,6 +2105,7 @@ function rSaham(){
   if(crit.length)h+=`<button class="urgent" onclick="openAlerts()"><span class="ai">${crit[0].ic}</span><span><b>${esc(crit[0].title)}</b><span class="ab">${crit.length>1?`dan ${crit.length-1} lagi amaran segera`:esc(crit[0].body)}</span></span><span class="go">Lihat</span></button>`;
   const al=scheduleAlerts();if(al)h+=`<div class="pad" style="margin-top:12px">${al}</div>`;
   if(S.market)h+=dataStatusHTML();
+  h+=klciHTML();
   if(S.market)h+=`<div class="pad" style="margin-top:12px"><button class="smbtn" onclick="openSummary()"><span>📋</span><span><b>Ringkasan isyarat aktif</b><small>${topSignals(60).length} saham · bermula hari ini</small></span><span class="go">Buka</span></button></div>`;
   h+=newsBoxHTML();
   h+=champHTML();
@@ -2521,7 +2555,7 @@ async function login(){const f=await fbInit().catch(()=>null);if(!f)return toast
     if(/popup-blocked|operation-not-supported|environment/.test(c)){try{await f.auth.signInWithRedirect(pv);}catch(x){toast('Log masuk gagal ('+(x.code||x.message)+')');}return;}
     if(c==='auth/popup-closed-by-user'||c==='auth/cancelled-popup-request')return;
     toast('Log masuk gagal ('+(c||e.message)+')');}}
-async function logout(){if(cloudUnsub){cloudUnsub();cloudUnsub=null;}if(FB)await FB.auth.signOut();FBU=null;S.manual=[];S.manDel=[];S.watch=[];S.watchAt=0;save0();robotStateSync();render();toast('Log keluar');}
+async function logout(){if(cloudUnsub){cloudUnsub();cloudUnsub=null;}if(FB)await FB.auth.signOut();FBU=null;S.manual=[];S.manDel=[];S.watch=[];S.watchAt=0;S.holdings=[];S.tathir=[];S.zakat=structuredClone(DEF.zakat);S.pfAt=0;S._pfH=pfHash();save0();robotStateSync();render();toast('Log keluar');}
 function toggleWatch(c){if(needLogin()){toast('Log masuk dahulu untuk guna watchlist');login();return false;}
   if(S.watch.includes(c))S.watch=S.watch.filter(x=>x!==c);else S.watch.push(c);S.watchAt=Date.now();save();return true;}
 const DEV=(()=>{try{let d=localStorage.getItem('ps_dev');if(!d){d=Math.random().toString(36).slice(2,10);localStorage.setItem('ps_dev',d);}return d;}catch(e){return 'x';}})();
@@ -2530,6 +2564,10 @@ function applyRemote(R,fromLogin,autoRaw){const del=new Set([...(S.manDel||[]),.
   S.manual=mergeManual(mergeManual(S.manual||[],R.manual||[]),AU).filter(p=>!del.has(p.id));S.manDel=[...del].slice(-300);
   if(fromLogin&&!(S.watchAt>(R.watchAt||0)))S.watch=R.watch||[];else if((R.watchAt||0)>(S.watchAt||0))S.watch=R.watch||[];
   S.watchAt=Math.max(S.watchAt||0,R.watchAt||0);
+  if(R.pf){const byId=(a,b)=>{const m={};[...(a||[]),...(b||[])].forEach(x=>{if(x&&x.id)m[x.id]=x;});return Object.values(m);};
+    if(fromLogin&&!(S.pfAt>0)){S.holdings=byId(R.pf.holdings,S.holdings);S.tathir=byId(R.pf.tathir,S.tathir);if(R.pf.zakat)S.zakat=Object.assign({},DEF.zakat,R.pf.zakat);S.pfAt=Math.max(R.pfAt||0,1);}   // data lama dalam phone + data akaun digabung
+    else if((R.pfAt||0)>(S.pfAt||0)){S.holdings=R.pf.holdings||[];S.tathir=R.pf.tathir||[];if(R.pf.zakat)S.zakat=Object.assign({},DEF.zakat,R.pf.zakat);S.pfAt=R.pfAt;}
+    S._pfH=pfHash();}
   if(R.settings&&(R.updatedAt||0)>(S.cloudAt||0))Object.entries(R.settings).forEach(([k,v])=>{if(v!=null)S.settings[k]=v;});
   save0();render();}
 function listenCloud(){if(cloudUnsub)cloudUnsub();if(!FBU)return;
@@ -2542,8 +2580,8 @@ async function cloudPull(){if(!FBU)return;try{const d=await FB.db.collection('us
     if(r&&r.data)applyRemote(JSON.parse(r.data),true,r.auto);else if(r&&r.auto)applyRemote({},true,r.auto);
     await cloudPush(true);listenCloud();toast('✓ Data diselaraskan');}catch(e){toast('Segerak awan gagal');}}
 async function cloudPush(now){if(!FBU)return;clearTimeout(cloudT);
-  const go=async()=>{try{S.cloudAt=Date.now();save0();
-    const D={dev:DEV,watchAt:S.watchAt||0,manual:S.manual||[],watch:S.watch||[],manDel:S.manDel||[],settings:{lang:S.settings.lang,platform:S.settings.platform??null,paperStake:S.settings.paperStake??null,auto:S.settings.auto||null},updatedAt:S.cloudAt};
+  const go=async()=>{try{S.cloudAt=Date.now();if(!(S.pfAt>0)){S.pfAt=S.cloudAt;S._pfH=pfHash();}save0();
+    const D={dev:DEV,watchAt:S.watchAt||0,manual:S.manual||[],watch:S.watch||[],manDel:S.manDel||[],pf:{holdings:S.holdings||[],tathir:S.tathir||[],zakat:S.zakat||null},pfAt:S.pfAt||0,settings:{lang:S.settings.lang,platform:S.settings.platform??null,paperStake:S.settings.paperStake??null,auto:S.settings.auto||null},updatedAt:S.cloudAt};
     await FB.db.collection('users').doc(FBU.uid).set({data:JSON.stringify(D),email:FBU.email||'',lang:S.settings.lang||'bm',sig:!!(S.alerts&&S.alerts.on&&S.alerts.on.isyarat!==false),news:!!(S.alerts&&S.alerts.on&&S.alerts.on.berita!==false),sigWatch:!!(S.alerts&&S.alerts.sigScope==='watch'),autoOn:!!AUTO().on,autoSig:!!AUTO().sig,autoChamp:!!AUTO().champ,autoNews:!!AUTO().news,autoStake:+AUTO().stake||20,pushAm:!!(S.alerts&&S.alerts.pushTime==='am'),updatedAt:S.cloudAt},{merge:true});}catch(e){}};
   if(now)return go();cloudT=setTimeout(go,2500);}
 async function regPush(){try{if(!FBU||!FB_VAPID||!('serviceWorker' in navigator)||!('Notification' in window)||Notification.permission!=='granted')return;
@@ -2552,10 +2590,12 @@ async function regPush(){try{if(!FBU||!FB_VAPID||!('serviceWorker' in navigator)
 async function unregPush(){try{if(!FBU||!FB_VAPID)return;const reg=await navigator.serviceWorker.ready;const tok=await firebase.messaging().getToken({vapidKey:FB_VAPID,serviceWorkerRegistration:reg});
   if(tok)await FB.db.collection('users').doc(FBU.uid).set({tokens:firebase.firestore.FieldValue.arrayRemove(tok)},{merge:true});}catch(e){}}
 function accountHTML(){if(!FB_CONFIG)return '';
-  if(!FBU)return `<div class="card"><h2>Akaun</h2><p class="muted" style="margin-top:0">Log masuk supaya senarai Robot Manual, watchlist dan tetapan anda disimpan dengan selamat dan sama di semua phone. Notifikasi Robot Manual juga boleh sampai walaupun app ditutup.</p><button class="btn gold" style="width:100%" id="acIn">Log masuk dengan Google</button></div>`;
+  if(!FBU)return `<div class="card"><h2>Akaun</h2><p class="muted" style="margin-top:0">Log masuk supaya Watchlist, Robot, Portfolio, Tathir, Zakat dan tetapan anda disimpan dengan selamat dan sama di semua phone. Notifikasi juga boleh sampai walaupun app ditutup.</p><button class="btn gold" style="width:100%" id="acIn">Log masuk dengan Google</button><a class="plink" href="privacy.html" target="_blank" rel="noopener">🔒 Privasi & Terma</a></div>`;
   return `<div class="card"><h2>Akaun</h2><div class="kv"><span>Log masuk sebagai</span><b>${esc(FBU.email||FBU.displayName||'-')}</b></div><div class="kv"><span>Simpanan awan</span><b class="up">Aktif</b></div>
-    <div class="row" style="gap:8px;margin-top:10px"><button class="btn sm sec" id="acSync">Segerak sekarang</button><button class="btn sm sec" id="acOut">Log keluar</button></div></div>`;}
-function bindAccount(){const a=$('#acIn');if(a)a.onclick=login;const b=$('#acOut');if(b)b.onclick=logout;const c=$('#acSync');if(c)c.onclick=()=>cloudPull();}
+    <div class="row" style="gap:8px;margin-top:10px"><button class="btn sm sec" id="acSync">Segerak sekarang</button><button class="btn sm sec" id="acOut">Log keluar</button></div>
+    <div class="row between" style="margin-top:12px;align-items:center"><a class="plink" style="margin:0" href="privacy.html" target="_blank" rel="noopener">🔒 Privasi & Terma</a><button class="btn sm sec" id="acDel">Padam data akaun</button></div></div>`;}
+function bindAccount(){const a=$('#acIn');if(a)a.onclick=login;const b=$('#acOut');if(b)b.onclick=logout;const c=$('#acSync');if(c)c.onclick=()=>cloudPull();const d=$('#acDel');if(d)d.onclick=()=>confirm2(d,'Tekan lagi: padam semua',deleteAccountData);}
+async function deleteAccountData(){if(!FBU)return;try{await unregPush();}catch(e){}try{if(cloudUnsub){cloudUnsub();cloudUnsub=null;}await FB.db.collection('users').doc(FBU.uid).delete();toast('✓ Data akaun dipadam');await logout();}catch(e){toast('Gagal padam: '+(e.code||e.message||e));}}
 /* ===== PANDUAN PENGGUNA BARU ===== */
 const ONB=[
  ['📈',{bm:['Selamat datang ke ProSyariah','App indicator untuk saham <b>patuh syariah</b> Bursa Malaysia.<ul><li>Senarai syariah SC, harga & isyarat dikemas kini <b>automatik</b> setiap hari bekerja.</li><li>Anda hanya baca & nilai keputusan.</li><li>Ini bacaan indicator, <b>bukan</b> cadangan beli atau jual.</li></ul>'],
@@ -2599,7 +2639,8 @@ function rTetapan(){
    <div class="kv"><span>Panduan tindakan & penyucian</span><span>Panduan SAC SC</span></div>
    <div class="kv"><span>Nisab & kaedah zakat</span><span>Lembaga zakat negeri</span></div>
    <p class="disc"><b>Penafian:</b> ProSyariah ialah alat bantu maklumat dan pengiraan, bukan fatwa dan bukan nasihat pelaburan. Isyarat teknikal untuk rujukan sahaja. Data harga daripada penyedia pihak ketiga bersifat indikatif dan mungkin berbeza sedikit dari harga sebenar bursa. Keputusan pelaburan, penyucian dan zakat adalah tanggungjawab pengguna — rujuk SC, lembaga zakat negeri atau penasihat syariah bertauliah.</p>
-   <p class="disc">ProSyariah · Versi Percuma v1.0 · Watchlist, Robot Manual & Robot Auto disimpan dalam akaun Google anda bila log masuk. Portfolio, Tathir & Zakat disimpan dalam peranti ini sahaja.</p></div>`;
+   <a class="plink" href="privacy.html" target="_blank" rel="noopener">🔒 Privasi & Terma</a>
+   <p class="disc">ProSyariah · Versi Percuma v1.0 · Bila log masuk, Watchlist, Robot, Portfolio, Tathir & Zakat disimpan dalam akaun Google anda dan sama di semua phone. Tanpa log masuk, Portfolio, Tathir & Zakat disimpan dalam phone ini sahaja.</p></div>`;
   $('#main').innerHTML=h;
   $('#syncB').onclick=()=>syncData(true);
   bindAlertSettings();bindAccount();

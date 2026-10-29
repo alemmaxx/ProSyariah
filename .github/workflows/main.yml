@@ -11,7 +11,7 @@ on:
   workflow_dispatch: {}
   push:
     branches: [main]
-    paths: ["index.html", "manifest.webmanifest", "sw.js", "icons/**", "data/sc-upload/**"]
+    paths: ["index.html", "privacy.html", "manifest.webmanifest", "sw.js", "icons/**", "data/sc-upload/**"]
 
 permissions:
   contents: write
@@ -98,7 +98,7 @@ jobs:
       - name: Commit rekod prestasi isyarat
         run: |
           python3 -c "import json;m=json.load(open('_site/data/market.json'))['meta'];json.dump(m,open('data/market-meta.json','w'),indent=1)" || true
-          git add data/signals.json data/paper-live.json data/paper-summary.json data/paper-experiments.json data/exit-experiments.json data/market-meta.json data/news.json data/fund.json data/holidays.json 2>/dev/null || true
+          git add data/signals.json data/paper-live.json data/paper-summary.json data/paper-experiments.json data/exit-experiments.json data/market-meta.json data/news.json data/fund.json data/holidays.json data/klci.json 2>/dev/null || true
           if ! git diff --cached --quiet; then
             git commit -m "Data: rekod prestasi isyarat"
             git pull --rebase -X theirs -q || true
@@ -107,7 +107,7 @@ jobs:
 
       - name: Sediakan laman
         run: |
-          cp index.html manifest.webmanifest sw.js _site/
+          cp index.html privacy.html manifest.webmanifest sw.js _site/
           cp data/paper-experiments.json data/exit-experiments.json _site/data/ 2>/dev/null || true
           cp -r icons _site/icons
           touch _site/.nojekyll
@@ -153,3 +153,7 @@ jobs:
         run: |
           echo "::error::Bacaan senarai SC gagal. Data harga tetap dikemas kini; senarai SC lama dikekalkan. Muat turun artifact sc-debug, atau letak PDF senarai SC dalam folder data/sc-upload/."
           exit 1
+
+      - name: Gagalkan job jika data harga lewat (supaya anda dapat emel)
+        if: github.event_name == 'schedule'
+        run: python scripts/check_fresh.py

@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ProSyariah · Privasi & Terma</title>
+<style>
+:root{--bg:#0b1411;--card:#13201b;--ink:#e8efe9;--mut:#9fb0a7;--line:#22332c;--gold:#e0b94f}
+@media (prefers-color-scheme: light){:root{--bg:#f6f4ee;--card:#fff;--ink:#16211c;--mut:#5b6a62;--line:#e3ded2;--gold:#a8821f}}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:720px;margin:0 auto;padding:20px 16px 48px}
+h1{font-size:22px;margin:4px 0 2px}h2{font-size:17px;margin:22px 0 6px;color:var(--gold)}
+.sub{color:var(--mut);font-size:13px;margin:0 0 14px}
+.tabs{display:flex;gap:6px;margin:12px 0 4px}.tabs button{flex:1;padding:10px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:600 14px inherit;cursor:pointer}
+.tabs button.on{background:var(--gold);color:#1b1503;border-color:var(--gold)}
+section{display:none}section.on{display:block}
+ul{padding-left:20px;margin:6px 0}li{margin:3px 0}
+.box{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:10px 0}
+a{color:var(--gold)}
+</style>
+</head>
+<body>
+<main>
+<h1>ProSyariah · Privasi & Terma</h1>
+<p class="sub">Kemas kini / Updated: 29 Oktober 2026 · ProSyariah oleh KUKUSAN LEGACY</p>
+<div class="tabs"><button id="tbm" class="on">BM</button><button id="ten">EN</button></div>
+
+<section id="bm" class="on">
+<h2>1. Apa ProSyariah</h2>
+<p>ProSyariah ialah app <b>indicator</b> untuk saham patuh syariah Bursa Malaysia. Ia memaparkan data, carta dan bacaan teknikal. Ia <b>bukan</b> nasihat pelaburan, <b>bukan</b> cadangan beli atau jual, dan <b>bukan</b> fatwa.</p>
+
+<h2>2. Data yang kami simpan</h2>
+<div class="box"><b>Tanpa log masuk:</b> semua data (portfolio, tathir, zakat, tetapan) disimpan dalam phone anda sahaja. Kami tidak menerima apa-apa.</div>
+<div class="box"><b>Bila log masuk dengan Google</b>, kami simpan:
+<ul>
+<li>Emel dan ID akaun Google anda (untuk kenal akaun anda).</li>
+<li>Watchlist, senarai Robot (Manual & Auto), Portfolio, Tathir, Zakat dan tetapan app.</li>
+<li>Token notifikasi phone (jika anda hidupkan notifikasi), untuk hantar amaran.</li>
+</ul></div>
+<p>Kami <b>tidak</b> menyimpan kata laluan Google anda, <b>tidak</b> meminta nombor kad atau akaun bank, dan <b>tidak</b> memasang iklan atau penjejak pihak ketiga.</p>
+
+<h2>3. Di mana data disimpan</h2>
+<p>Data akaun disimpan dalam Google Firebase (Firestore). Setiap akaun hanya boleh baca dan ubah datanya sendiri. Laman app dihoskan di Firebase Hosting dan GitHub Pages.</p>
+
+<h2>4. Untuk apa data digunakan</h2>
+<ul><li>Supaya data anda sama di semua phone.</li><li>Untuk menjalankan Robot Auto dan menghantar notifikasi yang anda pilih.</li></ul>
+<p>Kami <b>tidak menjual</b> atau berkongsi data anda dengan sesiapa.</p>
+
+<h2>5. Padam data anda</h2>
+<p>Dalam app, pergi ke <b>Tetapan → Akaun → Padam data akaun</b>. Semua data akaun anda di awan dipadam serta-merta. Data dalam phone pula boleh dibuang dengan log keluar atau padam data laman dalam pelayar.</p>
+
+<h2>6. Terma guna</h2>
+<ul>
+<li>Data harga daripada pihak ketiga dan bersifat <b>indikatif</b>; mungkin lewat atau berbeza sedikit daripada harga sebenar Bursa.</li>
+<li>Isyarat dan Robot ialah <b>ujian maya</b> berdasarkan sejarah harga. Keputusan lepas tidak menjamin keputusan akan datang.</li>
+<li>Status syariah mengikut senarai Majlis Penasihat Syariah SC (dan kelulusan berasingan untuk ETF & REIT Islam).</li>
+<li>Semua keputusan pelaburan, penyucian dan zakat adalah tanggungjawab anda sendiri. Rujuk SC, lembaga zakat negeri atau penasihat bertauliah.</li>
+<li>Kami boleh mengubah app atau terma ini; tarikh di atas akan dikemas kini.</li>
+</ul>
+</section>
+
+<section id="en">
+<h2>1. What ProSyariah is</h2>
+<p>ProSyariah is an <b>indicator</b> app for Shariah-compliant Bursa Malaysia stocks. It shows data, charts and technical readings. It is <b>not</b> investment advice, <b>not</b> a buy or sell recommendation, and <b>not</b> a fatwa.</p>
+
+<h2>2. Data we store</h2>
+<div class="box"><b>Without signing in:</b> all data (portfolio, purification, zakat, settings) stays on your phone only. We receive nothing.</div>
+<div class="box"><b>When you sign in with Google</b>, we store:
+<ul>
+<li>Your Google email and account ID (to recognise your account).</li>
+<li>Watchlist, Robot list (Manual & Auto), Portfolio, Purification, Zakat and app settings.</li>
+<li>Your phone notification token (if you turn notifications on), to send alerts.</li>
+</ul></div>
+<p>We do <b>not</b> store your Google password, do <b>not</b> ask for card or bank account numbers, and do <b>not</b> use ads or third-party trackers.</p>
+
+<h2>3. Where data is stored</h2>
+<p>Account data is stored in Google Firebase (Firestore). Each account can only read and change its own data. The app is hosted on Firebase Hosting and GitHub Pages.</p>
+
+<h2>4. What data is used for</h2>
+<ul><li>Keeping your data the same on every phone.</li><li>Running Auto Robot and sending the notifications you choose.</li></ul>
+<p>We do <b>not sell</b> or share your data with anyone.</p>
+
+<h2>5. Delete your data</h2>
+<p>In the app, go to <b>Settings → Account → Delete account data</b>. All your cloud account data is deleted immediately. Data on your phone can be removed by logging out or clearing the site data in your browser.</p>
+
+<h2>6. Terms of use</h2>
+<ul>
+<li>Price data comes from third parties and is <b>indicative</b>; it may be delayed or differ slightly from actual Bursa prices.</li>
+<li>Signals and Robot are <b>virtual tests</b> based on price history. Past results do not guarantee future results.</li>
+<li>Shariah status follows the SC Shariah Advisory Council list (and separate approvals for Islamic ETFs & REITs).</li>
+<li>All investment, purification and zakat decisions are your own responsibility. Consult the SC, your state zakat board or a licensed adviser.</li>
+<li>We may change the app or these terms; the date above will be updated.</li>
+</ul>
+</section>
+<p class="sub" style="margin-top:28px"><a href="./">← Kembali ke ProSyariah / Back to ProSyariah</a></p>
+</main>
+<script>
+const set=l=>{['bm','en'].forEach(x=>{document.getElementById(x).classList.toggle('on',x===l);document.getElementById('t'+x).classList.toggle('on',x===l);});document.documentElement.lang=l==='en'?'en':'ms';};
+document.getElementById('tbm').onclick=()=>set('bm');document.getElementById('ten').onclick=()=>set('en');
+try{const s=JSON.parse(localStorage.getItem('prosyariah_v1')||'{}');if(s.settings&&s.settings.lang==='en')set('en');}catch(e){}
+if(location.hash==='#en')set('en');
+</script>
+</body>
+</html>

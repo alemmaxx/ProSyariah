@@ -89,6 +89,17 @@ ISLAMIC = {
 }
 
 
+def klci_series():
+    """Indeks FBM KLCI (^KLSE) 5 tahun: [[tarikh, tutup], ...]. Kosong jika gagal."""
+    try:
+        import yfinance as yf
+        h = yf.Ticker("^KLSE").history(period="5y", auto_adjust=False)
+        return [[i.strftime("%Y-%m-%d"), round(float(r["Close"]), 2)] for i, r in h.iterrows() if r["Close"] == r["Close"]]
+    except Exception as e:
+        print("! KLCI gagal:", e)
+        return []
+
+
 def status(code, name, sc):
     if code in ISLAMIC:
         return "ok"
@@ -275,12 +286,22 @@ def main():
     meta = {
         "generated": datetime.now(timezone.utc).isoformat(timespec="minutes"),
         "asof": asof, "provider": PROVIDER if not (PROVIDER == "eodhd" and not KEY) else "yfinance",
-        "count": len(stocks), "priced": len(px),
+        "count": len(stocks), "priced": len(px), "islNoPrice": [c for c in ISLAMIC if c not in px],
         "scDate": st["lists"][-1]["date"] if st and st.get("lists") else None,
         "bt": {"h": BT.H, "tgt": BT.TGT_ATR, "stp": BT.STP_ATR, "fee": BT.FEE},
         "setups": {k: {"name": BT.SETUPS[k], "n": g["n"], "p": round(prior[k] * 100), "md": g["md"],
                        "d25": g["d25"], "d75": g["d75"], "ev": g["ev"]} for k, g in gstats.items()},
     }
+    K = klci_series()
+    if len(K) > 60:
+        cl = [x[1] for x in K]
+        ma50 = sum(cl[-50:]) / 50
+        ma200 = sum(cl[-200:]) / min(200, len(cl))
+        meta["klci"] = {"d": K[-1][0], "c": cl[-1], "ch": round((cl[-1] / cl[-2] - 1) * 100, 2),
+                        "m1": round((cl[-1] / cl[-22] - 1) * 100, 2) if len(cl) > 22 else None,
+                        "up": 1 if cl[-1] > ma50 > ma200 else (-1 if cl[-1] < ma50 < ma200 else 0)}
+        json.dump({"asof": K[-1][0], "bars": K}, open(os.path.join(a.out, "klci.json"), "w"), separators=(",", ":"))
+        json.dump({"asof": K[-1][0], "bars": K}, open(os.path.join(ROOT, "data", "klci.json"), "w"), separators=(",", ":"))
     json.dump({"meta": meta, "stocks": stocks}, open(os.path.join(a.out, "market.json"), "w"),
               ensure_ascii=False, separators=(",", ":"))
     if st:

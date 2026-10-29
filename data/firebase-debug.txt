@@ -19,7 +19,7 @@ npm warn deprecated glob@10.5.0: Old versions of glob are not supported, and con
 [36m[1mi [22m[39m deploying [1mhosting[22m
 [36m[1mi  hosting[prosyariah]:[22m[39m beginning deploy...
 [36m[1mi  hosting[prosyariah]:[22m[39m found 1190 files in [1m_site[22m
-[36m[1mi  hosting:[22m[39m uploading new files [0/146] ([1m[32m0%[39m[22m)
+[36m[1mi  hosting:[22m[39m uploading new files [0/129] ([1m[32m0%[39m[22m)
 [36m[1mi  hosting:[22m[39m upload complete
 [32m[1m✔  hosting[prosyariah]:[22m[39m file upload complete
 [36m[1mi  hosting[prosyariah]:[22m[39m finalizing version...

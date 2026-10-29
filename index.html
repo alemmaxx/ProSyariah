@@ -263,6 +263,7 @@ main>.card,main>.alert,main>.grid2,main>.disc,main>.pad,.search,.results{margin-
 .sw{position:relative;display:inline-block;width:46px;height:26px}.sw input{opacity:0;width:0;height:0}.sw span{position:absolute;inset:0;border-radius:99px;background:var(--line);transition:.2s;cursor:pointer}.sw span::before{content:"";position:absolute;width:20px;height:20px;left:3px;top:3px;border-radius:50%;background:#fff;transition:.2s}.sw input:checked+span{background:var(--gold)}.sw input:checked+span::before{transform:translateX(20px)}
 .alleg{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--mut);background:var(--card2);border-radius:10px;padding:8px 10px;margin:4px 0 8px}.altg{align-items:flex-start}.altg>div{flex:1;padding-right:10px}.altg small{display:block;color:var(--mut);font-size:12px;line-height:1.35;margin-top:2px}.altag{font-size:12px}
 input,textarea,[contenteditable]{-webkit-user-select:text;user-select:text}
+.autob{display:flex;align-items:center;gap:12px;width:calc(100% - 2*var(--gut));text-align:left;cursor:pointer;font:inherit;color:inherit}.autob-ic{font-size:26px}.autob-t{flex:1}.autob-t small{display:block;color:var(--mut);font-size:12.5px}
 .auopt.off{opacity:.45;pointer-events:none}
 .mrow{padding:14px 0;border-bottom:1px solid var(--line);cursor:pointer}.mrow:last-child{border-bottom:0}
 .mhd{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
@@ -879,17 +880,22 @@ const RES3={W:['Menang','up','b-ok'],L:['Kalah','dn','b-no'],T:['Tamat masa','',
 function fmtDT(iso){const d=new Date(iso);return fmtD(isoD(d))+', '+d.toLocaleTimeString(S.settings.lang==='en'?'en-GB':'ms-MY',{hour:'2-digit',minute:'2-digit',hour12:false});}
 function manStartTxt(p){return p.at&&isoD(new Date(p.at))===p.d?fmtDT(p.at):fmtD(p.d);}
 function AUTO(){S.settings.auto=Object.assign({on:false,sig:true,champ:true,news:false,stake:20},S.settings.auto||{});return S.settings.auto;}
-function autoCardHTML(){const a=AUTO();
-  return `<div class="card autoc"><div class="row between" style="align-items:center"><h2 style="margin:0">🤖 Robot Auto</h2><label class="sw"><input type="checkbox" id="auOn" ${a.on?'checked':''}><span></span></label></div>
+function autoCardHTML(){const a=AUTO();const ty=[a.sig&&'🟢',a.champ&&'🏆',a.news&&'📰'].filter(Boolean).join(' ');
+  return `<button class="card autob" id="auBtn"><span class="autob-ic">🤖</span><span class="autob-t"><b>Robot Auto</b><small>${a.on?`Hidup · ${ty||'tiada jenis dipilih'} · RM${a.stake}`:'Mati · tekan untuk hidupkan'}</small></span><span class="badge ${a.on?'b-ok':''}">${a.on?'ON':'OFF'}</span><span class="muted" style="font-size:20px">›</span></button>`;}
+function openAuto(){const a=AUTO();
+  openSheet(`<div class="row between" style="align-items:center"><h2 style="margin:0">🤖 Robot Auto</h2><label class="sw"><input type="checkbox" id="auOn" ${a.on?'checked':''}><span></span></label></div>
     <p class="muted" style="margin:6px 0 8px;font-size:13px">Bila hidup, robot masuk ujian sendiri setiap petang (selepas data) untuk jenis yang anda pilih, guna harga tutup terakhir. Saham ini ditanda A dalam senarai.</p>
     <div class="auopt${a.on?'':' off'}"><label class="toggle"><span>🟢 Isyarat Kuat (Ringkasan isyarat aktif)</span><input type="checkbox" id="auSig" ${a.sig?'checked':''}></label>
     <label class="toggle"><span>🏆 Champion sahaja</span><input type="checkbox" id="auChamp" ${a.champ?'checked':''}></label>
     <label class="toggle"><span>📰 Berita Berpotensi</span><input type="checkbox" id="auNews" ${a.news?'checked':''}></label>
-    <label>Nilai maya setiap posisi (RM)</label><input id="auStake" inputmode="decimal" value="${a.stake}"></div></div>`;}
-function bindAuto(){const a=AUTO();const upd=()=>{save();rRobot();};
-  const on=$('#auOn');if(!on)return;on.onchange=e=>{a.on=e.target.checked;upd();toast(a.on?'🤖 Robot Auto dihidupkan':'Robot Auto dimatikan');};
+    <label>Nilai maya setiap posisi (RM)</label><input id="auStake" inputmode="decimal" value="${a.stake}"></div>
+    <button class="btn" style="width:100%;margin-top:14px" id="auDone">Siap</button>`);
+  const upd=()=>{save();if(TAB==='robot')rRobot();openAuto();};
+  $('#auOn').onchange=e=>{a.on=e.target.checked;upd();toast(a.on?'🤖 Robot Auto dihidupkan':'Robot Auto dimatikan');};
   $('#auSig').onchange=e=>{a.sig=e.target.checked;upd();};$('#auChamp').onchange=e=>{a.champ=e.target.checked;upd();};$('#auNews').onchange=e=>{a.news=e.target.checked;upd();};
-  $('#auStake').onchange=e=>{a.stake=Math.max(1,num(e.target.value)||20);e.target.value=a.stake;upd();toast('✓ Nilai maya RM'+a.stake+' disimpan');};}
+  $('#auStake').onchange=e=>{a.stake=Math.max(1,num(e.target.value)||20);upd();toast('✓ Nilai maya RM'+a.stake+' disimpan');};
+  $('#auDone').onclick=()=>{const v=$('#auStake');if(v&&num(v.value)&&num(v.value)!==a.stake){a.stake=Math.max(1,num(v.value));save();if(TAB==='robot')rRobot();}closeSheet();};}
+function bindAuto(){const b=$('#auBtn');if(b)b.onclick=openAuto;}
 function manDelete(id){S.manual=(S.manual||[]).filter(x=>x.id!==id);S.manDel=[...new Set([...(S.manDel||[]),id])].slice(-300);save();}
 function manOpen(code){return (S.manual||[]).find(p=>p.code===code&&!p.closed);}
 function manLevels(code,en){
@@ -1467,6 +1473,7 @@ const EN_EXACT={
 '🔔 Senarai syariah SC baharu dijangka':'🔔 New SC Shariah list expected','🔔 Tarikh haul anda':'🔔 Your haul date',
 };
 const EN_RX=[
+[/^Hidup · (.*) · RM([\d.]+)$/,(m,a,b)=>'On · '+(a==='tiada jenis dipilih'?'no type chosen':a)+' · RM'+b],
 [/^✓ Nilai maya RM([\d.]+) disimpan$/,(m,a)=>'✓ Virtual amount RM'+a+' saved'],
 [/^Harga (\S+) (di atas|di bawah) EMA200 \((\S+)\)$/,(m,a,b,c)=>`Price ${a} ${b==='di atas'?'above':'below'} EMA200 (${c})`],
 [/^EMA200 perlukan 200 bar — guna EMA50 \((\S+)\)\. Harga (di atas|di bawah)\.$/,(m,a,b)=>`EMA200 needs 200 bars — using EMA50 (${a}). Price ${b==='di atas'?'above':'below'}.`],
@@ -1550,6 +1557,7 @@ const EN_PHRASE=[
 ];
 
 Object.assign(EN_EXACT,{
+'Mati · tekan untuk hidupkan':'Off · tap to turn on','Siap':'Done','tiada jenis dipilih':'no type chosen',
 'Untuk 📱, log masuk dan tekan Hidupkan pada Notifikasi telefon.':'For 📱, log in and tap Turn on under Phone notifications.',
 '📱 = sampai ke telefon (walaupun app tutup)':'📱 = reaches your phone (even when the app is closed)','🔔 = dalam loceng app sahaja':'🔔 = in the app bell only','Isyarat Kuat & Champion':'Strong signals & Champion','Saham patuh syariah yang dapat isyarat kuat hari ini.':'Shariah-compliant stocks with a strong signal today.','Berita baik hari ini untuk saham yang ada isyarat.':"Today's good news for stocks with a signal.",'Robot (Manual & Auto)':'Robot (Manual & Auto)','Saham dalam tab Robot sampai sasaran, cut loss, cukup hari, atau Robot Auto masuk saham baru.':'A stock in the Robot tab hits its target, cut loss or day limit, or Auto Robot enters a new stock.','5 isyarat terkuat':'Top 5 signals','Ringkasan 5 isyarat terbaik: harga masuk, paras atas/bawah, tempoh.':'Summary of the 5 best signals: entry price, upper/lower levels, period.','Saham dalam portfolio/watchlist bertukar status patuh syariah.':'A stock in your portfolio/watchlist changes Shariah status.','Harga':'Price','Harga sampai paras yang anda tetapkan, atau pegangan turun lebih % di bawah.':'Price reaches the level you set, or a holding falls more than the % below.','Isyarat teknikal':'Technical signals','Golden/death cross dan RSI melampau untuk saham anda.':'Golden/death cross and extreme RSI for your stocks.','Peringatan zakat dan dividen yang perlu disucikan.':'Reminders for zakat and dividends to purify.','Peringatan bila SC keluarkan senarai syariah baru (Mei & Nov).':'Reminder when the SC releases a new Shariah list (May & Nov).',
 'Senarai saham yang diuji: M = Manual (anda tekan ✍️ Manual pada saham), A = Auto (robot masuk sendiri). Semua ditutup automatik bila sampai sasaran, cut loss atau 40 hari dagangan.':'Stocks being tested: M = Manual (you tap ✍️ Manual on a stock), A = Auto (the robot enters by itself). All close automatically at the target, cut loss or after 40 trading days.',

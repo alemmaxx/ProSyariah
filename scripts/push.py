@@ -109,6 +109,29 @@ def new_signals(M, en, only=None):
     return out
 
 
+def pot_news(M, out_dir, en):
+    """Berita Berpotensi: saham patuh syariah dengan berita bernada positif sejak semalam."""
+    try:
+        N = json.load(open(os.path.join(out_dir, "news.json")))["items"]
+    except Exception:
+        return []
+    cut = (date.today() - timedelta(days=1)).isoformat()
+    hits = []
+    for c, arr in N.items():
+        v = M["stocks"].get(c, {})
+        if v.get("s") != "ok":
+            continue
+        g = [x for x in arr if x.get("x") == "+" and x.get("d", "") >= cut]
+        if g:
+            hits.append((g[0]["d"], (v.get("n") or c).replace(" Berhad", "").replace(" Bhd", "")))
+    if not hits:
+        return []
+    hits.sort(reverse=True)
+    names = ", ".join(n for _, n in hits[:3]) + (f" +{len(hits) - 3}" if len(hits) > 3 else "")
+    title = f"📰 {len(hits)} stock(s) with positive news" if en else f"📰 {len(hits)} saham dengan berita positif"
+    return [(f"news:{hits[0][0]}", title, names)]
+
+
 def weekly(data, M, en):
     """Ringkasan mingguan: dihantar sekali setiap minggu, pada larian petang Jumaat (atau Sabtu jika terlepas)."""
     from datetime import datetime, timezone
@@ -187,6 +210,8 @@ def main():
             continue
         if f.get("sig", {}).get("booleanValue", True):
             items += new_signals(M, en, set(data.get("watch", [])) if f.get("sigWatch", {}).get("booleanValue") else None)
+        if f.get("news", {}).get("booleanValue", True):
+            items += pot_news(M, a.out, en)
         wk = weekly(data, M, en)
         if wk:
             items.append(wk)

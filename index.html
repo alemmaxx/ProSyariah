@@ -257,6 +257,7 @@ main>.card,main>.alert,main>.grid2,main>.disc,main>.pad,.search,.results{margin-
 .onbb{font-size:15px;line-height:1.5}.onbb ul{padding-left:20px;margin:6px 0}.onbb li{margin:6px 0}
 .onbdots{display:flex;justify-content:center;gap:6px;margin:14px 0}.onbdots span{width:8px;height:8px;border-radius:50%;background:var(--line)}.onbdots span.on{background:var(--gold);width:20px;border-radius:4px}
 .dstat{margin:12px var(--gut) 0;padding:10px 12px;border-radius:12px;background:var(--card);border:1px solid var(--line);display:flex;flex-direction:column;gap:3px;font-size:13px;color:var(--muted)}.dstat b{color:var(--ink)}.dstat.warn{border-color:var(--amber)}
+.pnr{border-bottom:1px solid var(--line);padding-bottom:8px}.pnl{display:flex;gap:8px;color:var(--ink);text-decoration:none;font-size:13px;line-height:1.4;padding:0 4px}
 .mrow{padding:14px 0;border-bottom:1px solid var(--line);cursor:pointer}.mrow:last-child{border-bottom:0}
 .mhd{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
 .mrow.mc{padding:12px 0}.help-p .mrow{border-bottom:0;cursor:default}
@@ -823,6 +824,24 @@ function dataStatusHTML(){const asof=S.market.meta.asof,now=new Date(),t=today()
 function champHTML(){
   if(!S.market)return '';const n=champList().length;
   return `<div class="pad" style="margin-top:10px"><button class="smbtn${n?'':' off'}" onclick="openChamp()"><span>🏆</span><span><b>Isyarat Champion</b><small>${n?`${n} saham · bermula hari ini`:'Tiada isyarat Champion hari ini'}</small></span>${n?'<span class="go">Buka</span>':''}</button></div>`;}
+/* Berita Berpotensi: saham patuh syariah dengan berita bernada positif dalam 3 hari lepas */
+function potNews(days){if(!S.news||!S.news.items)return [];const cut=isoD(new Date(Date.now()-(days||3)*864e5));const out=[];
+  Object.entries(S.news.items).forEach(([c,arr])=>{if(status(c,nameOf(c))!=='ok')return;const g=(arr||[]).filter(x=>x.x==='+'&&x.d>=cut);if(g.length)out.push({code:c,name:nameOf(c),n:g[0],k:g.length});});
+  return out.sort((a,b)=>b.n.d.localeCompare(a.n.d));}
+function newsBoxHTML(){if(!S.market)return '';const L=potNews(3);
+  return `<div class="pad" style="margin-top:10px"><button class="smbtn${L.length?'':' off'}" onclick="openPotNews()"><span>📰</span><span><b>Berita Berpotensi</b><small>${L.length?`${L.length} saham dengan berita positif · 3 hari lepas`:'Tiada berita positif dalam 3 hari lepas'}</small></span>${L.length?'<span class="go">Buka</span>':''}</button></div>`;}
+function openPotNews(){const L=potNews(3);if(!L.length)return toast('Tiada berita positif dalam 3 hari lepas');
+  const d=document.createElement('div');d.className='help';d.id='help';document.body.classList.add('ovl');bkEnsure();
+  d.innerHTML=`<div class="help-p" role="dialog" aria-modal="true"><div><div class="shd-top" style="margin-bottom:6px"><h2 style="margin:0">📰 Berita Berpotensi</h2><button class="xbtn" id="helpX" aria-label="Tutup">✕</button></div>
+    <p class="muted" style="margin:0">Saham patuh syariah yang ada berita bernada positif (▲) dalam 3 hari lepas. Tekan nama untuk lihat analisa, atau "Baca" untuk berita penuh.</p></div>
+    ${L.map(x=>`<div class="pnr"><button class="smr" data-sc="${esc(x.code)}" style="border:0;padding-bottom:2px"><span><b>${esc(shortName(x.name))}</b> <span class="code">${esc(x.code)}</span></span><span class="smt">${x.k>1?`<small class="muted">${x.k} berita</small>`:''}</span></button>
+      <a class="pnl" href="${esc(x.n.u)}" target="_blank" rel="noopener"><span class="ntone tp">▲</span><span>${esc(x.n.t)}<small class="muted"> · ${fmtD(x.n.d)}${x.n.s?' · '+esc(x.n.s):''} · Baca ↗</small></span></a></div>`).join('')}
+    <p class="disc" style="margin-top:12px">Nada berita dikira dari kata kunci tajuk sahaja. Berita positif tidak bermaksud harga pasti naik. Ini bukan cadangan beli atau jual.</p></div>`;
+  document.body.appendChild(d);
+  const close=()=>{d.remove();if(!$('#sheet').classList.contains('on'))document.body.classList.remove('ovl');};
+  d.onclick=e=>{const b=e.target.closest('[data-sc]');if(b){close();stockSheet(b.dataset.sc,nameOf(b.dataset.sc));return;}if(e.target===d)close();};$('#helpX').onclick=close;}
+function newsAlerts(push){const L=potNews(1);if(!L.length)return;
+  push({id:'news:'+L[0].n.d,lv:'action',ic:'📰',cat:'berita',code:L.length===1?L[0].code:null,title:`${L.length} saham dengan berita positif`,body:`${L.slice(0,3).map(x=>shortName(x.name)).join(', ')}${L.length>3?` +${L.length-3}`:''}. Buka 📰 Berita Berpotensi.`});}
 /* Isyarat Pemerhatian: Isyarat Sederhana yang bermula hari ini — untuk dipantau, belum cukup kuat */
 function obsHTML(){if(!S.market)return '';const n=topSignals(60,'obs').length;
   return `<div class="pad" style="margin-top:10px"><button class="smbtn${n?'':' off'}" onclick="openObs()"><span>👀</span><span><b>Isyarat Pemerhatian</b><small>${n?`${n} saham · belum cukup kuat, untuk dipantau`:'Tiada isyarat untuk dipantau hari ini'}</small></span>${n?'<span class="go">Buka</span>':''}</button></div>`;}
@@ -1209,9 +1228,9 @@ function openTrack(){
 }
 
 /* ================= PUSAT AMARAN ================= */
-const ALERT_DEF={on:{isyarat:true,robot:true,top5:true,syariah:true,harga:true,teknikal:true,ibadah:true,jadual:true},lossPct:10,price:[],seen:{},notified:{},notify:false};
+const ALERT_DEF={on:{berita:true,isyarat:true,robot:true,top5:true,syariah:true,harga:true,teknikal:true,ibadah:true,jadual:true},lossPct:10,price:[],seen:{},notified:{},notify:false};
 function AL(){if(!S.alerts)S.alerts={};const a=S.alerts;const D=structuredClone(ALERT_DEF);Object.keys(D).forEach(k=>{if(a[k]===undefined)a[k]=D[k];});if(!a.on)a.on={};Object.keys(D.on).forEach(k=>{if(a.on[k]===undefined)a.on[k]=D.on[k];});
-  if(!S.alerts.v2){S.alerts.v2=1;Object.keys(S.alerts.on).forEach(k=>S.alerts.on[k]=k==='robot'||k==='isyarat');}   // amaran hanya untuk Robot Manual (boleh hidupkan lain di Tetapan)
+  if(!S.alerts.v2){S.alerts.v2=1;Object.keys(S.alerts.on).forEach(k=>S.alerts.on[k]=k==='robot'||k==='isyarat'||k==='berita');}   // amaran hanya untuk Robot Manual (boleh hidupkan lain di Tetapan)
   return S.alerts;}
 /* Amaran Robot Manual: tutup (sasaran), cut loss, hampir cut loss, tarikh tempoh biasa & tutup paling lewat */
 function weeklyAlert(push){const n=new Date(),dw=n.getDay();if(!((dw===5&&n.getHours()>=17)||dw===6))return;const M=S.manual||[];if(!M.length)return;
@@ -1278,6 +1297,7 @@ function computeAlerts(){
       if(m.r!=null&&m.r>70&&own)push({id:'rsih:'+c+':'+m.d,lv:'info',ic:'🔺',cat:'teknikal',code:c,title:`${nm}: RSI ${m.r.toFixed(0)}`,body:'Lebih belian, berisiko pembetulan.'});});
   }
   if(A.on.isyarat)signalAlerts(push);
+  if(A.on.berita)newsAlerts(push);
   if(A.on.robot)robotAlerts(push);
   if(A.on.top5)top5Alerts(push);
   if(A.on.ibadah){
@@ -1329,7 +1349,7 @@ function openAlerts(){
   openSheet(h);
   $('#alRead').onclick=()=>{list.forEach(a=>A.seen[a.id]=1);save();updateBell();openAlerts();};
   document.querySelectorAll('[data-al]').forEach(b=>b.onclick=()=>{const a=list.find(x=>x.id===b.dataset.al);A.seen[a.id]=1;save();updateBell();
-    if(a.go){closeSheet();goTab(a.go);}else if(a.code)stockSheet(a.code,nameOf(a.code));else if(a.cat==='isyarat'){closeSheet();a.id.startsWith('champ')?openChamp():openSummary();}});
+    if(a.go){closeSheet();goTab(a.go);}else if(a.code)stockSheet(a.code,nameOf(a.code));else if(a.cat==='isyarat'){closeSheet();a.id.startsWith('champ')?openChamp():openSummary();}else if(a.cat==='berita'){closeSheet();openPotNews();}});
   const n=$('#alNot');if(n)n.onclick=enableNotify;
 }
 async function enableNotify(){
@@ -1353,7 +1373,7 @@ function priceAlertForm(code){
   document.querySelectorAll('[data-pd]').forEach(b=>b.onclick=()=>{A.price=A.price.filter(p=>p.id!==b.dataset.pd);save();updateBell();priceAlertForm(code);});
 }
 function alertSettingsHTML(){
-  const A=AL();const lab={isyarat:'Isyarat baharu (Isyarat Kuat & Champion)',robot:'Robot Manual (tutup, cut loss, tarikh tutup)',top5:'5 isyarat terkuat (masuk, paras atas/bawah, tempoh)',syariah:'Status syariah (pegangan & watchlist)',harga:'Harga (sasaran harga & had penurunan)',teknikal:'Isyarat teknikal (cross, RSI)',ibadah:'Zakat & penyucian',jadual:'Jadual senarai SC'};
+  const A=AL();const lab={isyarat:'Isyarat baharu (Isyarat Kuat & Champion)',berita:'Berita Berpotensi (berita positif)',robot:'Robot Manual (tutup, cut loss, tarikh tutup)',top5:'5 isyarat terkuat (masuk, paras atas/bawah, tempoh)',syariah:'Status syariah (pegangan & watchlist)',harga:'Harga (sasaran harga & had penurunan)',teknikal:'Isyarat teknikal (cross, RSI)',ibadah:'Zakat & penyucian',jadual:'Jadual senarai SC'};
   return `<div class="card"><h2>Amaran</h2>
    ${Object.entries(lab).map(([k,v])=>`<div class="toggle"><span>${v}</span><input type="checkbox" data-alon="${k}" ${A.on[k]?'checked':''}></div>`).join('')}
    <label>Isyarat baharu untuk</label><select id="alScope"><option value="all"${A.sigScope!=='watch'?' selected':''}>Semua saham patuh syariah</option><option value="watch"${A.sigScope==='watch'?' selected':''}>Saham dalam watchlist sahaja</option></select>
@@ -1624,6 +1644,9 @@ const EN_PHRASE=[
 ];
 
 Object.assign(EN_EXACT,{
+'Berita Berpotensi':'Potential news','📰 Berita Berpotensi':'📰 Potential news','Tiada berita positif dalam 3 hari lepas':'No positive news in the last 3 days','Berita Berpotensi (berita positif)':'Potential news (positive news)',
+'Saham patuh syariah yang ada berita bernada positif (▲) dalam 3 hari lepas. Tekan nama untuk lihat analisa, atau "Baca" untuk berita penuh.':'Shariah-compliant stocks with positive-toned news (▲) in the last 3 days. Tap a name for analysis, or "Read" for the full article.',
+'Nada berita dikira dari kata kunci tajuk sahaja. Berita positif tidak bermaksud harga pasti naik. Ini bukan cadangan beli atau jual.':'News tone is based on headline keywords only. Positive news does not mean the price will rise. This is not a buy or sell recommendation.',
 'Isyarat Pemerhatian':'Watch signals','👀 Isyarat Pemerhatian':'👀 Watch signals','Tiada isyarat untuk dipantau hari ini':'No signals to watch today',
 'Dalam ujian robot 3 tahun, Isyarat Sederhana secara purata hampir pulang modal. Ini bacaan indicator, bukan cadangan beli atau jual.':'In the 3-year robot test, moderate signals were close to break-even on average. This is an indicator reading, not a buy or sell recommendation.',
 'hari ini, selepas 6.30 petang':'today, after 6.30pm','sebentar lagi (robot sedang berjalan)':'shortly (the robot is running)','data lewat — robot akan cuba semula (paling lewat 9.15 pagi)':'data delayed — the robot will retry (by 9.15am at the latest)',
@@ -1800,6 +1823,8 @@ Object.assign(EN_EXACT,{
 'Paras ini naik mengikut harga tertinggi sejak tarikh belian dan tidak pernah turun. Harga tutup di bawahnya menandakan momentum menurun.':'This level rises with the highest price since the purchase date and never falls. A close below it signals weakening momentum.',
 });
 EN_RX.unshift(
+[/^(\d+) saham dengan berita positif · 3 hari lepas$/,'$1 stocks with positive news · last 3 days'],[/^(\d+) saham dengan berita positif$/,'$1 stocks with positive news'],
+[/^(.+)\. Buka 📰 Berita Berpotensi\.$/,'$1. Open 📰 Potential news.'],[/^ · (.+) · Baca ↗$/,(m,a)=>` · ${a} · Read ↗`],[/^(\d+) berita$/,'$1 news'],
 [/^(\d+) saham · belum cukup kuat, untuk dipantau$/,'$1 stocks · not strong enough yet, to watch'],
 [/^Isyarat Sederhana yang bermula (.+)\. Corak ini ada, tetapi belum cukup kuat dalam sejarah saham itu\. Sesuai untuk dipantau atau diuji dengan ✍️ Robot Manual\.$/,(m,a)=>`Moderate signals starting ${trText(a)}. The pattern is there, but not yet strong enough in that stock's history. Good for watching or testing with the ✍️ Manual Robot.`],
 [/^📅 Data harga tutup (.+?) · (?:(\d+) isyarat untuk (.+?)|tiada Isyarat Kuat untuk (.+?))(?: · (\d+) dalam pemerhatian)?$/,(m,a,b,c,d,f)=>`📅 Closing price data ${trText(a)} · ${b?`${b} signal(s) for ${trText(c)}`:`no strong signal for ${trText(d)}`}${f?` · ${f} to watch`:''}`],
@@ -2116,10 +2141,11 @@ function rSaham(){
   const al=scheduleAlerts();if(al)h+=`<div class="pad" style="margin-top:12px">${al}</div>`;
   if(S.market)h+=dataStatusHTML();
   if(S.market)h+=`<div class="pad" style="margin-top:12px"><button class="smbtn" onclick="openSummary()"><span>📋</span><span><b>Ringkasan isyarat aktif</b><small>${topSignals(60).length} saham · bermula hari ini</small></span><span class="go">Buka</span></button></div>`;
+  h+=newsBoxHTML();
   h+=champHTML();
   h+=obsHTML();
   h+=top5HTML();
-  h+=rail('Watchlist anda',S.watch.length?S.watch.length+' saham':'',S.watch.map(c=>({code:c,name:nameOf(c)})),false,needLogin()?'Log masuk (Tetapan → Akaun) untuk guna watchlist. Watchlist disimpan dalam akaun Google anda.':'Belum ada saham. Buka mana-mana saham dan tekan ☆ Tambah watchlist.');
+  h+=rail('Watchlist anda',S.watch.length?S.watch.length+' saham':'',S.watch.filter(c=>status(c,nameOf(c))!=='no').map(c=>({code:c,name:nameOf(c)})),false,needLogin()?'Log masuk (Tetapan → Akaun) untuk guna watchlist. Watchlist disimpan dalam akaun Google anda.':'Belum ada saham. Buka mana-mana saham dan tekan ☆ Tambah watchlist.');
   if(S.holdings.length)h+=rail('Pegangan saya','',S.holdings.map(x=>({code:x.code,name:x.name||nameOf(x.code)})),true,'');
   if(M){
     h+=rail('Isyarat teknikal hari ini','kebarangkalian dari sejarah 5 tahun',screen(v=>v.op&&v.op.some(o=>o.ev>0&&(o.ago||0)===0&&(S.settings.showMod||rateSignal(o).g==='A')&&(S.settings.style!=='ketat'||(o.md||0)>=5)),(a,b)=>b.op[0].p-a.op[0].p),false,'');
@@ -2130,7 +2156,6 @@ function rSaham(){
   }
   if(L&&prevList()){
     h+=rail('Baru patuh syariah',fmtD(L.date),L.added.slice(0,30).map(n=>({code:codeFor(n),name:n})),false,'Tiada saham baharu dalam semakan ini.');
-    h+=rail('Digugurkan dari senarai',fmtD(L.date),L.removed.slice(0,30).map(n=>({code:codeFor(n),name:n})),false,'Tiada saham digugurkan.');
   }
   h+=trackCard();
   h+=`<p class="disc" style="margin:18px 16px 0">${M?`Data pasaran setakat ${fmtD(M.meta.asof)}. `:''}${L?`Senarai syariah SC ${fmtD(L.date)}. `:''}Dikemas kini automatik setiap hari bekerja. Isyarat teknikal untuk rujukan sahaja, bukan cadangan beli atau jual.</p>`;
@@ -2138,7 +2163,7 @@ function rSaham(){
   const res=()=>{
     const q=Q.trim().toUpperCase();if(!q){$('#res').innerHTML='';return;}
     const nq=normName(q);
-    const hits=U.filter(x=>x.code.toUpperCase().startsWith(q)||normName(x.name).includes(nq)).slice(0,30);
+    const hits=U.filter(x=>(x.code.toUpperCase().startsWith(q)||normName(x.name).includes(nq))&&status(x.code,x.name)==='ok').slice(0,30);
     $('#res').innerHTML=hits.length?hits.map(x=>{const m=mk(x.code);return `<div class="item" data-code="${esc(x.code)}" data-name="${esc(x.name)}"><div><b>${esc(x.name)}</b><div class="code">${esc(x.code||'tiada kod')}${m&&m.c!=null?` · ${px(m.c)}`:''}</div>${x.code?statusHTML(x.code,x.name,true):''}</div>${badge(status(x.code,x.name))}</div>`;}).join(''):`<div class="muted" style="padding:10px 0">${U.length?'Tiada padanan. Cuba kod 4 digit atau sebahagian nama.':'Data sedang dimuat.'}</div>`;
     $('#res').querySelectorAll('.item').forEach(el=>el.onclick=()=>stockSheet(el.dataset.code,el.dataset.name));
   };
@@ -2586,7 +2611,7 @@ async function cloudPull(){if(!FBU)return;try{const d=await FB.db.collection('us
 async function cloudPush(now){if(!FBU)return;clearTimeout(cloudT);
   const go=async()=>{try{S.cloudAt=Date.now();save0();
     const D={dev:DEV,watchAt:S.watchAt||0,manual:S.manual||[],watch:S.watch||[],manDel:S.manDel||[],settings:{lang:S.settings.lang,platform:S.settings.platform??null,paperStake:S.settings.paperStake??null},updatedAt:S.cloudAt};
-    await FB.db.collection('users').doc(FBU.uid).set({data:JSON.stringify(D),email:FBU.email||'',lang:S.settings.lang||'bm',sig:!!(S.alerts&&S.alerts.on&&S.alerts.on.isyarat!==false),sigWatch:!!(S.alerts&&S.alerts.sigScope==='watch'),pushAm:!!(S.alerts&&S.alerts.pushTime==='am'),updatedAt:S.cloudAt},{merge:true});}catch(e){}};
+    await FB.db.collection('users').doc(FBU.uid).set({data:JSON.stringify(D),email:FBU.email||'',lang:S.settings.lang||'bm',sig:!!(S.alerts&&S.alerts.on&&S.alerts.on.isyarat!==false),news:!!(S.alerts&&S.alerts.on&&S.alerts.on.berita!==false),sigWatch:!!(S.alerts&&S.alerts.sigScope==='watch'),pushAm:!!(S.alerts&&S.alerts.pushTime==='am'),updatedAt:S.cloudAt},{merge:true});}catch(e){}};
   if(now)return go();cloudT=setTimeout(go,2500);}
 async function regPush(){try{if(!FBU||!FB_VAPID||!('serviceWorker' in navigator)||!('Notification' in window)||Notification.permission!=='granted')return;
   const reg=await navigator.serviceWorker.ready;const tok=await firebase.messaging().getToken({vapidKey:FB_VAPID,serviceWorkerRegistration:reg});
@@ -2632,7 +2657,6 @@ function rTetapan(){
   h+=alertSettingsHTML();
   h+=`<div class="card"><h2>Mod Patuh Syariah</h2>
    <div class="toggle"><span>Tunjuk Isyarat Sederhana juga<br><small class="muted">Asal: Isyarat Kuat sahaja — satu-satunya yang untung dalam ujian 3 tahun</small></span><input type="checkbox" id="smod" ${st.showMod?'checked':''}></div>
-   <div class="toggle"><span>Sembunyi isyarat untuk saham tidak patuh</span><input type="checkbox" id="sm" ${st.shariahMode?'checked':''}></div>
    <label>Gaya dagangan</label><div class="seg"><button data-sty="sc" class="${st.style==='sc'?'on':''}">Ikut SC (carta harian)</button><button data-sty="ketat" class="${st.style==='ketat'?'on':''}">Ketat (carta mingguan)</button></div>
    <div class="disc">Terdapat perbezaan pandangan ulama tentang dagangan jangka sangat pendek. "Ketat" mengira indicator pada carta mingguan untuk fokus jangka sederhana–panjang. App ini tidak menyokong margin, short selling, options, futures atau waran.</div></div>`;
   h+=`<div class="card"><h2>Sandaran data</h2><div class="row"><button class="btn sm sec" id="bE">Muat turun sandaran</button><button class="btn sm sec" id="bC">Salin sandaran</button><button class="btn sm sec" id="bI">Pulihkan</button><button class="btn sm red" id="cc">Kosongkan cache harga</button></div></div>`;
@@ -2648,7 +2672,7 @@ function rTetapan(){
   bindAlertSettings();bindAccount();
   document.querySelectorAll('[data-pf]').forEach(b=>b.onclick=()=>openPlatform(+b.dataset.pf));
   const pm=$('#pfMain');if(pm)pm.onchange=e=>{S.settings.platform=e.target.value;save();toast('✓ Disimpan');};
-  $('#sm').onchange=e=>{st.shariahMode=e.target.checked;save();};
+  S.settings.shariahMode=true;
   $('#smod').onchange=e=>{st.showMod=e.target.checked;save();toast(st.showMod?'Isyarat Sederhana dipaparkan':'Isyarat Kuat sahaja');};
   document.querySelectorAll('[data-sty]').forEach(b=>b.onclick=()=>{st.style=b.dataset.sty;S.cache={};save();render();toast('Cache harga dikosongkan untuk gaya baharu');});
   const backup=()=>JSON.stringify(Object.assign({},S,{cache:{}}));

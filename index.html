@@ -939,7 +939,7 @@ function openManual(code){if(needLogin()){toast('Log masuk dahulu untuk guna Rob
   else $('#mGo').onclick=()=>{const st=num($('#mS').value),en=num($('#mE').value),tg=num($('#mT').value),sl=num($('#mL').value),dt=$('#mD').value;
     if(!(st>0&&en>0))return toast('Masukkan nilai maya dan harga masuk');if(!(tg>en&&sl<en&&sl>0))return toast('Paras atas mesti lebih tinggi dan paras bawah lebih rendah daripada harga masuk');
     const sg=signalFor(code);S.manual=S.manual||[];S.manual.push({id:uid(),inc:1,at:new Date().toISOString(),code,name:nm,d:dt||today(),en,stake:st,tg,sl,md:sg&&sg.md?Math.round(sg.md):null});
-    if(!S.watch.includes(code))S.watch.push(code);save();toast('Ditambah ke Robot Manual');getBars(code).catch(()=>{});close();closeSheet();goTab('robot');};
+    if(!S.watch.includes(code)){S.watch.push(code);S.watchAt=Date.now();}save();toast('Ditambah ke Robot Manual');getBars(code).catch(()=>{});close();closeSheet();goTab('robot');};
 }
 function manRow(p){const nm=shortName(p.name||nameOf(p.code));const m=mk(p.code),now=m&&m.c;
   if(p.closed){const C=p.closed,r=RES3[C.res],u=manPnl(p,C.exit),xp=(C.exit/p.en-1)*100;
@@ -1601,6 +1601,8 @@ const EN_PHRASE=[
 ];
 
 Object.assign(EN_EXACT,{
+'Log masuk (Tetapan → Akaun) untuk guna watchlist. Watchlist disimpan dalam akaun Google anda.':'Sign in (Settings → Account) to use the watchlist. Your watchlist is saved in your Google account.',
+'Log masuk dahulu untuk guna watchlist':'Sign in first to use the watchlist',
 'Isyarat baharu untuk':'New signals for','Semua saham patuh syariah':'All Shariah-compliant stocks','Saham dalam watchlist sahaja':'Watchlist stocks only',
 'Masa notifikasi phone':'Phone notification time','Bila-bila masa (petang selepas pasaran tutup)':'Any time (evening after market close)','Pagi sahaja (sekitar 9 pagi, sebelum pasaran buka)':'Mornings only (around 9am, before market open)',
 'Isyarat baharu (Isyarat Kuat & Champion)':'New signals (Strong & Champion)',
@@ -2085,7 +2087,7 @@ function rSaham(){
   if(S.market)h+=`<div class="pad" style="margin-top:12px"><button class="smbtn" onclick="openSummary()"><span>📋</span><span><b>Ringkasan isyarat aktif</b><small>${topSignals(60).length} saham · bermula hari ini</small></span><span class="go">Buka</span></button></div>`;
   h+=champHTML();
   h+=top5HTML();
-  h+=rail('Watchlist anda',S.watch.length?S.watch.length+' saham':'',S.watch.map(c=>({code:c,name:nameOf(c)})),false,'Belum ada saham. Buka mana-mana saham dan tekan ☆ Tambah watchlist.');
+  h+=rail('Watchlist anda',S.watch.length?S.watch.length+' saham':'',S.watch.map(c=>({code:c,name:nameOf(c)})),false,needLogin()?'Log masuk (Tetapan → Akaun) untuk guna watchlist. Watchlist disimpan dalam akaun Google anda.':'Belum ada saham. Buka mana-mana saham dan tekan ☆ Tambah watchlist.');
   if(S.holdings.length)h+=rail('Pegangan saya','',S.holdings.map(x=>({code:x.code,name:x.name||nameOf(x.code)})),true,'');
   if(M){
     h+=rail('Isyarat teknikal hari ini','kebarangkalian dari sejarah 5 tahun',screen(v=>v.op&&v.op.some(o=>o.ev>0&&(o.ago||0)===0&&(S.settings.showMod||rateSignal(o).g==='A')&&(S.settings.style!=='ketat'||(o.md||0)>=5)),(a,b)=>b.op[0].p-a.op[0].p),false,'');
@@ -2112,7 +2114,7 @@ function rSaham(){
   document.querySelectorAll('.t5r').forEach(p=>p.onclick=()=>stockSheet(p.dataset.code,nameOf(p.dataset.code)));
   document.querySelectorAll('.poster').forEach(p=>p.onclick=()=>stockSheet(p.dataset.code,p.dataset.name));
   document.querySelectorAll('[data-open]').forEach(b=>b.onclick=()=>stockSheet(b.dataset.open,nameOf(b.dataset.open)));
-  document.querySelectorAll('[data-wt]').forEach(b=>b.onclick=()=>{const c=b.dataset.wt;if(S.watch.includes(c))S.watch=S.watch.filter(x=>x!==c);else S.watch.push(c);save();render();});
+  document.querySelectorAll('[data-wt]').forEach(b=>b.onclick=()=>{if(toggleWatch(b.dataset.wt))render();});
   bindHeroChart();
   const hf=$('#hFocus');if(hf)hf.onclick=()=>$('#q').focus();
   const hs=$('#hSync');if(hs)hs.onclick=()=>syncData(true);
@@ -2264,7 +2266,7 @@ function stockSheet(code,name){
   } else h+=`<div class="alert a-amber">Saham ini tiada kod dalam senarai. Nama ini belum dapat dipadankan dengan kod Bursa secara automatik.</div>`;
   openSheet(h);
   if(!code)return;
-  $('#wBtn').onclick=()=>{if(S.watch.includes(code))S.watch=S.watch.filter(x=>x!==code);else S.watch.push(code);save();stockSheet(code,name);if(TAB==='saham')renderWatch();};
+  $('#wBtn').onclick=()=>{if(toggleWatch(code)){stockSheet(code,name);if(TAB==='saham')renderWatch();}};
   $('#hBtn').onclick=()=>holdingForm({code,name});
   $('#paBtn').onclick=()=>priceAlertForm(code);
   $('#cBtn').onclick=()=>{navigator.clipboard&&navigator.clipboard.writeText(code);toast('Kod '+code+' disalin');};
@@ -2521,7 +2523,7 @@ function loadScript(u){return new Promise((ok,no)=>{const x=document.createEleme
 async function fbInit(){if(!FB_CONFIG)return null;if(FB)return FB;
   for(const m of ['app','auth','firestore','messaging'])await loadScript(`https://www.gstatic.com/firebasejs/${FBV}/firebase-${m}-compat.js`);
   firebase.initializeApp(FB_CONFIG);FB={auth:firebase.auth(),db:firebase.firestore()};
-  FB.auth.onAuthStateChanged(async u=>{FBU=u;FBREADY=true;if(u){await cloudPull();regPush();}else{S.manual=[];S.manDel=[];save0();robotStateSync();}if(TAB==='tetapan'||TAB==='robot')render();});
+  FB.auth.onAuthStateChanged(async u=>{FBU=u;FBREADY=true;if(u){await cloudPull();regPush();}else{if(cloudUnsub){cloudUnsub();cloudUnsub=null;}S.manual=[];S.manDel=[];S.watch=[];S.watchAt=0;save0();robotStateSync();}if(TAB==='tetapan'||TAB==='robot')render();});
   try{await FB.auth.getRedirectResult();}catch(e){}
   return FB;}
 async function login(){const f=await fbInit().catch(()=>null);if(!f)return toast('Log masuk belum tersedia');const pv=new firebase.auth.GoogleAuthProvider();
@@ -2530,18 +2532,28 @@ async function login(){const f=await fbInit().catch(()=>null);if(!f)return toast
     if(/popup-blocked|operation-not-supported|environment/.test(c)){try{await f.auth.signInWithRedirect(pv);}catch(x){toast('Log masuk gagal ('+(x.code||x.message)+')');}return;}
     if(c==='auth/popup-closed-by-user'||c==='auth/cancelled-popup-request')return;
     toast('Log masuk gagal ('+(c||e.message)+')');}}
-async function logout(){if(FB)await FB.auth.signOut();FBU=null;S.manual=[];S.manDel=[];save0();robotStateSync();render();toast('Log keluar');}
+async function logout(){if(cloudUnsub){cloudUnsub();cloudUnsub=null;}if(FB)await FB.auth.signOut();FBU=null;S.manual=[];S.manDel=[];S.watch=[];S.watchAt=0;save0();robotStateSync();render();toast('Log keluar');}
+function toggleWatch(c){if(needLogin()){toast('Log masuk dahulu untuk guna watchlist');login();return false;}
+  if(S.watch.includes(c))S.watch=S.watch.filter(x=>x!==c);else S.watch.push(c);S.watchAt=Date.now();save();return true;}
+const DEV=(()=>{try{let d=localStorage.getItem('ps_dev');if(!d){d=Math.random().toString(36).slice(2,10);localStorage.setItem('ps_dev',d);}return d;}catch(e){return 'x';}})();
+let cloudUnsub=null;
+function applyRemote(R,fromLogin){const del=new Set([...(S.manDel||[]),...(R.manDel||[])]);
+  S.manual=mergeManual(S.manual||[],R.manual||[]).filter(p=>!del.has(p.id));S.manDel=[...del].slice(-300);
+  if(fromLogin&&!(S.watchAt>(R.watchAt||0)))S.watch=R.watch||[];else if((R.watchAt||0)>(S.watchAt||0))S.watch=R.watch||[];
+  S.watchAt=Math.max(S.watchAt||0,R.watchAt||0);
+  if(R.settings&&(R.updatedAt||0)>(S.cloudAt||0))Object.entries(R.settings).forEach(([k,v])=>{if(v!=null)S.settings[k]=v;});
+  save0();render();}
+function listenCloud(){if(cloudUnsub)cloudUnsub();if(!FBU)return;
+  cloudUnsub=FB.db.collection('users').doc(FBU.uid).onSnapshot(d=>{const r=d.exists?d.data():null;if(!r||!r.data)return;
+    let R;try{R=JSON.parse(r.data);}catch(e){return;}if(R.dev===DEV)return;   // perubahan dari phone ini sendiri
+    applyRemote(R,false);},()=>{});}
 function mergeManual(a,b){const m={};[...a,...b].forEach(p=>{const o=m[p.id];if(!o||(p.closed&&!o.closed))m[p.id]=p;});return Object.values(m);}
 async function cloudPull(){if(!FBU)return;try{const d=await FB.db.collection('users').doc(FBU.uid).get();const r=d.exists?d.data():null;
-    if(r&&r.data){const R=JSON.parse(r.data);const del=new Set([...(S.manDel||[]),...(R.manDel||[])]);
-      S.manual=mergeManual(S.manual||[],R.manual||[]).filter(p=>!del.has(p.id));S.manDel=[...del].slice(-300);
-      S.watch=[...new Set([...(S.watch||[]),...(R.watch||[])])];
-      if(R.settings&&(R.updatedAt||0)>(S.cloudAt||0))Object.entries(R.settings).forEach(([k,v])=>{if(v!=null)S.settings[k]=v;});
-      save0();render();}
-    await cloudPush(true);toast('✓ Data diselaraskan');}catch(e){toast('Segerak awan gagal');}}
+    if(r&&r.data)applyRemote(JSON.parse(r.data),true);
+    await cloudPush(true);listenCloud();toast('✓ Data diselaraskan');}catch(e){toast('Segerak awan gagal');}}
 async function cloudPush(now){if(!FBU)return;clearTimeout(cloudT);
   const go=async()=>{try{S.cloudAt=Date.now();save0();
-    const D={manual:S.manual||[],watch:S.watch||[],manDel:S.manDel||[],settings:{lang:S.settings.lang,platform:S.settings.platform??null,paperStake:S.settings.paperStake??null},updatedAt:S.cloudAt};
+    const D={dev:DEV,watchAt:S.watchAt||0,manual:S.manual||[],watch:S.watch||[],manDel:S.manDel||[],settings:{lang:S.settings.lang,platform:S.settings.platform??null,paperStake:S.settings.paperStake??null},updatedAt:S.cloudAt};
     await FB.db.collection('users').doc(FBU.uid).set({data:JSON.stringify(D),email:FBU.email||'',lang:S.settings.lang||'bm',sig:!!(S.alerts&&S.alerts.on&&S.alerts.on.isyarat!==false),sigWatch:!!(S.alerts&&S.alerts.sigScope==='watch'),pushAm:!!(S.alerts&&S.alerts.pushTime==='am'),updatedAt:S.cloudAt},{merge:true});}catch(e){}};
   if(now)return go();cloudT=setTimeout(go,2500);}
 async function regPush(){try{if(!FBU||!FB_VAPID||!('serviceWorker' in navigator)||!('Notification' in window)||Notification.permission!=='granted')return;

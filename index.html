@@ -569,7 +569,9 @@ async function syncData(manual){
     try{const r6=await fetch(DATA_BASE+'i/index.json?t='+Math.floor(Date.now()/36e5),{cache:'no-cache'});if(r6.ok){S.intra=(await r6.json()).codes||[];}}catch(e){}
     try{const r8=await fetch(DATA_BASE+'holidays.json?t='+Math.floor(Date.now()/36e5),{cache:'no-cache'});if(r8.ok){const H=await r8.json();S.hol=H.days||[];S.hol.forEach(d=>BURSA_HOL.add(d));}}catch(e){}
     try{const r7=await fetch(DATA_BASE+'fund.json?t='+Math.floor(Date.now()/36e5),{cache:'no-cache'});if(r7.ok){S.fund=await r7.json();}}catch(e){}
-    try{const r5=await fetch(DATA_BASE+'news.json?t='+Math.floor(Date.now()/36e5),{cache:'no-cache'});if(r5.ok){S.news=await r5.json();}}catch(e){}
+    // Berita dikemas kini setiap 2 jam (robot berita) — ambil terus dari repo; jika gagal, guna salinan laman
+    try{let r5=null;if(location.protocol.startsWith('http')&&!/localhost/.test(location.hostname))r5=await fetch('https://raw.githubusercontent.com/alemmaxx/ProSyariah/main/data/news.json?t='+Math.floor(Date.now()/6e5)).catch(()=>null);
+      if(!r5||!r5.ok)r5=await fetch(DATA_BASE+'news.json?t='+Math.floor(Date.now()/36e5),{cache:'no-cache'});if(r5.ok){S.news=await r5.json();}}catch(e){}
     try{const r3=await fetch(DATA_BASE+'track.json?t='+Math.floor(Date.now()/36e5),{cache:'no-cache'});if(r3.ok){const t=await r3.json();if(!S.track||S.track.asof!==t.asof){S.track=t;changed=true;}}}catch(e){}
     updateTop5Track();
     S.sync.at=new Date().toISOString();S.sync.err='';
@@ -826,15 +828,15 @@ function champHTML(){
   if(!S.market)return '';const n=champList().length;
   return `<div class="pad" style="margin-top:10px"><button class="smbtn${n?'':' off'}" onclick="openChamp()"><span>🏆</span><span><b>Isyarat Champion</b><small>${n?`${n} saham · bermula hari ini`:'Tiada isyarat Champion hari ini'}</small></span>${n?'<span class="go">Buka</span>':''}</button></div>`;}
 /* Berita Berpotensi: saham patuh syariah dengan berita bernada positif dalam 3 hari lepas */
-function potNews(days){if(!S.news||!S.news.items)return [];const cut=isoD(new Date(Date.now()-(days||3)*864e5));const out=[];
-  Object.entries(S.news.items).forEach(([c,arr])=>{if(status(c,nameOf(c))!=='ok')return;const g=(arr||[]).filter(x=>x.x==='+'&&x.d>=cut);if(g.length)out.push({code:c,name:nameOf(c),n:g[0],k:g.length});});
+function potNews(){if(!S.news||!S.news.items)return [];const cut=today();const out=[];
+  Object.entries(S.news.items).forEach(([c,arr])=>{if(status(c,nameOf(c))!=='ok')return;const g=(arr||[]).filter(x=>x.x==='+'&&x.d===cut);if(g.length)out.push({code:c,name:nameOf(c),n:g[0],k:g.length});});
   return out.sort((a,b)=>b.n.d.localeCompare(a.n.d));}
-function newsBoxHTML(){if(!S.market)return '';const L=potNews(3);
-  return `<div class="pad" style="margin-top:10px"><button class="smbtn${L.length?'':' off'}" onclick="openPotNews()"><span>📰</span><span><b>Berita Berpotensi</b><small>${L.length?`${L.length} saham dengan berita positif · 3 hari lepas`:'Tiada berita positif dalam 3 hari lepas'}</small></span>${L.length?'<span class="go">Buka</span>':''}</button></div>`;}
-function openPotNews(){const L=potNews(3);if(!L.length)return toast('Tiada berita positif dalam 3 hari lepas');
+function newsBoxHTML(){if(!S.market)return '';const L=potNews();
+  return `<div class="pad" style="margin-top:10px"><button class="smbtn${L.length?'':' off'}" onclick="openPotNews()"><span>📰</span><span><b>Berita Berpotensi</b><small>${L.length?`${L.length} saham dengan berita positif hari ini`:'Tiada berita positif hari ini setakat ini'}</small></span>${L.length?'<span class="go">Buka</span>':''}</button></div>`;}
+function openPotNews(){const L=potNews();if(!L.length)return toast('Tiada berita positif hari ini setakat ini');
   const d=document.createElement('div');d.className='help';d.id='help';document.body.classList.add('ovl');bkEnsure();
   d.innerHTML=`<div class="help-p" role="dialog" aria-modal="true"><div><div class="shd-top" style="margin-bottom:6px"><h2 style="margin:0">📰 Berita Berpotensi</h2><button class="xbtn" id="helpX" aria-label="Tutup">✕</button></div>
-    <p class="muted" style="margin:0">Saham patuh syariah yang ada berita bernada positif (▲) dalam 3 hari lepas. Tekan nama untuk lihat analisa, atau "Baca" untuk berita penuh.</p></div>
+    <p class="muted" style="margin:0">Saham patuh syariah dengan berita bernada positif (▲) hari ini, ${fmtD(today())}. Senarai bermula baharu setiap hari selepas 12 tengah malam.</p></div>
     ${L.map(x=>`<div class="pnr"><button class="smr" data-sc="${esc(x.code)}" style="border:0;padding-bottom:2px"><span><b>${esc(shortName(x.name))}</b> <span class="code">${esc(x.code)}</span></span><span class="smt">${x.k>1?`<small class="muted">${x.k} berita</small>`:''}</span></button>
       <a class="pnl" href="${esc(x.n.u)}" target="_blank" rel="noopener"><span class="ntone tp">▲</span><span>${esc(x.n.t)}<small class="muted"> · ${fmtD(x.n.d)}${x.n.s?' · '+esc(x.n.s):''} · Baca ↗</small></span></a>
       <div class="row pnb"><button class="btn sm sec" data-sc="${esc(x.code)}">📊 Buka syarikat</button><button class="btn sm gold" data-an="${esc(x.code)}">📝 Ringkasan analisa</button><a class="btn sm sec" href="${esc(x.n.u)}" target="_blank" rel="noopener">📰 Baca berita</a></div></div>`).join('')}
@@ -842,7 +844,7 @@ function openPotNews(){const L=potNews(3);if(!L.length)return toast('Tiada berit
   document.body.appendChild(d);
   const close=()=>{d.remove();if(!$('#sheet').classList.contains('on'))document.body.classList.remove('ovl');};
   d.onclick=e=>{const an=e.target.closest('[data-an]');if(an){close();openAnalysis(an.dataset.an);return;}const b=e.target.closest('[data-sc]');if(b){close();stockSheet(b.dataset.sc,nameOf(b.dataset.sc));return;}if(e.target===d)close();};$('#helpX').onclick=close;}
-function newsAlerts(push){const L=potNews(1);if(!L.length)return;
+function newsAlerts(push){const L=potNews();if(!L.length)return;
   push({id:'news:'+L[0].n.d,lv:'action',ic:'📰',cat:'berita',code:L.length===1?L[0].code:null,title:`${L.length} saham dengan berita positif`,body:`${L.slice(0,3).map(x=>shortName(x.name)).join(', ')}${L.length>3?` +${L.length-3}`:''}. Buka 📰 Berita Berpotensi.`});}
 /* Isyarat Pemerhatian: Isyarat Sederhana yang bermula hari ini — untuk dipantau, belum cukup kuat */
 function obsHTML(){if(!S.market)return '';const n=topSignals(60,'obs').length;
@@ -898,7 +900,7 @@ async function openAccuracy(){
   const A=V.gred_A_sahaja;
   B.innerHTML=`<p class="muted" style="margin-top:0">Robot mengulang setiap hari dagangan dalam 3 tahun lepas, guna hanya maklumat yang ada pada hari itu, dan mencatat sama ada setiap isyarat sampai sasaran atau cut loss dahulu. Kos dagangan 0.3% diambil kira.</p>
    <table class="actb"><tr><th>Isyarat</th><th>Kali</th><th>Tepat</th><th>Purata</th></tr>
-   ${row('⭐ Isyarat Kuat sahaja',A,1)}${row('Semua isyarat',V.semua_isyarat)}${row('Momentum MACD',V.mc_sahaja)}${row('Lantunan lebih jualan',V.os_sahaja)}${row('Koreksi dalam trend',V.pb_sahaja)}${row('Golden cross',V.gc_sahaja)}</table>
+   ${row('⭐ Isyarat Kuat sahaja',A,1)}${row('Semua isyarat',V.semua_isyarat)}${row('Momentum MACD',V.mc_sahaja)}${row('Lantunan lebih jualan',V.os_sahaja)}${row('Koreksi dalam trend menaik',V.pb_sahaja)}${row('Golden cross',V.gc_sahaja)}</table>
    ${A&&A.years?`<h3>Isyarat Kuat ikut tahun</h3><table class="actb"><tr><th>Tahun</th><th>Kali</th><th>Tepat</th><th>Purata</th></tr>${Object.entries(A.years).filter(([y,s])=>s.n>=5).map(([y,s])=>`<tr><td>${y}</td><td>${s.n}</td><td>${s.win}%</td><td class="${s.avg>=0?'up':'dn'}">${s.avg>0?'+':''}${s.avg}%</td></tr>`).join('')}</table>`:''}
    <div class="verd"><b>Maksudnya</b><p style="margin:4px 0 0">"Purata" ialah untung atau rugi purata setiap kali isyarat diikut. Hanya Isyarat Kuat yang positif secara keseluruhan, dan untungnya kecil. Sebab itu senarai utama hanya menunjukkan Isyarat Kuat.</p></div>
    <p class="disc">Keputusan lampau tidak menjamin keputusan masa depan. Dikemas kini ${fmtD(X.asof)}.</p>`;
@@ -1646,6 +1648,7 @@ const EN_PHRASE=[
 ];
 
 Object.assign(EN_EXACT,{
+'Tiada berita positif hari ini setakat ini':'No positive news today so far',
 'Isyarat terkuat hari ini':"Today's strongest signal",'🏆 Champion hari ini':"🏆 Today's Champion",'Pilihan hari ini · Meter tertinggi':"Today's top pick · highest Meter",
 '📊 Buka syarikat':'📊 Open company','📝 Ringkasan analisa':'📝 Analysis summary','📰 Baca berita':'📰 Read news',
 'Berita Berpotensi':'Potential news','📰 Berita Berpotensi':'📰 Potential news','Tiada berita positif dalam 3 hari lepas':'No positive news in the last 3 days','Berita Berpotensi (berita positif)':'Potential news (positive news)',
@@ -1827,6 +1830,8 @@ Object.assign(EN_EXACT,{
 'Paras ini naik mengikut harga tertinggi sejak tarikh belian dan tidak pernah turun. Harga tutup di bawahnya menandakan momentum menurun.':'This level rises with the highest price since the purchase date and never falls. A close below it signals weakening momentum.',
 });
 EN_RX.unshift(
+[/^(\d+) saham dengan berita positif hari ini$/,'$1 stocks with positive news today'],
+[/^Saham patuh syariah dengan berita bernada positif \(▲\) hari ini, (.+)\. Senarai bermula baharu setiap hari selepas 12 tengah malam\.$/,(m,a)=>`Shariah-compliant stocks with positive-toned news (▲) today, ${trText(a)}. The list starts fresh every day after midnight.`],
 [/^(\d+) saham dengan berita positif · 3 hari lepas$/,'$1 stocks with positive news · last 3 days'],[/^(\d+) saham dengan berita positif$/,'$1 stocks with positive news'],
 [/^(.+)\. Buka 📰 Berita Berpotensi\.$/,'$1. Open 📰 Potential news.'],[/^ · (.+) · Baca ↗$/,(m,a)=>` · ${a} · Read ↗`],[/^(\d+) berita$/,'$1 news'],
 [/^(\d+) saham · belum cukup kuat, untuk dipantau$/,'$1 stocks · not strong enough yet, to watch'],

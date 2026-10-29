@@ -9,13 +9,13 @@ self.addEventListener('fetch',e=>{if(e.request.method!=='GET')return;
 // Notifikasi push dari server (Firebase Cloud Messaging) — dihantar oleh robot GitHub
 self.addEventListener('push',e=>{let d={};try{d=e.data?e.data.json():{};}catch(x){}
   const n=d.notification||{},x=d.data||{};const title=x.title||n.title||'ProSyariah';
-  e.waitUntil(self.registration.showNotification(title,{body:x.body||n.body||'',tag:x.tag||undefined,icon:'icons/icon-192.png',badge:'icons/icon-192.png',data:{url:'./#robot'}}));});
+  e.waitUntil(self.registration.showNotification(title,{body:x.body||n.body||'',tag:x.tag||undefined,icon:'icons/icon-192.png',badge:'icons/icon-192.png',data:{url:/^(man:|week:)/.test(x.tag||'')?'./#robot':'./'}}));});
 
 // Tekan notifikasi → buka app di tab Robot
 self.addEventListener('notificationclick',e=>{e.notification.close();
   e.waitUntil(self.clients.matchAll({type:'window',includeUncontrolled:true}).then(ws=>{
-    for(const w of ws){if('focus' in w){w.postMessage({go:'robot'});return w.focus();}}
-    return self.clients.openWindow('./#robot');}));});
+    const u=(e.notification.data&&e.notification.data.url)||'./';for(const w of ws){if('focus' in w){if(u.includes('#robot'))w.postMessage({go:'robot'});return w.focus();}}
+    return self.clients.openWindow((e.notification.data&&e.notification.data.url)||'./');}));});
 
 // Semakan latar (Chrome Android, app dipasang): semak harga terkini untuk Robot Manual
 self.addEventListener('periodicsync',e=>{if(e.tag==='robot-check')e.waitUntil(robotCheck());});

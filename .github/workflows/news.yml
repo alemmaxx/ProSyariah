@@ -1,0 +1,52 @@
+name: Berita terkini (setiap 2 jam)
+
+on:
+  schedule:
+    # 9 pagi – 11 malam waktu Malaysia, setiap 2 jam
+    - cron: "0 1-15/2 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: prosyariah-news
+  cancel-in-progress: false
+
+jobs:
+  news:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      FIREBASE_SA: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Pasang keperluan
+        run: pip install requests google-auth
+      - name: Ambil data pasaran terkini dari app
+        run: |
+          mkdir -p tmp/data
+          curl -sSfL "https://prosyariah.web.app/data/market.json" -o tmp/data/market.json \
+            || curl -sSfL "https://alemmaxx.github.io/ProSyariah/data/market.json" -o tmp/data/market.json
+      - name: Tarik berita
+        run: python scripts/news.py --out tmp/data
+      - name: Simpan berita
+        run: |
+          git config user.name "prosyariah-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/news.json
+          if ! git diff --cached --quiet; then
+            git commit -qm "Data: berita terkini"
+            git pull --rebase -X theirs -q || true
+            git push -q
+          fi
+      - name: Notifikasi Berita Berpotensi
+        if: env.FIREBASE_SA != ''
+        continue-on-error: true
+        run: |
+          printf '%s' "$FIREBASE_SA" > "$RUNNER_TEMP/sa.json"
+          GOOGLE_APPLICATION_CREDENTIALS="$RUNNER_TEMP/sa.json" python scripts/push.py --out tmp/data --only-news
+          rm -f "$RUNNER_TEMP/sa.json"

@@ -115,13 +115,14 @@ def pot_news(M, out_dir, en):
         N = json.load(open(os.path.join(out_dir, "news.json")))["items"]
     except Exception:
         return []
-    cut = (date.today() - timedelta(days=1)).isoformat()
+    from datetime import datetime, timezone
+    cut = datetime.now(timezone(timedelta(hours=8))).date().isoformat()   # berita hari ini (waktu Malaysia) sahaja
     hits = []
     for c, arr in N.items():
         v = M["stocks"].get(c, {})
         if v.get("s") != "ok":
             continue
-        g = [x for x in arr if x.get("x") == "+" and x.get("d", "") >= cut]
+        g = [x for x in arr if x.get("x") == "+" and x.get("d", "") == cut]
         if g:
             hits.append((g[0]["d"], (v.get("n") or c).replace(" Berhad", "").replace(" Bhd", "")))
     if not hits:
@@ -164,6 +165,7 @@ def main():
 
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", default="_site/data")
+    ap.add_argument("--only-news", action="store_true", help="larian berita sahaja (setiap 2 jam)")
     a = ap.parse_args()
     key = os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
     pid = json.load(open(key))["project_id"]
@@ -201,18 +203,24 @@ def main():
         users += 1
         new, dead = [], set()
         items = []
-        for p in data.get("manual", []):
+        if a.only_news:
+            from datetime import datetime, timezone
+            if f.get("pushAm", {}).get("booleanValue") and datetime.now(timezone(timedelta(hours=8))).hour >= 12:
+                continue
+            if f.get("news", {}).get("booleanValue", True):
+                items += pot_news(M, a.out, en)
+        for p in ([] if a.only_news else data.get("manual", [])):
             if not p.get("closed"):
                 items += alerts_for(p, M, a.out, en)
         # Masa notifikasi: "pagi sahaja" → hanya hantar pada larian pagi (sebelum 12 tgh MYT)
         from datetime import datetime, timezone
         if f.get("pushAm", {}).get("booleanValue") and datetime.now(timezone(timedelta(hours=8))).hour >= 12:
             continue
-        if f.get("sig", {}).get("booleanValue", True):
+        if not a.only_news and f.get("sig", {}).get("booleanValue", True):
             items += new_signals(M, en, set(data.get("watch", [])) if f.get("sigWatch", {}).get("booleanValue") else None)
-        if f.get("news", {}).get("booleanValue", True):
+        if not a.only_news and f.get("news", {}).get("booleanValue", True):
             items += pot_news(M, a.out, en)
-        wk = weekly(data, M, en)
+        wk = None if a.only_news else weekly(data, M, en)
         if wk:
             items.append(wk)
         for aid, title, body in items:

@@ -63,7 +63,7 @@ def fetch(name):
         if key.split()[0] not in title.lower():
             continue  # buang hasil yang tidak menyebut syarikat
         try:
-            d = parsedate_to_datetime(it.findtext("pubDate")).astimezone(timezone.utc)
+            d = parsedate_to_datetime(it.findtext("pubDate")).astimezone(timezone(timedelta(hours=8)))  # tarikh waktu Malaysia
         except Exception:
             continue
         out.append({"t": title, "s": src, "u": (it.findtext("link") or "").strip(), "d": d.strftime("%Y-%m-%d"), "x": tone(title)})

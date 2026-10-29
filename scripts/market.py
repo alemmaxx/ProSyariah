@@ -219,6 +219,8 @@ def main():
                 ops = []
                 for act in R["active"]:
                     k = act["k"]; stt = bt[k]
+                    if k in BT.DISABLED:
+                        continue
                     last = closes[-1]
                     ops.append({
                         "k": k, "p": stt["p"], "n": stt["n"], "w": stt["w"], "cf": stt["cf"],

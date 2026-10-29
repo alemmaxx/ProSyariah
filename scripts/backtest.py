@@ -27,6 +27,11 @@ SETUPS = {
 }
 
 
+# Isyarat yang dihentikan: tidak dipaparkan & tidak diuji robot (masih dikira untuk statistik pasaran).
+# "pb" (koreksi dalam trend) rugi dalam ujian robot 12 bulan — ketepatan 27% selepas penapis kecairan.
+DISABLED = {"pb"}
+
+
 def atr(h, l, c, n=14):
     tr = [h[0] - l[0]] + [max(h[i] - l[i], abs(h[i] - c[i - 1]), abs(l[i] - c[i - 1])) for i in range(1, len(c))]
     o = [None] * len(c)

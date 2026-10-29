@@ -82,6 +82,8 @@ def historical(runs, px, compliant, min_score=0, only_a=False):
             continue
         dates = [r[0] for r in px[code]]
         for k, trs in R["trades"].items():
+            if k in BT.DISABLED:
+                continue
             for tr in trs:
                 t = tr["t"]
                 if t + tr["days"] >= len(dates):

@@ -744,9 +744,10 @@ function endFor(sd,md){return addTradingDays(entryDate(sd),Math.max(0,Math.round
 function dayNo(sd){const e=entryDate(sd),t=today();return t<e?0:tdBetween(e,t)+(parseD(t).getDay()%6?1:0);}
 function tdBetween(a,b){if(!a||!b||b<=a)return 0;const x=parseD(a),y=parseD(b);let n=0;while(x<y){x.setDate(x.getDate()+1);if(x.getDay()%6)n++;}return n;}
 function subTradingDays(d,n){const x=parseD(d);let k=0;while(k<n){x.setDate(x.getDate()-1);if(x.getDay()%6)k++;}return isoD(x);}
+const DIS_SETUP=new Set(['pb']);
 function topSignals(n=5){
   const M=S.market;if(!M)return [];const asof=M.meta.asof;const fee=BTH().fee;const out=[],seen=new Set();
-  const add=x=>{const m=mk(x.code);if(!m||m.s!=='ok'||!x.en||!x.tg||!x.sl)return;
+  const add=x=>{const m=mk(x.code);if(!m||m.s!=='ok'||!x.en||!x.tg||!x.sl||DIS_SETUP.has(x.k))return;
     if(S.settings.style==='ketat'&&(x.md||0)<5)return;
     const key=x.code+x.k+x.start;if(seen.has(key))return;seen.add(key);
     const tp=x.tg/x.en-1,sp=1-x.sl/x.en,be=(sp+fee)/(tp+sp),edge=x.p/100-be;if(edge<=0)return;
@@ -879,7 +880,7 @@ function manEval(p){
   return null;}
 function manPnl(p,exit){return (exit/p.en-1-BTH().fee)*p.stake;}
 function manRefresh(){setTimeout(robotStateSync,0);let ch=false;(S.manual||[]).forEach(p=>{if(p.closed)return;const r=manEval(p);if(r){p.closed=r;ch=true;}});if(ch)save();}
-function openManual(code){
+function openManual(code){if(needLogin()){toast('Log masuk dahulu untuk guna Robot Manual');closeSheet();goTab('robot');return;}
   code=code||'';const nm=nameOf(code);const m=mk(code);const P=manOpen(code);
   const d=document.createElement('div');d.className='help';d.id='help';document.body.classList.add('ovl');bkEnsure();
   let body;
@@ -986,7 +987,12 @@ function rbRow(t,scale,live){
     return `<button class="rbr" data-code="${esc(t.c)}"><span class="rbm"><b>${esc(nm)}</b> <span class="code">${esc(t.c)}</span><span class="muted">${esc(setupName(t.k))} · masuk ${fmtD(t.d)} @ ${px(t.en)}</span><span class="muted">sasaran ${px(t.tg)} · had ${px(t.sl)}${now?` · kini ${px(now)}`:''}</span><span class="rbend">${t.md?`<span>tempoh biasa hingga ${fmtD(addTradingDays(t.d,Math.max(1,Math.round(t.md))))}</span> · `:''}<span>tutup paling lewat ${fmtD(addTradingDays(t.d,BTH().h))}</span></span></span><b class="${u==null?'':u>=0?'up':'dn'}">${u==null?'-':rmS(u)}</b></button>`;}
   const r=RES3[t.res];return `<button class="rbr" data-code="${esc(t.c)}"><span class="rbm"><b>${esc(nm)}</b> <span class="code">${esc(t.c)}</span><span class="muted">${esc(setupName(t.k))} · ${fmtD(t.d)} → ${fmtD(t.exit||t.end)} · ${t.days} hari</span></span><span class="rbres"><span class="badge ${r[2]}">${r[0]}</span><b class="${r[1]}">${rmS(t.ret*rbStake()/100)}</b></span></button>`;
 }
-function rRobot(){$('#main').innerHTML=rManual();bindManual();}
+let FBREADY=false;
+function needLogin(){return !!FB_CONFIG&&!FBU;}
+function loginGateHTML(){return `<div class="card" style="text-align:center"><div style="font-size:42px">🔐</div><h2>Log masuk untuk guna Robot Manual</h2>
+  <p class="muted">Senarai Robot Manual anda disimpan dalam akaun Google, supaya selamat dan sama di semua phone. Notifikasi sasaran dan cut loss juga dihantar ke akaun anda.</p>
+  ${FBREADY?'<button class="btn gold" style="width:100%" id="rbLogin">Log masuk dengan Google</button>':'<p class="muted">Memuatkan akaun…</p>'}</div>`;}
+function rRobot(){if(needLogin()){$('#main').innerHTML=loginGateHTML();const b=$('#rbLogin');if(b)b.onclick=login;return;}$('#main').innerHTML=rManual();bindManual();}
 function rRobotAutoOld(){
   const seg=`<div class="pad" style="margin:0 var(--gut) 12px"><div class="seg rbseg"><button data-rbm="auto" class="${RB_MODE!=='manual'?'on':''}">🤖 Robot Auto</button><button data-rbm="manual" class="${RB_MODE==='manual'?'on':''}">✍️ Robot Manual</button></div></div>`;
   if(RB_MODE==='manual'){$('#main').innerHTML=seg+rManual();bindRbSeg();bindManual();return;}
@@ -1040,7 +1046,7 @@ function signalFor(code){
   (m.op||[]).forEach(o=>{if(o.ev>0){const x={k:o.k,p:o.p,start:subTradingDays(m.d,o.ago||0),en:o.en,tg:o.tg,sl:o.sl,md:o.md,n:o.n,w:o.w,ev:o.ev};if(!best||x.p>best.p)best=x;}});
   const more=[...((S.track&&S.track.openList)||[]).filter(s=>s.c===code).map(s=>({k:s.k,p:s.p,start:s.d,en:s.en,tg:s.tg,sl:s.sl,md:s.md,n:s.ns,w:s.ws,ev:s.ev})),
     ...Object.values(S.t5||{}).filter(t=>t.code===code).map(t=>({k:t.k,p:t.p,start:t.start,en:t.en,tg:t.tg,sl:t.sl,md:t.md}))];
-  more.forEach(x=>{if(!best||x.start>best.start)best=x;});
+  more.filter(x=>!DIS_SETUP.has(x.k)).forEach(x=>{if(!best||x.start>best.start)best=x;});
   return best;
 }
 function stockStatus(code,name){
@@ -1544,6 +1550,8 @@ const EN_PHRASE=[
 ];
 
 Object.assign(EN_EXACT,{
+'Log masuk untuk guna Robot Manual':'Sign in to use the Manual Robot','Memuatkan akaun…':'Loading account…','Log masuk dahulu untuk guna Robot Manual':'Sign in first to use the Manual Robot',
+'Senarai Robot Manual anda disimpan dalam akaun Google, supaya selamat dan sama di semua phone. Notifikasi sasaran dan cut loss juga dihantar ke akaun anda.':'Your Manual Robot list is stored in your Google account, so it is safe and the same on every phone. Target and cut-loss notifications are also sent to your account.',
 'Akaun':'Account','Log masuk dengan Google':'Sign in with Google','Log masuk sebagai':'Signed in as','Simpanan awan':'Cloud storage','Aktif':'Active','Segerak sekarang':'Sync now','Log keluar':'Sign out',
 '✓ Data diselaraskan':'✓ Data synced','Segerak awan gagal':'Cloud sync failed','Log masuk gagal':'Sign-in failed','Log masuk belum tersedia':'Sign-in not available yet',
 'Log masuk supaya senarai Robot Manual, watchlist dan tetapan anda disimpan dengan selamat dan sama di semua phone. Notifikasi Robot Manual juga boleh sampai walaupun app ditutup.':'Sign in so your Manual Robot list, watchlist and settings are stored safely and the same on every phone. Manual Robot notifications can also arrive even when the app is closed.',
@@ -2442,7 +2450,7 @@ function loadScript(u){return new Promise((ok,no)=>{const x=document.createEleme
 async function fbInit(){if(!FB_CONFIG)return null;if(FB)return FB;
   for(const m of ['app','auth','firestore','messaging'])await loadScript(`https://www.gstatic.com/firebasejs/${FBV}/firebase-${m}-compat.js`);
   firebase.initializeApp(FB_CONFIG);FB={auth:firebase.auth(),db:firebase.firestore()};
-  FB.auth.onAuthStateChanged(async u=>{FBU=u;if(u){await cloudPull();regPush();}if(TAB==='tetapan')render();});
+  FB.auth.onAuthStateChanged(async u=>{FBU=u;FBREADY=true;if(u){await cloudPull();regPush();}else{S.manual=[];S.manDel=[];save0();robotStateSync();}if(TAB==='tetapan'||TAB==='robot')render();});
   try{await FB.auth.getRedirectResult();}catch(e){}
   return FB;}
 async function login(){const f=await fbInit().catch(()=>null);if(!f)return toast('Log masuk belum tersedia');const pv=new firebase.auth.GoogleAuthProvider();
@@ -2451,7 +2459,7 @@ async function login(){const f=await fbInit().catch(()=>null);if(!f)return toast
     if(/popup-blocked|operation-not-supported|environment/.test(c)){try{await f.auth.signInWithRedirect(pv);}catch(x){toast('Log masuk gagal ('+(x.code||x.message)+')');}return;}
     if(c==='auth/popup-closed-by-user'||c==='auth/cancelled-popup-request')return;
     toast('Log masuk gagal ('+(c||e.message)+')');}}
-async function logout(){if(FB)await FB.auth.signOut();FBU=null;render();toast('Log keluar');}
+async function logout(){if(FB)await FB.auth.signOut();FBU=null;S.manual=[];S.manDel=[];save0();robotStateSync();render();toast('Log keluar');}
 function mergeManual(a,b){const m={};[...a,...b].forEach(p=>{const o=m[p.id];if(!o||(p.closed&&!o.closed))m[p.id]=p;});return Object.values(m);}
 async function cloudPull(){if(!FBU)return;try{const d=await FB.db.collection('users').doc(FBU.uid).get();const r=d.exists?d.data():null;
     if(r&&r.data){const R=JSON.parse(r.data);const del=new Set([...(S.manDel||[]),...(R.manDel||[])]);
@@ -2522,7 +2530,7 @@ render();
 if(location.hash==='#robot'){try{history.replaceState(history.state,'',location.pathname+location.search);}catch(e){}goTab('robot');}
 updateLangBtn();startI18N();updateInstallBtn();
 if(S.alerts&&S.alerts.notify)regPeriodic();
-if(FB_CONFIG)setTimeout(()=>fbInit().catch(()=>{}),1500);
+if(FB_CONFIG)fbInit().catch(()=>{FBREADY=true;if(TAB==='robot')render();});
 syncData(false);
 </script>
 </body>

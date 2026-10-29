@@ -759,7 +759,7 @@ function dayNo(sd){const e=entryDate(sd),t=today();return t<e?0:tdBetween(e,t)+(
 function tdBetween(a,b){if(!a||!b||b<=a)return 0;const x=parseD(a),y=parseD(b);let n=0;while(x<y){x.setDate(x.getDate()+1);if(isTD(x))n++;}return n;}
 function subTradingDays(d,n){const x=parseD(d);let k=0;while(k<n){x.setDate(x.getDate()-1);if(isTD(x))k++;}return isoD(x);}
 const DIS_SETUP=new Set();
-function topSignals(n=5){
+function topSignals(n=5,mode){
   const M=S.market;if(!M)return [];const asof=M.meta.asof;const fee=BTH().fee;const out=[],seen=new Set();
   const add=x=>{const m=mk(x.code);if(!m||m.s!=='ok'||!x.en||!x.tg||!x.sl||DIS_SETUP.has(x.k))return;
     if(S.settings.style==='ketat'&&(x.md||0)<5)return;
@@ -772,7 +772,7 @@ function topSignals(n=5){
   ((S.track&&S.track.openList)||[]).forEach(s=>add({code:s.c,name:s.n,k:s.k,p:s.p,start:s.d,en:s.en,tg:s.tg,sl:s.sl,md:s.md,n:s.ns,w:s.ws,ev:s.ev}));
   const best={};out.filter(x=>x.start===asof).forEach(x=>{if(!best[x.code]||x.edge>best[x.code].edge)best[x.code]=x;});
   const gr=x=>'ABCD'.indexOf(rateSignal(x).g);
-  Object.keys(best).forEach(k=>{if(!S.settings.showMod&&rateSignal(best[k]).g!=='A')delete best[k];});
+  Object.keys(best).forEach(k=>{const g=rateSignal(best[k]).g;if(mode==='obs'?(g==='A'||g==='D'):(!S.settings.showMod&&g!=='A'))delete best[k];});
   return Object.values(best).sort((a,b)=>gr(a)-gr(b)||b.edge-a.edge||b.p-a.p).slice(0,n);
 }
 
@@ -819,10 +819,22 @@ function dataStatusHTML(){const asof=S.market.meta.asof,now=new Date(),t=today()
   else if(isTD(now)&&hm>=1110&&hm<1260&&asof>=subTradingDays(t,1))nxt='sebentar lagi (robot sedang berjalan)';
   else{nxt='data lewat — robot akan cuba semula (paling lewat 9.15 pagi)';warn=true;}
   const n=topSignals(60).length,e=fmtD(entryDate(asof));
-  return `<div class="dstat${warn?' warn':''}"><span>📅 Data harga tutup ${fmtD(asof)} · ${n?`${n} isyarat untuk ${e}`:`tiada Isyarat Kuat untuk ${e}`}</span><span>🔄 Kemas kini seterusnya: ${nxt}</span></div>`;}
+  return `<div class="dstat${warn?' warn':''}"><span>📅 Data harga tutup ${fmtD(asof)} · ${n?`${n} isyarat untuk ${e}`:`tiada Isyarat Kuat untuk ${e}`}${(o=>o?` · ${o} dalam pemerhatian`:'')(topSignals(60,'obs').length)}</span><span>🔄 Kemas kini seterusnya: ${nxt}</span></div>`;}
 function champHTML(){
   if(!S.market)return '';const n=champList().length;
   return `<div class="pad" style="margin-top:10px"><button class="smbtn${n?'':' off'}" onclick="openChamp()"><span>🏆</span><span><b>Isyarat Champion</b><small>${n?`${n} saham · bermula hari ini`:'Tiada isyarat Champion hari ini'}</small></span>${n?'<span class="go">Buka</span>':''}</button></div>`;}
+/* Isyarat Pemerhatian: Isyarat Sederhana yang bermula hari ini — untuk dipantau, belum cukup kuat */
+function obsHTML(){if(!S.market)return '';const n=topSignals(60,'obs').length;
+  return `<div class="pad" style="margin-top:10px"><button class="smbtn${n?'':' off'}" onclick="openObs()"><span>👀</span><span><b>Isyarat Pemerhatian</b><small>${n?`${n} saham · belum cukup kuat, untuk dipantau`:'Tiada isyarat untuk dipantau hari ini'}</small></span>${n?'<span class="go">Buka</span>':''}</button></div>`;}
+function openObs(){const L=topSignals(60,'obs');if(!L.length)return toast('Tiada isyarat untuk dipantau hari ini');
+  const d=document.createElement('div');d.className='help';d.id='help';document.body.classList.add('ovl');bkEnsure();
+  d.innerHTML=`<div class="help-p" role="dialog" aria-modal="true"><div><div class="shd-top" style="margin-bottom:6px"><h2 style="margin:0">👀 Isyarat Pemerhatian</h2><button class="xbtn" id="helpX" aria-label="Tutup">✕</button></div>
+    <p class="muted" style="margin:0">Isyarat Sederhana yang bermula ${fmtD(entryDate(S.market.meta.asof))}. Corak ini ada, tetapi belum cukup kuat dalam sejarah saham itu. Sesuai untuk dipantau atau diuji dengan ✍️ Robot Manual.</p></div>
+    ${L.map(x=>`<button class="smr" data-sc="${esc(x.code)}"><span><b>${esc(shortName(x.name))}</b> <span class="code">${esc(x.code)}</span><br><small class="muted">${esc(setupName(x.k))}</small></span><span class="smt"><b>${x.p}%</b></span></button>`).join('')}
+    <p class="disc" style="margin-top:12px">Dalam ujian robot 3 tahun, Isyarat Sederhana secara purata hampir pulang modal. Ini bacaan indicator, bukan cadangan beli atau jual.</p></div>`;
+  document.body.appendChild(d);
+  const close=()=>{d.remove();if(!$('#sheet').classList.contains('on'))document.body.classList.remove('ovl');};
+  d.onclick=e=>{const b=e.target.closest('[data-sc]');if(b){close();stockSheet(b.dataset.sc,nameOf(b.dataset.sc));return;}if(e.target===d)close();};$('#helpX').onclick=close;}
 function openChamp(){
   const L=champList();if(!L.length)return toast('Tiada isyarat Champion hari ini');
   const held=c=>S.paper&&S.paper.live&&S.paper.live.open.some(p=>p.c===c);
@@ -1612,6 +1624,8 @@ const EN_PHRASE=[
 ];
 
 Object.assign(EN_EXACT,{
+'Isyarat Pemerhatian':'Watch signals','👀 Isyarat Pemerhatian':'👀 Watch signals','Tiada isyarat untuk dipantau hari ini':'No signals to watch today',
+'Dalam ujian robot 3 tahun, Isyarat Sederhana secara purata hampir pulang modal. Ini bacaan indicator, bukan cadangan beli atau jual.':'In the 3-year robot test, moderate signals were close to break-even on average. This is an indicator reading, not a buy or sell recommendation.',
 'hari ini, selepas 6.30 petang':'today, after 6.30pm','sebentar lagi (robot sedang berjalan)':'shortly (the robot is running)','data lewat — robot akan cuba semula (paling lewat 9.15 pagi)':'data delayed — the robot will retry (by 9.15am at the latest)',
 'Log masuk (Tetapan → Akaun) untuk guna watchlist. Watchlist disimpan dalam akaun Google anda.':'Sign in (Settings → Account) to use the watchlist. Your watchlist is saved in your Google account.',
 'Log masuk dahulu untuk guna watchlist':'Sign in first to use the watchlist',
@@ -1786,7 +1800,9 @@ Object.assign(EN_EXACT,{
 'Paras ini naik mengikut harga tertinggi sejak tarikh belian dan tidak pernah turun. Harga tutup di bawahnya menandakan momentum menurun.':'This level rises with the highest price since the purchase date and never falls. A close below it signals weakening momentum.',
 });
 EN_RX.unshift(
-[/^📅 Data harga tutup (.+?) · (?:(\d+) isyarat untuk (.+)|tiada Isyarat Kuat untuk (.+))$/,(m,a,b,c,d)=>`📅 Closing price data ${trText(a)} · ${b?`${b} signal(s) for ${trText(c)}`:`no strong signal for ${trText(d)}`}`],
+[/^(\d+) saham · belum cukup kuat, untuk dipantau$/,'$1 stocks · not strong enough yet, to watch'],
+[/^Isyarat Sederhana yang bermula (.+)\. Corak ini ada, tetapi belum cukup kuat dalam sejarah saham itu\. Sesuai untuk dipantau atau diuji dengan ✍️ Robot Manual\.$/,(m,a)=>`Moderate signals starting ${trText(a)}. The pattern is there, but not yet strong enough in that stock's history. Good for watching or testing with the ✍️ Manual Robot.`],
+[/^📅 Data harga tutup (.+?) · (?:(\d+) isyarat untuk (.+?)|tiada Isyarat Kuat untuk (.+?))(?: · (\d+) dalam pemerhatian)?$/,(m,a,b,c,d,f)=>`📅 Closing price data ${trText(a)} · ${b?`${b} signal(s) for ${trText(c)}`:`no strong signal for ${trText(d)}`}${f?` · ${f} to watch`:''}`],
 [/^🔄 Kemas kini seterusnya: (.+?), selepas 6\.30 petang$/,(m,a)=>`🔄 Next update: ${trText(a)}, after 6.30pm`],[/^🔄 Kemas kini seterusnya: (.+)$/,(m,a)=>`🔄 Next update: ${trText(a)}`],
 [/^(\d+) isyarat Champion baharu$/,'$1 new Champion signal(s)'],[/^(\d+) Isyarat Kuat baharu$/,'$1 new Strong signal(s)'],
 [/^(.+)\. Isyarat Kuat \+ skor teknikal Kuat, mula (.+)\.$/,(m,a,b)=>`${a}. Strong signal + strong technical score, starting ${trText(b)}.`],
@@ -2101,6 +2117,7 @@ function rSaham(){
   if(S.market)h+=dataStatusHTML();
   if(S.market)h+=`<div class="pad" style="margin-top:12px"><button class="smbtn" onclick="openSummary()"><span>📋</span><span><b>Ringkasan isyarat aktif</b><small>${topSignals(60).length} saham · bermula hari ini</small></span><span class="go">Buka</span></button></div>`;
   h+=champHTML();
+  h+=obsHTML();
   h+=top5HTML();
   h+=rail('Watchlist anda',S.watch.length?S.watch.length+' saham':'',S.watch.map(c=>({code:c,name:nameOf(c)})),false,needLogin()?'Log masuk (Tetapan → Akaun) untuk guna watchlist. Watchlist disimpan dalam akaun Google anda.':'Belum ada saham. Buka mana-mana saham dan tekan ☆ Tambah watchlist.');
   if(S.holdings.length)h+=rail('Pegangan saya','',S.holdings.map(x=>({code:x.code,name:x.name||nameOf(x.code)})),true,'');

@@ -6,8 +6,8 @@ npm warn deprecated json-ptr@3.1.1: Package no longer supported. Contact Support
 npm warn deprecated uuid@8.3.2: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
 npm warn deprecated uuid@9.0.1: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
 npm warn deprecated uuid@9.0.1: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
-npm warn deprecated uuid@9.0.1: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
 npm warn deprecated glob@10.5.0: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+npm warn deprecated uuid@9.0.1: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
 
 ┌──────────────┬────────────────────────────┐
 │ Site ID:     │ prosyariah                 │
@@ -18,8 +18,8 @@ npm warn deprecated glob@10.5.0: Old versions of glob are not supported, and con
 └──────────────┴────────────────────────────┘
 [36m[1mi [22m[39m deploying [1mhosting[22m
 [36m[1mi  hosting[prosyariah]:[22m[39m beginning deploy...
-[36m[1mi  hosting[prosyariah]:[22m[39m found 1176 files in [1m_site[22m
-[36m[1mi  hosting:[22m[39m uploading new files [0/119] ([1m[32m0%[39m[22m)
+[36m[1mi  hosting[prosyariah]:[22m[39m found 1175 files in [1m_site[22m
+[36m[1mi  hosting:[22m[39m uploading new files [24/136] ([1m[32m17%[39m[22m)
 [36m[1mi  hosting:[22m[39m upload complete
 [32m[1m✔  hosting[prosyariah]:[22m[39m file upload complete
 [36m[1mi  hosting[prosyariah]:[22m[39m finalizing version...
@@ -33,12 +33,14 @@ npm warn deprecated glob@10.5.0: Old versions of glob are not supported, and con
 [1mHosting URL:[22m https://prosyariah.web.app
 exit=0
 firestore rules OK
-Traceback (most recent call last):
-  File "/home/runner/work/ProSyariah/ProSyariah/scripts/push.py", line 144, in <module>
-    main()
-  File "/home/runner/work/ProSyariah/ProSyariah/scripts/push.py", line 95, in main
-    r.raise_for_status()
-  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/requests/models.py", line 1167, in raise_for_status
-    raise HTTPError(http_error_msg, response=self)
-requests.exceptions.HTTPError: 403 Client Error: Forbidden for url: https://firestore.googleapis.com/v1/projects/prosyariah-26a55/databases/(default)/documents/users?pageSize=300
-push: dilangkau
+Firestore 403 {
+  "error": {
+    "code": 403,
+    "message": "Cloud Firestore API has not been used in project prosyariah-26a55 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/firestore.googleapis.com/overview?project=prosyariah-26a55 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.",
+    "status": "PERMISSION_DENIED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "SERVICE_DISABLED",
+        "domain": "googleapis.com",
+        "metadat

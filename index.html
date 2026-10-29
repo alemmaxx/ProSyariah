@@ -248,6 +248,7 @@ main>.card,main>.alert,main>.grid2,main>.disc,main>.pad,.search,.results{margin-
 .tfseg{margin:0 0 8px}.tfseg button{padding:8px 2px;font:600 12px var(--f)}.tfseg button.on{background:var(--gold);color:#1b1503}.tfseg button.dis{opacity:.4}
 .meter{display:flex;align-items:center;gap:10px;margin-top:8px;cursor:pointer}.meter .mtx{display:flex;flex-direction:column;line-height:1.2}.meter small{font-size:11px;color:var(--muted)}.meter b{font-size:16px}.meter span{font-size:12px;color:var(--muted)}
 .meter.big{justify-content:center;margin:0 0 10px}.meter.big b{font-size:22px}
+.actb{width:100%;border-collapse:collapse;font-size:14px;margin:8px 0}.actb th{text-align:left;font-size:12px;color:var(--muted);font-weight:600;padding:6px 4px;border-bottom:1px solid var(--line)}.actb td{padding:8px 4px;border-bottom:1px solid var(--line)}.actb tr.hl td{font-weight:700;background:var(--gold2)}
 .mrow{padding:14px 0;border-bottom:1px solid var(--line);cursor:pointer}.mrow:last-child{border-bottom:0}
 .mhd{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
 .mrow.mc{padding:12px 0}.help-p .mrow{border-bottom:0;cursor:default}
@@ -758,6 +759,7 @@ function topSignals(n=5){
   ((S.track&&S.track.openList)||[]).forEach(s=>add({code:s.c,name:s.n,k:s.k,p:s.p,start:s.d,en:s.en,tg:s.tg,sl:s.sl,md:s.md,n:s.ns,w:s.ws,ev:s.ev}));
   const best={};out.filter(x=>x.start===asof).forEach(x=>{if(!best[x.code]||x.edge>best[x.code].edge)best[x.code]=x;});
   const gr=x=>'ABCD'.indexOf(rateSignal(x).g);
+  Object.keys(best).forEach(k=>{if(!S.settings.showMod&&rateSignal(best[k]).g!=='A')delete best[k];});
   return Object.values(best).sort((a,b)=>gr(a)-gr(b)||b.edge-a.edge||b.p-a.p).slice(0,n);
 }
 
@@ -812,8 +814,8 @@ function openChamp(){
 }
 function top5HTML(){
   const L=topSignals(5);if(!S.market)return '';
-  let h=`<section class="rowsec"><h3>5 isyarat teknikal terkuat<small>disusun ikut penilaian & kekuatan sejarah</small></h3><div class="t5">`;
-  if(!L.length)h+=`<div class="emptyrail" style="margin:0">Tiada isyarat teknikal baharu yang bermula hari ini.</div>`;
+  let h=`<section class="rowsec"><h3>5 isyarat teknikal terkuat<small>${S.settings.showMod?'Isyarat Kuat & Sederhana':'Isyarat Kuat sahaja'}</small></h3><div class="t5">`;
+  if(!L.length)h+=`<div class="emptyrail" style="margin:0">${S.settings.showMod?'Tiada isyarat teknikal baharu yang bermula hari ini.':'Tiada Isyarat Kuat yang bermula hari ini. Isyarat Kuat jarang muncul, kira-kira sekali setiap 4 hari dagangan. Untuk lihat Isyarat Sederhana juga, hidupkan suis di Tetapan.'}</div>`;
   L.forEach((x,i)=>{const pct=Math.min(100,x.el/x.md*100);
     h+=`<button class="t5r" data-code="${esc(x.code)}"><span class="t5n">${i+1}</span><span class="t5b">
       <span class="row between"><span><b>${esc(shortName(x.name))}</b> <span class="code">${esc(x.code)}</span>${isChamp(x)?' <span class="badge b-gold">🏆 Champion</span>':''}${(S.t5&&S.t5[x.code+':'+x.k+':'+x.start]&&S.t5[x.code+':'+x.k+':'+x.start].ev.in===S.market.meta.asof)?' <span class="badge b-ok">Baharu</span>':''}</span><b class="t5p">${x.p}%</b></span>
@@ -826,8 +828,24 @@ function top5HTML(){
       ${platChips(x.code)}
       <span class="muted" style="font-size:12px">Harga kini ${px(x.now)} · paras atas ${px(x.tg)} · paras bawah ${px(x.sl)} · isyarat tamat ${fmtD(x.limitEnd)}</span>
     </span></button>`;});
-  h+=`</div><p class="disc" style="margin:8px var(--gut) 0">Kekuatan = kebarangkalian sejarah berbanding paras neutral. "Tempoh biasa" ialah median masa harga sampai paras atas dalam sejarah saham ini. Ini bacaan indicator, bukan cadangan beli atau jual.</p></section>`;
+  h+=`</div><p class="disc" style="margin:8px var(--gut) 0">Kekuatan = kebarangkalian sejarah berbanding paras neutral. "Tempoh biasa" ialah median masa harga sampai paras atas dalam sejarah saham ini. Ini bacaan indicator, bukan cadangan beli atau jual.</p><div class="pad" style="margin-top:10px"><button class="smbtn off" onclick="openAccuracy()"><span>📊</span><span><b>Ketepatan isyarat</b><small>Keputusan ujian robot 3 tahun</small></span><span class="go">Buka</span></button></div></section>`;
   return h;
+}
+async function openAccuracy(){
+  const d=document.createElement('div');d.className='help';d.id='help';document.body.classList.add('ovl');bkEnsure();
+  d.innerHTML=`<div class="help-p" role="dialog" aria-modal="true"><div><div class="shd-top"><h2 style="margin:0">📊 Ketepatan isyarat</h2><button class="xbtn" id="helpX" aria-label="Tutup">✕</button></div></div><div id="acBody"><p class="muted">Memuatkan…</p></div></div>`;
+  document.body.appendChild(d);const close=()=>{d.remove();if(!$('#sheet').classList.contains('on'))document.body.classList.remove('ovl');};
+  d.onclick=e=>{if(e.target===d)close();};$('#helpX').onclick=close;
+  let X=null;try{const r=await fetch(DATA_BASE+'paper-experiments.json?t='+Math.floor(Date.now()/36e5),{cache:'no-cache'});if(r.ok)X=await r.json();}catch(e){}
+  const B=$('#acBody');if(!B)return;if(!X||!X.variants){B.innerHTML='<p class="muted">Keputusan ujian belum tersedia.</p>';return;}
+  const V=X.variants,row=(l,v,b)=>{const s=v&&v.summary;if(!s||!s.n)return '';return `<tr${b?' class="hl"':''}><td>${l}</td><td>${s.n}</td><td>${s.win}%</td><td class="${s.avg>=0?'up':'dn'}">${s.avg>0?'+':''}${s.avg}%</td></tr>`;};
+  const A=V.gred_A_sahaja;
+  B.innerHTML=`<p class="muted" style="margin-top:0">Robot mengulang setiap hari dagangan dalam 3 tahun lepas, guna hanya maklumat yang ada pada hari itu, dan mencatat sama ada setiap isyarat sampai sasaran atau cut loss dahulu. Kos dagangan 0.3% diambil kira.</p>
+   <table class="actb"><tr><th>Isyarat</th><th>Kali</th><th>Tepat</th><th>Purata</th></tr>
+   ${row('⭐ Isyarat Kuat sahaja',A,1)}${row('Semua isyarat',V.semua_isyarat)}${row('Momentum MACD',V.mc_sahaja)}${row('Lantunan lebih jualan',V.os_sahaja)}${row('Koreksi dalam trend',V.pb_sahaja)}${row('Golden cross',V.gc_sahaja)}</table>
+   ${A&&A.years?`<h3>Isyarat Kuat ikut tahun</h3><table class="actb"><tr><th>Tahun</th><th>Kali</th><th>Tepat</th><th>Purata</th></tr>${Object.entries(A.years).filter(([y,s])=>s.n>=5).map(([y,s])=>`<tr><td>${y}</td><td>${s.n}</td><td>${s.win}%</td><td class="${s.avg>=0?'up':'dn'}">${s.avg>0?'+':''}${s.avg}%</td></tr>`).join('')}</table>`:''}
+   <div class="verd"><b>Maksudnya</b><p style="margin:4px 0 0">"Purata" ialah untung atau rugi purata setiap kali isyarat diikut. Hanya Isyarat Kuat yang positif secara keseluruhan, dan untungnya kecil. Sebab itu senarai utama hanya menunjukkan Isyarat Kuat.</p></div>
+   <p class="disc">Keputusan lampau tidak menjamin keputusan masa depan. Dikemas kini ${fmtD(X.asof)}.</p>`;
 }
 
 /* Jejak 5 isyarat terkuat: rekod bila masuk, kemudian pantau paras atas/bawah & tempoh */
@@ -1550,6 +1568,14 @@ const EN_PHRASE=[
 ];
 
 Object.assign(EN_EXACT,{
+'Isyarat Kuat sahaja':'Strong signals only','Isyarat Kuat & Sederhana':'Strong & moderate signals','Tunjuk Isyarat Sederhana juga':'Also show moderate signals',
+'Asal: Isyarat Kuat sahaja — satu-satunya yang untung dalam ujian 3 tahun':'Default: strong signals only — the only ones profitable in the 3-year test',
+'Isyarat Sederhana dipaparkan':'Moderate signals shown',
+'Tiada Isyarat Kuat yang bermula hari ini. Isyarat Kuat jarang muncul, kira-kira sekali setiap 4 hari dagangan. Untuk lihat Isyarat Sederhana juga, hidupkan suis di Tetapan.':'No strong signal starts today. Strong signals are rare, about once every 4 trading days. To also see moderate signals, turn on the switch in Settings.',
+'Ketepatan isyarat':'Signal accuracy','📊 Ketepatan isyarat':'📊 Signal accuracy','Keputusan ujian robot 3 tahun':'3-year robot test results','Kali':'Times','Tepat':'Accurate','Purata':'Average','Tahun':'Year',
+'⭐ Isyarat Kuat sahaja':'⭐ Strong signals only','Semua isyarat':'All signals','Isyarat Kuat ikut tahun':'Strong signals by year','Maksudnya':'What it means','Keputusan ujian belum tersedia.':'Test results not available yet.',
+'Robot mengulang setiap hari dagangan dalam 3 tahun lepas, guna hanya maklumat yang ada pada hari itu, dan mencatat sama ada setiap isyarat sampai sasaran atau cut loss dahulu. Kos dagangan 0.3% diambil kira.':'The robot replays every trading day of the last 3 years, using only information available on that day, and records whether each signal reached its target or cut loss first. A 0.3% trading cost is included.',
+'"Purata" ialah untung atau rugi purata setiap kali isyarat diikut. Hanya Isyarat Kuat yang positif secara keseluruhan, dan untungnya kecil. Sebab itu senarai utama hanya menunjukkan Isyarat Kuat.':'"Average" is the average profit or loss each time a signal is followed. Only strong signals are positive overall, and the profit is small. That is why the main list shows strong signals only.',
 'Log masuk untuk guna Robot Manual':'Sign in to use the Manual Robot','Memuatkan akaun…':'Loading account…','Log masuk dahulu untuk guna Robot Manual':'Sign in first to use the Manual Robot',
 'Senarai Robot Manual anda disimpan dalam akaun Google, supaya selamat dan sama di semua phone. Notifikasi sasaran dan cut loss juga dihantar ke akaun anda.':'Your Manual Robot list is stored in your Google account, so it is safe and the same on every phone. Target and cut-loss notifications are also sent to your account.',
 'Akaun':'Account','Log masuk dengan Google':'Sign in with Google','Log masuk sebagai':'Signed in as','Simpanan awan':'Cloud storage','Aktif':'Active','Segerak sekarang':'Sync now','Log keluar':'Sign out',
@@ -1705,6 +1731,7 @@ Object.assign(EN_EXACT,{
 'Paras ini naik mengikut harga tertinggi sejak tarikh belian dan tidak pernah turun. Harga tutup di bawahnya menandakan momentum menurun.':'This level rises with the highest price since the purchase date and never falls. A close below it signals weakening momentum.',
 });
 EN_RX.unshift(
+[/^Keputusan lampau tidak menjamin keputusan masa depan\. Dikemas kini (.+)\.$/,(m,a)=>`Past results do not guarantee future results. Updated ${trText(a)}.`],
 [/^RM ([\d.]+) (bilion|juta)$/,(m,a,b)=>`RM ${a} ${b==='bilion'?'billion':'million'}`],
 [/^Sumber: Yahoo Finance, dikemas kini (.+)\. Angka indikatif\.$/,(m,a)=>`Source: Yahoo Finance, updated ${trText(a)}. Indicative figures.`],
 [/^(\S+) · Robot Manual$/,'$1 · Manual Robot'],
@@ -2015,7 +2042,7 @@ function rSaham(){
   h+=rail('Watchlist anda',S.watch.length?S.watch.length+' saham':'',S.watch.map(c=>({code:c,name:nameOf(c)})),false,'Belum ada saham. Buka mana-mana saham dan tekan ☆ Tambah watchlist.');
   if(S.holdings.length)h+=rail('Pegangan saya','',S.holdings.map(x=>({code:x.code,name:x.name||nameOf(x.code)})),true,'');
   if(M){
-    h+=rail('Isyarat teknikal hari ini','kebarangkalian dari sejarah 5 tahun',screen(v=>v.op&&v.op.some(o=>o.ev>0&&(o.ago||0)===0&&(S.settings.style!=='ketat'||(o.md||0)>=5)),(a,b)=>b.op[0].p-a.op[0].p),false,'');
+    h+=rail('Isyarat teknikal hari ini','kebarangkalian dari sejarah 5 tahun',screen(v=>v.op&&v.op.some(o=>o.ev>0&&(o.ago||0)===0&&(S.settings.showMod||rateSignal(o).g==='A')&&(S.settings.style!=='ketat'||(o.md||0)>=5)),(a,b)=>b.op[0].p-a.op[0].p),false,'');
     h+=rail('Pilihan teratas hari ini','skor 4/5 ke atas',screen(v=>v.sc>=4,byScore),false,'');
     h+=rail('Lebih jualan, RSI bawah 30','potensi lantunan',screen(v=>v.r!=null&&v.r<30,(a,b)=>a.r-b.r),false,'');
     h+=rail('Golden cross terkini','EMA50 lintas atas EMA200',screen(v=>v.x==='g',byScore),false,'');
@@ -2496,6 +2523,7 @@ function rTetapan(){
   h+=platformHTML();
   h+=alertSettingsHTML();
   h+=`<div class="card"><h2>Mod Patuh Syariah</h2>
+   <div class="toggle"><span>Tunjuk Isyarat Sederhana juga<br><small class="muted">Asal: Isyarat Kuat sahaja — satu-satunya yang untung dalam ujian 3 tahun</small></span><input type="checkbox" id="smod" ${st.showMod?'checked':''}></div>
    <div class="toggle"><span>Sembunyi isyarat untuk saham tidak patuh</span><input type="checkbox" id="sm" ${st.shariahMode?'checked':''}></div>
    <label>Gaya dagangan</label><div class="seg"><button data-sty="sc" class="${st.style==='sc'?'on':''}">Ikut SC (carta harian)</button><button data-sty="ketat" class="${st.style==='ketat'?'on':''}">Ketat (carta mingguan)</button></div>
    <div class="disc">Terdapat perbezaan pandangan ulama tentang dagangan jangka sangat pendek. "Ketat" mengira indicator pada carta mingguan untuk fokus jangka sederhana–panjang. App ini tidak menyokong margin, short selling, options, futures atau waran.</div></div>`;
@@ -2513,6 +2541,7 @@ function rTetapan(){
   document.querySelectorAll('[data-pf]').forEach(b=>b.onclick=()=>openPlatform(+b.dataset.pf));
   const pm=$('#pfMain');if(pm)pm.onchange=e=>{S.settings.platform=e.target.value;save();toast('✓ Disimpan');};
   $('#sm').onchange=e=>{st.shariahMode=e.target.checked;save();};
+  $('#smod').onchange=e=>{st.showMod=e.target.checked;save();toast(st.showMod?'Isyarat Sederhana dipaparkan':'Isyarat Kuat sahaja');};
   document.querySelectorAll('[data-sty]').forEach(b=>b.onclick=()=>{st.style=b.dataset.sty;S.cache={};save();render();toast('Cache harga dikosongkan untuk gaya baharu');});
   const backup=()=>JSON.stringify(Object.assign({},S,{cache:{}}));
   $('#bE').onclick=()=>download('prosyariah-sandaran-'+today()+'.json',backup(),'application/json');

@@ -25,7 +25,7 @@
   --f:"Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f);font-size:15px;line-height:1.5}
+html,body{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent;margin:0;background:var(--bg);color:var(--ink);font-family:var(--f);font-size:15px;line-height:1.5}
 header{position:sticky;top:0;z-index:5;padding:14px 16px 18px;background:linear-gradient(180deg,rgba(10,18,16,.96) 40%,rgba(10,18,16,0));display:flex;align-items:center;gap:10px}
 header .mark{width:36px;height:36px;border-radius:9px;background:var(--gold);display:grid;place-items:center;color:#1b1503;font-weight:800;font-size:16px}
 header h1{margin:0;font-size:20px;font-weight:800;letter-spacing:-.3px}
@@ -262,6 +262,7 @@ main>.card,main>.alert,main>.grid2,main>.disc,main>.pad,.search,.results{margin-
 .mtag{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:6px;font:800 11px var(--f);margin-right:6px;vertical-align:1px}.mtag.m{background:var(--card2);color:var(--ink);border:1px solid var(--line)}.mtag.a{background:var(--gold);color:#1b1503}
 .sw{position:relative;display:inline-block;width:46px;height:26px}.sw input{opacity:0;width:0;height:0}.sw span{position:absolute;inset:0;border-radius:99px;background:var(--line);transition:.2s;cursor:pointer}.sw span::before{content:"";position:absolute;width:20px;height:20px;left:3px;top:3px;border-radius:50%;background:#fff;transition:.2s}.sw input:checked+span{background:var(--gold)}.sw input:checked+span::before{transform:translateX(20px)}
 .alleg{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--mut);background:var(--card2);border-radius:10px;padding:8px 10px;margin:4px 0 8px}.altg{align-items:flex-start}.altg>div{flex:1;padding-right:10px}.altg small{display:block;color:var(--mut);font-size:12px;line-height:1.35;margin-top:2px}.altag{font-size:12px}
+input,textarea,[contenteditable]{-webkit-user-select:text;user-select:text}
 .auopt.off{opacity:.45;pointer-events:none}
 .mrow{padding:14px 0;border-bottom:1px solid var(--line);cursor:pointer}.mrow:last-child{border-bottom:0}
 .mhd{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
@@ -888,7 +889,7 @@ function autoCardHTML(){const a=AUTO();
 function bindAuto(){const a=AUTO();const upd=()=>{save();rRobot();};
   const on=$('#auOn');if(!on)return;on.onchange=e=>{a.on=e.target.checked;upd();toast(a.on?'🤖 Robot Auto dihidupkan':'Robot Auto dimatikan');};
   $('#auSig').onchange=e=>{a.sig=e.target.checked;upd();};$('#auChamp').onchange=e=>{a.champ=e.target.checked;upd();};$('#auNews').onchange=e=>{a.news=e.target.checked;upd();};
-  $('#auStake').onchange=e=>{a.stake=Math.max(1,num(e.target.value)||20);upd();};}
+  $('#auStake').onchange=e=>{a.stake=Math.max(1,num(e.target.value)||20);e.target.value=a.stake;upd();toast('✓ Nilai maya RM'+a.stake+' disimpan');};}
 function manDelete(id){S.manual=(S.manual||[]).filter(x=>x.id!==id);S.manDel=[...new Set([...(S.manDel||[]),id])].slice(-300);save();}
 function manOpen(code){return (S.manual||[]).find(p=>p.code===code&&!p.closed);}
 function manLevels(code,en){

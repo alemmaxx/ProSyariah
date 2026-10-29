@@ -246,6 +246,8 @@ main>.card,main>.alert,main>.grid2,main>.disc,main>.pad,.search,.results{margin-
 .nrow>span:last-child{display:flex;flex-direction:column;gap:2px;min-width:0}.nrow b{font-weight:600;font-size:14px;line-height:1.35}.nrow .muted{font-size:12px}
 .ntone{flex:none;width:20px;text-align:center;font-weight:800}.ntone.tp{color:var(--green)}.ntone.tn{color:var(--red)}.ntone.tz{color:var(--muted)}
 .tfseg{margin:0 0 8px}.tfseg button{padding:8px 2px;font:600 12px var(--f)}.tfseg button.on{background:var(--gold);color:#1b1503}.tfseg button.dis{opacity:.4}
+.meter{display:flex;align-items:center;gap:10px;margin-top:8px;cursor:pointer}.meter .mtx{display:flex;flex-direction:column;line-height:1.2}.meter small{font-size:11px;color:var(--muted)}.meter b{font-size:16px}.meter span{font-size:12px;color:var(--muted)}
+.meter.big{justify-content:center;margin:0 0 10px}.meter.big b{font-size:22px}
 .mrow{padding:14px 0;border-bottom:1px solid var(--line);cursor:pointer}.mrow:last-child{border-bottom:0}
 .mhd{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
 .mnow{display:flex;flex-direction:column;align-items:flex-end}.mnow small{font-size:11px;color:var(--muted)}.mnow b{font-size:22px}
@@ -810,6 +812,7 @@ function top5HTML(){
       <span class="row between"><span><b>${esc(shortName(x.name))}</b> <span class="code">${esc(x.code)}</span>${isChamp(x)?' <span class="badge b-gold">🏆 Champion</span>':''}${(S.t5&&S.t5[x.code+':'+x.k+':'+x.start]&&S.t5[x.code+':'+x.k+':'+x.start].ev.in===S.market.meta.asof)?' <span class="badge b-ok">Baharu</span>':''}</span><b class="t5p">${x.p}%</b></span>
       <span class="muted">${esc(setupName(x.k))}</span>
       ${rateHTML(x)}
+      ${meterHTML(x.code,false)}
       <span class="t5d"><span>Mula <b>${fmtD(entryDate(x.start))}</b></span><span>Tempoh biasa ${x.md} hari dagangan, hingga <b>${fmtD(x.end)}</b></span></span>
       <span class="t5bar${x.passed?' over':''}"><span style="width:${pct}%"></span></span>
       <span class="t5s"><span class="badge ${x.passed?'b-warn':'b-ok'}">${x.passed?`Tempoh biasa sudah berlalu`:`Masih dalam tempoh biasa`}</span><span class="muted">hari dagangan ke-${dayNo(x.start)} daripada ~${x.md}</span></span>
@@ -1509,6 +1512,8 @@ const EN_PHRASE=[
 ];
 
 Object.assign(EN_EXACT,{
+'Meter ProSyariah':'ProSyariah Meter','Sangat Lemah':'Very Weak','Sangat Kuat':'Very Strong','Isyarat (40%)':'Signal (40%)','Skor teknikal (40%)':'Technical score (40%)','Nada berita (20%)':'News tone (20%)','Tiada berita (neutral)':'No news (neutral)',
+'Meter ini dikira oleh ProSyariah daripada bacaan dalam app: penilaian isyarat sejarah, skor teknikal semasa dan nada tajuk berita 30 hari. Ia bukan konsensus penganalisis dan bukan cadangan beli atau jual.':"This meter is calculated by ProSyariah from the app's readings: historical signal rating, current technical score and 30-day news headline tone. It is not an analyst consensus and not a buy or sell recommendation.",
 'Hari':'Day','Minggu':'Week','Bulan':'Month','Tahun':'Year',
 '1J':'1H','Harian':'Daily','Mingguan':'Weekly','Bulanan':'Monthly','Tahunan':'Yearly','Data carta tidak tersedia.':'Chart data not available.',
 'Carta 30 minit / 1 jam hanya untuk saham yang dipantau (isyarat aktif atau skor tinggi).':'30-minute / 1-hour charts are only for tracked stocks (active signal or high score).',
@@ -1647,6 +1652,7 @@ Object.assign(EN_EXACT,{
 'Paras ini naik mengikut harga tertinggi sejak tarikh belian dan tidak pernah turun. Harga tutup di bawahnya menandakan momentum menurun.':'This level rises with the highest price since the purchase date and never falls. A close below it signals weakening momentum.',
 });
 EN_RX.unshift(
+[/^(\d+)\/100 ⓘ$/,'$1/100 ⓘ'],
 [/^Carta (30 minit|1 jam) · (\S+) pada (.+) \(bukan masa nyata\)$/,(m,a,b,c)=>`${a==='30 minit'?'30-minute':'1-hour'} chart · ${b} at ${trText(c)} (not real-time)`],
 [/^Carta (Bulanan|Tahunan) · harga tutup (\S+) pada (.+)$/,(m,a,b,c)=>`${a==='Bulanan'?'Monthly':'Yearly'} chart · close ${b} on ${c}`],
 [/^📝 Ringkasan analisa · 📰 (\d+) berita$/,'📝 Analysis summary · 📰 $1 news'],
@@ -1989,6 +1995,36 @@ function platformHTML(){
     <label>Platform saham utama anda (dipaparkan pada isyarat)</label><select id="pfMain"><option value="all"${(S.settings.platform==null||S.settings.platform==='all')?' selected':''}>Semua (moomoo, Rakuten Trade, Webull)</option>${PLATFORMS.map((P,i)=>P.g==='saham'?`<option value="${i}"${String(S.settings.platform)===String(i)?' selected':''}>${esc(P.n)}</option>`:'').join('')}</select>
     ${grp('saham','Beli saham sendiri')}${grp('urus','Diurus untuk anda')}
     <div class="disc">ProSyariah tiada kaitan dengan platform ini dan tidak menerima bayaran. Semak lesen SC, yuran dan pilihan akaun Islamik sebelum membuka akaun.</div></div>`;}
+/* ===== METER PROSYARIAH: gabungan isyarat (40%) + skor teknikal (40%) + nada berita (20%) ===== */
+const MZ=[[20,'Sangat Lemah','#e0564a'],[40,'Lemah','#f08a3c'],[60,'Neutral','#e8c14a'],[80,'Kuat','#8cc152'],[101,'Sangat Kuat','#2fbf8c']];
+function curSig(code){const m=mk(code);let so=bestOp(code);if(!so){const sg=signalFor(code);if(sg&&m&&m.c!=null&&m.c<sg.tg&&m.c>sg.sl&&tdBetween(sg.start,S.market.meta.asof)<=BTH().h)so=sg;}
+  if(so&&!so.start&&m)so={...so,start:subTradingDays(m.d,so.ago||0)};return so;}
+function meterOf(code){
+  const m=mk(code);if(!m||!m.va||status(code,nameOf(code))==='no')return null;
+  const so=curSig(code),g=so?rateSignal(so).g:null;
+  const sig={A:1,B:.65,C:.55,D:.2}[g]??.3;const tech=m.sc/m.va;
+  const N=newsFor(code);const nb=N.length?(N.filter(x=>x.x==='+').length-N.filter(x=>x.x==='-').length)/N.length:0;
+  const v=Math.round(100*(.4*sig+.4*tech+.2*(nb+1)/2));const z=MZ.find(z=>v<z[0]);
+  return {v,lbl:z[1],col:z[2],sig,tech,nb,hasNews:!!N.length};}
+function gaugeSVG(M,w){if(!M)return '';w=w||150;const h=w*0.62,cx=w/2,cy=w*0.52,r=w*0.42,t=w*0.11;
+  const pt=(a,rr)=>[cx+rr*Math.cos(Math.PI*(1-a)),cy-rr*Math.sin(Math.PI*(1-a))];
+  const arc=(a0,a1,col)=>{const [x0,y0]=pt(a0,r),[x1,y1]=pt(a1,r);return `<path d="M${x0.toFixed(1)} ${y0.toFixed(1)} A${r} ${r} 0 0 1 ${x1.toFixed(1)} ${y1.toFixed(1)}" stroke="${col}" stroke-width="${t}" fill="none"/>`;};
+  let segs='',a=0;MZ.forEach(z=>{const b=Math.min(z[0],100)/100;segs+=arc(a+.006,b-.006,z[2]);a=b;});
+  const f=Math.min(Math.max(M.v,0),100)/100,[nx,ny]=pt(f,r*0.86),[lx,ly]=pt(f-.5,w*0.05),[rx,ry]=pt(f+.5,w*0.05);
+  return `<svg class="gauge" viewBox="0 0 ${w} ${h}" width="${w}" height="${h}" role="img" aria-label="Meter ${M.v}"><g>${segs}</g>
+    <path d="M${lx.toFixed(1)} ${ly.toFixed(1)} L${nx.toFixed(1)} ${ny.toFixed(1)} L${rx.toFixed(1)} ${ry.toFixed(1)} Z" fill="var(--ink)"/><circle cx="${cx}" cy="${cy}" r="${w*0.06}" fill="var(--ink)"/></svg>`;}
+function meterHTML(code,big){const M=meterOf(code);if(!M)return '';
+  return `<div class="meter${big?' big':''}" onclick="event.stopPropagation();openMeterHelp('${esc(code)}')" role="button">${gaugeSVG(M,big?170:96)}<div class="mtx"><small>Meter ProSyariah</small><b style="color:${M.col}">${M.lbl}</b><span>${M.v}/100 ⓘ</span></div></div>`;}
+function openMeterHelp(code){const M=meterOf(code);if(!M)return;
+  const d=document.createElement('div');d.className='help';d.id='help';document.body.classList.add('ovl');bkEnsure();
+  const pc=x=>Math.round(x*100);
+  d.innerHTML=`<div class="help-p" role="dialog" aria-modal="true"><div><div class="shd-top"><div class="shd-name"><h2 style="margin:0">Meter ProSyariah</h2><div class="code">${esc(shortName(nameOf(code)))} · ${esc(code)}</div></div><button class="xbtn" id="helpX" aria-label="Tutup">✕</button></div></div>
+    <div style="display:flex;justify-content:center">${gaugeSVG(M,220)}</div><p style="text-align:center;margin:0"><b style="color:${M.col};font-size:20px">${M.lbl}</b> · ${M.v}/100</p>
+    <div class="card" style="margin-top:12px"><div class="kv"><span>Isyarat (40%)</span><b>${pc(M.sig)}/100</b></div><div class="kv"><span>Skor teknikal (40%)</span><b>${pc(M.tech)}/100</b></div><div class="kv"><span>Nada berita (20%)</span><b>${M.hasNews?pc((M.nb+1)/2)+'/100':'Tiada berita (neutral)'}</b></div></div>
+    <div class="hrow" style="flex-wrap:wrap;gap:6px">${MZ.map(z=>`<span class="badge" style="background:${z[2]}22;color:${z[2]}">${z[1]}</span>`).join(' ')}</div>
+    <p class="muted" style="font-size:13px">Meter ini dikira oleh ProSyariah daripada bacaan dalam app: penilaian isyarat sejarah, skor teknikal semasa dan nada tajuk berita 30 hari. Ia bukan konsensus penganalisis dan bukan cadangan beli atau jual.</p></div>`;
+  document.body.appendChild(d);const close=()=>{d.remove();if(!$('#sheet').classList.contains('on'))document.body.classList.remove('ovl');};
+  d.onclick=e=>{if(e.target===d)close();};$('#helpX').onclick=close;}
 /* ===== RINGKASAN ANALISA: semua bacaan penting + berita dalam satu pop up ===== */
 function newsFor(code){return (S.news&&S.news.items&&S.news.items[code])||[];}
 async function openAnalysis(code){
@@ -2016,7 +2052,7 @@ function analysisHTML(code,A){
   else if(V&&V.lbl==='Kuat')ks='Tiada isyarat baharu, tetapi trend semasa kuat. Tunggu isyarat seterusnya.';
   else ks='Tiada isyarat aktif dan trend semasa tidak kuat. Tiada bacaan positif buat masa ini.';
   const ns=N.length?`Berita 30 hari: ${N.length} tajuk (${np} positif, ${nn} negatif).`:'';
-  let h=`<div class="verd" style="margin-top:0"><b>Kesimpulan</b><p style="margin:4px 0 0">${esc(ks)}</p>${ns?`<p style="margin:4px 0 0">${esc(ns)}</p>`:''}</div>`;
+  let h=meterHTML(code,true)+`<div class="verd"><b>Kesimpulan</b><p style="margin:4px 0 0">${esc(ks)}</p>${ns?`<p style="margin:4px 0 0">${esc(ns)}</p>`:''}</div>`;
   h+=`<div class="hstat" style="margin:12px 0 4px">${badge(st)}${st==='no'?'':R?`<span class="badge ${R.cls}">${R.lbl}</span>`:'<span class="badge b-na">Tiada isyarat aktif</span>'}${V&&st!=='no'?`<span class="badge ${V.cls}">Skor ${m.sc}/${m.va} · ${V.lbl.split(' –')[0]}</span>`:''}${champ&&st!=='no'?'<span class="badge b-gold">🏆 Champion</span>':''}</div>`;
   // Isyarat
   if(so&&st!=='no'){const md=Math.max(1,Math.round(so.md||0)),tp=(so.tg/so.en-1)*100,sp=(1-so.sl/so.en)*100;
@@ -2045,6 +2081,7 @@ function stockSheet(code,name){
   let h=`<div class="shd"><div class="shd-top"><div class="shd-name"><h2 style="margin:0">${esc(name||code)}</h2><div class="code">${esc(code||'tiada kod')} · KLSE</div></div><div class="row" style="gap:8px;flex:none;flex-wrap:nowrap">${code&&st!=='no'&&mk(code)&&mk(code).c?`<button class="mbtn" onclick="openManual('${esc(code)}')" aria-label="Robot manual">✍️ ${manOpen(code)?'Urus':'Manual'}</button>`:''}<button class="xbtn" onclick="closeSheet()" aria-label="Tutup">✕</button></div></div>
     ${code?statusHTML(code,name):''}
     ${code&&st!=='no'?sheetStatHTML(code):''}
+    ${code&&st!=='no'?meterHTML(code,false):''}
     ${code&&mk(code)?`<button class="anbtn" onclick="openAnalysis('${esc(code)}')">📝 Ringkasan analisa${newsFor(code).length?` · 📰 ${newsFor(code).length} berita`:''}</button>`:''}
     <div style="margin:10px 0 0">${badge(st)} ${L?`<span class="muted">Senarai SC ${fmtD(L.date)}</span>`:''}</div></div>`;
   if(st==='no')h+=`<div class="alert a-red">Saham ini <b>tiada</b> dalam senarai patuh syariah SC terkini.${blocked?' Isyarat teknikal disembunyikan kerana Mod Patuh Syariah ON.':''}</div>`;

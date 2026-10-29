@@ -30,6 +30,14 @@
 :root[data-theme="light"] nav{background:rgba(246,244,238,.94)}
 :root[data-theme="light"] .hcl{background:rgba(255,255,255,.7)}
 :root[data-theme="light"] .hero::before{background:radial-gradient(120% 80% at 85% 10%,#cfeadd 0%,transparent 60%),radial-gradient(90% 70% at 0% 100%,#f1e4bf 0%,transparent 60%),var(--bg)}
+/* Gaya tulisan 3D (tajuk & nombor besar) — boleh dimatikan di Tetapan → Paparan */
+.fx3d .hero h2:not([style*="color"]),.fx3d .stats b:not([style*="color"]),.fx3d span.big:not([style*="color"]),.fx3d b.big:not([style*="color"]),.fx3d div.big:not(.meter):not([style*="color"]),.fx3d .mstat b:not([style*="color"]),.fx3d .t3d:not([style*="color"]){background-image:linear-gradient(180deg,#fffbe9 0%,#f3dc8e 42%,#c99a2e 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 2px 0 #3a2a08) drop-shadow(0 5px 12px rgba(217,180,74,.32))}
+.fx3d .stats b,.fx3d .mstat b{filter:drop-shadow(0 1.5px 0 #3a2a08) drop-shadow(0 3px 8px rgba(217,180,74,.25))}
+.fx3d b.big.up,.fx3d span.big.up,.fx3d .mstat b.up,.fx3d .t3d.up{background-image:linear-gradient(180deg,#e2fff3 0%,#5fe0b0 45%,#16815c 100%);filter:drop-shadow(0 2px 0 #0b3a2a) drop-shadow(0 5px 12px rgba(47,191,140,.35))}
+.fx3d b.big.dn,.fx3d span.big.dn,.fx3d .mstat b.dn,.fx3d .t3d.dn{background-image:linear-gradient(180deg,#ffe6e2 0%,#f48c80 45%,#b2392c 100%);filter:drop-shadow(0 2px 0 #3d1410) drop-shadow(0 5px 12px rgba(239,107,92,.32))}
+:root[data-theme="light"].fx3d .hero h2,:root[data-theme="light"].fx3d .stats b,:root[data-theme="light"].fx3d span.big,:root[data-theme="light"].fx3d b.big,:root[data-theme="light"].fx3d div.big:not(.meter),:root[data-theme="light"].fx3d .mstat b,:root[data-theme="light"].fx3d .t3d{background-image:linear-gradient(180deg,#c99a2e 0%,#8a6512 100%);filter:drop-shadow(0 2px 0 rgba(90,64,10,.25))}
+:root[data-theme="light"].fx3d .up.big,:root[data-theme="light"].fx3d .mstat b.up{background-image:linear-gradient(180deg,#22b077,#0d6b48)}
+:root[data-theme="light"].fx3d .dn.big,:root[data-theme="light"].fx3d .mstat b.dn{background-image:linear-gradient(180deg,#e05a4b,#9e2c20)}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent;margin:0;background:var(--bg);color:var(--ink);font-family:var(--f);font-size:15px;line-height:1.5}
 header{position:sticky;top:0;z-index:5;padding:14px 16px 18px;background:linear-gradient(180deg,rgba(10,18,16,.96) 40%,rgba(10,18,16,0));display:flex;align-items:center;gap:10px}
@@ -802,7 +810,7 @@ async function openKlci(){const K=S.market.meta.klci;
       <svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block;margin-top:4px"><polyline points="0,${H} ${pt} ${W},${H}" fill="${col}" opacity=".12"/><polyline points="${pt}" fill="none" stroke="${col}" stroke-width="2"/></svg>
       <div class="row between" style="font-size:12px;color:var(--muted)"><span>Rendah ${lo.toFixed(0)}</span><span>Tinggi ${hi.toFixed(0)}</span></div>`;}
   openSheet(`<div class="row between" style="align-items:center"><h2 style="margin:0">📊 FBM KLCI</h2><button class="xbtn" onclick="closeSheet()" aria-label="Tutup">✕</button></div>
-    <p style="margin:6px 0 2px"><b style="font-size:22px">${K.c.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</b> <span class="${K.ch>=0?'up':'dn'}">${K.ch>0?'+':''}${K.ch}% hari ini</span></p>
+    <p style="margin:6px 0 2px"><b class="t3d" style="font-size:26px;font-weight:800">${K.c.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</b> <span class="${K.ch>=0?'up':'dn'}">${K.ch>0?'+':''}${K.ch}% hari ini</span></p>
     <p class="muted" style="margin:0 0 10px;font-size:13px">Pasaran ${klciWord(K.up).toLowerCase()} · data ${fmtD(K.d)}</p>
     <div class="tfs" style="display:flex;gap:6px;margin-bottom:8px">${rng.map(([n,l])=>`<button class="btn sm ${n===KLR?'gold':'sec'}" data-kr="${n}">${l}</button>`).join('')}</div>${svg}
     <div class="disc">KLCI ialah indeks 30 syarikat terbesar Bursa (bukan semuanya patuh syariah). Ia tunjuk keadaan pasaran secara umum. Menaik = harga atas purata 50 dan 200 hari. Menurun = bawah kedua-duanya. Selain itu Mendatar.</div>`);
@@ -1385,12 +1393,13 @@ function priceAlertForm(code){
   $('#paS').onclick=()=>{const v=num($('#paP').value);if(!v){toast('Isi harga');return;}A.price.push({id:uid(),code,op:$('#paOp').value,price:v});save();updateBell();toast('✓ Amaran harga ditetapkan');priceAlertForm(code);};
   document.querySelectorAll('[data-pd]').forEach(b=>b.onclick=()=>{A.price=A.price.filter(p=>p.id!==b.dataset.pd);save();updateBell();priceAlertForm(code);});
 }
-function applyDisplay(){const st=S.settings||{};const r=document.documentElement;r.setAttribute('data-theme',st.theme==='light'?'light':'dark');
+function applyDisplay(){const st=S.settings||{};const r=document.documentElement;r.setAttribute('data-theme',st.theme==='light'?'light':'dark');r.classList.toggle('fx3d',st.fx!=='flat');
   const z={kecil:.92,besar:1.12}[st.fs]||1;document.body.style.zoom=z===1?'':z;const m=document.querySelector('meta[name="theme-color"]');if(m)m.content=st.theme==='light'?'#f6f4ee':'#0a1210';}
 function displayHTML(){const st=S.settings;const o=(v,l,c)=>`<option value="${v}"${(c||'')===v?' selected':''}>${l}</option>`;
   return `<div class="card"><h2>Paparan</h2><div class="grid2"><div><label>Saiz tulisan</label><select id="dpFs">${o('kecil','Kecil',st.fs)}${o('','Biasa',st.fs||'')}${o('besar','Besar',st.fs)}</select></div>
-   <div><label>Tema</label><select id="dpTh">${o('','Gelap',st.theme||'')}${o('light','Cerah',st.theme)}</select></div></div></div>`;}
-function bindDisplay(){const f=$('#dpFs'),t=$('#dpTh');if(f)f.onchange=()=>{S.settings.fs=f.value;save0();applyDisplay();};if(t)t.onchange=()=>{S.settings.theme=t.value;save0();applyDisplay();};}
+   <div><label>Tema</label><select id="dpTh">${o('','Gelap',st.theme||'')}${o('light','Cerah',st.theme)}</select></div>
+   <div><label>Gaya tajuk & nombor</label><select id="dpFx">${o('','3D berkilat',st.fx||'')}${o('flat','Biasa',st.fx)}</select></div></div></div>`;}
+function bindDisplay(){const f=$('#dpFs'),t=$('#dpTh');if(f)f.onchange=()=>{S.settings.fs=f.value;save0();applyDisplay();};if(t)t.onchange=()=>{S.settings.theme=t.value;save0();applyDisplay();};const x=$('#dpFx');if(x)x.onchange=()=>{S.settings.fx=x.value;save0();applyDisplay();};}
 function alertSettingsHTML(){
   const A=AL();const lab={
    isyarat:['🟢','Isyarat Kuat & Champion','Saham patuh syariah yang dapat isyarat kuat hari ini.',1],
@@ -1683,6 +1692,7 @@ const EN_PHRASE=[
 ];
 
 Object.assign(EN_EXACT,{
+'Gaya tajuk & nombor':'Heading & number style','3D berkilat':'Glossy 3D',
 'Paparan':'Display','Saiz tulisan':'Text size','Kecil':'Small','Biasa':'Normal','Besar':'Large','Tema':'Theme','Gelap':'Dark','Cerah':'Light',
 'Bilangan':'Count','Untung/rugi':'Profit/loss',
 'Penapis':'Filter','Kalendar':'Calendar','Banding':'Compare','🔎 Penapis saham':'🔎 Stock filter','Jenis':'Type','Semua':'All','Saham':'Stocks','ETF Islam':'Islamic ETF','REIT Islam':'Islamic REIT','Sektor':'Sector','Semua sektor':'All sectors','P/E maksimum':'Max P/E','Tiada had':'No limit','Dividen minimum':'Min dividend','Susun ikut':'Sort by','Meter tertinggi':'Highest meter','Dividen tertinggi':'Highest dividend','P/E terendah':'Lowest P/E','Naik paling banyak hari ini':'Biggest gain today','Isyarat':'Signal','Ada isyarat sahaja':'With signal only','Tiada saham ikut tapisan ini.':'No stocks match this filter.','Data asas daripada Yahoo Finance (indikatif). Ini alat tapisan, bukan cadangan beli.':'Fundamentals from Yahoo Finance (indicative). This is a filter tool, not a buy recommendation.','📅 Kalendar syarikat':'📅 Company calendar','45 hari akan datang, saham patuh syariah sahaja. ⭐ = dalam watchlist atau portfolio anda.':'Next 45 days, Shariah-compliant stocks only. ⭐ = in your watchlist or portfolio.','📊 Keputusan suku':'📊 Quarterly results','Belum ada tarikh dalam 45 hari akan datang. Data dikemas kini sedikit demi sedikit setiap hari.':'No dates in the next 45 days yet. Data is updated a little every day.','💰 Ex-dividen: perlu pegang saham sebelum tarikh ini untuk dapat dividen. 📊 Keputusan suku: tarikh dijangka syarikat umum untung/rugi. Sumber Yahoo Finance, tarikh boleh berubah; rujuk pengumuman rasmi Bursa.':'💰 Ex-dividend: you must hold the stock before this date to get the dividend. 📊 Quarterly results: the expected date the company reports profit/loss. Source Yahoo Finance; dates may change; check official Bursa announcements.','⚖️ Banding 2 saham':'⚖️ Compare 2 stocks','Pilih saham pertama.':'Pick the first stock.','. Pilih saham kedua.':'. Pick the second stock.','Dipilih: ':'Selected: ','⚖️ Banding':'⚖️ Compare','Hari ini':'Today','1 bulan':'1 month','Tiada':'None','Ada':'Yes','🟢 Kuat':'🟢 Strong','Dividen':'Dividend','Tukar saham':'Change stocks','Perbandingan maklumat sahaja, bukan cadangan beli atau jual.':'Information comparison only, not a buy or sell recommendation.','Pergerakan 40 hari dagangan (mula = 100).':'Movement over 40 trading days (start = 100).','⚖️ Banding dengan saham lain':'⚖️ Compare with another stock','Tarikh ex-dividen':'Ex-dividend date','Beli sebelum tarikh ini untuk layak dividen':'Buy before this date to qualify for the dividend','Keputusan suku seterusnya':'Next quarterly results','Tarikh dijangka umum keputusan kewangan':'Expected date of the financial results',

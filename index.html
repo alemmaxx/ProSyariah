@@ -1477,6 +1477,10 @@ const EN_PHRASE=[
 ];
 
 Object.assign(EN_EXACT,{
+'Platform pelaburan':'Investment platforms','Beli saham sendiri':'Buy stocks yourself','Diurus untuk anda':'Managed for you','Buka ↗':'Open ↗','Buka di platform':'Open in a platform',
+'Saham Bursa & AS':'Bursa & US stocks','Robo-advisor patuh syariah':'Shariah-compliant robo-advisor','Robo-advisor (ada portfolio syariah)':'Robo-advisor (has Shariah portfolio)','Simpanan dana (ada Versa Save Shariah)':'Fund savings (has Versa Save Shariah)',
+'ProSyariah hanya memberi indicator. Untuk melabur, guna platform berlesen di bawah. Semua percuma untuk buka akaun.':'ProSyariah only provides indicators. To invest, use a licensed platform below. All are free to open an account.',
+'ProSyariah tiada kaitan dengan platform ini dan tidak menerima bayaran. Semak lesen SC, yuran dan pilihan akaun Islamik sebelum membuka akaun.':'ProSyariah is not affiliated with these platforms and receives no payment. Check SC licensing, fees and Islamic account options before opening an account.',
 'Tamat tempoh biasa':'Typical trading period end',
 'Sasaran':'Target','Cut loss':'Cut loss','Tarikh mula':'Start date','Tarikh akhir':'End date','Tempoh biasa hingga':'Typical period until',
 'Mula':'Start',
@@ -1596,6 +1600,7 @@ Object.assign(EN_EXACT,{
 'Paras ini naik mengikut harga tertinggi sejak tarikh belian dan tidak pernah turun. Harga tutup di bawahnya menandakan momentum menurun.':'This level rises with the highest price since the purchase date and never falls. A close below it signals weakening momentum.',
 });
 EN_RX.unshift(
+[/^kod (\S+) akan disalin$/,'code $1 will be copied'],[/^Kod (\S+) disalin — tampal dalam carian (.+)$/,'Code $1 copied — paste it into $2 search'],
 [/^Isyarat aktif (\d+)% \((.+)\) · tempoh indicator trading \(hari ke-(\d+) daripada ~(\d+)\)$/,(m,a,b,c,d)=>`Active signal ${a}% (${trText(b)}) · trading indicator period (day ${c} of ~${d})`],
 [/^Isyarat (\d+)% · tempoh indicator trading sudah berlalu \(hari ke-(\d+) daripada ~(\d+)\)$/,'Signal $1% · trading indicator period has passed (day $2 of ~$3)'],
 [/^Saham patuh syariah dengan isyarat teknikal baharu untuk mula (.+) \(dari harga tutup (.+)\), disusun dari yang terkuat\. Tekan nama untuk lihat butiran\.$/,(m,a,b)=>`Shariah-compliant stocks with a new technical signal to start on ${trText(a)} (from the ${trText(b)} close), strongest first. Tap a name for details.`],
@@ -1906,6 +1911,22 @@ function sheetStatHTML(code){
   const R=so?rateSignal(so):null,V=scoreVerdict(m.sc,m.va);
   return `<div class="hstat" style="margin:10px 0 0"><span><small>Isyarat</small>${R?`<span class="badge ${R.cls}">${R.lbl}</span>`:`<span class="badge b-na">Tiada isyarat aktif</span>`}</span>${V?`<span><small>Skor teknikal ${m.sc}/${m.va}</small><span class="badge ${V.cls}">${V.lbl}</span></span>`:''}${so&&isChamp(so,code)?`<span><small>&nbsp;</small><span class="badge b-gold">🏆 Champion</span></span>`:''}<button class="sinfo" onclick="openStatusHelp()" aria-label="Maksud status">ⓘ</button></div>`;
 }
+/* ===== Platform luar (pautan sahaja — ProSyariah kekal app indicator) ===== */
+const PLATFORMS=[
+ {g:'saham',n:'moomoo',u:'https://www.moomoo.com/my',d:'Saham Bursa & AS'},
+ {g:'saham',n:'Rakuten Trade',u:'https://www.rakutentrade.my',d:'Saham Bursa & AS'},
+ {g:'saham',n:'Webull',u:'https://www.webull.com.my',d:'Saham Bursa & AS'},
+ {g:'urus',n:'Wahed',u:'https://www.wahed.com/my',d:'Robo-advisor patuh syariah'},
+ {g:'urus',n:'StashAway',u:'https://www.stashaway.my',d:'Robo-advisor (ada portfolio syariah)'},
+ {g:'urus',n:'Versa',u:'https://versa.com.my',d:'Simpanan dana (ada Versa Save Shariah)'}];
+function openPlatform(i,code){const P=PLATFORMS[i];if(!P)return;
+  if(code){try{navigator.clipboard&&navigator.clipboard.writeText(code).catch(()=>{});}catch(e){}toast(`Kod ${code} disalin — tampal dalam carian ${P.n}`);}
+  window.open(P.u,'_blank','noopener');}
+function platformHTML(){
+  const grp=(g,t)=>`<h3 style="margin:14px 0 6px">${t}</h3>`+PLATFORMS.map((P,i)=>P.g!==g?'':`<div class="kv"><span><b>${esc(P.n)}</b><br><span class="muted" style="font-size:12px">${esc(P.d)}</span></span><button class="btn sm sec" data-pf="${i}">Buka ↗</button></div>`).join('');
+  return `<div class="card"><h2>Platform pelaburan</h2><p class="muted" style="margin-top:0">ProSyariah hanya memberi indicator. Untuk melabur, guna platform berlesen di bawah. Semua percuma untuk buka akaun.</p>
+    ${grp('saham','Beli saham sendiri')}${grp('urus','Diurus untuk anda')}
+    <div class="disc">ProSyariah tiada kaitan dengan platform ini dan tidak menerima bayaran. Semak lesen SC, yuran dan pilihan akaun Islamik sebelum membuka akaun.</div></div>`;}
 function stockSheet(code,name){
   name=name||nameOf(code);const st=status(code,name);const L=latestList();
   const blocked=S.settings.shariahMode&&st==='no';
@@ -1922,6 +1943,7 @@ function stockSheet(code,name){
       <button class="btn sm ${inW?'gold':'sec'}" id="wBtn">${inW?'★ Dalam watchlist':'☆ Tambah watchlist'}</button>
       <button class="btn sm sec" id="hBtn">+ Portfolio</button>
       <button class="btn sm sec" id="paBtn">🔔 Amaran harga</button><button class="btn sm sec" id="cBtn">Salin kod saham</button></div>`;
+    if(st!=='no')h+=`<div class="card"><div class="row between" style="align-items:center"><b>Buka di platform</b><span class="muted" style="font-size:12px">kod ${esc(code)} akan disalin</span></div><div class="row" style="gap:8px;margin-top:8px;flex-wrap:wrap">${PLATFORMS.map((P,i)=>P.g==='saham'?`<button class="btn sm sec" data-pfc="${i}">${esc(P.n)} ↗</button>`:'').join('')}</div></div>`;
     h+=oppSection(code,blocked);
     h+=`<div class="card" id="ind"><div class="row between"><h2 style="margin:0">Indicator</h2><button class="btn sm sec" id="ldBtn">Muat semula</button></div><div id="indBody" class="muted" style="margin-top:8px">${mk(code)||S.cache[code]?'Memuatkan…':S.settings.apiKey?'Tekan Muat semula untuk tarik data harga.':'Data harga untuk kaunter ini belum tersedia.'}</div></div>`;
   } else h+=`<div class="alert a-amber">Saham ini tiada kod dalam senarai. Nama ini belum dapat dipadankan dengan kod Bursa secara automatik.</div>`;
@@ -1931,6 +1953,7 @@ function stockSheet(code,name){
   $('#hBtn').onclick=()=>holdingForm({code,name});
   $('#paBtn').onclick=()=>priceAlertForm(code);
   $('#cBtn').onclick=()=>{navigator.clipboard&&navigator.clipboard.writeText(code);toast('Kod '+code+' disalin');};
+  document.querySelectorAll('[data-pfc]').forEach(b=>b.onclick=()=>openPlatform(+b.dataset.pfc,code));
   const run=async force=>{
     $('#indBody').innerHTML='Memuatkan…';
     try{const A=analyze(await getBars(code,force));showInd(A,blocked);const ss=document.querySelector('#sheetBody .sst');if(ss)ss.outerHTML=statusHTML(code,name);const bh=$('#btHist');if(bh&&!blocked)bh.innerHTML=btHistHTML(S.cache[code]&&S.cache[code].bt);}catch(e){$('#indBody').innerHTML=`<div class="alert a-red">${esc(e.message)}</div>`;}
@@ -2178,6 +2201,7 @@ function rTetapan(){
    ${S.sync.err?`<div class="alert a-amber" style="margin-top:10px">Segerak terakhir gagal: ${esc(S.sync.err)}</div>`:''}
    <button class="btn" style="margin-top:12px;width:100%" id="syncB">Segerak sekarang</button>
    <div class="disc">Robot ProSyariah semak senarai SC dan kira indicator semua saham Bursa selepas pasaran tutup setiap hari bekerja. App terima data terkini setiap kali dibuka.</div></div>`;
+  h+=platformHTML();
   h+=alertSettingsHTML();
   h+=`<div class="card"><h2>Mod Patuh Syariah</h2>
    <div class="toggle"><span>Sembunyi isyarat untuk saham tidak patuh</span><input type="checkbox" id="sm" ${st.shariahMode?'checked':''}></div>
@@ -2194,6 +2218,7 @@ function rTetapan(){
   $('#main').innerHTML=h;
   $('#syncB').onclick=()=>syncData(true);
   bindAlertSettings();
+  document.querySelectorAll('[data-pf]').forEach(b=>b.onclick=()=>openPlatform(+b.dataset.pf));
   $('#sm').onchange=e=>{st.shariahMode=e.target.checked;save();};
   document.querySelectorAll('[data-sty]').forEach(b=>b.onclick=()=>{st.style=b.dataset.sty;S.cache={};save();render();toast('Cache harga dikosongkan untuk gaya baharu');});
   const backup=()=>JSON.stringify(Object.assign({},S,{cache:{}}));

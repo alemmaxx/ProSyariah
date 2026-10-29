@@ -14,12 +14,17 @@ from datetime import date, timedelta
 H, FEE = 40, 0.003
 
 
+HOL = {"2026-01-01", "2026-02-02", "2026-02-17", "2026-02-18", "2026-03-20", "2026-03-23", "2026-05-01", "2026-05-27",
+       "2026-06-01", "2026-06-02", "2026-06-17", "2026-08-25", "2026-08-31", "2026-09-16", "2026-11-09", "2026-12-25", "2027-01-01"}
+
+
 def add_td(d, n):
+    """Tambah hari dagangan Bursa (langkau hujung minggu & cuti umum)."""
     x = date.fromisoformat(d)
     k = 0
     while k < n:
         x += timedelta(days=1)
-        if x.weekday() < 5:
+        if x.weekday() < 5 and x.isoformat() not in HOL:
             k += 1
     return x.isoformat()
 
@@ -72,6 +77,32 @@ def alerts_for(p, M, out_dir, en):
     return out
 
 
+def weekly(data, M, en):
+    """Ringkasan mingguan: dihantar sekali setiap minggu, pada larian petang Jumaat (atau Sabtu jika terlepas)."""
+    from datetime import datetime, timezone
+    now = datetime.now(timezone(timedelta(hours=8)))
+    if not ((now.weekday() == 4 and now.hour >= 17) or now.weekday() == 5):
+        return None
+    man = data.get("manual", [])
+    if not man:
+        return None
+    y, w, _ = now.isocalendar()
+    mon = (now.date() - timedelta(days=now.weekday())).isoformat()
+    op = [p for p in man if not p.get("closed")]
+    cl = [p for p in man if p.get("closed") and p["closed"].get("end", "") >= mon]
+    pnl = lambda p, x: (x / p["en"] - 1 - FEE) * p["stake"]
+    o_pl = sum(pnl(p, M["stocks"][p["code"]]["c"]) for p in op if M["stocks"].get(p["code"], {}).get("c"))
+    c_pl = sum(pnl(p, p["closed"]["exit"]) for p in cl)
+    win = sum(1 for p in cl if p["closed"].get("res") == "W")
+    if en:
+        title = "ProSyariah · Weekly summary"
+        body = f"Open: {len(op)} ({rm(o_pl)}). Closed this week: {len(cl)}" + (f", {win} won ({rm(c_pl)})" if cl else "") + "."
+    else:
+        title = "ProSyariah · Ringkasan minggu ini"
+        body = f"Sedang diuji: {len(op)} ({rm(o_pl)}). Ditutup minggu ini: {len(cl)}" + (f", {win} menang ({rm(c_pl)})" if cl else "") + "."
+    return (f"week:{y}-{w:02d}", title, body)
+
+
 def main():
     from google.oauth2 import service_account
     from google.auth.transport.requests import AuthorizedSession
@@ -114,10 +145,15 @@ def main():
         en = (f.get("lang", {}).get("stringValue") or "bm") == "en"
         users += 1
         new, dead = [], set()
+        items = []
         for p in data.get("manual", []):
-            if p.get("closed"):
-                continue
-            for aid, title, body in alerts_for(p, M, a.out, en):
+            if not p.get("closed"):
+                items += alerts_for(p, M, a.out, en)
+        wk = weekly(data, M, en)
+        if wk:
+            items.append(wk)
+        for aid, title, body in items:
+            if True:
                 if aid in sent:
                     continue
                 for t in tokens:

@@ -249,6 +249,13 @@ main>.card,main>.alert,main>.grid2,main>.disc,main>.pad,.search,.results{margin-
 .meter{display:flex;align-items:center;gap:10px;margin-top:8px;cursor:pointer}.meter .mtx{display:flex;flex-direction:column;line-height:1.2}.meter small{font-size:11px;color:var(--muted)}.meter b{font-size:16px}.meter span{font-size:12px;color:var(--muted)}
 .meter.big{justify-content:center;margin:0 0 10px}.meter.big b{font-size:22px}
 .actb{width:100%;border-collapse:collapse;font-size:14px;margin:8px 0}.actb th{text-align:left;font-size:12px;color:var(--muted);font-weight:600;padding:6px 4px;border-bottom:1px solid var(--line)}.actb td{padding:8px 4px;border-bottom:1px solid var(--line)}.actb tr.hl td{font-weight:700;background:var(--gold2)}
+.shn{margin:0;font-size:20px;line-height:1.2}.shd .code .badge{font-size:11px;padding:2px 7px}
+.shrow{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:8px}.shrow .hstat{margin:0!important}
+.meter.mini{margin:0;gap:6px}.meter.mini b{font-size:13px}.meter.mini small,.meter.mini span{font-size:10px}
+.shd .sst{margin-top:6px}.shd .anbtn{margin-top:8px;padding:8px 12px;font-size:13px}
+.onb{text-align:left;max-width:440px}.onbic{font-size:46px;text-align:center;margin:18px 0 4px}.onb h2{text-align:center;margin:0 0 8px}
+.onbb{font-size:15px;line-height:1.5}.onbb ul{padding-left:20px;margin:6px 0}.onbb li{margin:6px 0}
+.onbdots{display:flex;justify-content:center;gap:6px;margin:14px 0}.onbdots span{width:8px;height:8px;border-radius:50%;background:var(--line)}.onbdots span.on{background:var(--gold);width:20px;border-radius:4px}
 .mrow{padding:14px 0;border-bottom:1px solid var(--line);cursor:pointer}.mrow:last-child{border-bottom:0}
 .mhd{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
 .mrow.mc{padding:12px 0}.help-p .mrow{border-bottom:0;cursor:default}
@@ -690,7 +697,10 @@ function drawChart(cv,A,hi){
 const SETUP_FALLBACK={pb:'Koreksi dalam trend menaik',gc:'Golden cross',mc:'Momentum MACD',os:'Lantunan lebih jualan'};
 const setupName=k=>(S.market&&S.market.meta.setups&&S.market.meta.setups[k]&&S.market.meta.setups[k].name)||SETUP_FALLBACK[k]||k;
 const BTH=()=>(S.market&&S.market.meta.bt)||{h:40,tgt:2,stp:1.25,fee:0.003};
-function addTradingDays(d,n){const x=parseD(d);let k=0;while(k<n){x.setDate(x.getDate()+1);if(x.getDay()%6)k++;}return isoD(x);}
+/* Cuti umum Bursa Malaysia (pasaran ditutup). Sumber: notis Bursa / kalendar MYX 2026. */
+const BURSA_HOL=new Set(['2026-01-01','2026-02-02','2026-02-17','2026-02-18','2026-03-20','2026-03-23','2026-05-01','2026-05-27','2026-06-01','2026-06-02','2026-06-17','2026-08-25','2026-08-31','2026-09-16','2026-11-09','2026-12-25','2027-01-01']);
+const isTD=x=>x.getDay()%6!==0&&!BURSA_HOL.has(isoD(x));
+function addTradingDays(d,n){const x=parseD(d);let k=0;while(k<n){x.setDate(x.getDate()+1);if(isTD(x))k++;}return isoD(x);}
 function opsFor(code){const m=mk(code);if(!m||!m.op)return [];let o=m.op;if(S.settings.style==='ketat')o=o.filter(x=>(x.md||0)>=5);return o;}
 function bestOp(code){const o=opsFor(code);return o.length?o[0]:null;}
 function breakeven(op){const tp=op.tg/op.en-1,sp=1-op.sl/op.en;return (sp+BTH().fee)/(tp+sp);}
@@ -740,11 +750,11 @@ function exitPlan(hd){
 /* ================= 5 ISYARAT TEKNIKAL TERKUAT ================= */
 /* Tarikh mula (labur) = hari dagangan selepas hari isyarat. Untuk isyarat terkini, jika hari ini sudah lebih lewat, guna hari ini. */
 function entryDate(sd){if(!sd)return sd;const nx=addTradingDays(sd,1),t=today(),asof=S.market&&S.market.meta.asof;
-  return (sd===asof&&parseD(t).getDay()%6&&t>nx)?t:nx;}
+  return (sd===asof&&isTD(parseD(t))&&t>nx)?t:nx;}
 function endFor(sd,md){return addTradingDays(entryDate(sd),Math.max(0,Math.round(md||1)-1));}
-function dayNo(sd){const e=entryDate(sd),t=today();return t<e?0:tdBetween(e,t)+(parseD(t).getDay()%6?1:0);}
-function tdBetween(a,b){if(!a||!b||b<=a)return 0;const x=parseD(a),y=parseD(b);let n=0;while(x<y){x.setDate(x.getDate()+1);if(x.getDay()%6)n++;}return n;}
-function subTradingDays(d,n){const x=parseD(d);let k=0;while(k<n){x.setDate(x.getDate()-1);if(x.getDay()%6)k++;}return isoD(x);}
+function dayNo(sd){const e=entryDate(sd),t=today();return t<e?0:tdBetween(e,t)+(isTD(parseD(t))?1:0);}
+function tdBetween(a,b){if(!a||!b||b<=a)return 0;const x=parseD(a),y=parseD(b);let n=0;while(x<y){x.setDate(x.getDate()+1);if(isTD(x))n++;}return n;}
+function subTradingDays(d,n){const x=parseD(d);let k=0;while(k<n){x.setDate(x.getDate()-1);if(isTD(x))k++;}return isoD(x);}
 const DIS_SETUP=new Set();
 function topSignals(n=5){
   const M=S.market;if(!M)return [];const asof=M.meta.asof;const fee=BTH().fee;const out=[],seen=new Set();
@@ -964,6 +974,9 @@ function rManual(){
   const w=cl.filter(p=>p.closed.res==='W').length,pnl=cl.reduce((t,p)=>t+manPnl(p,p.closed.exit),0),opn=op.reduce((t,p)=>{const m=mk(p.code);return t+(m&&m.c?manPnl(p,m.c):0);},0);
   let h=`<div class="card"><h2>✍️ Robot Manual</h2><p class="muted" style="margin-top:0">Senarai saham yang anda uji. Untuk tambah, buka mana-mana saham dan tekan ✍️ Manual. Robot semak harga setiap hari dan tutup bila sampai paras atas, paras bawah atau ${BTH().h} hari dagangan.</p>
     <div class="mstat"><div><b>${op.length}</b><span>Sedang diuji</span></div><div><b class="${opn>=0?'up':'dn'}">${rmS(opn)}</b><span>Untung/rugi kini</span></div><div><b>${cl.length?Math.round(w/cl.length*100)+'%':'-'}</b><span>Ketepatan</span></div><div><b class="${pnl>=0?'up':'dn'}">${cl.length?rmS(pnl):'-'}</b><span>Untung/rugi selesai</span></div></div>${M.length?`<div class="row" style="gap:8px;margin-top:10px;flex-wrap:wrap">${cl.length?'<button class="btn sm sec" id="rsClosed">Kosongkan yang selesai</button>':''}<button class="btn sm sec" id="rsAll">↺ Reset semua</button></div>`:''}</div>`;
+  if(M.length){const cs=cl.slice().sort((a,b)=>a.closed.end.localeCompare(b.closed.end));let cum=0;const first=M.map(p=>p.d).sort()[0];
+    const cv=[[first,0],...cs.map(p=>[p.closed.end,cum+=manPnl(p,p.closed.exit)])];if(op.length||cv.length<2)cv.push([today(),cum+opn]);
+    h+=`<div class="card"><h2>Graf untung / rugi</h2><p class="muted" style="margin-top:0;font-size:13px">Jumlah terkumpul dari ujian pertama${op.length?', termasuk ujian yang masih terbuka pada harga kini':''}.</p>${equitySVG(cv,1)}</div>`;}
   if(!M.length)h+=`<div class="card"><p class="muted" style="margin:0">Belum ada saham. Buka mana-mana saham dan tekan butang ✍️ Manual di atas kanan untuk mula ujian.</p></div>`;
   if(op.length)h+=`<div class="card"><h2>Sedang diuji (${op.length})</h2>${op.map(manRow).join('')}</div>`;
   if(cl.length)h+=`<div class="card"><h2>Selesai (${cl.length})</h2>${cl.map(manRow).join('')}</div>`;
@@ -1176,7 +1189,11 @@ function AL(){S.alerts=Object.assign(structuredClone(ALERT_DEF),S.alerts||{});S.
   if(!S.alerts.v2){S.alerts.v2=1;Object.keys(S.alerts.on).forEach(k=>S.alerts.on[k]=k==='robot');}   // amaran hanya untuk Robot Manual (boleh hidupkan lain di Tetapan)
   return S.alerts;}
 /* Amaran Robot Manual: tutup (sasaran), cut loss, hampir cut loss, tarikh tempoh biasa & tutup paling lewat */
-function robotAlerts(push){
+function weeklyAlert(push){const n=new Date(),dw=n.getDay();if(!((dw===5&&n.getHours()>=17)||dw===6))return;const M=S.manual||[];if(!M.length)return;
+  const mon=new Date(n);mon.setDate(n.getDate()-((dw+6)%7));const ms=isoD(mon);const op=M.filter(p=>!p.closed),cl=M.filter(p=>p.closed&&p.closed.end>=ms);
+  const opl=op.reduce((t,p)=>{const m=mk(p.code);return t+(m&&m.c?manPnl(p,m.c):0);},0),cpl=cl.reduce((t,p)=>t+manPnl(p,p.closed.exit),0),w=cl.filter(p=>p.closed.res==='W').length;
+  push({id:'week:'+ms,lv:'action',ic:'🗓️',cat:'robot',go:'robot',title:'Ringkasan minggu ini',body:`Sedang diuji: ${op.length} (${rmS(opl)}). Ditutup minggu ini: ${cl.length}${cl.length?`, ${w} menang (${rmS(cpl)})`:''}.`});}
+function robotAlerts(push){weeklyAlert(push);
   const asof=S.market?S.market.meta.asof:today(),H=BTH().h;
   (S.manual||[]).forEach(p=>{const nm=shortName(p.name||nameOf(p.code));const base='man:'+p.id+':';
     if(p.closed){const C=p.closed;if(daysBetween(C.end,today())>14)return;const u=manPnl(p,C.exit);
@@ -1572,6 +1589,9 @@ const EN_PHRASE=[
 ];
 
 Object.assign(EN_EXACT,{
+'Selamat datang ke ProSyariah':'Welcome to ProSyariah','Cara baca isyarat':'How to read signals','Uji dengan Robot Manual':'Test with the Manual Robot',
+'Langkau':'Skip','Kembali':'Back','Seterusnya →':'Next →','Mula guna app':'Start using the app','📖 Panduan ringkas app':'📖 Quick app guide',
+'Graf untung / rugi':'Profit / loss chart','Ringkasan minggu ini':'Weekly summary','Belum cukup dagangan selesai untuk melukis graf.':'Not enough closed trades to draw a chart yet.',
 'Kosongkan yang selesai':'Clear closed','↺ Reset semua':'↺ Reset all','Tekan sekali lagi untuk reset':'Tap again to reset','Tekan sekali lagi untuk kosongkan':'Tap again to clear',
 'Robot Manual direset — mula semula dari RM 0':'Manual Robot reset — starting again from RM 0','Rekod selesai dikosongkan':'Closed records cleared',
 'Isyarat Kuat sahaja':'Strong signals only','Isyarat Kuat & Sederhana':'Strong & moderate signals','Tunjuk Isyarat Sederhana juga':'Also show moderate signals',
@@ -1737,6 +1757,8 @@ Object.assign(EN_EXACT,{
 'Paras ini naik mengikut harga tertinggi sejak tarikh belian dan tidak pernah turun. Harga tutup di bawahnya menandakan momentum menurun.':'This level rises with the highest price since the purchase date and never falls. A close below it signals weakening momentum.',
 });
 EN_RX.unshift(
+[/^Jumlah terkumpul dari ujian pertama(, termasuk ujian yang masih terbuka pada harga kini)?\.$/,(m,a)=>`Running total since the first test${a?', including open tests at the current price':''}.`],
+[/^Sedang diuji: (\d+) \((.+?)\)\. Ditutup minggu ini: (\d+)(?:, (\d+) menang \((.+)\))?\.$/,(m,a,b,c,d,e)=>`Being tested: ${a} (${b}). Closed this week: ${c}${d?`, ${d} won (${e})`:''}.`],
 [/^Keputusan lampau tidak menjamin keputusan masa depan\. Dikemas kini (.+)\.$/,(m,a)=>`Past results do not guarantee future results. Updated ${trText(a)}.`],
 [/^RM ([\d.]+) (bilion|juta)$/,(m,a,b)=>`RM ${a} ${b==='bilion'?'billion':'million'}`],
 [/^Sumber: Yahoo Finance, dikemas kini (.+)\. Angka indikatif\.$/,(m,a)=>`Source: Yahoo Finance, updated ${trText(a)}. Indicative figures.`],
@@ -2126,8 +2148,8 @@ function gaugeSVG(M,w){if(!M)return '';w=w||150;const h=w*0.62,cx=w/2,cy=w*0.52,
   const f=Math.min(Math.max(M.v,0),100)/100,[nx,ny]=pt(f,r*0.86),[lx,ly]=pt(f-.5,w*0.05),[rx,ry]=pt(f+.5,w*0.05);
   return `<svg class="gauge" viewBox="0 0 ${w} ${h}" width="${w}" height="${h}" role="img" aria-label="Meter ${M.v}"><g>${segs}</g>
     <path d="M${lx.toFixed(1)} ${ly.toFixed(1)} L${nx.toFixed(1)} ${ny.toFixed(1)} L${rx.toFixed(1)} ${ry.toFixed(1)} Z" fill="var(--ink)"/><circle cx="${cx}" cy="${cy}" r="${w*0.06}" fill="var(--ink)"/></svg>`;}
-function meterHTML(code,big){const M=meterOf(code);if(!M)return '';
-  return `<div class="meter${big?' big':''}" onclick="event.stopPropagation();openMeterHelp('${esc(code)}')" role="button">${gaugeSVG(M,big?170:96)}<div class="mtx"><small>Meter ProSyariah</small><b style="color:${M.col}">${M.lbl}</b><span>${M.v}/100 ⓘ</span></div></div>`;}
+function meterHTML(code,big,mini){const M=meterOf(code);if(!M)return '';
+  return `<div class="meter${big?' big':''}${mini?' mini':''}" onclick="event.stopPropagation();openMeterHelp('${esc(code)}')" role="button">${gaugeSVG(M,big?170:mini?58:96)}<div class="mtx"><small>Meter ProSyariah</small><b style="color:${M.col}">${M.lbl}</b><span>${M.v}/100 ⓘ</span></div></div>`;}
 function openMeterHelp(code){const M=meterOf(code);if(!M)return;
   const d=document.createElement('div');d.className='help';d.id='help';document.body.classList.add('ovl');bkEnsure();
   const pc=x=>Math.round(x*100);
@@ -2206,12 +2228,10 @@ function stockSheet(code,name){
   name=name||nameOf(code);const st=status(code,name);const L=latestList();
   const blocked=S.settings.shariahMode&&st==='no';
   const inW=code&&S.watch.includes(code);
-  let h=`<div class="shd"><div class="shd-top"><div class="shd-name"><h2 style="margin:0">${esc(name||code)}</h2><div class="code">${esc(code||'tiada kod')} · KLSE</div></div><div class="row" style="gap:8px;flex:none;flex-wrap:nowrap">${code&&st!=='no'&&mk(code)&&mk(code).c?`<button class="mbtn" onclick="openManual('${esc(code)}')" aria-label="Robot manual">✍️ ${manOpen(code)?'Urus':'Manual'}</button>`:''}<button class="xbtn" onclick="closeSheet()" aria-label="Tutup">✕</button></div></div>
-    ${code?statusHTML(code,name):''}
-    ${code&&st!=='no'?sheetStatHTML(code):''}
-    ${code&&st!=='no'?meterHTML(code,false):''}
-    ${code&&mk(code)?`<button class="anbtn" onclick="openAnalysis('${esc(code)}')">📝 Ringkasan analisa${newsFor(code).length?` · 📰 ${newsFor(code).length} berita`:''}</button>`:''}
-    <div style="margin:10px 0 0">${badge(st)} ${L?`<span class="muted">Senarai SC ${fmtD(L.date)}</span>`:''}</div></div>`;
+  let h=`<div class="shd"><div class="shd-top"><div class="shd-name"><h2 class="shn">${esc(name||code)}</h2><div class="code">${esc(code||'tiada kod')} · KLSE · ${badge(st)}</div></div><div class="row" style="gap:8px;flex:none;flex-wrap:nowrap">${code&&st!=='no'&&mk(code)&&mk(code).c?`<button class="mbtn" onclick="openManual('${esc(code)}')" aria-label="Robot manual">✍️ ${manOpen(code)?'Urus':'Manual'}</button>`:''}<button class="xbtn" onclick="closeSheet()" aria-label="Tutup">✕</button></div></div>
+    ${code&&st!=='no'?`<div class="shrow">${sheetStatHTML(code)}${meterHTML(code,false,true)}</div>`:''}
+    ${code?statusHTML(code,name,true):''}
+    ${code&&mk(code)?`<button class="anbtn" onclick="openAnalysis('${esc(code)}')">📝 Ringkasan analisa${newsFor(code).length?` · 📰 ${newsFor(code).length} berita`:''}</button>`:''}</div>`;
   if(st==='no')h+=`<div class="alert a-red">Saham ini <b>tiada</b> dalam senarai patuh syariah SC terkini.${blocked?' Isyarat teknikal disembunyikan kerana Mod Patuh Syariah ON.':''}</div>`;
   if(st==='na')h+=`<div class="alert a-amber">Senarai SC belum diimport — status tidak dapat ditentukan.</div>`;
   h+=`<details class="card"><summary><b>Kenapa?</b> Kaedah saringan SC</summary><p class="muted">Majlis Penasihat Syariah (SAC) SC menyaring syarikat berdasarkan dua ujian: <b>aktiviti perniagaan</b> (sumbangan aktiviti tidak patuh kepada hasil & untung mesti bawah penanda aras) dan <b>nisbah kewangan</b> (tunai dalam akaun konvensional dan hutang berfaedah berbanding jumlah aset, bawah 33%). App ini memaparkan keputusan rasmi SAC, bukan pengiraan sendiri.</p></details>`;
@@ -2514,6 +2534,23 @@ function accountHTML(){if(!FB_CONFIG)return '';
   return `<div class="card"><h2>Akaun</h2><div class="kv"><span>Log masuk sebagai</span><b>${esc(FBU.email||FBU.displayName||'-')}</b></div><div class="kv"><span>Simpanan awan</span><b class="up">Aktif</b></div>
     <div class="row" style="gap:8px;margin-top:10px"><button class="btn sm sec" id="acSync">Segerak sekarang</button><button class="btn sm sec" id="acOut">Log keluar</button></div></div>`;}
 function bindAccount(){const a=$('#acIn');if(a)a.onclick=login;const b=$('#acOut');if(b)b.onclick=logout;const c=$('#acSync');if(c)c.onclick=()=>cloudPull();}
+/* ===== PANDUAN PENGGUNA BARU ===== */
+const ONB=[
+ ['📈',{bm:['Selamat datang ke ProSyariah','App indicator untuk saham <b>patuh syariah</b> Bursa Malaysia.<ul><li>Senarai syariah SC, harga & isyarat dikemas kini <b>automatik</b> setiap hari bekerja.</li><li>Anda hanya baca & nilai keputusan.</li><li>Ini bacaan indicator, <b>bukan</b> cadangan beli atau jual.</li></ul>'],
+        en:['Welcome to ProSyariah','An indicator app for <b>Shariah-compliant</b> Bursa Malaysia stocks.<ul><li>The SC Shariah list, prices & signals update <b>automatically</b> every working day.</li><li>You just read & judge the results.</li><li>These are indicator readings, <b>not</b> buy or sell recommendations.</li></ul>']}],
+ ['🟢',{bm:['Cara baca isyarat','<ul><li><b>Isyarat Kuat</b> — corak yang paling kerap berjaya dalam sejarah saham itu. Senarai utama hanya tunjuk ini.</li><li><b>%</b> — peluang harga sampai <b>sasaran</b> dahulu sebelum <b>cut loss</b>.</li><li><b>Tempoh biasa</b> — berapa hari biasanya ambil masa.</li><li><b>Meter</b> — gabungan isyarat, trend & berita (Lemah → Sangat Kuat).</li><li>Tekan <b>📝 Ringkasan analisa</b> untuk semua maklumat dalam satu skrin.</li></ul>'],
+        en:['How to read signals','<ul><li><b>Strong signal</b> — the pattern that most often worked in that stock\'s history. The main list shows only these.</li><li><b>%</b> — chance price reaches the <b>target</b> before the <b>cut loss</b>.</li><li><b>Typical period</b> — how many days it usually takes.</li><li><b>Meter</b> — signal, trend & news combined (Weak → Very Strong).</li><li>Tap <b>📝 Analysis summary</b> for everything on one screen.</li></ul>']}],
+ ['✍️',{bm:['Uji dengan Robot Manual','<ul><li>Buka mana-mana saham → tekan <b>✍️ Manual</b> → uji dengan wang maya (contoh RM20).</li><li>Robot semak setiap hari dan tutup bila sampai sasaran, cut loss atau 40 hari.</li><li><b>Log masuk Google</b> (Tetapan) supaya senarai disimpan & notifikasi sampai walaupun app ditutup.</li></ul>'],
+        en:['Test with the Manual Robot','<ul><li>Open any stock → tap <b>✍️ Manual</b> → test with virtual money (e.g. RM20).</li><li>The robot checks daily and closes at the target, the cut loss or after 40 days.</li><li><b>Sign in with Google</b> (Settings) so your list is saved & notifications arrive even when the app is closed.</li></ul>']}]];
+function openOnboard(i){i=i||0;const old=$('#onb');if(old)old.remove();const d=document.createElement('div');d.className='help';d.id='onb';document.body.classList.add('ovl');
+  const ic=ONB[i][0],[t,b]=ONB[i][1][S.settings.lang==='en'?'en':'bm'];
+  d.innerHTML=`<div class="help-p onb" role="dialog" aria-modal="true"><div class="onbic">${ic}</div><h2>${t}</h2><div class="onbb">${b}</div>
+    <div class="onbdots">${ONB.map((_,k)=>`<span class="${k===i?'on':''}"></span>`).join('')}</div>
+    <div class="row" style="gap:8px"><button class="btn sec" id="onSkip" style="flex:1">${i<ONB.length-1?'Langkau':'Kembali'}</button><button class="btn gold" id="onNext" style="flex:2">${i<ONB.length-1?'Seterusnya →':'Mula guna app'}</button></div></div>`;
+  document.body.appendChild(d);
+  const done=()=>{S.onb=1;save();d.remove();if(!$('#sheet').classList.contains('on'))document.body.classList.remove('ovl');};
+  $('#onNext').onclick=()=>{if(i<ONB.length-1)openOnboard(i+1);else done();};
+  $('#onSkip').onclick=()=>{if(i<ONB.length-1)done();else openOnboard(i-1);};}
 function rTetapan(){
   const st=S.settings;const L=latestList();
   const M=S.market;
@@ -2525,6 +2562,7 @@ function rTetapan(){
    ${S.sync.err?`<div class="alert a-amber" style="margin-top:10px">Segerak terakhir gagal: ${esc(S.sync.err)}</div>`:''}
    <button class="btn" style="margin-top:12px;width:100%" id="syncB">Segerak sekarang</button>
    <div class="disc">Robot ProSyariah semak senarai SC dan kira indicator semua saham Bursa selepas pasaran tutup setiap hari bekerja. App terima data terkini setiap kali dibuka.</div></div>`;
+  h+=`<div class="card"><button class="btn sec" style="width:100%" onclick="openOnboard(0)">📖 Panduan ringkas app</button></div>`;
   h+=accountHTML();
   h+=platformHTML();
   h+=alertSettingsHTML();
@@ -2567,6 +2605,7 @@ updateLangBtn();startI18N();updateInstallBtn();
 if(S.alerts&&S.alerts.notify)regPeriodic();
 if(FB_CONFIG)fbInit().catch(()=>{FBREADY=true;if(TAB==='robot')render();});
 syncData(false);
+if(!S.onb)setTimeout(()=>openOnboard(0),600);
 </script>
 </body>
 </html>

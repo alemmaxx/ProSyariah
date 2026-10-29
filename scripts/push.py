@@ -225,6 +225,43 @@ def pot_news(M, out_dir, en):
     return [(f"news:{hits[0][0]}", title, names)]
 
 
+def price_alerts(data, M, en):
+    """Amaran harga (sasaran pengguna) dan pegangan turun melebihi had % — sekali bagi setiap amaran."""
+    out, st = [], M["stocks"]
+    for p in data.get("pxa") or []:
+        v = st.get(str(p.get("code")), {})
+        c, tgt = v.get("c"), p.get("price")
+        if c is None or not tgt:
+            continue
+        up = p.get("op") == ">="
+        if (c >= tgt) if up else (c <= tgt):
+            nm = (v.get("n") or p.get("code")).replace(" Berhad", "").replace(" Bhd", "")
+            if en:
+                out.append((f"pxa:{p.get('id')}", f"🎯 {nm} {'rose to' if up else 'fell to'} {c:.3f}",
+                            f"Your price alert ({'≥' if up else '≤'} {tgt:.3f}) was reached."))
+            else:
+                out.append((f"pxa:{p.get('id')}", f"🎯 {nm} {'naik ke' if up else 'turun ke'} {c:.3f}",
+                            f"Amaran harga anda ({'≥' if up else '≤'} {tgt:.3f}) sudah sampai."))
+    lim = abs(float(data.get("lossPct") or 10))
+    for h in ((data.get("pf") or {}).get("holdings") or []):
+        v = st.get(str(h.get("code")), {})
+        c, cost = v.get("c"), h.get("cost")
+        try:
+            pct = (c / float(cost) - 1) * 100
+        except (TypeError, ValueError, ZeroDivisionError):
+            continue
+        if pct <= -lim:
+            nm = (v.get("n") or h.get("code")).replace(" Berhad", "").replace(" Bhd", "")
+            wk = M["meta"]["asof"][:8]  # sekali sebulan paling kerap
+            if en:
+                out.append((f"loss:{h.get('id')}:{wk}", f"📉 {nm} down {abs(pct):.1f}% from cost",
+                            f"Price {c:.3f} vs cost {float(cost):.3f}. Your alert limit: {lim:g}%."))
+            else:
+                out.append((f"loss:{h.get('id')}:{wk}", f"📉 {nm} turun {abs(pct):.1f}% dari kos",
+                            f"Harga {c:.3f} berbanding kos {float(cost):.3f}. Had amaran anda: {lim:g}%."))
+    return out
+
+
 def weekly(data, M, en):
     """Ringkasan mingguan: dihantar sekali setiap minggu, pada larian petang Jumaat (atau Sabtu jika terlepas)."""
     from datetime import datetime, timezone
@@ -318,6 +355,8 @@ def main():
                 items += new_signals(M, en, set(data.get("watch", [])) if b("sigWatch", False) else None)
             if b("news"):
                 items += pot_news(M, a.out, en)
+            if b("px", False):
+                items += price_alerts(data, M, en)
             wk = weekly(data, M, en)
             if wk:
                 items.append(wk)

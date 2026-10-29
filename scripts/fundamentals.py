@@ -9,7 +9,7 @@ import json
 import math
 import os
 import time
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
 ROOT = os.path.join(os.path.dirname(__file__), "..")
 STORE = os.path.join(ROOT, "data", "fund.json")
@@ -24,6 +24,17 @@ def num(x, mul=1.0, nd=2):
     if math.isnan(x) or math.isinf(x):
         return None
     return round(x * mul, nd)
+
+
+def ts_date(x):
+    """Cap masa unix (saat) → 'YYYY-MM-DD' waktu Malaysia, atau None."""
+    try:
+        x = float(x)
+        if x <= 0 or math.isnan(x):
+            return None
+        return datetime.fromtimestamp(x, timezone(timedelta(hours=8))).strftime("%Y-%m-%d")
+    except (TypeError, ValueError, OSError):
+        return None
 
 
 def main():
@@ -60,9 +71,12 @@ def main():
             "eg": num(info.get("earningsGrowth"), 100, 1),
             "mc": num(info.get("marketCap"), nd=0),
             "sec": info.get("sector") or None,
+            "xd": ts_date(info.get("exDividendDate")),
+            "dps": num(info.get("dividendRate") or info.get("lastDividendValue"), nd=4),
+            "ed": ts_date(info.get("earningsTimestamp") or info.get("earningsTimestampStart")),
             "at": M["meta"]["asof"],
         }
-        if any(v is not None for k, v in f.items() if k not in ("at", "sec")):
+        if any(v is not None for k, v in f.items() if k not in ("at", "sec", "xd", "ed")):
             items[c] = {k: v for k, v in f.items() if v is not None}
             ok += 1
         else:

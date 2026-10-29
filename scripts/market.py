@@ -302,6 +302,12 @@ def main():
                         "up": 1 if cl[-1] > ma50 > ma200 else (-1 if cl[-1] < ma50 < ma200 else 0)}
         json.dump({"asof": K[-1][0], "bars": K}, open(os.path.join(a.out, "klci.json"), "w"), separators=(",", ":"))
         json.dump({"asof": K[-1][0], "bars": K}, open(os.path.join(ROOT, "data", "klci.json"), "w"), separators=(",", ":"))
+        try:
+            import regime
+            if regime.due():
+                regime.run(runs, px, {c for c, v in stocks.items() if v.get("s") == "ok"}, K, asof)
+        except Exception as e:
+            print("! Eksperimen rejim pasaran gagal:", e)
     json.dump({"meta": meta, "stocks": stocks}, open(os.path.join(a.out, "market.json"), "w"),
               ensure_ascii=False, separators=(",", ":"))
     if st:

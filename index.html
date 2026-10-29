@@ -235,6 +235,12 @@ main>.card,main>.alert,main>.grid2,main>.disc,main>.pad,.search,.results{margin-
 .rbseg{width:100%}.rbseg button{flex:1;padding:11px 8px;font:600 14px var(--f)}
 .mstat{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.mstat>div{background:var(--card2);border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:2px}.mstat b{font-size:18px}.mstat span{font-size:12px;color:var(--muted)}
 @media(min-width:640px){.mstat{grid-template-columns:repeat(4,1fr)}}
+.pfl{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:12px;margin-top:6px}.pfl-t{color:var(--muted)}
+.pfc{display:inline-block;padding:3px 9px;border-radius:999px;border:1px solid var(--gold);color:var(--gold);background:var(--gold2);font-weight:700;font-size:12px;cursor:pointer}
+.hero .hpf{order:6;position:relative;z-index:2;margin:0}
+.poster .ppf{position:absolute;left:8px;right:6px;bottom:7px;z-index:2;font-size:9.5px;font-weight:700;color:var(--gold);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.poster .ppf .pfl-t{display:none}.poster .ppf .pfc{padding:0 2px;border:0;background:none;font-size:9.5px}
+.poster .pn.up2{bottom:42px}.poster .pb.up2{bottom:23px}
 .mrow{padding:14px 0;border-bottom:1px solid var(--line);cursor:pointer}.mrow:last-child{border-bottom:0}
 .mhd{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
 .mnow{display:flex;flex-direction:column;align-items:flex-end}.mnow small{font-size:11px;color:var(--muted)}.mnow b{font-size:22px}
@@ -782,6 +788,7 @@ function top5HTML(){
       <span class="t5d"><span>Mula <b>${fmtD(entryDate(x.start))}</b></span><span>Tempoh biasa ${x.md} hari dagangan, hingga <b>${fmtD(x.end)}</b></span></span>
       <span class="t5bar${x.passed?' over':''}"><span style="width:${pct}%"></span></span>
       <span class="t5s"><span class="badge ${x.passed?'b-warn':'b-ok'}">${x.passed?`Tempoh biasa sudah berlalu`:`Masih dalam tempoh biasa`}</span><span class="muted">hari dagangan ke-${dayNo(x.start)} daripada ~${x.md}</span></span>
+      ${platChips(x.code)}
       <span class="muted" style="font-size:12px">Harga kini ${px(x.now)} · paras atas ${px(x.tg)} · paras bawah ${px(x.sl)} · isyarat tamat ${fmtD(x.limitEnd)}</span>
     </span></button>`;});
   h+=`</div><p class="disc" style="margin:8px var(--gut) 0">Kekuatan = kebarangkalian sejarah berbanding paras neutral. "Tempoh biasa" ialah median masa harga sampai paras atas dalam sejarah saham ini. Ini bacaan indicator, bukan cadangan beli atau jual.</p></section>`;
@@ -1477,6 +1484,7 @@ const EN_PHRASE=[
 ];
 
 Object.assign(EN_EXACT,{
+'📲 Labur di:':'📲 Invest via:','Platform saham utama anda (dipaparkan pada isyarat)':'Your main stock platform (shown on signals)','Semua (moomoo, Rakuten Trade, Webull)':'All (moomoo, Rakuten Trade, Webull)','✓ Disimpan':'✓ Saved',
 'Platform pelaburan':'Investment platforms','Beli saham sendiri':'Buy stocks yourself','Diurus untuk anda':'Managed for you','Buka ↗':'Open ↗','Buka di platform':'Open in a platform',
 'Saham Bursa & AS':'Bursa & US stocks','Robo-advisor patuh syariah':'Shariah-compliant robo-advisor','Robo-advisor (ada portfolio syariah)':'Robo-advisor (has Shariah portfolio)','Simpanan dana (ada Versa Save Shariah)':'Fund savings (has Versa Save Shariah)',
 'ProSyariah hanya memberi indicator. Untuk melabur, guna platform berlesen di bawah. Semua percuma untuk buka akaun.':'ProSyariah only provides indicators. To invest, use a licensed platform below. All are free to open an account.',
@@ -1802,7 +1810,7 @@ function poster(code,name,wide){
   const lbl={ok:'✓ Patuh',no:'✕ Tidak patuh',na:'Belum disaring'}[st];
   return `<button class="poster${wide?' wide':''}" style="--p1:${p1};--p2:${p2}" data-code="${esc(code)}" data-name="${esc(name)}" aria-label="${esc(name)}">
     <span class="pc">${esc(code||'—')}</span>${sc}${code?spark(code,100,40,up?'#d9b44a':'#ef6b5c'):''}
-    <span class="pn">${esc(shortName(name)||code)}</span><span class="pb ${st}">${lbl}${lc?` · ${px(lc.c)}`:''}</span></button>`;
+    <span class="pn${bo&&st==='ok'?' up2':''}">${esc(shortName(name)||code)}</span><span class="pb ${st}${bo&&st==='ok'?' up2':''}">${lbl}${lc?` · ${px(lc.c)}`:''}</span>${bo&&st==='ok'?platChips(code,'ppf'):''}</button>`;
 }
 function rail(title,note,items,wide,empty){
   if(!items.length&&!empty)return '';
@@ -1858,6 +1866,7 @@ function heroHTML(){
     <h2>${esc(shortName(nm)||code)}</h2>
     <p class="sub">${esc(code)} di Bursa Malaysia${lc?`, ditutup ${px(lc.c)} pada ${fmtD(lc.d)}${m&&m.ch!=null?` (${m.ch>=0?'+':''}${m.ch.toFixed(2)}%)`:''}.`:'.'}</p>
     ${m&&m.va&&!hide?`<div class="stats">${bestOp(code)?`<div><b>${bestOp(code).p}%</b>kebarangkalian sejarah</div><div><b>${Math.round(bestOp(code).md||0)} hari</b>tempoh biasa</div>`:''}<div><b>${m.r!=null?Math.round(m.r):'-'}</b>RSI 14</div><div><b>${m.e2==null?'-':m.e2?'Atas':'Bawah'}</b>EMA200</div></div>`:''}
+    ${m&&m.va&&!hide&&st==='ok'&&bestOp(code)?platChips(code,'pfl hpf'):''}
     <div class="acts"><button class="btn" data-open="${esc(code)}">▶ Lihat analisa</button><button class="btn sec" data-wt="${esc(code)}">${inW?'✓ Dalam watchlist':'+ Watchlist'}</button></div></section>`;
 }
 function rSaham(){
@@ -1919,12 +1928,18 @@ const PLATFORMS=[
  {g:'urus',n:'Wahed',u:'https://www.wahed.com/my',d:'Robo-advisor patuh syariah'},
  {g:'urus',n:'StashAway',u:'https://www.stashaway.my',d:'Robo-advisor (ada portfolio syariah)'},
  {g:'urus',n:'Versa',u:'https://versa.com.my',d:'Simpanan dana (ada Versa Save Shariah)'}];
+function myPlats(){const k=S.settings.platform;return PLATFORMS.map((P,i)=>({...P,i})).filter(P=>P.g==='saham'&&(k==null||k==='all'||+k===P.i));}
+const PSHORT={'Rakuten Trade':'Rakuten'};
+function platChips(code,cls){if(!code)return '';
+  return `<span class="${cls||'pfl'}"><span class="pfl-t">📲 Labur di:</span> ${myPlats().map(P=>`<span class="pfc" role="button" data-pfx="${P.i}" data-pcode="${esc(code)}">${esc(cls==='ppf'?(PSHORT[P.n]||P.n):P.n)}</span>`).join(cls==='ppf'?'·':' ')}</span>`;}
+document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('[data-pfx]');if(!b)return;e.stopPropagation();e.preventDefault();openPlatform(+b.dataset.pfx,b.dataset.pcode);},true);
 function openPlatform(i,code){const P=PLATFORMS[i];if(!P)return;
   if(code){try{navigator.clipboard&&navigator.clipboard.writeText(code).catch(()=>{});}catch(e){}toast(`Kod ${code} disalin — tampal dalam carian ${P.n}`);}
   window.open(P.u,'_blank','noopener');}
 function platformHTML(){
   const grp=(g,t)=>`<h3 style="margin:14px 0 6px">${t}</h3>`+PLATFORMS.map((P,i)=>P.g!==g?'':`<div class="kv"><span><b>${esc(P.n)}</b><br><span class="muted" style="font-size:12px">${esc(P.d)}</span></span><button class="btn sm sec" data-pf="${i}">Buka ↗</button></div>`).join('');
   return `<div class="card"><h2>Platform pelaburan</h2><p class="muted" style="margin-top:0">ProSyariah hanya memberi indicator. Untuk melabur, guna platform berlesen di bawah. Semua percuma untuk buka akaun.</p>
+    <label>Platform saham utama anda (dipaparkan pada isyarat)</label><select id="pfMain"><option value="all"${(S.settings.platform==null||S.settings.platform==='all')?' selected':''}>Semua (moomoo, Rakuten Trade, Webull)</option>${PLATFORMS.map((P,i)=>P.g==='saham'?`<option value="${i}"${String(S.settings.platform)===String(i)?' selected':''}>${esc(P.n)}</option>`:'').join('')}</select>
     ${grp('saham','Beli saham sendiri')}${grp('urus','Diurus untuk anda')}
     <div class="disc">ProSyariah tiada kaitan dengan platform ini dan tidak menerima bayaran. Semak lesen SC, yuran dan pilihan akaun Islamik sebelum membuka akaun.</div></div>`;}
 function stockSheet(code,name){
@@ -2219,6 +2234,7 @@ function rTetapan(){
   $('#syncB').onclick=()=>syncData(true);
   bindAlertSettings();
   document.querySelectorAll('[data-pf]').forEach(b=>b.onclick=()=>openPlatform(+b.dataset.pf));
+  const pm=$('#pfMain');if(pm)pm.onchange=e=>{S.settings.platform=e.target.value;save();toast('✓ Disimpan');};
   $('#sm').onchange=e=>{st.shariahMode=e.target.checked;save();};
   document.querySelectorAll('[data-sty]').forEach(b=>b.onclick=()=>{st.style=b.dataset.sty;S.cache={};save();render();toast('Cache harga dikosongkan untuk gaya baharu');});
   const backup=()=>JSON.stringify(Object.assign({},S,{cache:{}}));

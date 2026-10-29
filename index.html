@@ -239,6 +239,7 @@ main>.card,main>.alert,main>.grid2,main>.disc,main>.pad,.search,.results{margin-
 .mhd{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
 .mnow{display:flex;flex-direction:column;align-items:flex-end}.mnow small{font-size:11px;color:var(--muted)}.mnow b{font-size:22px}
 .mgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}.mgrid>div{background:var(--card2);border-radius:8px;padding:8px 10px;display:flex;flex-direction:column;gap:2px}
+.mgrid>.mw{grid-column:1/-1}
 .mgrid span{font-size:11px;color:var(--muted)}.mgrid b{font-size:15px}
 @media(min-width:640px){.mgrid{grid-template-columns:repeat(4,1fr)}}
 .mft{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-top:8px}
@@ -868,12 +869,12 @@ function manRow(p){const nm=shortName(p.name||nameOf(p.code));
   if(p.closed){const r=RES3[p.closed.res];const u=manPnl(p,p.closed.exit);
     return `<div class="rbr" role="button" data-code="${esc(p.code)}"><span class="rbm"><b>${esc(nm)}</b> <span class="code">${esc(p.code)}</span><span class="muted">${fmtD(p.d)} → ${fmtD(p.closed.end)} · ${p.closed.days} hari · ${rm(p.stake)}</span></span><span class="rbres"><span class="badge ${r[2]}">${r[0]}</span><b class="${u>=0?'up':'dn'}">${rmS(u)}</b><button class="mdel" data-md="${esc(p.id)}" aria-label="Padam">🗑</button></span></div>`;}
   const m=mk(p.code),now=m&&m.c,u=now?manPnl(p,now):null,H=BTH().h;let pct=now?(now/p.en-1)*100:null;if(pct!=null&&Math.abs(pct)<0.05)pct=0;const pc=pct==null||pct===0?'':pct>0?'up':'dn';
-  const cell=(l,v,c='')=>`<div><span>${l}</span><b class="${c}">${v}</b></div>`;
+  const cell=(l,v,c='',w='')=>`<div${w?' class="mw"':''}><span>${l}</span><b class="${c}">${v}</b></div>`;
   return `<div class="mrow" data-code="${esc(p.code)}" role="button">
     <div class="mhd"><span><b>${esc(nm)}</b> <span class="code">${esc(p.code)}</span></span><span class="mnow"><small>Harga kini</small><b class="${pc}">${now?px(now):'-'}</b></span></div>
     <div class="mgrid">${cell('Harga masuk',px(p.en))}${cell('Nilai maya',rm(p.stake))}${cell('Sasaran',px(p.tg),'up')}${cell('Cut loss',px(p.sl),'dn')}
-      ${cell('Tarikh mula',fmtD(p.d))}${cell('Tarikh akhir',fmtD(addTradingDays(p.d,p.inc?H-1:H)))}${cell('Tempoh biasa hingga',p.md?fmtD(addTradingDays(p.d,p.inc?p.md-1:p.md)):'-')}${cell('Untung / rugi',u==null?'-':`${rmS(u)} (${pct>0?'+':''}${pct.toFixed(1)}%)`,u==null?'':u>=0?'up':'dn')}</div>
-    <div class="mft">${statusHTML(p.code,nameOf(p.code),true).replace(/<span class="s-warn">(✍️|🤖)[^]*?<\/span>/g,'')}<span class="row" style="gap:6px;flex:none"><button class="btn sm sec" data-mx="${esc(p.code)}">Urus</button><button class="mdel" data-md="${esc(p.id)}" aria-label="Padam">🗑</button></span></div></div>`;}
+      ${cell('Tarikh mula',fmtD(p.d))}${cell('Tamat tempoh biasa',p.md?fmtD(addTradingDays(p.d,p.inc?p.md-1:p.md)):'-')}${cell('Untung / rugi',u==null?'-':`${rmS(u)} (${pct>0?'+':''}${pct.toFixed(1)}%)`,u==null?'':u>=0?'up':'dn',1)}</div>
+    <div class="mft">${statusHTML(p.code,nameOf(p.code),true).replace(/<span class="s-warn">(✍️|🤖)[^]*?<\/span>/g,'').replace(/ · bermula [^<]*? hingga [^<]*?(?= <button)/g,'')}<span class="row" style="gap:6px;flex:none"><button class="btn sm sec" data-mx="${esc(p.code)}">Urus</button><button class="mdel" data-md="${esc(p.id)}" aria-label="Padam">🗑</button></span></div></div>`;}
 function rManual(){
   manRefresh();const M=(S.manual||[]).slice();const op=M.filter(p=>!p.closed),cl=M.filter(p=>p.closed).sort((a,b)=>b.closed.end.localeCompare(a.closed.end));
   const w=cl.filter(p=>p.closed.res==='W').length,pnl=cl.reduce((t,p)=>t+manPnl(p,p.closed.exit),0),opn=op.reduce((t,p)=>{const m=mk(p.code);return t+(m&&m.c?manPnl(p,m.c):0);},0);
@@ -1476,6 +1477,7 @@ const EN_PHRASE=[
 ];
 
 Object.assign(EN_EXACT,{
+'Tamat tempoh biasa':'Typical trading period end',
 'Sasaran':'Target','Cut loss':'Cut loss','Tarikh mula':'Start date','Tarikh akhir':'End date','Tempoh biasa hingga':'Typical period until',
 'Mula':'Start',
 'Robot manual sejak …':'Manual robot since …','Saham ini sedang diuji dalam Robot Manual anda (tab Robot): tarikh dan harga masuk maya, serta untung atau rugi semasa.':'This stock is being tested in your Manual Robot (Robot tab): virtual entry date and price, and current profit or loss.',
@@ -1594,6 +1596,8 @@ Object.assign(EN_EXACT,{
 'Paras ini naik mengikut harga tertinggi sejak tarikh belian dan tidak pernah turun. Harga tutup di bawahnya menandakan momentum menurun.':'This level rises with the highest price since the purchase date and never falls. A close below it signals weakening momentum.',
 });
 EN_RX.unshift(
+[/^Isyarat aktif (\d+)% \((.+)\) · tempoh indicator trading \(hari ke-(\d+) daripada ~(\d+)\)$/,(m,a,b,c,d)=>`Active signal ${a}% (${trText(b)}) · trading indicator period (day ${c} of ~${d})`],
+[/^Isyarat (\d+)% · tempoh indicator trading sudah berlalu \(hari ke-(\d+) daripada ~(\d+)\)$/,'Signal $1% · trading indicator period has passed (day $2 of ~$3)'],
 [/^Saham patuh syariah dengan isyarat teknikal baharu untuk mula (.+) \(dari harga tutup (.+)\), disusun dari yang terkuat\. Tekan nama untuk lihat butiran\.$/,(m,a,b)=>`Shariah-compliant stocks with a new technical signal to start on ${trText(a)} (from the ${trText(b)} close), strongest first. Tap a name for details.`],
 [/^(.+): sampai paras atas, masa tutup \(jual\)$/,'$1: reached upper level, time to close (sell)'],
 [/^(.+): kena cut loss, force close$/,'$1: hit cut loss, force close'],

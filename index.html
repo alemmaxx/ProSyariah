@@ -387,7 +387,7 @@ const PAGES_URL='https://alemmaxx.github.io/ProSyariah/';
 const DATA_BASE=(location.protocol.startsWith('http')?'':PAGES_URL)+'data/';
 const KEY='prosyariah_v1';
 const DEF={
-  settings:{apiKey:'',shariahMode:true,style:'sc',capital:0,riskPct:1,lang:'bm'},
+  settings:{shariahMode:true,style:'sc',capital:0,riskPct:1,lang:'bm'},
   lists:[], symbols:[], symbolsDate:'', watch:[], holdings:[], tathir:[], manual:[],
   zakat:{state:'WP',method:'semasa',nisab:{},haulDate:'',divs:0,debt:0,other:0,prices:{},paid:[]},
   cache:{}, calls:{date:'',n:0}, market:null, track:null, paper:null, sync:{at:'',err:'',scAuto:false}
@@ -452,41 +452,6 @@ function nameOf(code){
   const L=latestList(); if(L&&L.codes&&L.codes[code])return L.codes[code];
   const h=S.holdings.find(x=>x.code===code); return h?h.name:'';
 }
-function parseListText(txt){
-  const codes={},names={};let n=0;
-  txt.split(/\r?\n/).forEach(raw=>{
-    let line=raw.trim(); if(!line)return;
-    line=line.replace(/^\d{1,4}[.)]\s+/,'');
-    const parts=line.split(/[,\t;]/).map(s=>s.trim().replace(/^"|"$/g,'')).filter(Boolean);
-    if(!parts.length)return;
-    const isCode=s=>/^\d{4,5}[A-Z]{0,3}$/.test(s);
-    let code='',name='';
-    if(isCode(parts[0])){code=parts[0];name=parts.slice(1).join(' ');}
-    else if(parts.length>1&&isCode(parts[parts.length-1])){code=parts[parts.length-1];name=parts.slice(0,-1).join(' ');}
-    else {
-      const m=line.match(/^(\d{4,5}[A-Z]{0,3})\s+(.+)$/);
-      if(m){code=m[1];name=m[2];} else name=parts.join(' ');
-    }
-    if(/^(no|bil|name|nama|stock|kod|code|securities)\b/i.test(name)&&!code)return;
-    if(!code&&normName(name).length<3)return;
-    if(code)codes[code]=name||code;
-    const k=normName(name); if(k)names[k]=name;
-    n++;
-  });
-  return {codes,names,count:n};
-}
-function importList(date,txt){
-  const p=parseListText(txt);
-  if(!p.count){toast('Tiada entri dikesan');return null;}
-  const prev=latestList();
-  const L={date,codes:p.codes,names:p.names,count:p.count,importedAt:today()};
-  if(prev){
-    const pk=new Set(Object.keys(prev.names)),nk=new Set(Object.keys(L.names));
-    L.added=[...nk].filter(k=>!pk.has(k)).map(k=>L.names[k]);
-    L.removed=[...pk].filter(k=>!nk.has(k)).map(k=>prev.names[k]);
-  } else {L.added=[];L.removed=[];}
-  S.lists.push(L); S.lists.sort((a,b)=>a.date<b.date?-1:1); save(); return L;
-}
 
 /* jadual semakan SC: Jumaat terakhir Mei & Nov */
 function lastFriday(y,m){const d=new Date(y,m+1,0);while(d.getDay()!==5)d.setDate(d.getDate()-1);return d;}
@@ -506,34 +471,16 @@ function scheduleAlerts(){
 
 /* ================= DATA HARGA (EODHD) ================= */
 function countCall(){const d=today();if(S.calls.date!==d)S.calls={date:d,n:0};S.calls.n++;save();}
-async function api(path){
-  if(!S.settings.apiKey)throw new Error('Kunci API EODHD belum dimasukkan (Tetapan).');
-  const sep=path.includes('?')?'&':'?';
-  let r;
-  try{r=await fetch('https://eodhd.com/api/'+path+sep+'api_token='+encodeURIComponent(S.settings.apiKey)+'&fmt=json');}
-  catch(e){throw new Error('Gagal sambung ke EODHD (semak internet).');}
-  countCall();
-  const t=await r.text();
-  if(!r.ok)throw new Error('EODHD '+r.status+': '+t.slice(0,140));
-  try{return JSON.parse(t);}catch(e){throw new Error('Respons EODHD tidak sah: '+t.slice(0,140));}
-}
 function mk(code){return S.market&&S.market.stocks&&S.market.stocks[code];}
 async function getBars(code,force){
   const c=S.cache[code];const m=mk(code);
-  if(m&&m.d){
-    if(c&&c.asof===m.d&&!force)return c.bars;
-    try{const r=await fetch(DATA_BASE+'s/'+encodeURIComponent(code)+'.json?v='+m.d);
-      if(r.ok){const j=await r.json();const bars=j.d.map((d,i)=>({d,o:j.o[i],h:j.h[i],l:j.l[i],c:j.c[i],v:j.v[i]})).filter(b=>b.c>0);
-        S.cache[code]={fetched:today(),asof:m.d,bars,bt:j.bt||null,atr:j.atr||null};trimCache();save();return bars;}}
-    catch(e){if(!S.settings.apiKey)throw new Error('Gagal muat data harga. Semak sambungan internet.');}
-  }
-  if(c&&c.fetched===today()&&!force)return c.bars;
-  if(!S.settings.apiKey)throw new Error(m?'Gagal muat data harga. Semak sambungan internet.':'Data harga untuk '+code+' belum tersedia.');
-  const from=new Date();from.setDate(from.getDate()-(S.settings.style==='ketat'?1100:430));
-  const data=await api(`eod/${encodeURIComponent(code)}.KLSE?from=${isoD(from)}`);
-  if(!Array.isArray(data)||!data.length)throw new Error('Tiada data harga untuk '+code);
-  const bars=data.map(b=>({d:b.date,o:+b.open,h:+b.high,l:+b.low,c:+(b.adjusted_close??b.close),v:+b.volume})).filter(b=>b.c>0);
-  S.cache[code]={fetched:today(),bars};save();return bars;
+  if(m&&m.d&&c&&c.asof===m.d&&!force)return c.bars;
+  if(!m||!m.d){if(c&&c.bars)return c.bars;throw new Error('Data harga untuk '+code+' belum tersedia.');}
+  try{const r=await fetch(DATA_BASE+'s/'+encodeURIComponent(code)+'.json?v='+m.d);
+    if(r.ok){const j=await r.json();const bars=j.d.map((d,i)=>({d,o:j.o[i],h:j.h[i],l:j.l[i],c:j.c[i],v:j.v[i]})).filter(b=>b.c>0);
+      S.cache[code]={fetched:today(),asof:m.d,bars,bt:j.bt||null,atr:j.atr||null};trimCache();save();return bars;}}catch(e){}
+  if(c&&c.bars)return c.bars;
+  throw new Error('Gagal muat data harga. Semak sambungan internet.');
 }
 const lastClose=code=>{const c=S.cache[code];const m=mk(code);
   if(m&&m.c!=null&&(!c||!c.bars.length||m.d>=c.bars[c.bars.length-1].d))return {d:m.d,c:m.c};
@@ -565,7 +512,6 @@ async function syncData(manual){
           const isNew=curLatest&&newLatest.date>curLatest.date;
           S.lists=conv;changed=true;S.sync.scAuto=true;
           if(isNew)msg=`Senarai syariah SC baharu (${fmtD(newLatest.date)}) diterima`;}}}
-    try{const r4=await fetch(DATA_BASE+'paper.json?t='+Math.floor(Date.now()/36e5),{cache:'no-cache'});if(r4.ok){const t=await r4.json();if(!S.paper||S.paper.asof!==t.asof||!S.paper.hist!==!t.hist){S.paper=t;changed=true;}}}catch(e){}
     try{const r6=await fetch(DATA_BASE+'i/index.json?t='+Math.floor(Date.now()/36e5),{cache:'no-cache'});if(r6.ok){S.intra=(await r6.json()).codes||[];}}catch(e){}
     try{const r8=await fetch(DATA_BASE+'holidays.json?t='+Math.floor(Date.now()/36e5),{cache:'no-cache'});if(r8.ok){const H=await r8.json();S.hol=H.days||[];S.hol.forEach(d=>BURSA_HOL.add(d));}}catch(e){}
     try{const r7=await fetch(DATA_BASE+'fund.json?t='+Math.floor(Date.now()/36e5),{cache:'no-cache'});if(r7.ok){S.fund=await r7.json();}}catch(e){}
@@ -581,12 +527,6 @@ async function syncData(manual){
   if(changed||manual)render();
   try{const need=[...new Set((S.manual||[]).filter(p=>!p.closed).map(p=>p.code))];if(need.length){await Promise.allSettled(need.map(c=>getBars(c)));manRefresh();if(TAB==='robot')rRobot();}}catch(e){}
   updateBell();notifyNew();
-}
-async function loadSymbols(){
-  const data=await api('exchange-symbol-list/KLSE');
-  if(!Array.isArray(data))throw new Error('Senarai simbol tidak sah');
-  S.symbols=data.map(x=>({code:String(x.Code),name:x.Name||'',type:x.Type||''})).filter(x=>x.code);
-  S.symbolsDate=today();save();return S.symbols.length;
 }
 
 /* ================= MODUL 5: INDICATOR ================= */
@@ -803,8 +743,6 @@ function rateSignal(x){
            D:['Isyarat Lemah','b-no','Dalam sejarah saham ini, isyarat ini tidak lebih kerap berjaya berbanding kadar rawak.']}[g];
   const bits=[];
   if(n!=null&&x.w!=null)bits.push(`Isyarat ini muncul ${n} kali dalam 5 tahun; ${x.w} kali harga sampai sasaran dahulu`);
-  const H=S.paper&&S.paper.hist&&S.paper.hist.bySetup&&S.paper.hist.bySetup[x.k];
-  if(false&&H&&H.n)bits.push(`Ujian robot 12 bulan (${rm(rbStake())} setiap isyarat, ${H.n} dagangan): ${setupName(x.k)} tepat ${H.win}% · ${H.pnl>=0?'untung':'rugi'} ${rmS(H.pnl*rbScale())}`);
   return {g,lbl:G[0],cls:G[1],txt:G[2],bits,edge,be};
 }
 function rateHTML(x){const R=rateSignal(x);
@@ -812,8 +750,6 @@ function rateHTML(x){const R=rateSignal(x);
 /* ===== CHAMPION: Isyarat Kuat + Skor teknikal Kuat ===== */
 function isChamp(x,code){const m=mk(code||x.code);if(!m||!m.va||!x)return false;const V=scoreVerdict(m.sc,m.va);return rateSignal(x).g==='A'&&V&&V.lbl==='Kuat';}
 function champList(){return topSignals(60).filter(x=>isChamp(x));}
-function champTestLine(){const C=S.paper&&S.paper.champ&&S.paper.champ.summary;if(!C||!C.n)return '';
-  return `Ujian robot 12 bulan untuk Champion sahaja (${rm(rbStake())} setiap isyarat): ${C.n} dagangan · tepat ${C.win}% · ${C.pnl>=0?'untung':'rugi'} ${rmS(C.pnl*rbScale())}`;}
 /* Status data: tarikh harga tutup & bila kemas kini seterusnya — supaya pengguna faham kenapa tiada isyarat */
 function nextTradingDay(d){return addTradingDays(d,1);}
 function dataStatusHTML(){const asof=S.market.meta.asof,now=new Date(),t=today(),hm=now.getHours()*60+now.getMinutes();
@@ -860,7 +796,6 @@ function openObs(){const L=topSignals(60,'obs');if(!L.length)return toast('Tiada
   d.onclick=e=>{const b=e.target.closest('[data-sc]');if(b){close();stockSheet(b.dataset.sc,nameOf(b.dataset.sc));return;}if(e.target===d)close();};$('#helpX').onclick=close;}
 function openChamp(){
   const L=champList();if(!L.length)return toast('Tiada isyarat Champion hari ini');
-  const held=c=>S.paper&&S.paper.live&&S.paper.live.open.some(p=>p.c===c);
   const d=document.createElement('div');d.className='help';d.id='help';document.body.classList.add('ovl');bkEnsure();
   d.innerHTML=`<div class="help-p" role="dialog" aria-modal="true"><div><div class="shd-top" style="margin-bottom:6px"><h2 style="margin:0">🏆 Isyarat Champion</h2><button class="xbtn" id="helpX" aria-label="Tutup">✕</button></div>
     <p class="muted" style="margin:0">Isyarat Kuat + Skor teknikal Kuat, bermula hari ini.</p></div>
@@ -934,7 +869,6 @@ function top5Alerts(push){
 }
 
 /* ================= TAB ROBOT AUTO (akaun latihan maya) ================= */
-let RB_MODE='live',RB_ALL=false;
 const RES3={W:['Menang','up','b-ok'],L:['Kalah','dn','b-no'],T:['Tamat masa','','b-na'],M:['Ditutup sendiri','','b-na']};
 /* ===== ROBOT MANUAL: pengguna pilih saham & harga masuk maya sendiri ===== */
 function fmtDT(iso){const d=new Date(iso);return fmtD(isoD(d))+', '+d.toLocaleTimeString(S.settings.lang==='en'?'en-GB':'ms-MY',{hour:'2-digit',minute:'2-digit',hour12:false});}
@@ -1042,7 +976,6 @@ function bindManual(){
   if(need.length&&!bindManual._busy){bindManual._busy=true;Promise.allSettled([...new Set(need)].map(c=>getBars(c))).then(()=>{bindManual._busy=false;manRefresh();if(TAB==='robot')rRobot();});}
 }
 function rbStake(){return num(S.settings.paperStake)||20;}
-function rbScale(){return rbStake()/((S.paper&&S.paper.stake)||20);}
 function rmS(n){const v=(Number(n)||0);return (v>0?'+':v<0?'−':'')+rm(Math.abs(v));}
 function equitySVG(curve,scale){
   if(!curve||curve.length<2)return `<div class="muted" style="padding:16px 0">Belum cukup dagangan selesai untuk melukis graf.</div>`;
@@ -1054,73 +987,13 @@ function equitySVG(curve,scale){
     <span class="eqz" style="top:${(Y(0)/H*100).toFixed(1)}%">RM 0</span><span class="eqv ${last>=0?'up':'dn'}" style="top:${(Y(last)/H*100).toFixed(1)}%">${rmS(last)}</span>
     <span class="hcd l">${fmtD(curve[0][0])}</span><span class="hcd r">${fmtD(curve[curve.length-1][0])}</span></div>`;
 }
-function rbStats(sum,scale,capital){
-  if(!sum||!sum.n)return `<div class="alert a-gold" style="margin:0">Belum ada dagangan maya yang selesai. Robot akan mula merekod keputusan sebaik isyarat pertama sampai paras atas, paras bawah atau had masa.</div>`;
-  const pnl=sum.pnl*scale,roi=pnl/capital*100;
-  return `<div class="rbk">
-    <div><span>Ketepatan</span><b class="big">${sum.win}%</b><small>${sum.w} menang · ${sum.l} kalah · ${sum.to} tamat masa</small></div>
-    <div><span>Untung / rugi</span><b class="big ${pnl>=0?'up':'dn'}">${rmS(pnl)}</b><small>daripada ${sum.n} dagangan maya</small></div>
-    <div><span>Pulangan atas modal</span><b class="big ${roi>=0?'up':'dn'}">${roi>=0?'+':''}${roi.toFixed(1)}%</b><small>modal maya ${rm(capital)} (${S.paper.maxOpen} × ${rm(rbStake())})</small></div>
-    <div><span>Purata setiap dagangan</span><b class="big ${sum.avg>=0?'up':'dn'}">${sum.avg>0?'+':''}${sum.avg}%</b><small>purata tempoh ${sum.days} hari dagangan</small></div></div>
-    <div class="alert ${pnl>=0?'a-green':'a-red'}" style="margin:12px 0 0">${pnl>=0?`Dalam ujian ini, robot <b>untung</b>. Ketepatan ${sum.win}% cukup tinggi untuk menampung dagangan yang kalah.`:`Dalam ujian ini, robot <b>rugi</b>. Ketepatan ${sum.win}% belum cukup tinggi untuk menampung dagangan yang kalah.`}</div>`;
-}
-function rbRow(t,scale,live){
-  const nm=shortName((S.paper.names&&S.paper.names[t.c])||t.n||nameOf(t.c)||t.c);
-  if(live){const m=mk(t.c),now=m&&m.c;const u=now?(now/t.en-1-S.paper.fee)*rbStake():null;
-    return `<button class="rbr" data-code="${esc(t.c)}"><span class="rbm"><b>${esc(nm)}</b> <span class="code">${esc(t.c)}</span><span class="muted">${esc(setupName(t.k))} · masuk ${fmtD(t.d)} @ ${px(t.en)}</span><span class="muted">sasaran ${px(t.tg)} · had ${px(t.sl)}${now?` · kini ${px(now)}`:''}</span><span class="rbend">${t.md?`<span>tempoh biasa hingga ${fmtD(addTradingDays(t.d,Math.max(1,Math.round(t.md))))}</span> · `:''}<span>tutup paling lewat ${fmtD(addTradingDays(t.d,BTH().h))}</span></span></span><b class="${u==null?'':u>=0?'up':'dn'}">${u==null?'-':rmS(u)}</b></button>`;}
-  const r=RES3[t.res];return `<button class="rbr" data-code="${esc(t.c)}"><span class="rbm"><b>${esc(nm)}</b> <span class="code">${esc(t.c)}</span><span class="muted">${esc(setupName(t.k))} · ${fmtD(t.d)} → ${fmtD(t.exit||t.end)} · ${t.days} hari</span></span><span class="rbres"><span class="badge ${r[2]}">${r[0]}</span><b class="${r[1]}">${rmS(t.ret*rbStake()/100)}</b></span></button>`;
-}
 let FBREADY=false;
 function needLogin(){return !!FB_CONFIG&&!FBU;}
 function loginGateHTML(){return `<div class="card" style="text-align:center"><div style="font-size:42px">🔐</div><h2>Log masuk untuk guna Robot Manual</h2>
   <p class="muted">Senarai Robot Manual anda disimpan dalam akaun Google, supaya selamat dan sama di semua phone. Notifikasi sasaran dan cut loss juga dihantar ke akaun anda.</p>
   ${FBREADY?'<button class="btn gold" style="width:100%" id="rbLogin">Log masuk dengan Google</button>':'<p class="muted">Memuatkan akaun…</p>'}</div>`;}
 function rRobot(){if(needLogin()){$('#main').innerHTML=loginGateHTML();const b=$('#rbLogin');if(b)b.onclick=login;return;}$('#main').innerHTML=rManual();bindManual();}
-function rRobotAutoOld(){
-  const seg=`<div class="pad" style="margin:0 var(--gut) 12px"><div class="seg rbseg"><button data-rbm="auto" class="${RB_MODE!=='manual'?'on':''}">🤖 Robot Auto</button><button data-rbm="manual" class="${RB_MODE==='manual'?'on':''}">✍️ Robot Manual</button></div></div>`;
-  if(RB_MODE==='manual'){$('#main').innerHTML=seg+rManual();bindRbSeg();bindManual();return;}
-  const P=S.paper;let h=seg+`<div class="card"><div class="row between"><h2 style="margin:0">Robot Auto</h2><span class="badge b-warn">Wang maya</span></div>
-    <p class="muted" style="margin:6px 0 10px">Robot "melabur" nilai maya pada setiap isyarat dalam 5 terkuat dan keluar bila harga sampai paras atas (menang), paras bawah (kalah) atau selepas ${(S.market&&S.market.meta.bt&&S.market.meta.bt.h)||40} hari dagangan (tarikh "tutup paling lewat"). Paling banyak ${P?P.maxOpen:5} kedudukan serentak. Tiada wang sebenar terlibat.</p>
-    <label>Nilai maya setiap isyarat (RM)</label><input id="rbS" inputmode="decimal" value="${rbStake()}"></div>`;
-  if(!P){$('#main').innerHTML=h+`<div class="alert a-amber">Data Robot Auto belum diterima. Robot GitHub akan menghasilkannya pada larian seterusnya.</div>`;bindRb();bindRbSeg();return;}
-  const sc=rbScale(),cap=P.maxOpen*rbStake();
-  h+=`<div class="pad" style="margin:0 var(--gut) 12px"><button class="btn sec" style="width:100%" id="rbHist">📊 Lihat ujian sejarah 12 bulan${P.hist&&P.hist.summary.n?` · ketepatan ${P.hist.summary.win}% · ${rmS(P.hist.summary.pnl*sc)}`:''}</button></div>`;
-  if(false){const H=P.hist;
-    if(!H){h+=`<div class="alert a-amber">Sejarah belum cukup untuk ujian.</div>`;}
-    else{h+=`<div class="card"><h2>${fmtD(H.start)} – ${fmtD(H.end)}</h2><p class="muted" style="margin-top:0">Robot mengulang setiap hari dagangan setahun lepas. Pada setiap hari, ia hanya guna statistik daripada dagangan yang sudah selesai sebelum hari itu, jadi tiada maklumat masa depan digunakan.</p>${rbStats(H.summary,sc,cap)}</div>`;
-      h+=`<div class="card"><h2>Untung / rugi terkumpul</h2>${equitySVG(H.curve,sc)}</div>`;
-      h+=`<div class="card"><h2>Ikut jenis isyarat</h2><div class="bth"><div class="hd"><span>Isyarat</span><span>Dagangan</span><span>Ketepatan</span><span>Untung/rugi</span></div>`+
-        Object.entries(H.bySetup).map(([k,v])=>`<div><span>${esc(setupName(k))}</span><span>${v.n||0}</span><span>${v.n?v.win+'%':'-'}</span><span class="${(v.pnl||0)>=0?'up':'dn'}">${v.n?rmS(v.pnl*sc):'-'}</span></div>`).join('')+`</div></div>`;
-      h+=`<div class="card"><h2>Dagangan maya terkini</h2>${H.recent.slice(0,RB_ALL?60:12).map(t=>rbRow(t,sc)).join('')}${H.recent.length>12?`<button class="btn sm sec" style="margin-top:10px" id="rbAll">${RB_ALL?'Tunjuk kurang':'Lihat semua ('+H.recent.length+')'}</button>`:''}</div>`;}}
-  else{const L=P.live;
-    h+=`<div class="card"><h2>Sejak ${fmtD(L.started)}</h2><p class="muted" style="margin-top:0">Pilihan sebenar robot setiap hari bekerja, disemak dengan harga sebenar. Robot memilih isyarat baharu dengan susunan yang sama seperti 5 isyarat terkuat (Isyarat Kuat dahulu), kemudian memegangnya sehingga paras atas, paras bawah atau 40 hari dagangan — ia tidak bertukar walaupun senarai 5 terkuat berubah esoknya.</p>${rbStats(L.summary,sc,cap)}</div>`;
-    h+=`<div class="card"><h2>Kedudukan maya terbuka (${L.open.length}/${P.maxOpen})</h2>${L.open.length?L.open.map(t=>rbRow(t,sc,true)).join(''):'<p class="muted">Tiada kedudukan terbuka. Robot akan masuk bila ada isyarat baharu dalam 5 terkuat.</p>'}</div>`;
-    if(L.curve&&L.curve.length>1)h+=`<div class="card"><h2>Untung / rugi terkumpul</h2>${equitySVG(L.curve,sc)}</div>`;
-    if(L.recent.length)h+=`<div class="card"><h2>Dagangan maya selesai</h2>${L.recent.slice(0,RB_ALL?60:12).map(t=>rbRow(t,sc)).join('')}${L.recent.length>12?`<button class="btn sm sec" style="margin-top:10px" id="rbAll">${RB_ALL?'Tunjuk kurang':'Lihat semua ('+L.recent.length+')'}</button>`:''}</div>`;}
-  h+=`<p class="disc" style="margin:6px var(--gut) 0">Simulasi menggunakan harga tutup harian dan kos dagangan ${(P.fee*100).toFixed(1)}%. Ujian sejarah menggunakan senarai syariah SC terkini untuk semua tempoh. Keputusan simulasi bukan jaminan prestasi masa depan dan bukan cadangan beli atau jual.</p>`;
-  $('#main').innerHTML=h;bindRb();bindRbSeg();
-}
 
-function openRbHist(all){
-  const P=S.paper,H=P&&P.hist;if(!H)return toast('Sejarah belum cukup untuk ujian.');const sc=rbScale(),cap=P.maxOpen*rbStake();
-  let h=`<div class="row between"><h2 style="margin:0">Ujian sejarah 12 bulan</h2><button class="btn sm sec" onclick="closeSheet()">Tutup</button></div>
-   <p class="muted">${fmtD(H.start)} – ${fmtD(H.end)}. Robot mengulang setiap hari dagangan setahun lepas. Pada setiap hari, ia hanya guna statistik daripada dagangan yang sudah selesai sebelum hari itu, jadi tiada maklumat masa depan digunakan.</p>
-   <div class="card">${rbStats(H.summary,sc,cap)}</div>${P.champ&&P.champ.summary&&P.champ.summary.n?`<div class="card"><h2>🏆 Champion sahaja</h2><p class="muted" style="margin-top:0">Ujian yang sama, tetapi robot hanya ambil isyarat yang Isyarat Kuat dan skor teknikal Kuat pada hari isyarat.</p>${rbStats(P.champ.summary,sc,cap)}</div>`:''}<div class="card"><h2>Untung / rugi terkumpul</h2>${equitySVG(H.curve,sc)}</div>
-   <div class="card"><h2>Ikut jenis isyarat</h2><div class="bth"><div class="hd"><span>Isyarat</span><span>Dagangan</span><span>Ketepatan</span><span>Untung/rugi</span></div>`+
-   Object.entries(H.bySetup).map(([k,v])=>`<div><span>${esc(setupName(k))}</span><span>${v.n||0}</span><span>${v.n?v.win+'%':'-'}</span><span class="${(v.pnl||0)>=0?'up':'dn'}">${v.n?rmS(v.pnl*sc):'-'}</span></div>`).join('')+`</div></div>
-   <div class="card"><h2>Dagangan maya terkini</h2>${H.recent.slice(0,all?60:12).map(t=>rbRow(t,sc)).join('')}${H.recent.length>12?`<button class="btn sm sec" style="margin-top:10px" id="rbAllH">${all?'Tunjuk kurang':'Lihat semua ('+H.recent.length+')'}</button>`:''}</div>
-   <p class="disc">Ujian sejarah menggunakan senarai syariah SC terkini untuk semua tempoh. Keputusan simulasi bukan jaminan prestasi masa depan.</p>`;
-  openSheet(h);const b=$('#rbAllH');if(b)b.onclick=()=>openRbHist(!all);
-  document.querySelectorAll('#sheetBody .rbr').forEach(b=>b.onclick=()=>stockSheet(b.dataset.code,nameOf(b.dataset.code)));
-}
-function bindRbSeg(){document.querySelectorAll('[data-rbm]').forEach(b=>b.onclick=()=>{RB_MODE=b.dataset.rbm;RB_ALL=false;rRobot();window.scrollTo(0,0);});}
-function bindRb(){
-  const i=$('#rbS');if(i)i.onchange=e=>{S.settings.paperStake=Math.max(1,num(e.target.value)||20);save();rRobot();};
-  document.querySelectorAll('[data-rb]').forEach(b=>b.onclick=()=>{RB_MODE=b.dataset.rb;RB_ALL=false;rRobot();});
-  const ra=$('#rbAll');if(ra)ra.onclick=()=>{RB_ALL=!RB_ALL;rRobot();};
-  const rh=$('#rbHist');if(rh)rh.onclick=()=>openRbHist(false);
-  document.querySelectorAll('.rbr').forEach(b=>b.onclick=()=>stockSheet(b.dataset.code,nameOf(b.dataset.code)));
-}
 
 /* ================= STATUS ISYARAT SETIAP SAHAM ================= */
 function signalFor(code){
@@ -1146,14 +1019,13 @@ function stockStatus(code,name){
   else if(m&&m.liq===0)out.push({ic:'💧',cls:'s-warn',t:`Kecairan rendah: harga bawah RM0.20 atau nilai dagangan bawah RM100k sehari. Isyarat tidak dipaparkan.`});
   else if(m&&m.va)out.push({ic:'⚪',cls:'s-na',t:`Tiada isyarat teknikal aktif · skor ${m.sc}/${m.va} (${scoreVerdict(m.sc,m.va).lbl})`});
   const mp=manOpen(code);if(mp){const now=m&&m.c;const u=now?manPnl(mp,now):null;out.push({ic:'✍️',cls:'s-warn',t:`Robot manual sejak ${fmtD(mp.d)} @ ${px(mp.en)}${u!=null?` · ${rmS(u)}`:''}`});}
-  const rp=null;if(rp){const now=m&&m.c;const u=now?(now/rp.en-1-S.paper.fee)*rbStake():null;out.push({ic:'🤖',cls:'s-warn',t:`Dalam robot sejak ${fmtD(rp.d)} @ ${px(rp.en)}${u!=null?` · ${rmS(u)}`:''}`});}
   if(hd){const lc=lastClose(code);if(lc){const pl=(lc.c-hd.cost)*hd.qty,pct=(lc.c/hd.cost-1)*100;const XP=exitPlan(hd);
     out.push({ic:'💼',cls:pl>=0?'s-up':'s-no',t:`Pegangan anda ${pl>=0?'untung':'rugi'} ${rmS(pl)} (${pct>=0?'+':''}${pct.toFixed(1)}%)${XP?(XP.hit?' · harga tutup di bawah paras sokongan mengekor':' · di atas paras sokongan mengekor'):''}`});}}
   return out.length?out:null;
 }
 
 function openSummary(){
-  const L=topSignals(60);const held=c=>S.paper&&S.paper.live&&S.paper.live.open.some(p=>p.c===c);
+  const L=topSignals(60);
   const grp=[['C','🏆 Champion','b-gold'],['A','Isyarat Kuat','b-ok'],['B','Isyarat Sederhana','b-warn']];
   const by={C:[],A:[],B:[]};L.forEach(x=>{const g=rateSignal(x).g;if(isChamp(x))by.C.push(x);else (g==='A'?by.A:g==='D'?null:by.B)?.push(x);});
   const row=x=>`<button class="smr" data-sc="${esc(x.code)}"><span><b>${esc(shortName(x.name))}</b> <span class="code">${esc(x.code)}</span></span><span class="smt">${x.passed?'⏳ ':''}<b>${x.p}%</b></span></button>`;
@@ -2328,7 +2200,7 @@ function stockSheet(code,name){
       <button class="btn sm sec" id="paBtn">🔔 Amaran harga</button><button class="btn sm sec" id="cBtn">Salin kod saham</button></div>`;
     if(st!=='no')h+=`<div class="card"><div class="row between" style="align-items:center"><b>Buka di platform</b><span class="muted" style="font-size:12px">kod ${esc(code)} akan disalin</span></div><div class="row" style="gap:8px;margin-top:8px;flex-wrap:wrap">${PLATFORMS.map((P,i)=>P.g==='saham'?`<button class="btn sm sec" data-pfc="${i}">${esc(P.n)} ↗</button>`:'').join('')}</div></div>`;
     h+=oppSection(code,blocked);
-    h+=`<div class="card" id="ind"><div class="row between"><h2 style="margin:0">Indicator</h2><button class="btn sm sec" id="ldBtn">Muat semula</button></div><div id="indBody" class="muted" style="margin-top:8px">${mk(code)||S.cache[code]?'Memuatkan…':S.settings.apiKey?'Tekan Muat semula untuk tarik data harga.':'Data harga untuk kaunter ini belum tersedia.'}</div></div>`;
+    h+=`<div class="card" id="ind"><div class="row between"><h2 style="margin:0">Indicator</h2><button class="btn sm sec" id="ldBtn">Muat semula</button></div><div id="indBody" class="muted" style="margin-top:8px">${mk(code)||S.cache[code]?'Memuatkan…':'Data harga untuk kaunter ini belum tersedia.'}</div></div>`;
   } else h+=`<div class="alert a-amber">Saham ini tiada kod dalam senarai. Nama ini belum dapat dipadankan dengan kod Bursa secara automatik.</div>`;
   openSheet(h);
   if(!code)return;

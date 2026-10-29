@@ -92,7 +92,9 @@ def main():
         if r.status_code == 404:
             print("Tiada pangkalan data Firestore / koleksi users lagi.")
             return
-        r.raise_for_status()
+        if not r.ok:
+            print("Firestore", r.status_code, r.text[:600])
+            return
         j = r.json()
         docs += j.get("documents", [])
         tok = j.get("nextPageToken")

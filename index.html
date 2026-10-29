@@ -904,8 +904,13 @@ function openManual(code){
     if(!S.watch.includes(code))S.watch.push(code);save();toast('Ditambah ke Robot Manual');getBars(code).catch(()=>{});close();closeSheet();goTab('robot');};
 }
 function manRow(p){const nm=shortName(p.name||nameOf(p.code));
-  if(p.closed){const r=RES3[p.closed.res];const u=manPnl(p,p.closed.exit);
-    return `<div class="rbr" role="button" data-code="${esc(p.code)}"><span class="rbm"><b>${esc(nm)}</b> <span class="code">${esc(p.code)}</span><span class="muted">${fmtD(p.d)} → ${fmtD(p.closed.end)} · ${p.closed.days} hari · ${rm(p.stake)}</span></span><span class="rbres"><span class="badge ${r[2]}">${r[0]}</span><b class="${u>=0?'up':'dn'}">${rmS(u)}</b><button class="mdel" data-md="${esc(p.id)}" aria-label="Padam">🗑</button></span></div>`;}
+  if(p.closed){const C=p.closed,r=RES3[C.res];const u=manPnl(p,C.exit),xp=(C.exit/p.en-1)*100;
+    const m=mk(p.code),now=m&&m.c,since=now?(now/C.exit-1)*100:null,sc=since==null||Math.abs(since)<0.05?'':since>0?'up':'dn';
+    const cell=(l,v,c='')=>`<div><span>${l}</span><b class="${c}">${v}</b></div>`;
+    return `<div class="mrow" data-code="${esc(p.code)}" role="button">
+    <div class="mhd"><span><b>${esc(nm)}</b> <span class="code">${esc(p.code)}</span><br><span class="badge ${r[2]}" style="margin-top:4px">${r[0]}</span></span><span class="mnow"><small>Harga kini</small><b class="${sc}">${now?px(now):'-'}</b>${since==null?'':`<em class="${sc}">${since>0?'+':''}${since.toFixed(1)}% sejak ditutup</em>`}</span></div>
+    <div class="mgrid">${cell('Harga masuk',px(p.en))}${cell('Harga tutup',px(C.exit),xp>=0?'up':'dn')}${cell('Tarikh mula',fmtD(p.d))}${cell('Tarikh tutup',`${fmtD(C.end)} (${C.days} hari)`)}<div class="mw"><span>Keputusan</span><b class="${u>=0?'up':'dn'}">${rmS(u)} (${xp>0?'+':''}${xp.toFixed(1)}%)</b></div></div>
+    <div class="mft"><span class="muted" style="font-size:12px">${rm(p.stake)} nilai maya · sasaran ${px(p.tg)} · cut loss ${px(p.sl)}</span><button class="mdel" data-md="${esc(p.id)}" aria-label="Padam">🗑</button></div></div>`;}
   const m=mk(p.code),now=m&&m.c,u=now?manPnl(p,now):null,H=BTH().h;let pct=now?(now/p.en-1)*100:null;if(pct!=null&&Math.abs(pct)<0.05)pct=0;const pc=pct==null||pct===0?'':pct>0?'up':'dn';
   const cell=(l,v,c='',w='')=>`<div${w?' class="mw"':''}><span>${l}</span><b class="${c}">${v}</b></div>`;
   return `<div class="mrow" data-code="${esc(p.code)}" role="button">
@@ -1515,6 +1520,7 @@ const EN_PHRASE=[
 ];
 
 Object.assign(EN_EXACT,{
+'Harga tutup':'Close price','Tarikh tutup':'Close date','Keputusan':'Result',
 '12J':'12H','Carta 30 minit / 1 jam / 12 jam hanya untuk saham yang dipantau (isyarat aktif atau skor tinggi).':'30-minute / 1-hour / 12-hour charts are only for tracked stocks (active signal or high score).',
 'Meter ProSyariah':'ProSyariah Meter','Sangat Lemah':'Very Weak','Sangat Kuat':'Very Strong','Isyarat (40%)':'Signal (40%)','Skor teknikal (40%)':'Technical score (40%)','Nada berita (20%)':'News tone (20%)','Tiada berita (neutral)':'No news (neutral)',
 'Meter ini dikira oleh ProSyariah daripada bacaan dalam app: penilaian isyarat sejarah, skor teknikal semasa dan nada tajuk berita 30 hari. Ia bukan konsensus penganalisis dan bukan cadangan beli atau jual.':"This meter is calculated by ProSyariah from the app's readings: historical signal rating, current technical score and 30-day news headline tone. It is not an analyst consensus and not a buy or sell recommendation.",
@@ -1656,6 +1662,8 @@ Object.assign(EN_EXACT,{
 'Paras ini naik mengikut harga tertinggi sejak tarikh belian dan tidak pernah turun. Harga tutup di bawahnya menandakan momentum menurun.':'This level rises with the highest price since the purchase date and never falls. A close below it signals weakening momentum.',
 });
 EN_RX.unshift(
+[/^([+-]?[\d.]+)% sejak ditutup$/,'$1% since closed'],[/^(.+) \((\d+) hari\)$/,(m,a,b)=>`${trText(a)} (${b} days)`],
+[/^(RM [\d.,]+) nilai maya · sasaran (\S+) · cut loss (\S+)$/,'$1 virtual · target $2 · cut loss $3'],
 [/^(\d+)\/100 ⓘ$/,'$1/100 ⓘ'],
 [/^Carta (30 minit|1 jam|Sesi) · (\S+) pada (.+) \(bukan masa nyata\)$/,(m,a,b,c)=>`${a==='30 minit'?'30-minute':a==='1 jam'?'1-hour':'12-hour (session)'} chart · ${b} at ${trText(c)} (not real-time)`],
 [/^Carta (Bulanan|Tahunan) · harga tutup (\S+) pada (.+)$/,(m,a,b,c)=>`${a==='Bulanan'?'Monthly':'Yearly'} chart · close ${b} on ${c}`],

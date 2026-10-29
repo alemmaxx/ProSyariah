@@ -257,6 +257,7 @@ main>.card,main>.alert,main>.grid2,main>.disc,main>.pad,.search,.results{margin-
 .onbb{font-size:15px;line-height:1.5}.onbb ul{padding-left:20px;margin:6px 0}.onbb li{margin:6px 0}
 .onbdots{display:flex;justify-content:center;gap:6px;margin:14px 0}.onbdots span{width:8px;height:8px;border-radius:50%;background:var(--line)}.onbdots span.on{background:var(--gold);width:20px;border-radius:4px}
 .dstat{margin:12px var(--gut) 0;padding:10px 12px;border-radius:12px;background:var(--card);border:1px solid var(--line);display:flex;flex-direction:column;gap:3px;font-size:13px;color:var(--muted)}.dstat b{color:var(--ink)}.dstat.warn{border-color:var(--amber)}
+.pnb{gap:6px;flex-wrap:wrap;margin:8px 4px 4px}.pnb .btn{text-decoration:none}
 .pnr{border-bottom:1px solid var(--line);padding-bottom:8px}.pnl{display:flex;gap:8px;color:var(--ink);text-decoration:none;font-size:13px;line-height:1.4;padding:0 4px}
 .mrow{padding:14px 0;border-bottom:1px solid var(--line);cursor:pointer}.mrow:last-child{border-bottom:0}
 .mhd{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
@@ -835,11 +836,12 @@ function openPotNews(){const L=potNews(3);if(!L.length)return toast('Tiada berit
   d.innerHTML=`<div class="help-p" role="dialog" aria-modal="true"><div><div class="shd-top" style="margin-bottom:6px"><h2 style="margin:0">📰 Berita Berpotensi</h2><button class="xbtn" id="helpX" aria-label="Tutup">✕</button></div>
     <p class="muted" style="margin:0">Saham patuh syariah yang ada berita bernada positif (▲) dalam 3 hari lepas. Tekan nama untuk lihat analisa, atau "Baca" untuk berita penuh.</p></div>
     ${L.map(x=>`<div class="pnr"><button class="smr" data-sc="${esc(x.code)}" style="border:0;padding-bottom:2px"><span><b>${esc(shortName(x.name))}</b> <span class="code">${esc(x.code)}</span></span><span class="smt">${x.k>1?`<small class="muted">${x.k} berita</small>`:''}</span></button>
-      <a class="pnl" href="${esc(x.n.u)}" target="_blank" rel="noopener"><span class="ntone tp">▲</span><span>${esc(x.n.t)}<small class="muted"> · ${fmtD(x.n.d)}${x.n.s?' · '+esc(x.n.s):''} · Baca ↗</small></span></a></div>`).join('')}
+      <a class="pnl" href="${esc(x.n.u)}" target="_blank" rel="noopener"><span class="ntone tp">▲</span><span>${esc(x.n.t)}<small class="muted"> · ${fmtD(x.n.d)}${x.n.s?' · '+esc(x.n.s):''} · Baca ↗</small></span></a>
+      <div class="row pnb"><button class="btn sm sec" data-sc="${esc(x.code)}">📊 Buka syarikat</button><button class="btn sm gold" data-an="${esc(x.code)}">📝 Ringkasan analisa</button><a class="btn sm sec" href="${esc(x.n.u)}" target="_blank" rel="noopener">📰 Baca berita</a></div></div>`).join('')}
     <p class="disc" style="margin-top:12px">Nada berita dikira dari kata kunci tajuk sahaja. Berita positif tidak bermaksud harga pasti naik. Ini bukan cadangan beli atau jual.</p></div>`;
   document.body.appendChild(d);
   const close=()=>{d.remove();if(!$('#sheet').classList.contains('on'))document.body.classList.remove('ovl');};
-  d.onclick=e=>{const b=e.target.closest('[data-sc]');if(b){close();stockSheet(b.dataset.sc,nameOf(b.dataset.sc));return;}if(e.target===d)close();};$('#helpX').onclick=close;}
+  d.onclick=e=>{const an=e.target.closest('[data-an]');if(an){close();openAnalysis(an.dataset.an);return;}const b=e.target.closest('[data-sc]');if(b){close();stockSheet(b.dataset.sc,nameOf(b.dataset.sc));return;}if(e.target===d)close();};$('#helpX').onclick=close;}
 function newsAlerts(push){const L=potNews(1);if(!L.length)return;
   push({id:'news:'+L[0].n.d,lv:'action',ic:'📰',cat:'berita',code:L.length===1?L[0].code:null,title:`${L.length} saham dengan berita positif`,body:`${L.slice(0,3).map(x=>shortName(x.name)).join(', ')}${L.length>3?` +${L.length-3}`:''}. Buka 📰 Berita Berpotensi.`});}
 /* Isyarat Pemerhatian: Isyarat Sederhana yang bermula hari ini — untuk dipantau, belum cukup kuat */
@@ -1644,6 +1646,7 @@ const EN_PHRASE=[
 ];
 
 Object.assign(EN_EXACT,{
+'📊 Buka syarikat':'📊 Open company','📝 Ringkasan analisa':'📝 Analysis summary','📰 Baca berita':'📰 Read news',
 'Berita Berpotensi':'Potential news','📰 Berita Berpotensi':'📰 Potential news','Tiada berita positif dalam 3 hari lepas':'No positive news in the last 3 days','Berita Berpotensi (berita positif)':'Potential news (positive news)',
 'Saham patuh syariah yang ada berita bernada positif (▲) dalam 3 hari lepas. Tekan nama untuk lihat analisa, atau "Baca" untuk berita penuh.':'Shariah-compliant stocks with positive-toned news (▲) in the last 3 days. Tap a name for analysis, or "Read" for the full article.',
 'Nada berita dikira dari kata kunci tajuk sahaja. Berita positif tidak bermaksud harga pasti naik. Ini bukan cadangan beli atau jual.':'News tone is based on headline keywords only. Positive news does not mean the price will rise. This is not a buy or sell recommendation.',

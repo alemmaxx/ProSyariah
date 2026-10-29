@@ -16,10 +16,10 @@ npm warn deprecated glob@10.5.0: Old versions of glob are not supported, and con
 ├──────────────┼────────────────────────────┤
 │ App ID:      │                            │
 └──────────────┴────────────────────────────┘
-[36m[1mi [22m[39m deploying [1mhosting[22m
 [36m[1mi  hosting[prosyariah]:[22m[39m beginning deploy...
-[36m[1mi  hosting[prosyariah]:[22m[39m found 1176 files in [1m_site[22m
-[36m[1mi  hosting:[22m[39m adding files to version [1000/1176] ([1m[32m85%[39m[22m)
+[36m[1mi  hosting[prosyariah]:[22m[39m found 1175 files in [1m_site[22m
+[36m[1mi  hosting:[22m[39m adding files to version [1000/1175] ([1m[32m85%[39m[22m)
+[36m[1mi  hosting:[22m[39m uploading new files [3/111] ([1m[32m2%[39m[22m)
 [36m[1mi  hosting:[22m[39m upload complete
 [32m[1m✔  hosting[prosyariah]:[22m[39m file upload complete
 [36m[1mi  hosting[prosyariah]:[22m[39m finalizing version...
@@ -33,14 +33,4 @@ npm warn deprecated glob@10.5.0: Old versions of glob are not supported, and con
 [1mHosting URL:[22m https://prosyariah.web.app
 exit=0
 firestore rules OK
-Firestore 403 {
-  "error": {
-    "code": 403,
-    "message": "Cloud Firestore API has not been used in project prosyariah-26a55 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/firestore.googleapis.com/overview?project=prosyariah-26a55 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.",
-    "status": "PERMISSION_DENIED",
-    "details": [
-      {
-        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
-        "reason": "SERVICE_DISABLED",
-        "domain": "googleapis.com",
-        "metadat
+✓ Notifikasi push: 0 pengguna disemak, 0 notifikasi dihantar

@@ -443,7 +443,10 @@ function inList(L,code,name){
   const k=normName(name); if(k&&L.names&&L.names[k])return true;
   return false;
 }
+const ISL={'0821EA':'etf','0824EA':'etf','0825EA':'etf','0827EA':'etf','0828EA':'etf','0838EA':'etf','0839EA':'etf','5116':'reit','5106':'reit','5235SS':'reit','5269':'reit'};
+function islTag(code){const k=ISL[code];return k?` <span class="badge b-ok">☪️ ${k==='etf'?'ETF Islam':'REIT Islam'}</span>`:'';}
 function status(code,name){ // 'ok' | 'no' | 'na'
+  if(ISL[code])return 'ok';
   const L=latestList(); if(!L)return 'na';
   return inList(L,code,name)?'ok':'no';
 }
@@ -1557,6 +1560,7 @@ const EN_PHRASE=[
 ];
 
 Object.assign(EN_EXACT,{
+'☪️ ETF Islam':'☪️ Islamic ETF','☪️ REIT Islam':'☪️ Islamic REIT',
 'Mati · tekan untuk hidupkan':'Off · tap to turn on','Siap':'Done','tiada jenis dipilih':'no type chosen',
 'Untuk 📱, log masuk dan tekan Hidupkan pada Notifikasi telefon.':'For 📱, log in and tap Turn on under Phone notifications.',
 '📱 = sampai ke telefon (walaupun app tutup)':'📱 = reaches your phone (even when the app is closed)','🔔 = dalam loceng app sahaja':'🔔 = in the app bell only','Isyarat Kuat & Champion':'Strong signals & Champion','Saham patuh syariah yang dapat isyarat kuat hari ini.':'Shariah-compliant stocks with a strong signal today.','Berita baik hari ini untuk saham yang ada isyarat.':"Today's good news for stocks with a signal.",'Robot (Manual & Auto)':'Robot (Manual & Auto)','Saham dalam tab Robot sampai sasaran, cut loss, cukup hari, atau Robot Auto masuk saham baru.':'A stock in the Robot tab hits its target, cut loss or day limit, or Auto Robot enters a new stock.','5 isyarat terkuat':'Top 5 signals','Ringkasan 5 isyarat terbaik: harga masuk, paras atas/bawah, tempoh.':'Summary of the 5 best signals: entry price, upper/lower levels, period.','Saham dalam portfolio/watchlist bertukar status patuh syariah.':'A stock in your portfolio/watchlist changes Shariah status.','Harga':'Price','Harga sampai paras yang anda tetapkan, atau pegangan turun lebih % di bawah.':'Price reaches the level you set, or a holding falls more than the % below.','Isyarat teknikal':'Technical signals','Golden/death cross dan RSI melampau untuk saham anda.':'Golden/death cross and extreme RSI for your stocks.','Peringatan zakat dan dividen yang perlu disucikan.':'Reminders for zakat and dividends to purify.','Peringatan bila SC keluarkan senarai syariah baru (Mei & Nov).':'Reminder when the SC releases a new Shariah list (May & Nov).',
@@ -2233,7 +2237,7 @@ function stockSheet(code,name){
   name=name||nameOf(code);const st=status(code,name);const L=latestList();
   const blocked=S.settings.shariahMode&&st==='no';
   const inW=code&&S.watch.includes(code);
-  let h=`<div class="shd"><div class="shd-top"><div class="shd-name"><h2 class="shn">${esc(name||code)}</h2><div class="code">${esc(code||'tiada kod')} · KLSE · ${badge(st)}</div></div><div class="row" style="gap:8px;flex:none;flex-wrap:nowrap">${code&&st!=='no'&&mk(code)&&mk(code).c?`<button class="mbtn" onclick="openManual('${esc(code)}')" aria-label="Robot manual">✍️ ${manOpen(code)?'Urus':'Manual'}</button>`:''}<button class="xbtn" onclick="closeSheet()" aria-label="Tutup">✕</button></div></div>
+  let h=`<div class="shd"><div class="shd-top"><div class="shd-name"><h2 class="shn">${esc(name||code)}</h2><div class="code">${esc(code||'tiada kod')} · KLSE · ${badge(st)}${islTag(code)}</div></div><div class="row" style="gap:8px;flex:none;flex-wrap:nowrap">${code&&st!=='no'&&mk(code)&&mk(code).c?`<button class="mbtn" onclick="openManual('${esc(code)}')" aria-label="Robot manual">✍️ ${manOpen(code)?'Urus':'Manual'}</button>`:''}<button class="xbtn" onclick="closeSheet()" aria-label="Tutup">✕</button></div></div>
     ${code&&st!=='no'?`<div class="shrow">${sheetStatHTML(code)}${meterHTML(code,false,true)}</div>`:''}
     ${code?statusHTML(code,name,true):''}
     ${code&&mk(code)?`<button class="anbtn" onclick="openAnalysis('${esc(code)}')">📝 Ringkasan analisa${newsFor(code).length?` · 📰 ${newsFor(code).length} berita`:''}</button>`:''}</div>`;

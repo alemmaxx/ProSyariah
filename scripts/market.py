@@ -73,7 +73,25 @@ def load_sc():
     return st, ({c for c in L.get("codes", {})}, {norm_name(n) for n in L["names"]})
 
 
+# ETF & REIT Islam di Bursa: diluluskan berasingan (bukan dalam senarai saham patuh SC), jadi ditanda patuh di sini
+ISLAMIC = {
+    "0821EA": ("Eq8 Dow Jones Islamic Market Malaysia Titans 25 ETF", "etf"),
+    "0824EA": ("Eq8 MSCI Malaysia Islamic Dividend ETF", "etf"),
+    "0825EA": ("Eq8 MSCI SEA Islamic Dividend ETF", "etf"),
+    "0827EA": ("Eq8 Dow Jones US Titans 50 ETF", "etf"),
+    "0828EA": ("TradePlus Shariah Gold Tracker", "etf"),
+    "0838EA": ("VP-DJ Shariah China A-Shares 100 ETF", "etf"),
+    "0839EA": ("Eq8 FTSE Malaysia Enhanced Dividend Waqf ETF", "etf"),
+    "5116": ("Al-'Aqar Healthcare REIT", "reit"),
+    "5106": ("Axis REIT", "reit"),
+    "5235SS": ("KLCC Property Holdings (KLCC REIT)", "reit"),
+    "5269": ("Al-Salam REIT", "reit"),
+}
+
+
 def status(code, name, sc):
+    if code in ISLAMIC:
+        return "ok"
     if not sc:
         return "na"
     codes, names = sc
@@ -156,6 +174,8 @@ def main():
         extra = [{"code": c, "name": n, "type": "SC"} for c, n in st["lists"][-1].get("codes", {}).items()
                  if c not in have and CODE_RE.match(c)]
         syms = syms + extra  # cth. saham pasaran LEAP: tiada harga, tetapi status syariah tetap dipaparkan
+    have = {s["code"] for s in syms}
+    syms = syms + [{"code": c, "name": n, "type": k.upper()} for c, (n, k) in ISLAMIC.items() if c not in have]
     codes = [s["code"] for s in syms if s.get("type") != "SC"]
     print(f"Tarik harga {len(codes)} kaunter guna {PROVIDER} …")
     px = prices_eodhd(codes) if PROVIDER == "eodhd" and KEY else prices_yf(codes)
@@ -191,7 +211,9 @@ def main():
         c = s["code"]
         rows = px.get(c)
         st_ = status(c, s["name"], sc)
-        item = {"n": s["name"], "s": st_}
+        item = {"n": ISLAMIC[c][0] if c in ISLAMIC else s["name"], "s": st_}
+        if c in ISLAMIC:
+            item["k"] = ISLAMIC[c][1]
         bt = None
         if rows:
             closes = [float(r[4]) for r in rows]

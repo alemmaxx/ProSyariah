@@ -2446,7 +2446,11 @@ async function fbInit(){if(!FB_CONFIG)return null;if(FB)return FB;
   try{await FB.auth.getRedirectResult();}catch(e){}
   return FB;}
 async function login(){const f=await fbInit().catch(()=>null);if(!f)return toast('Log masuk belum tersedia');const pv=new firebase.auth.GoogleAuthProvider();
-  try{await f.auth.signInWithPopup(pv);}catch(e){if(/popup|environment/.test(e.code||''))await f.auth.signInWithRedirect(pv);else toast('Log masuk gagal');}}
+  try{await f.auth.signInWithPopup(pv);}catch(e){const c=e.code||'';
+    if(c==='auth/unauthorized-domain')return toast('Log masuk gagal: domain '+location.hostname+' belum dibenarkan di Firebase (Authentication → Settings → Authorized domains).');
+    if(/popup-blocked|operation-not-supported|environment/.test(c)){try{await f.auth.signInWithRedirect(pv);}catch(x){toast('Log masuk gagal ('+(x.code||x.message)+')');}return;}
+    if(c==='auth/popup-closed-by-user'||c==='auth/cancelled-popup-request')return;
+    toast('Log masuk gagal ('+(c||e.message)+')');}}
 async function logout(){if(FB)await FB.auth.signOut();FBU=null;render();toast('Log keluar');}
 function mergeManual(a,b){const m={};[...a,...b].forEach(p=>{const o=m[p.id];if(!o||(p.closed&&!o.closed))m[p.id]=p;});return Object.values(m);}
 async function cloudPull(){if(!FBU)return;try{const d=await FB.db.collection('users').doc(FBU.uid).get();const r=d.exists?d.data():null;

@@ -24,10 +24,10 @@ PER_STOCK = 6
 
 POS = ["profit rise", "profit jump", "higher profit", "net profit up", "record", "contract", "secures", "wins", "bags",
        "award", "dividend", "bonus issue", "surge", "jumps", "soars", "rally", "upgrade", "acquire", "expansion", "order book",
-       "untung meningkat", "kontrak", "anugerah", "dividen", "melonjak", "naik", "peroleh"]
+       "rise", "rises", "gain", "gains", "boost", "growth", "beats", "strong", "untung meningkat", "kontrak", "anugerah", "dividen", "melonjak", "naik", "peroleh"]
 NEG = ["loss", "losses", "falls", "fall", "plunge", "slump", "drop", "probe", "investigat", "lawsuit", "sued", "downgrade",
        "pn17", "default", "resign", "quits", "fraud", "warning", "delay", "terminated", "rugi", "jatuh", "merosot", "siasat",
-       "saman", "letak jawatan"]
+       "saman", "letak jawatan", "weak", "lower profit", "cuts", "slides"]
 
 SUFFIX = re.compile(r"\b(berhad|bhd\.?|holdings?|group|corporation|corp\.?|resources|industries|technologies|international)\b", re.I)
 
@@ -58,6 +58,8 @@ def fetch(name):
         src = (it.findtext("source") or "").strip()
         if src and title.endswith(" - " + src):
             title = title[: -len(src) - 3].strip()
+        if " estimates – " in title.lower() or " estimates - " in title.lower():
+            continue  # halaman anggaran automatik, bukan berita
         if key.split()[0] not in title.lower():
             continue  # buang hasil yang tidak menyebut syarikat
         try:

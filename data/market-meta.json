@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-29T03:22+00:00",
+ "generated": "2026-10-29T03:38+00:00",
  "asof": "2026-10-28",
  "provider": "yfinance",
  "count": 1112,
@@ -34,14 +34,14 @@
    "name": "Momentum MACD",
    "n": 13968,
    "p": 35,
-   "md": 5,
+   "md": 5.0,
    "d25": 2,
    "d75": 10,
    "ev": -0.69
   },
   "os": {
    "name": "Lantunan lebih jualan",
-   "n": 10290,
+   "n": 10289,
    "p": 41,
    "md": 5.0,
    "d25": 2,

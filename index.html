@@ -256,6 +256,7 @@ main>.card,main>.alert,main>.grid2,main>.disc,main>.pad,.search,.results{margin-
 .onb{text-align:left;max-width:440px}.onbic{font-size:46px;text-align:center;margin:18px 0 4px}.onb h2{text-align:center;margin:0 0 8px}
 .onbb{font-size:15px;line-height:1.5}.onbb ul{padding-left:20px;margin:6px 0}.onbb li{margin:6px 0}
 .onbdots{display:flex;justify-content:center;gap:6px;margin:14px 0}.onbdots span{width:8px;height:8px;border-radius:50%;background:var(--line)}.onbdots span.on{background:var(--gold);width:20px;border-radius:4px}
+.dstat{margin:12px var(--gut) 0;padding:10px 12px;border-radius:12px;background:var(--card);border:1px solid var(--line);display:flex;flex-direction:column;gap:3px;font-size:13px;color:var(--muted)}.dstat b{color:var(--ink)}.dstat.warn{border-color:var(--amber)}
 .mrow{padding:14px 0;border-bottom:1px solid var(--line);cursor:pointer}.mrow:last-child{border-bottom:0}
 .mhd{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
 .mrow.mc{padding:12px 0}.help-p .mrow{border-bottom:0;cursor:default}
@@ -809,6 +810,16 @@ function isChamp(x,code){const m=mk(code||x.code);if(!m||!m.va||!x)return false;
 function champList(){return topSignals(60).filter(x=>isChamp(x));}
 function champTestLine(){const C=S.paper&&S.paper.champ&&S.paper.champ.summary;if(!C||!C.n)return '';
   return `Ujian robot 12 bulan untuk Champion sahaja (${rm(rbStake())} setiap isyarat): ${C.n} dagangan · tepat ${C.win}% · ${C.pnl>=0?'untung':'rugi'} ${rmS(C.pnl*rbScale())}`;}
+/* Status data: tarikh harga tutup & bila kemas kini seterusnya — supaya pengguna faham kenapa tiada isyarat */
+function nextTradingDay(d){return addTradingDays(d,1);}
+function dataStatusHTML(){const asof=S.market.meta.asof,now=new Date(),t=today(),hm=now.getHours()*60+now.getMinutes();
+  let lastTD;if(isTD(now)&&hm>=1110)lastTD=t;else{const x=parseD(t);do{x.setDate(x.getDate()-1);}while(!isTD(x));lastTD=isoD(x);}
+  let nxt,warn=false;
+  if(asof>=lastTD)nxt=(isTD(now)&&hm<1110&&asof<t)?'hari ini, selepas 6.30 petang':`${fmtD(nextTradingDay(asof>=t?t:lastTD))}, selepas 6.30 petang`;
+  else if(isTD(now)&&hm>=1110&&hm<1260&&asof>=subTradingDays(t,1))nxt='sebentar lagi (robot sedang berjalan)';
+  else{nxt='data lewat — robot akan cuba semula (paling lewat 9.15 pagi)';warn=true;}
+  const n=topSignals(60).length,e=fmtD(entryDate(asof));
+  return `<div class="dstat${warn?' warn':''}"><span>📅 Data harga tutup ${fmtD(asof)} · ${n?`${n} isyarat untuk ${e}`:`tiada Isyarat Kuat untuk ${e}`}</span><span>🔄 Kemas kini seterusnya: ${nxt}</span></div>`;}
 function champHTML(){
   if(!S.market)return '';const n=champList().length;
   return `<div class="pad" style="margin-top:10px"><button class="smbtn${n?'':' off'}" onclick="openChamp()"><span>🏆</span><span><b>Isyarat Champion</b><small>${n?`${n} saham · bermula hari ini`:'Tiada isyarat Champion hari ini'}</small></span>${n?'<span class="go">Buka</span>':''}</button></div>`;}
@@ -1601,6 +1612,7 @@ const EN_PHRASE=[
 ];
 
 Object.assign(EN_EXACT,{
+'hari ini, selepas 6.30 petang':'today, after 6.30pm','sebentar lagi (robot sedang berjalan)':'shortly (the robot is running)','data lewat — robot akan cuba semula (paling lewat 9.15 pagi)':'data delayed — the robot will retry (by 9.15am at the latest)',
 'Log masuk (Tetapan → Akaun) untuk guna watchlist. Watchlist disimpan dalam akaun Google anda.':'Sign in (Settings → Account) to use the watchlist. Your watchlist is saved in your Google account.',
 'Log masuk dahulu untuk guna watchlist':'Sign in first to use the watchlist',
 'Isyarat baharu untuk':'New signals for','Semua saham patuh syariah':'All Shariah-compliant stocks','Saham dalam watchlist sahaja':'Watchlist stocks only',
@@ -1774,6 +1786,8 @@ Object.assign(EN_EXACT,{
 'Paras ini naik mengikut harga tertinggi sejak tarikh belian dan tidak pernah turun. Harga tutup di bawahnya menandakan momentum menurun.':'This level rises with the highest price since the purchase date and never falls. A close below it signals weakening momentum.',
 });
 EN_RX.unshift(
+[/^📅 Data harga tutup (.+?) · (?:(\d+) isyarat untuk (.+)|tiada Isyarat Kuat untuk (.+))$/,(m,a,b,c,d)=>`📅 Closing price data ${trText(a)} · ${b?`${b} signal(s) for ${trText(c)}`:`no strong signal for ${trText(d)}`}`],
+[/^🔄 Kemas kini seterusnya: (.+?), selepas 6\.30 petang$/,(m,a)=>`🔄 Next update: ${trText(a)}, after 6.30pm`],[/^🔄 Kemas kini seterusnya: (.+)$/,(m,a)=>`🔄 Next update: ${trText(a)}`],
 [/^(\d+) isyarat Champion baharu$/,'$1 new Champion signal(s)'],[/^(\d+) Isyarat Kuat baharu$/,'$1 new Strong signal(s)'],
 [/^(.+)\. Isyarat Kuat \+ skor teknikal Kuat, mula (.+)\.$/,(m,a,b)=>`${a}. Strong signal + strong technical score, starting ${trText(b)}.`],
 [/^(.+)\. Mula (.+)\. Buka 📋 Ringkasan isyarat aktif\.$/,(m,a,b)=>`${a}. Starting ${trText(b)}. Open 📋 Active signals summary.`],
@@ -2084,6 +2098,7 @@ function rSaham(){
   const crit=unread(computeAlerts()).filter(a=>a.lv==='critical');
   if(crit.length)h+=`<button class="urgent" onclick="openAlerts()"><span class="ai">${crit[0].ic}</span><span><b>${esc(crit[0].title)}</b><span class="ab">${crit.length>1?`dan ${crit.length-1} lagi amaran segera`:esc(crit[0].body)}</span></span><span class="go">Lihat</span></button>`;
   const al=scheduleAlerts();if(al)h+=`<div class="pad" style="margin-top:12px">${al}</div>`;
+  if(S.market)h+=dataStatusHTML();
   if(S.market)h+=`<div class="pad" style="margin-top:12px"><button class="smbtn" onclick="openSummary()"><span>📋</span><span><b>Ringkasan isyarat aktif</b><small>${topSignals(60).length} saham · bermula hari ini</small></span><span class="go">Buka</span></button></div>`;
   h+=champHTML();
   h+=top5HTML();

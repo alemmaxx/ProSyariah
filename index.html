@@ -1646,6 +1646,7 @@ const EN_PHRASE=[
 ];
 
 Object.assign(EN_EXACT,{
+'Isyarat terkuat hari ini':"Today's strongest signal",'🏆 Champion hari ini':"🏆 Today's Champion",'Pilihan hari ini · Meter tertinggi':"Today's top pick · highest Meter",
 '📊 Buka syarikat':'📊 Open company','📝 Ringkasan analisa':'📝 Analysis summary','📰 Baca berita':'📰 Read news',
 'Berita Berpotensi':'Potential news','📰 Berita Berpotensi':'📰 Potential news','Tiada berita positif dalam 3 hari lepas':'No positive news in the last 3 days','Berita Berpotensi (berita positif)':'Potential news (positive news)',
 'Saham patuh syariah yang ada berita bernada positif (▲) dalam 3 hari lepas. Tekan nama untuk lihat analisa, atau "Baca" untuk berita penuh.':'Shariah-compliant stocks with positive-toned news (▲) in the last 3 days. Tap a name for analysis, or "Read" for the full article.',
@@ -2069,12 +2070,12 @@ function screen(fn,sort,n=20){
 }
 const byScore=(a,b)=>(b.sc/b.va)-(a.sc/a.va)||(b.ch||0)-(a.ch||0);
 function featured(){
-  const w=S.watch.filter(c=>{const m=mk(c);return m&&m.va&&status(c,nameOf(c))!=='no';}).sort((a,b)=>byScore(mk(a),mk(b)));
-  if(w.length)return {code:w[0],tag:'Skor tertinggi dalam watchlist anda'};
-  const o=screen(v=>v.op&&v.op.some(x=>x.ev>0),(a,b)=>b.op[0].p-a.op[0].p,1);
-  if(o.length)return {code:o[0].code,tag:'Isyarat teknikal terkuat hari ini'};
-  const t=screen(v=>v.va>=4,byScore,1);
-  if(t.length)return {code:t[0].code,tag:'Pilihan teratas hari ini'};
+  // 1) Isyarat terkuat hari ini — hanya jika benar-benar ada Isyarat Kuat yang bermula hari ini
+  const top=topSignals(1);
+  if(top.length&&rateSignal(top[0]).g==='A')return {code:top[0].code,tag:isChamp(top[0])?'🏆 Champion hari ini':'Isyarat terkuat hari ini'};
+  // 2) Tiada Isyarat Kuat → Pilihan hari ini: Meter ProSyariah tertinggi (saham patuh syariah, cukup didagang)
+  if(S.market){let best=null;Object.entries(S.market.stocks).forEach(([c,v])=>{if(v.s!=='ok'||!v.va||v.liq===0||!v.c)return;const M=meterOf(c);if(M&&(!best||M.v>best.v||(M.v===best.v&&v.sc>mk(best.c).sc)))best={c,v:M.v};});
+    if(best)return {code:best.c,tag:'Pilihan hari ini · Meter tertinggi'};}
   const any=S.watch[0]||(S.holdings[0]&&S.holdings[0].code);
   return any?{code:any,tag:'Dari senarai anda'}:null;
 }

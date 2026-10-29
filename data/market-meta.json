@@ -1,9 +1,9 @@
 {
- "generated": "2026-10-29T06:40+00:00",
+ "generated": "2026-10-29T06:50+00:00",
  "asof": "2026-10-28",
  "provider": "yfinance",
  "count": 1112,
- "priced": 1067,
+ "priced": 1066,
  "scDate": "2026-05-29",
  "bt": {
   "h": 40,

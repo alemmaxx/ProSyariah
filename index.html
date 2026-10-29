@@ -1467,6 +1467,7 @@ const EN_EXACT={
 '🔔 Senarai syariah SC baharu dijangka':'🔔 New SC Shariah list expected','🔔 Tarikh haul anda':'🔔 Your haul date',
 };
 const EN_RX=[
+[/^✓ Nilai maya RM([\d.]+) disimpan$/,(m,a)=>'✓ Virtual amount RM'+a+' saved'],
 [/^Harga (\S+) (di atas|di bawah) EMA200 \((\S+)\)$/,(m,a,b,c)=>`Price ${a} ${b==='di atas'?'above':'below'} EMA200 (${c})`],
 [/^EMA200 perlukan 200 bar — guna EMA50 \((\S+)\)\. Harga (di atas|di bawah)\.$/,(m,a,b)=>`EMA200 needs 200 bars — using EMA50 (${a}). Price ${b==='di atas'?'above':'below'}.`],
 [/^RSI (\S+) — (.+)$/,(m,a,b)=>`RSI ${a} — ${({'lebih jualan (potensi lantunan)':'oversold (potential rebound)','lebih belian (berisiko pembetulan)':'overbought (correction risk)','momentum positif':'positive momentum','momentum lemah':'weak momentum'})[b]||b}`],

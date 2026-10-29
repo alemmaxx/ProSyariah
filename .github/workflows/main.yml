@@ -6,6 +6,8 @@ on:
     - cron: "30 10 * * 1-5"
     # Sabtu 10 pagi waktu Malaysia — tangkap senarai SC yang terbit Jumaat terakhir Mei/Nov
     - cron: "0 2 * * 6"
+    # Pagi hari bekerja 9.15 MYT — tangkap harga semalam jika Yahoo lewat
+    - cron: "15 1 * * 2-6"
   workflow_dispatch: {}
   push:
     branches: [main]

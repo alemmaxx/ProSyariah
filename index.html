@@ -857,6 +857,8 @@ function top5Alerts(push){
 let RB_MODE='live',RB_ALL=false;
 const RES3={W:['Menang','up','b-ok'],L:['Kalah','dn','b-no'],T:['Tamat masa','','b-na'],M:['Ditutup sendiri','','b-na']};
 /* ===== ROBOT MANUAL: pengguna pilih saham & harga masuk maya sendiri ===== */
+function fmtDT(iso){const d=new Date(iso);return fmtD(isoD(d))+', '+d.toLocaleTimeString(S.settings.lang==='en'?'en-GB':'ms-MY',{hour:'2-digit',minute:'2-digit',hour12:false});}
+function manStartTxt(p){return p.at&&isoD(new Date(p.at))===p.d?fmtDT(p.at):fmtD(p.d);}
 function manOpen(code){return (S.manual||[]).find(p=>p.code===code&&!p.closed);}
 function manLevels(code,en){
   const sg=signalFor(code),m=mk(code);
@@ -881,7 +883,8 @@ function openManual(code){
     body=`<div class="card" style="margin:0 0 10px"><div class="kv"><span>Masuk</span><b>${fmtD(P.d)} @ ${px(P.en)}</b></div><div class="kv"><span>Nilai maya</span><b>${rm(P.stake)}</b></div>
       <div class="kv"><span>Paras atas / bawah</span><b>${px(P.tg)} / ${px(P.sl)}</b></div><div class="kv"><span>Harga kini</span><b>${now?px(now):'-'}</b></div>
       <div class="kv"><span>Untung / rugi</span><b class="${u==null?'':u>=0?'up':'dn'}">${u==null?'-':rmS(u)}</b></div><div class="kv"><span>Tutup paling lewat</span><b>${fmtD(addTradingDays(P.d,BTH().h))}</b></div></div>
-      <div class="row" style="gap:8px"><button class="btn" id="mxClose">Tutup sekarang</button><button class="btn sec" id="mxDel">Padam</button></div>`;}
+      <label>Harga tutup (ubah jika anda tutup pada harga lain)</label><input id="mX" inputmode="decimal" value="${now?(+now).toFixed(3):''}">
+      <div class="row" style="gap:8px;margin-top:10px"><button class="btn" id="mxClose">Tutup sekarang</button><button class="btn sec" id="mxDel">Padam</button></div>`;}
   else{const en=(m&&m.c)||0;const L=en?manLevels(code,en):{tg:0,sl:0};
     body=`<p class="muted" style="margin:0 0 6px">Ujian maya tanpa wang sebenar. Robot semak setiap hari dan tutup bila harga sampai paras atas (menang), paras bawah (kalah) atau selepas ${BTH().h} hari dagangan.</p>
       <label>Nilai maya (RM)</label><input id="mS" inputmode="decimal" value="${rbStake()}">
@@ -896,11 +899,11 @@ function openManual(code){
   const close=()=>{d.remove();if(!$('#sheet').classList.contains('on'))document.body.classList.remove('ovl');};
   d.onclick=e=>{if(e.target===d)close();};$('#helpX').onclick=close;
   const after=()=>{close();if($('#sheet').classList.contains('on'))stockSheet(code,nm);if(TAB==='robot')rRobot();};
-  if(P){$('#mxClose').onclick=()=>{const now=m&&m.c;if(!now)return toast('Harga kini belum tersedia');P.closed={res:'M',exit:now,end:(S.market&&S.market.meta.asof)||today(),days:tdBetween(P.d,(S.market&&S.market.meta.asof)||today())};save();toast('Ujian manual ditutup');after();};
+  if(P){$('#mxClose').onclick=()=>{const now=m&&m.c;if(!now&&!num($('#mX').value))return toast('Harga kini belum tersedia');const xv=num($('#mX').value)||now;P.closed={res:'M',exit:xv,end:today(),at:new Date().toISOString(),days:tdBetween(P.d,today())};save();toast('Ujian manual ditutup');after();};
     $('#mxDel').onclick=()=>{S.manual=S.manual.filter(x=>x!==P);save();toast('Dipadam');after();};}
   else $('#mGo').onclick=()=>{const st=num($('#mS').value),en=num($('#mE').value),tg=num($('#mT').value),sl=num($('#mL').value),dt=$('#mD').value;
     if(!(st>0&&en>0))return toast('Masukkan nilai maya dan harga masuk');if(!(tg>en&&sl<en&&sl>0))return toast('Paras atas mesti lebih tinggi dan paras bawah lebih rendah daripada harga masuk');
-    const sg=signalFor(code);S.manual=S.manual||[];S.manual.push({id:uid(),inc:1,code,name:nm,d:dt||today(),en,stake:st,tg,sl,md:sg&&sg.md?Math.round(sg.md):null});
+    const sg=signalFor(code);S.manual=S.manual||[];S.manual.push({id:uid(),inc:1,at:new Date().toISOString(),code,name:nm,d:dt||today(),en,stake:st,tg,sl,md:sg&&sg.md?Math.round(sg.md):null});
     if(!S.watch.includes(code))S.watch.push(code);save();toast('Ditambah ke Robot Manual');getBars(code).catch(()=>{});close();closeSheet();goTab('robot');};
 }
 function manRow(p){const nm=shortName(p.name||nameOf(p.code));
@@ -909,14 +912,14 @@ function manRow(p){const nm=shortName(p.name||nameOf(p.code));
     const cell=(l,v,c='')=>`<div><span>${l}</span><b class="${c}">${v}</b></div>`;
     return `<div class="mrow" data-code="${esc(p.code)}" role="button">
     <div class="mhd"><span><b>${esc(nm)}</b> <span class="code">${esc(p.code)}</span><br><span class="badge ${r[2]}" style="margin-top:4px">${r[0]}</span></span><span class="mnow"><small>Harga kini</small><b class="${sc}">${now?px(now):'-'}</b>${since==null?'':`<em class="${sc}">${since>0?'+':''}${since.toFixed(1)}% sejak ditutup</em>`}</span></div>
-    <div class="mgrid">${cell('Harga masuk',px(p.en))}${cell('Harga tutup',px(C.exit),xp>=0?'up':'dn')}${cell('Tarikh mula',fmtD(p.d))}${cell('Tarikh tutup',`${fmtD(C.end)} (${C.days} hari)`)}<div class="mw"><span>Keputusan</span><b class="${u>=0?'up':'dn'}">${rmS(u)} (${xp>0?'+':''}${xp.toFixed(1)}%)</b></div></div>
+    <div class="mgrid">${cell('Harga masuk',px(p.en))}${cell('Harga tutup',px(C.exit),xp>=0?'up':'dn')}${cell('Masa beli',manStartTxt(p))}${cell('Masa tutup',`${C.at?fmtDT(C.at):fmtD(C.end<p.d?p.d:C.end)} (${Math.max(0,C.days)} hari)`)}<div class="mw"><span>Keputusan</span><b class="${u>=0?'up':'dn'}">${rmS(u)} (${xp>0?'+':''}${xp.toFixed(1)}%)</b></div></div>
     <div class="mft"><span class="muted" style="font-size:12px">${rm(p.stake)} nilai maya · sasaran ${px(p.tg)} · cut loss ${px(p.sl)}</span><button class="mdel" data-md="${esc(p.id)}" aria-label="Padam">🗑</button></div></div>`;}
   const m=mk(p.code),now=m&&m.c,u=now?manPnl(p,now):null,H=BTH().h;let pct=now?(now/p.en-1)*100:null;if(pct!=null&&Math.abs(pct)<0.05)pct=0;const pc=pct==null||pct===0?'':pct>0?'up':'dn';
   const cell=(l,v,c='',w='')=>`<div${w?' class="mw"':''}><span>${l}</span><b class="${c}">${v}</b></div>`;
   return `<div class="mrow" data-code="${esc(p.code)}" role="button">
     <div class="mhd"><span><b>${esc(nm)}</b> <span class="code">${esc(p.code)}</span></span><span class="mnow"><small>Harga kini</small><b class="${pc}">${now?px(now):'-'}</b>${u==null?'':`<em class="${u>=0?'up':'dn'}">${rmS(u)} (${pct>0?'+':''}${pct.toFixed(1)}%)</em>`}</span></div>
     <div class="mgrid">${cell('Harga masuk',px(p.en))}${cell('Nilai maya',rm(p.stake))}${cell('Sasaran',px(p.tg),'up')}${cell('Cut loss',px(p.sl),'dn')}
-      ${cell('Tarikh mula',fmtD(p.d))}${cell('Tamat tempoh biasa',p.md?fmtD(addTradingDays(p.d,p.inc?p.md-1:p.md)):'-')}</div>
+      ${cell('Masa beli',manStartTxt(p))}${cell('Tamat tempoh biasa',p.md?fmtD(addTradingDays(p.d,p.inc?p.md-1:p.md)):'-')}</div>
     <div class="mft">${statusHTML(p.code,nameOf(p.code),true).replace(/<span class="s-warn">(✍️|🤖)[^]*?<\/span>/g,'').replace(/ · bermula [^<]*? hingga [^<]*?(?= <button)/g,'')}<span class="row" style="gap:6px;flex:none"><button class="btn sm sec" data-mx="${esc(p.code)}">Urus</button><button class="mdel" data-md="${esc(p.id)}" aria-label="Padam">🗑</button></span></div></div>`;}
 function rManual(){
   manRefresh();const M=(S.manual||[]).slice();const op=M.filter(p=>!p.closed),cl=M.filter(p=>p.closed).sort((a,b)=>b.closed.end.localeCompare(a.closed.end));
@@ -1520,6 +1523,7 @@ const EN_PHRASE=[
 ];
 
 Object.assign(EN_EXACT,{
+'Masa beli':'Buy time','Masa tutup':'Close time','Harga tutup (ubah jika anda tutup pada harga lain)':'Close price (change it if you closed at a different price)',
 'Harga tutup':'Close price','Tarikh tutup':'Close date','Keputusan':'Result',
 '12J':'12H','Carta 30 minit / 1 jam / 12 jam hanya untuk saham yang dipantau (isyarat aktif atau skor tinggi).':'30-minute / 1-hour / 12-hour charts are only for tracked stocks (active signal or high score).',
 'Meter ProSyariah':'ProSyariah Meter','Sangat Lemah':'Very Weak','Sangat Kuat':'Very Strong','Isyarat (40%)':'Signal (40%)','Skor teknikal (40%)':'Technical score (40%)','Nada berita (20%)':'News tone (20%)','Tiada berita (neutral)':'No news (neutral)',

@@ -80,11 +80,11 @@ def alerts_for(p, M, out_dir, en):
     return out
 
 
-def new_signals(M, en):
+def new_signals(M, en, only=None):
     """Isyarat Kuat & Champion yang bermula pada hari data terkini (sama seperti app)."""
     strong, champ = [], []
     for c, v in M["stocks"].items():
-        if v.get("s") != "ok" or not v.get("op") or v.get("liq") == 0:
+        if v.get("s") != "ok" or not v.get("op") or v.get("liq") == 0 or (only is not None and c not in only):
             continue
         best = None
         for o in v["op"]:
@@ -181,8 +181,12 @@ def main():
         for p in data.get("manual", []):
             if not p.get("closed"):
                 items += alerts_for(p, M, a.out, en)
+        # Masa notifikasi: "pagi sahaja" → hanya hantar pada larian pagi (sebelum 12 tgh MYT)
+        from datetime import datetime, timezone
+        if f.get("pushAm", {}).get("booleanValue") and datetime.now(timezone(timedelta(hours=8))).hour >= 12:
+            continue
         if f.get("sig", {}).get("booleanValue", True):
-            items += new_signals(M, en)
+            items += new_signals(M, en, set(data.get("watch", [])) if f.get("sigWatch", {}).get("booleanValue") else None)
         wk = weekly(data, M, en)
         if wk:
             items.append(wk)

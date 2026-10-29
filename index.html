@@ -1196,7 +1196,7 @@ function weeklyAlert(push){const n=new Date(),dw=n.getDay();if(!((dw===5&&n.getH
   const opl=op.reduce((t,p)=>{const m=mk(p.code);return t+(m&&m.c?manPnl(p,m.c):0);},0),cpl=cl.reduce((t,p)=>t+manPnl(p,p.closed.exit),0),w=cl.filter(p=>p.closed.res==='W').length;
   push({id:'week:'+ms,lv:'action',ic:'🗓️',cat:'robot',go:'robot',title:'Ringkasan minggu ini',body:`Sedang diuji: ${op.length} (${rmS(opl)}). Ditutup minggu ini: ${cl.length}${cl.length?`, ${w} menang (${rmS(cpl)})`:''}.`});}
 /* Amaran isyarat baharu: Isyarat Kuat & Champion yang bermula hari ini */
-function signalAlerts(push){if(!S.market)return;const asof=S.market.meta.asof;const L=topSignals(60).filter(x=>rateSignal(x).g==='A');if(!L.length)return;
+function signalAlerts(push){if(!S.market)return;const asof=S.market.meta.asof;const A0=AL();const L=topSignals(60).filter(x=>rateSignal(x).g==='A'&&(A0.sigScope!=='watch'||S.watch.includes(x.code)));if(!L.length)return;
   const C=L.filter(x=>isChamp(x)),nm=a=>a.slice(0,4).map(x=>shortName(x.name)).join(', ')+(a.length>4?` +${a.length-4}`:'');
   if(C.length)push({id:'champ:'+asof,lv:'critical',ic:'🏆',cat:'isyarat',code:C.length===1?C[0].code:null,title:`${C.length} isyarat Champion baharu`,body:`${nm(C)}. Isyarat Kuat + skor teknikal Kuat, mula ${fmtD(entryDate(asof))}.`});
   push({id:'sig:'+asof,lv:'action',ic:'🟢',cat:'isyarat',code:L.length===1?L[0].code:null,title:`${L.length} Isyarat Kuat baharu`,body:`${nm(L)}. Mula ${fmtD(entryDate(asof))}. Buka 📋 Ringkasan isyarat aktif.`});}
@@ -1333,6 +1333,8 @@ function alertSettingsHTML(){
   const A=AL();const lab={isyarat:'Isyarat baharu (Isyarat Kuat & Champion)',robot:'Robot Manual (tutup, cut loss, tarikh tutup)',top5:'5 isyarat terkuat (masuk, paras atas/bawah, tempoh)',syariah:'Status syariah (pegangan & watchlist)',harga:'Harga (sasaran harga & had penurunan)',teknikal:'Isyarat teknikal (cross, RSI)',ibadah:'Zakat & penyucian',jadual:'Jadual senarai SC'};
   return `<div class="card"><h2>Amaran</h2>
    ${Object.entries(lab).map(([k,v])=>`<div class="toggle"><span>${v}</span><input type="checkbox" data-alon="${k}" ${A.on[k]?'checked':''}></div>`).join('')}
+   <label>Isyarat baharu untuk</label><select id="alScope"><option value="all"${A.sigScope!=='watch'?' selected':''}>Semua saham patuh syariah</option><option value="watch"${A.sigScope==='watch'?' selected':''}>Saham dalam watchlist sahaja</option></select>
+   <label>Masa notifikasi phone</label><select id="alTime"><option value="any"${A.pushTime!=='am'?' selected':''}>Bila-bila masa (petang selepas pasaran tutup)</option><option value="am"${A.pushTime==='am'?' selected':''}>Pagi sahaja (sekitar 9 pagi, sebelum pasaran buka)</option></select>
    <label>Amaran bila pegangan turun melebihi (% dari kos)</label><input id="alLoss" inputmode="decimal" value="${A.lossPct}">
    <div class="toggle" style="margin-top:6px"><span>Notifikasi telefon ${A.notify&&'Notification' in window&&Notification.permission==='granted'?'<span class="badge b-ok">aktif</span>':''}</span>
    ${A.notify?`<button class="btn sm sec" id="alOff">Matikan</button>`:`<button class="btn sm gold" id="alOn">Hidupkan</button>`}</div>
@@ -1341,6 +1343,8 @@ function alertSettingsHTML(){
 function bindAlertSettings(){
   const A=AL();
   document.querySelectorAll('[data-alon]').forEach(i=>i.onchange=()=>{A.on[i.dataset.alon]=i.checked;save();updateBell();});
+  $('#alScope').onchange=e=>{A.sigScope=e.target.value;save();updateBell();};
+  $('#alTime').onchange=e=>{A.pushTime=e.target.value;save();toast('✓ Disimpan');};
   $('#alLoss').onchange=e=>{A.lossPct=Math.abs(num(e.target.value))||10;save();updateBell();};
   const on=$('#alOn');if(on)on.onclick=enableNotify;const off=$('#alOff');if(off)off.onclick=()=>{A.notify=false;save();render();};
 }
@@ -1597,6 +1601,8 @@ const EN_PHRASE=[
 ];
 
 Object.assign(EN_EXACT,{
+'Isyarat baharu untuk':'New signals for','Semua saham patuh syariah':'All Shariah-compliant stocks','Saham dalam watchlist sahaja':'Watchlist stocks only',
+'Masa notifikasi phone':'Phone notification time','Bila-bila masa (petang selepas pasaran tutup)':'Any time (evening after market close)','Pagi sahaja (sekitar 9 pagi, sebelum pasaran buka)':'Mornings only (around 9am, before market open)',
 'Isyarat baharu (Isyarat Kuat & Champion)':'New signals (Strong & Champion)',
 'Selamat datang ke ProSyariah':'Welcome to ProSyariah','Cara baca isyarat':'How to read signals','Uji dengan Robot Manual':'Test with the Manual Robot',
 'Langkau':'Skip','Kembali':'Back','Seterusnya →':'Next →','Mula guna app':'Start using the app','📖 Panduan ringkas app':'📖 Quick app guide',
@@ -2536,7 +2542,7 @@ async function cloudPull(){if(!FBU)return;try{const d=await FB.db.collection('us
 async function cloudPush(now){if(!FBU)return;clearTimeout(cloudT);
   const go=async()=>{try{S.cloudAt=Date.now();save0();
     const D={manual:S.manual||[],watch:S.watch||[],manDel:S.manDel||[],settings:{lang:S.settings.lang,platform:S.settings.platform??null,paperStake:S.settings.paperStake??null},updatedAt:S.cloudAt};
-    await FB.db.collection('users').doc(FBU.uid).set({data:JSON.stringify(D),email:FBU.email||'',lang:S.settings.lang||'bm',notify:!!(S.alerts&&S.alerts.notify),sig:!!(S.alerts&&S.alerts.on&&S.alerts.on.isyarat!==false),updatedAt:S.cloudAt},{merge:true});}catch(e){}};
+    await FB.db.collection('users').doc(FBU.uid).set({data:JSON.stringify(D),email:FBU.email||'',lang:S.settings.lang||'bm',notify:!!(S.alerts&&S.alerts.notify),sig:!!(S.alerts&&S.alerts.on&&S.alerts.on.isyarat!==false),sigWatch:!!(S.alerts&&S.alerts.sigScope==='watch'),pushAm:!!(S.alerts&&S.alerts.pushTime==='am'),updatedAt:S.cloudAt},{merge:true});}catch(e){}};
   if(now)return go();cloudT=setTimeout(go,2500);}
 async function regPush(){try{if(!FBU||!FB_VAPID||!('serviceWorker' in navigator)||!('Notification' in window)||Notification.permission!=='granted')return;
   const reg=await navigator.serviceWorker.ready;const tok=await firebase.messaging().getToken({vapidKey:FB_VAPID,serviceWorkerRegistration:reg});

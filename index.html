@@ -963,13 +963,17 @@ function rManual(){
   manRefresh();const M=(S.manual||[]).slice();const op=M.filter(p=>!p.closed),cl=M.filter(p=>p.closed).sort((a,b)=>b.closed.end.localeCompare(a.closed.end));
   const w=cl.filter(p=>p.closed.res==='W').length,pnl=cl.reduce((t,p)=>t+manPnl(p,p.closed.exit),0),opn=op.reduce((t,p)=>{const m=mk(p.code);return t+(m&&m.c?manPnl(p,m.c):0);},0);
   let h=`<div class="card"><h2>✍️ Robot Manual</h2><p class="muted" style="margin-top:0">Senarai saham yang anda uji. Untuk tambah, buka mana-mana saham dan tekan ✍️ Manual. Robot semak harga setiap hari dan tutup bila sampai paras atas, paras bawah atau ${BTH().h} hari dagangan.</p>
-    <div class="mstat"><div><b>${op.length}</b><span>Sedang diuji</span></div><div><b class="${opn>=0?'up':'dn'}">${rmS(opn)}</b><span>Untung/rugi kini</span></div><div><b>${cl.length?Math.round(w/cl.length*100)+'%':'-'}</b><span>Ketepatan</span></div><div><b class="${pnl>=0?'up':'dn'}">${cl.length?rmS(pnl):'-'}</b><span>Untung/rugi selesai</span></div></div></div>`;
+    <div class="mstat"><div><b>${op.length}</b><span>Sedang diuji</span></div><div><b class="${opn>=0?'up':'dn'}">${rmS(opn)}</b><span>Untung/rugi kini</span></div><div><b>${cl.length?Math.round(w/cl.length*100)+'%':'-'}</b><span>Ketepatan</span></div><div><b class="${pnl>=0?'up':'dn'}">${cl.length?rmS(pnl):'-'}</b><span>Untung/rugi selesai</span></div></div>${M.length?`<div class="row" style="gap:8px;margin-top:10px;flex-wrap:wrap">${cl.length?'<button class="btn sm sec" id="rsClosed">Kosongkan yang selesai</button>':''}<button class="btn sm sec" id="rsAll">↺ Reset semua</button></div>`:''}</div>`;
   if(!M.length)h+=`<div class="card"><p class="muted" style="margin:0">Belum ada saham. Buka mana-mana saham dan tekan butang ✍️ Manual di atas kanan untuk mula ujian.</p></div>`;
   if(op.length)h+=`<div class="card"><h2>Sedang diuji (${op.length})</h2>${op.map(manRow).join('')}</div>`;
   if(cl.length)h+=`<div class="card"><h2>Selesai (${cl.length})</h2>${cl.map(manRow).join('')}</div>`;
   if(M.length)h+=`<p class="disc" style="margin:6px var(--gut) 0">Ujian maya tanpa wang sebenar, kos dagangan ${(BTH().fee*100).toFixed(1)}% diambil kira. Ini bacaan indicator, bukan cadangan beli atau jual.</p>`;
   return h;}
+function manReset(ids){const del=new Set(ids);S.manual=(S.manual||[]).filter(p=>!del.has(p.id));S.manDel=[...new Set([...(S.manDel||[]),...ids])].slice(-300);save();rRobot();}
+function confirm2(btn,msg,fn){if(btn.dataset.armed){fn();return;}btn.dataset.armed=1;const t=btn.textContent;btn.textContent=msg;btn.classList.add('red');setTimeout(()=>{if(btn.isConnected){delete btn.dataset.armed;btn.textContent=t;btn.classList.remove('red');}},3500);}
 function bindManual(){
+  const ra=$('#rsAll');if(ra)ra.onclick=()=>confirm2(ra,'Tekan sekali lagi untuk reset',()=>{manReset((S.manual||[]).map(p=>p.id));toast('Robot Manual direset — mula semula dari RM 0');});
+  const rc=$('#rsClosed');if(rc)rc.onclick=()=>confirm2(rc,'Tekan sekali lagi untuk kosongkan',()=>{manReset((S.manual||[]).filter(p=>p.closed).map(p=>p.id));toast('Rekod selesai dikosongkan');});
   document.querySelectorAll('#main .mrow[data-mid]').forEach(b=>b.onclick=()=>openManDetail(b.dataset.mid));
   document.querySelectorAll('[data-mx]').forEach(b=>b.onclick=e=>{e.stopPropagation();openManual(b.dataset.mx);});
   document.querySelectorAll('[data-md]').forEach(b=>b.onclick=e=>{e.stopPropagation();const x=(S.manual||[]).find(p=>p.id===b.dataset.md);if(!x)return;manDelete(x.id);rRobot();toast('Dipadam dari senarai');});
@@ -1568,6 +1572,8 @@ const EN_PHRASE=[
 ];
 
 Object.assign(EN_EXACT,{
+'Kosongkan yang selesai':'Clear closed','↺ Reset semua':'↺ Reset all','Tekan sekali lagi untuk reset':'Tap again to reset','Tekan sekali lagi untuk kosongkan':'Tap again to clear',
+'Robot Manual direset — mula semula dari RM 0':'Manual Robot reset — starting again from RM 0','Rekod selesai dikosongkan':'Closed records cleared',
 'Isyarat Kuat sahaja':'Strong signals only','Isyarat Kuat & Sederhana':'Strong & moderate signals','Tunjuk Isyarat Sederhana juga':'Also show moderate signals',
 'Asal: Isyarat Kuat sahaja — satu-satunya yang untung dalam ujian 3 tahun':'Default: strong signals only — the only ones profitable in the 3-year test',
 'Isyarat Sederhana dipaparkan':'Moderate signals shown',

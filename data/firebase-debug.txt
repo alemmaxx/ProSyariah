@@ -6,8 +6,8 @@ npm warn deprecated json-ptr@3.1.1: Package no longer supported. Contact Support
 npm warn deprecated uuid@8.3.2: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
 npm warn deprecated uuid@9.0.1: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
 npm warn deprecated uuid@9.0.1: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
-npm warn deprecated glob@10.5.0: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
 npm warn deprecated uuid@9.0.1: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
+npm warn deprecated glob@10.5.0: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
 
 ┌──────────────┬────────────────────────────┐
 │ Site ID:     │ prosyariah                 │
@@ -18,8 +18,8 @@ npm warn deprecated uuid@9.0.1: uuid@10 and below is no longer supported.  For E
 └──────────────┴────────────────────────────┘
 [36m[1mi [22m[39m deploying [1mhosting[22m
 [36m[1mi  hosting[prosyariah]:[22m[39m beginning deploy...
-[36m[1mi  hosting[prosyariah]:[22m[39m found 1176 files in [1m_site[22m
-[36m[1mi  hosting:[22m[39m uploading new files [0/160] ([1m[32m0%[39m[22m)
+[36m[1mi  hosting[prosyariah]:[22m[39m found 1175 files in [1m_site[22m
+[36m[1mi  hosting:[22m[39m adding files to version [1000/1175] ([1m[32m85%[39m[22m)
 [36m[1mi  hosting:[22m[39m upload complete
 [32m[1m✔  hosting[prosyariah]:[22m[39m file upload complete
 [36m[1mi  hosting[prosyariah]:[22m[39m finalizing version...

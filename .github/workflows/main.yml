@@ -112,17 +112,27 @@ jobs:
           cp -r icons _site/icons
           touch _site/.nojekyll
 
+      - name: Ujian app sebelum dinaikkan (gagal = versi lama dikekalkan & anda dapat emel)
+        id: smoke
+        continue-on-error: true
+        run: python scripts/smoke.py --site _site
+
       - uses: actions/configure-pages@v5
+        if: steps.smoke.outcome == 'success'
       - uses: actions/upload-pages-artifact@v3
+        if: steps.smoke.outcome == 'success'
         with:
           path: _site
       - id: deploy
+        if: steps.smoke.outcome == 'success'
         uses: actions/deploy-pages@v4
 
       # Cermin yang sama ke Firebase Hosting (prosyariah.web.app) — hanya jika secret FIREBASE_SERVICE_ACCOUNT ada
       - name: Cermin ke Firebase (prosyariah.web.app)
         if: env.FIREBASE_SA != ''
         continue-on-error: true
+        env:
+          SMOKE: ${{ steps.smoke.outcome }}
         run: |
           printf '%s' "$FIREBASE_SA" > "$RUNNER_TEMP/sa.json"
           export GOOGLE_APPLICATION_CREDENTIALS="$RUNNER_TEMP/sa.json"
@@ -133,8 +143,12 @@ jobs:
           # Cipta laman "prosyariah" (prosyariah.web.app) secara automatik jika belum ada
           npx -y firebase-tools@13.29.1 hosting:sites:get prosyariah --project "$PID" --non-interactive >> firebase-debug.txt 2>&1 \
             || npx -y firebase-tools@13.29.1 hosting:sites:create prosyariah --project "$PID" --non-interactive >> firebase-debug.txt 2>&1
-          npx -y firebase-tools@13.29.1 deploy --only hosting --project "$PID" --non-interactive --message "Kemas kini $(date -u +%F)" > fb.log 2>&1
-          rc=$?
+          if [ "$SMOKE" = "success" ]; then
+            npx -y firebase-tools@13.29.1 deploy --only hosting --project "$PID" --non-interactive --message "Kemas kini $(date -u +%F)" > fb.log 2>&1
+            rc=$?
+          else
+            echo "Ujian app gagal: hosting TIDAK dikemas kini (versi lama kekal)" > fb.log; rc=0
+          fi
           grep -v -i "private_key\|bearer\|access_token\|refresh_token" fb.log | tail -15 >> firebase-debug.txt
           echo "exit=$rc" >> firebase-debug.txt
           # Peraturan Firestore (setiap pengguna hanya baca/tulis data sendiri) — abaikan jika Firestore belum dihidupkan
@@ -157,3 +171,9 @@ jobs:
       - name: Gagalkan job jika data harga lewat (supaya anda dapat emel)
         if: github.event_name == 'schedule'
         run: python scripts/check_fresh.py
+
+      - name: Gagalkan job jika ujian app gagal (supaya anda dapat emel)
+        if: steps.smoke.outcome == 'failure'
+        run: |
+          echo "::error::Ujian app gagal. Versi baharu tidak dinaikkan; app di telefon pengguna kekal versi lama. Data & notifikasi tetap berjalan."
+          exit 1

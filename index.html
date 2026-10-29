@@ -282,7 +282,7 @@ input,textarea,[contenteditable]{-webkit-user-select:text;user-select:text}
 .tools3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.tools3 button{display:flex;flex-direction:column;align-items:center;gap:2px;padding:10px 4px;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);font:600 13px var(--f);cursor:pointer}.tools3 span{font-size:20px}
 .sclist{display:flex;flex-direction:column}.scr{display:flex;align-items:center;gap:10px;padding:10px 2px;border:0;border-bottom:1px solid var(--line);background:none;color:var(--ink);font:14px var(--f);text-align:left;cursor:pointer;width:100%}.scr small{display:block;color:var(--muted);font-size:12px}.scn{flex:1;min-width:0}.scn b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.scv{text-align:right}.scm{text-align:right;min-width:74px}
 .cmpt{width:100%;border-collapse:collapse;font-size:13.5px}.cmpt td,.cmpt th{padding:7px 4px;border-bottom:1px solid var(--line);text-align:right;vertical-align:top}.cmpt td:first-child,.cmpt th:first-child{text-align:left;color:var(--muted)}.cmpt th small{display:block;color:var(--muted);font-weight:400}
-.cmpb{margin-top:6px}
+.cmpb{margin-top:6px}.cmprow>.cmpb{flex:1}
 .plink{display:block;text-align:center;margin-top:10px;font-size:13px;color:var(--muted);text-decoration:underline}
 .auopt.off{opacity:.45;pointer-events:none}
 .mrow{padding:14px 0;border-bottom:1px solid var(--line);cursor:pointer}.mrow:last-child{border-bottom:0}
@@ -815,6 +815,39 @@ async function openKlci(){const K=S.market.meta.klci;
     <div class="tfs" style="display:flex;gap:6px;margin-bottom:8px">${rng.map(([n,l])=>`<button class="btn sm ${n===KLR?'gold':'sec'}" data-kr="${n}">${l}</button>`).join('')}</div>${svg}
     <div class="alert a-amber" style="margin:10px 0 0">Penunjuk pasaran sahaja. KLCI bukan saham dan tidak boleh didagang atau diuji dengan Robot.</div><div class="disc">KLCI ialah indeks 30 syarikat terbesar Bursa (bukan semuanya patuh syariah). Ia tunjuk keadaan pasaran secara umum. Menaik = harga atas purata 50 dan 200 hari. Menurun = bawah kedua-duanya. Selain itu Mendatar.</div>`);
   document.querySelectorAll('[data-kr]').forEach(b=>b.onclick=()=>{KLR=+b.dataset.kr;openKlci();});}
+/* ===== KONGSI: kad gambar saham untuk WhatsApp / TikTok ===== */
+async function shareCard(code){const m=mk(code);if(!m||m.c==null)return;const en=S.settings.lang==='en';
+  try{await document.fonts.ready;}catch(e){}
+  const W=1080,H=1350,c=document.createElement('canvas');c.width=W;c.height=H;const g=c.getContext('2d');const F=(w,z)=>`${w} ${z}px "Bricolage Grotesque",system-ui,sans-serif`;
+  let gr=g.createRadialGradient(W*.8,H*.12,20,W*.8,H*.12,W*.9);gr.addColorStop(0,'#0f5a45');gr.addColorStop(1,'#0a1210');g.fillStyle=gr;g.fillRect(0,0,W,H);
+  gr=g.createRadialGradient(0,H,10,0,H,W*.7);gr.addColorStop(0,'rgba(42,34,16,.9)');gr.addColorStop(1,'rgba(42,34,16,0)');g.fillStyle=gr;g.fillRect(0,0,W,H);
+  const rr=(x,y,w,h,r)=>{g.beginPath();g.moveTo(x+r,y);g.arcTo(x+w,y,x+w,y+h,r);g.arcTo(x+w,y+h,x,y+h,r);g.arcTo(x,y+h,x,y,r);g.arcTo(x,y,x+w,y,r);g.closePath();};
+  // logo
+  g.fillStyle='#d9b44a';rr(72,72,96,96,22);g.fill();g.strokeStyle='#1b1503';g.lineWidth=5;g.lineCap='round';g.fillStyle='#1b1503';
+  [[96,100,140,108,128],[120,92,146,100,136],[144,104,138,112,126]].forEach(([x,y0,y1,b0,b1])=>{g.beginPath();g.moveTo(x,y0);g.lineTo(x,y1+6);g.stroke();g.fillRect(x-8,b0,16,b1-b0);});
+  g.beginPath();g.moveTo(84,154);g.lineTo(156,154);g.stroke();
+  g.fillStyle='#f1ede2';g.font=F(800,52);g.textBaseline='middle';g.fillText('ProSyariah',192,108);g.fillStyle='#2fbf8c';g.font=F(600,24);g.fillText(en?'SHARIAH · INDICATOR · BURSA':'SYARIAH · INDICATOR · BURSA',194,148);
+  // badge patuh
+  const st=status(code,nameOf(code));const bt=st==='ok'?(en?'✓ Shariah-compliant':'✓ Patuh Syariah'):(en?'Not compliant':'Tidak patuh');g.font=F(700,30);const bw=g.measureText(bt).width+48;
+  g.fillStyle=st==='ok'?'rgba(47,191,140,.18)':'rgba(239,107,92,.18)';rr(72,250,bw,60,30);g.fill();g.fillStyle=st==='ok'?'#2fbf8c':'#ef6b5c';g.fillText(bt,96,281);
+  // nama (3D emas)
+  let nm=shortName(m.n||nameOf(code)||code);g.font=F(800,104);while(g.measureText(nm).width>W-144&&nm.length>4)nm=nm.slice(0,-2);if(nm!==shortName(m.n||nameOf(code)||code))nm=nm.trim()+'…';
+  g.fillStyle='#3a2a08';g.fillText(nm,74,408);const tg=g.createLinearGradient(0,350,0,460);tg.addColorStop(0,'#fffbe9');tg.addColorStop(.45,'#f3dc8e');tg.addColorStop(1,'#c99a2e');g.fillStyle=tg;g.fillText(nm,72,402);
+  g.fillStyle='#93a39b';g.font=F(400,34);g.fillText(`${code} · Bursa Malaysia · ${fmtD(m.d)}`,74,478);
+  // harga
+  g.fillStyle='#f1ede2';g.font=F(800,120);g.fillText('RM '+px(m.c),72,600);const ch=m.ch||0;g.font=F(700,44);g.fillStyle=ch>=0?'#2fbf8c':'#ef6b5c';g.fillText(`${ch>0?'+':''}${ch.toFixed(2)}% ${en?'today':'hari ini'}`,76,690);
+  // carta
+  const sp=(m.sp||[]).slice(-40);if(sp.length>2){const x0=72,y0=760,cw=W-144,chh=250,lo=Math.min(...sp),hi=Math.max(...sp),r=(hi-lo)||1;const P=sp.map((v,i)=>[x0+i/(sp.length-1)*cw,y0+chh-(v-lo)/r*chh]);
+    const ag=g.createLinearGradient(0,y0,0,y0+chh);ag.addColorStop(0,'rgba(217,180,74,.35)');ag.addColorStop(1,'rgba(217,180,74,0)');g.beginPath();g.moveTo(P[0][0],y0+chh);P.forEach(p=>g.lineTo(p[0],p[1]));g.lineTo(P[P.length-1][0],y0+chh);g.closePath();g.fillStyle=ag;g.fill();
+    g.beginPath();P.forEach((p,i)=>i?g.lineTo(p[0],p[1]):g.moveTo(p[0],p[1]));g.strokeStyle='#d9b44a';g.lineWidth=6;g.lineJoin='round';g.stroke();g.fillStyle='#93a39b';g.font=F(400,26);g.fillText(en?'Last 40 trading days':'40 hari dagangan terakhir',x0,y0+chh+40);}
+  // kotak meter & isyarat
+  const M=meterOf(code),so=curSig(code);const box=(x,lbl,val,col)=>{g.fillStyle='rgba(20,31,27,.9)';rr(x,1090,452,150,28);g.fill();g.strokeStyle='#25342e';g.lineWidth=2;g.stroke();g.fillStyle='#93a39b';g.font=F(400,28);g.fillText(lbl,x+32,1135);g.fillStyle=col;g.font=F(800,50);g.fillText(val,x+32,1195);};
+  box(72,'Meter',M?`${M.v} · ${en?trText(M.lbl):M.lbl}`:'-','#d9b44a');
+  box(556,en?'Signal':'Isyarat',so?(rateSignal(so).g==='A'?(en?'Strong':'Kuat'):(en?'Watch':'Pemerhatian')):(en?'None today':'Tiada hari ini'),so&&rateSignal(so).g==='A'?'#2fbf8c':'#f1ede2');
+  g.fillStyle='#93a39b';g.font=F(400,24);g.fillText(en?'Indicator reading, not a buy/sell recommendation · prosyariah.web.app':'Bacaan indicator, bukan cadangan beli/jual · prosyariah.web.app',72,1295);
+  const blob=await new Promise(r=>c.toBlob(r,'image/png'));const file=new File([blob],`ProSyariah-${code}.png`,{type:'image/png'});
+  try{if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:'ProSyariah',text:`${shortName(m.n)} (${code}) · prosyariah.web.app`});return;}}catch(e){if(e&&e.name==='AbortError')return;}
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=file.name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},2000);toast(en?'✓ Image saved':'✓ Gambar disimpan');}
 /* ===== ALAT: Penapis, Kalendar, Banding ===== */
 function toolsHTML(){if(!S.market)return '';
   return `<div class="pad tools3" style="margin-top:12px"><button onclick="openScreener()"><span>🔎</span>Penapis</button><button onclick="openCal()"><span>📅</span>Kalendar</button><button onclick="openCompare()"><span>⚖️</span>Banding</button></div>`;}
@@ -1692,6 +1725,7 @@ const EN_PHRASE=[
 ];
 
 Object.assign(EN_EXACT,{
+'📤 Kongsi':'📤 Share',
 'Penunjuk pasaran sahaja. KLCI bukan saham dan tidak boleh didagang atau diuji dengan Robot.':'Market indicator only. KLCI is not a stock and cannot be traded or tested with the Robot.',
 'Gaya tajuk & nombor':'Heading & number style','3D berkilat':'Glossy 3D',
 'Paparan':'Display','Saiz tulisan':'Text size','Kecil':'Small','Biasa':'Normal','Besar':'Large','Tema':'Theme','Gelap':'Dark','Cerah':'Light',
@@ -2384,7 +2418,7 @@ function stockSheet(code,name){
   let h=`<div class="shd"><div class="shd-top"><div class="shd-name"><h2 class="shn">${esc(name||code)}</h2><div class="code">${esc(code||'tiada kod')} · KLSE · ${badge(st)}${islTag(code)}</div></div><div class="row" style="gap:8px;flex:none;flex-wrap:nowrap">${code&&st!=='no'&&mk(code)&&mk(code).c?`<button class="mbtn" onclick="openManual('${esc(code)}')" aria-label="Robot manual">✍️ ${manOpen(code)?'Urus':'Manual'}</button>`:''}<button class="xbtn" onclick="closeSheet()" aria-label="Tutup">✕</button></div></div>
     ${code&&st!=='no'?`<div class="shrow">${sheetStatHTML(code)}${meterHTML(code,false,true)}</div>`:''}
     ${code?statusHTML(code,name,true):''}
-    ${code&&mk(code)?`<button class="anbtn" onclick="openAnalysis('${esc(code)}')">📝 Ringkasan analisa${newsFor(code).length?` · 📰 ${newsFor(code).length} berita`:''}</button>`:''}${code&&st!=='no'&&mk(code)&&mk(code).c!=null?`<button class="anbtn cmpb" onclick="CMP=[];openCompare('${esc(code)}')">⚖️ Banding dengan saham lain</button>`:''}</div>`;
+    ${code&&mk(code)?`<button class="anbtn" onclick="openAnalysis('${esc(code)}')">📝 Ringkasan analisa${newsFor(code).length?` · 📰 ${newsFor(code).length} berita`:''}</button>`:''}${code&&st!=='no'&&mk(code)&&mk(code).c!=null?`<div class="row cmprow" style="gap:8px"><button class="anbtn cmpb" onclick="CMP=[];openCompare('${esc(code)}')">⚖️ Banding</button><button class="anbtn cmpb" onclick="shareCard('${esc(code)}')">📤 Kongsi</button></div>`:''}</div>`;
   if(st==='no')h+=`<div class="alert a-red">Saham ini <b>tiada</b> dalam senarai patuh syariah SC terkini.${blocked?' Isyarat teknikal disembunyikan kerana Mod Patuh Syariah ON.':''}</div>`;
   if(st==='na')h+=`<div class="alert a-amber">Senarai SC belum diimport — status tidak dapat ditentukan.</div>`;
   h+=`<details class="card"><summary><b>Kenapa?</b> Kaedah saringan SC</summary><p class="muted">Majlis Penasihat Syariah (SAC) SC menyaring syarikat berdasarkan dua ujian: <b>aktiviti perniagaan</b> (sumbangan aktiviti tidak patuh kepada hasil & untung mesti bawah penanda aras) dan <b>nisbah kewangan</b> (tunai dalam akaun konvensional dan hutang berfaedah berbanding jumlah aset, bawah 33%). App ini memaparkan keputusan rasmi SAC, bukan pengiraan sendiri.</p></details>`;

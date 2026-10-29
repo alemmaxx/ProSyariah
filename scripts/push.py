@@ -262,6 +262,35 @@ def price_alerts(data, M, en):
     return out
 
 
+MON_BM = ["Januari", "Februari", "Mac", "April", "Mei", "Jun", "Julai", "Ogos", "September", "Oktober", "November", "Disember"]
+MON_EN = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+
+
+def monthly_report(M, en):
+    """Laporan ketepatan isyarat sebenar bulan lepas (sekali sebulan)."""
+    try:
+        log = json.load(open(os.path.join(os.path.dirname(__file__), "..", "data", "signals.json")))
+    except Exception:
+        return []
+    asof = M["meta"]["asof"]
+    y, m = int(asof[:4]), int(asof[5:7])
+    py, pm = (y, m - 1) if m > 1 else (y - 1, 12)
+    key = f"{py:04d}-{pm:02d}"
+    cl = [t for t in log.get("closed", []) if t.get("ret") is not None]
+    mon = [t for t in cl if str(t.get("end", "")).startswith(key)]
+    if not mon:
+        return []
+    st = lambda L: (len(L), round(sum(1 for t in L if t.get("res") == "W") / len(L) * 100), sum(t["ret"] for t in L) / len(L))
+    n, w, a = st(mon)
+    N, W, A = st(cl)
+    sg = lambda v: ("+" if v > 0 else "") + f"{v:.2f}%"
+    if en:
+        return [(f"month:{key}", f"📊 {MON_EN[pm - 1]} signal report",
+                 f"{n} signals closed · {w}% reached the target · average {sg(a)} each. Since start: {N} signals, {W}%, {sg(A)}.")]
+    return [(f"month:{key}", f"📊 Laporan isyarat {MON_BM[pm - 1]}",
+             f"{n} isyarat selesai · {w}% sampai sasaran · purata {sg(a)} setiap satu. Sejak mula: {N} isyarat, {W}%, {sg(A)}.")]
+
+
 def weekly(data, M, en):
     """Ringkasan mingguan: dihantar sekali setiap minggu, pada larian petang Jumaat (atau Sabtu jika terlepas)."""
     from datetime import datetime, timezone
@@ -357,6 +386,8 @@ def main():
                 items += pot_news(M, a.out, en)
             if b("px", False):
                 items += price_alerts(data, M, en)
+            if b("sig"):
+                items += monthly_report(M, en)
             wk = weekly(data, M, en)
             if wk:
                 items.append(wk)

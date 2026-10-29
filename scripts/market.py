@@ -110,11 +110,29 @@ def status(code, name, sc):
 
 
 def prices_yf(codes):
+    out = _yf_pass(codes, 150)
+    # Laluan kedua (percuma): cuba semula kaunter yang tiada harga atau ketinggalan sehari, dalam kumpulan kecil
+    if out:
+        last = max(rows[-1][0] for rows in out.values())
+        redo = [c for c in codes if c not in out or out[c][-1][0] < last][:300]
+        if redo:
+            print(f"  cuba semula {len(redo)} kaunter (tiada / lewat)")
+            got = _yf_pass(redo, 25)
+            fixed = 0
+            for c, rows in got.items():
+                if c not in out or rows[-1][0] > out[c][-1][0]:
+                    out[c] = rows
+                    fixed += 1
+            print(f"  ✓ {fixed} kaunter dipulihkan pada laluan kedua")
+    return out
+
+
+def _yf_pass(codes, size):
     import yfinance as yf
 
     out = {}
-    for i in range(0, len(codes), 150):
-        chunk = codes[i : i + 150]
+    for i in range(0, len(codes), size):
+        chunk = codes[i : i + size]
         tick = [c + ".KL" for c in chunk]
         for attempt in range(3):
             try:
@@ -138,7 +156,7 @@ def prices_yf(codes):
                 [ix.strftime("%Y-%m-%d"), r.Open, r.High, r.Low, r.Close, 0 if math.isnan(r.Volume) else r.Volume]
                 for ix, r in sub.iterrows()
             ]
-        print(f"  harga {min(i + 150, len(codes))}/{len(codes)}")
+        print(f"  harga {min(i + size, len(codes))}/{len(codes)}")
         time.sleep(2)
     return out
 

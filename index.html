@@ -2434,8 +2434,8 @@ function download(name,content,type){
   catch(e){toast('Muat turun tidak disokong — guna Salin');}
 }
 /* ===== AKAUN & SEGERAK AWAN (Firebase: log masuk Google, Firestore, notifikasi push) ===== */
-const FB_CONFIG=null;   // firebaseConfig projek prosyariah (diisi selepas web app didaftarkan)
-const FB_VAPID='';      // kunci Web Push (Cloud Messaging)
+const FB_CONFIG={apiKey:"AIzaSyAr-T8JJ64alknkrAGyrzkQ5ZVQg8m0zhw",authDomain:"prosyariah-26a55.firebaseapp.com",projectId:"prosyariah-26a55",storageBucket:"prosyariah-26a55.firebasestorage.app",messagingSenderId:"449079095972",appId:"1:449079095972:web:aecc9fd321e1d8ed02ac31"};   // config web awam (bukan rahsia)
+const FB_VAPID='BGwPRKxZeZxoGgx1C2-HFUh9mnQ1wpe9IV9tixVkQzZ0plz3HwdlYtTVDoK4L-DWBLQC14KwEidJ2_BPVgk3ieo';   // kunci awam Web Push (Cloud Messaging)
 const FBV='10.12.2';
 let FB=null,FBU=null,cloudT=null;
 function loadScript(u){return new Promise((ok,no)=>{const x=document.createElement('script');x.src=u;x.onload=ok;x.onerror=no;document.head.appendChild(x);});}

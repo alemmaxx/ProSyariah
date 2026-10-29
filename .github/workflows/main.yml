@@ -76,6 +76,10 @@ jobs:
       - name: Tarik harga & kira indicator
         run: python scripts/market.py --out _site/data
 
+      - name: Tarik harga 30 minit (carta 30m / 1 jam)
+        continue-on-error: true
+        run: python scripts/intraday.py --out _site/data
+
       - name: Tarik berita terkini (Google News)
         continue-on-error: true
         run: python scripts/news.py --out _site/data

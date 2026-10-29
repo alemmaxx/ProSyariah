@@ -224,7 +224,7 @@ def main():
                 if ops:
                     ops.sort(key=lambda x: -x["p"])
                     item["op"] = ops
-            keep = rows[-520:]
+            keep = rows[-1300:]  # ~5 tahun: untuk carta bulanan & tahunan
             out = {"d": [r[0] for r in keep], "o": [r3(r[1]) for r in keep], "h": [r3(r[2]) for r in keep],
                    "l": [r3(r[3]) for r in keep], "c": [r3(r[4]) for r in keep], "v": [int(r[5] or 0) for r in keep]}
             if bt:

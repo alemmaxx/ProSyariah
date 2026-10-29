@@ -277,6 +277,7 @@ main>.card,main>.alert,main>.grid2,main>.disc,main>.pad,.search,.results{margin-
 
 /* ---- GRAF HERO DENGAN BACAAN ---- */
 .hero .tag{order:1}.hero h2{order:2}.hero .sub{order:3}.hero .stats{order:4}.hero .hc{order:5}.hero .acts{order:6}
+.hero .htf{order:6;position:relative;z-index:2;margin:16px 0 -6px}
 .hero .hc{position:relative;height:150px;margin:18px 62px 26px 0;z-index:0}
 .hero .hc svg{position:absolute;inset:0;width:100%;height:100%;opacity:.7}
 .hero .hc .hcg{stroke:var(--muted);stroke-width:1;stroke-dasharray:3 4;vector-effect:non-scaling-stroke;opacity:.5}
@@ -286,6 +287,7 @@ main>.card,main>.alert,main>.grid2,main>.disc,main>.pad,.search,.results{margin-
 .hcd{position:absolute;bottom:-18px;font-size:11px;color:var(--muted)}
 .hcd.l{left:4px}.hcd.r{right:0}
 @media (min-width:820px){.hero .hc{position:absolute;margin:0;left:40%;right:80px;height:300px;bottom:130px;z-index:-1}}
+@media (min-width:820px){.hero>.htf.tfseg{position:absolute!important;left:40%;right:80px;bottom:70px;margin:0;z-index:2}}
 
 @media (max-width:430px){header{gap:7px;padding-left:12px;padding-right:12px}header h1{font-size:18px}.instb{padding:0 11px}.instb .lbl{display:none}.langb span{padding:0 8px}.bell{width:38px}}
 
@@ -582,11 +584,12 @@ const INTRA={};
 async function getIntra(code){if(INTRA[code])return INTRA[code];
   const r=await fetch(DATA_BASE+'i/'+encodeURIComponent(code)+'.json?v='+((S.market&&S.market.meta.generated)||today()));if(!r.ok)throw new Error('Tiada data 30 minit');
   const j=await r.json();const bars=j.t.map((d,i)=>({d,o:j.o[i],h:j.h[i],l:j.l[i],c:j.c[i],v:j.v[i]})).filter(b=>b.c>0);INTRA[code]=bars;return bars;}
-const TFS=[['30m','30m'],['1j','1J'],['D','Hari'],['W','Minggu'],['M','Bulan'],['Y','Tahun']];
+const TFS=[['30m','30m'],['1j','1J'],['12j','12J'],['D','Hari'],['W','Minggu'],['M','Bulan'],['Y','Tahun']];
 function hasIntra(code){return !!(S.intra&&S.intra.includes(code));}
 async function chartFor(code,tf){
   if(tf==='30m')return analyze(await getIntra(code),'30 minit');
   if(tf==='1j')return analyze(aggBars(await getIntra(code),d=>d.slice(0,13)),'1 jam');
+  if(tf==='12j')return analyze(aggBars(await getIntra(code),d=>d.slice(0,10)+(+d.slice(11,13)<13?' 09:00':' 14:30')),'Sesi');
   const b=await getBars(code);
   if(tf==='W')return analyze(weekly(b),'Mingguan');
   if(tf==='M')return analyze(aggBars(b,d=>d.slice(0,7)),'Bulanan');
@@ -631,7 +634,7 @@ function bindHeroChart(){
     const v=HC.v[i],y=2+(1-(v-HC.mn)/(HC.mx-HC.mn||1))*(230-4);
     ln.style.left=(i/(HC.v.length-1)*100)+'%';ln.style.display='block';
     const chg=(v/HC.v[0]-1)*100;
-    tip.innerHTML=`<b>${px(v)}</b><span>${fmtD(HC.d[i])}</span><span class="${chg>=0?'up':'dn'}">${chg>=0?'+':''}${chg.toFixed(1)}%</span>`;
+    tip.innerHTML=`<b>${px(v)}</b><span>${HC.fb?HC.fb(HC.d[i]):fmtD(HC.d[i])}</span><span class="${chg>=0?'up':'dn'}">${chg>=0?'+':''}${chg.toFixed(1)}%</span>`;
     tip.style.display='flex';tip.style.left=Math.min(Math.max(i/(HC.v.length-1)*100,12),88)+'%';tip.style.top=(y/230*100)+'%';};
   const hide=()=>{tip.style.display='none';ln.style.display='none';};
   el.onpointerdown=e=>{show(e);};el.onpointermove=e=>{if(e.pointerType==='mouse'||e.buttons||e.pressure)show(e);};
@@ -1512,6 +1515,7 @@ const EN_PHRASE=[
 ];
 
 Object.assign(EN_EXACT,{
+'12J':'12H','Carta 30 minit / 1 jam / 12 jam hanya untuk saham yang dipantau (isyarat aktif atau skor tinggi).':'30-minute / 1-hour / 12-hour charts are only for tracked stocks (active signal or high score).',
 'Meter ProSyariah':'ProSyariah Meter','Sangat Lemah':'Very Weak','Sangat Kuat':'Very Strong','Isyarat (40%)':'Signal (40%)','Skor teknikal (40%)':'Technical score (40%)','Nada berita (20%)':'News tone (20%)','Tiada berita (neutral)':'No news (neutral)',
 'Meter ini dikira oleh ProSyariah daripada bacaan dalam app: penilaian isyarat sejarah, skor teknikal semasa dan nada tajuk berita 30 hari. Ia bukan konsensus penganalisis dan bukan cadangan beli atau jual.':"This meter is calculated by ProSyariah from the app's readings: historical signal rating, current technical score and 30-day news headline tone. It is not an analyst consensus and not a buy or sell recommendation.",
 'Hari':'Day','Minggu':'Week','Bulan':'Month','Tahun':'Year',
@@ -1653,7 +1657,7 @@ Object.assign(EN_EXACT,{
 });
 EN_RX.unshift(
 [/^(\d+)\/100 ⓘ$/,'$1/100 ⓘ'],
-[/^Carta (30 minit|1 jam) · (\S+) pada (.+) \(bukan masa nyata\)$/,(m,a,b,c)=>`${a==='30 minit'?'30-minute':'1-hour'} chart · ${b} at ${trText(c)} (not real-time)`],
+[/^Carta (30 minit|1 jam|Sesi) · (\S+) pada (.+) \(bukan masa nyata\)$/,(m,a,b,c)=>`${a==='30 minit'?'30-minute':a==='1 jam'?'1-hour':'12-hour (session)'} chart · ${b} at ${trText(c)} (not real-time)`],
 [/^Carta (Bulanan|Tahunan) · harga tutup (\S+) pada (.+)$/,(m,a,b,c)=>`${a==='Bulanan'?'Monthly':'Yearly'} chart · close ${b} on ${c}`],
 [/^📝 Ringkasan analisa · 📰 (\d+) berita$/,'📝 Analysis summary · 📰 $1 news'],
 [/^Berjaya (\d+) daripada (\d+) kali$/,'Succeeded $1 of $2 times'],[/^(.+) \(~(\d+) hari\)$/,(m,a,b)=>`${trText(a)} (~${b} days)`],
@@ -1885,13 +1889,32 @@ function featured(){
   return any?{code:any,tag:'Dari senarai anda'}:null;
 }
 
+let HERO_TF='D';
+function heroSeries(code,tf){
+  const c=S.cache[code],m=mk(code),daily=c&&c.bars.length>=5?c.bars:null,ib=INTRA[code];
+  const pick=(b,n)=>{const x=b.slice(-n);return {v:x.map(y=>y.c),d:x.map(y=>y.d)};};
+  if(tf==='30m')return ib?pick(ib,72):null;
+  if(tf==='1j')return ib?pick(aggBars(ib,d=>d.slice(0,13)),60):null;
+  if(tf==='12j')return ib?pick(aggBars(ib,d=>d.slice(0,10)+(+d.slice(11,13)<13?'a':'p')),44):null;
+  if(tf==='W')return daily?pick(weekly(daily),104):null;
+  if(tf==='M')return daily?pick(aggBars(daily,d=>d.slice(0,7)),60):null;
+  if(tf==='Y')return daily?pick(aggBars(daily,d=>d.slice(0,4)),10):null;
+  if(daily)return pick(daily,90);
+  if(m&&m.sp&&m.sp.length>=5){const v=m.sp.filter(x=>x!=null);return {v,d:v.map((_,i)=>subTradingDays(m.d,v.length-1-i))};}
+  return null;}
+const HTF=[['30m','30m'],['1j','1J'],['12j','12J'],['D','Hari'],['W','Minggu'],['M','Bulan'],['Y','Tahun']];
+const TFN={'30m':'30 minit','1j':'1 jam','12j':'Sesi','D':'Harian','W':'Mingguan','M':'Bulanan','Y':'Tahunan'};
+function heroTfHTML(code){return `<div class="seg tfseg htf">${HTF.map(([k,l])=>`<button data-htf="${k}" data-code="${esc(code)}" class="${k===HERO_TF?'on':''}${['30m','1j','12j'].includes(k)&&!hasIntra(code)?' dis':''}">${l}</button>`).join('')}</div>`;}
+async function setHeroTf(tf,code){
+  if(['30m','1j','12j'].includes(tf)){if(!hasIntra(code))return toast('Carta 30 minit / 1 jam / 12 jam hanya untuk saham yang dipantau (isyarat aktif atau skor tinggi).');try{await getIntra(code);}catch(e){return toast('Data carta tidak tersedia.');}}
+  else if(tf!=='D'||!S.cache[code]){try{await getBars(code);}catch(e){}}
+  HERO_TF=tf;renderWatch();}
+document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('[data-htf]');if(!b)return;e.stopPropagation();setHeroTf(b.dataset.htf,b.dataset.code);},true);
 function heroChart(code){
-  const c=S.cache[code],m=mk(code);let v,d0,d1;
-  if(c&&c.bars.length>=5){const b=c.bars.slice(-90);v=b.map(x=>x.c);d0=b[0].d;d1=b[b.length-1].d;}
-  else if(m&&m.sp&&m.sp.length>=5){v=m.sp.filter(x=>x!=null);d1=m.d;d0=subTradingDays(m.d,v.length-1);}
-  else return '';
+  let Sx=heroSeries(code,HERO_TF);if(!Sx){HERO_TF='D';Sx=heroSeries(code,'D');}if(!Sx||Sx.v.length<2)return '';
+  const tfl=TFN[HERO_TF];const v=Sx.v,d0=Sx.d[0],d1=Sx.d[Sx.d.length-1];const fb=x=>HERO_TF==='12j'?fmtBar(x.slice(0,10),'Harian')+(x.slice(11,13)<'13'?' AM':' PM'):fmtBar(x,tfl);
   const W=400,H=230,mn=Math.min(...v),mx=Math.max(...v),r=mx-mn||1,y=x=>2+(1-(x-mn)/r)*(H-4);
-  {const dd=c&&c.bars.length>=5?c.bars.slice(-90).map(x=>x.d):v.map((_,i)=>subTradingDays(d1,v.length-1-i));HC={v,d:dd,mn,mx};}
+  HC={v,d:Sx.d,mn,mx,fb};
   const pts=v.map((x,i)=>`${(i/(v.length-1)*W).toFixed(1)},${y(x).toFixed(1)}`).join(' ');
   const pct=x=>(y(x)/H*100).toFixed(1),last=v[v.length-1],up=last>=v[0];
   const chg=(last/v[0]-1)*100;
@@ -1900,7 +1923,7 @@ function heroChart(code){
     <polygon fill="url(#hcg)" points="0,${H} ${pts} ${W},${H}"/><polyline fill="none" stroke="#d9b44a" stroke-width="2" vector-effect="non-scaling-stroke" stroke-linejoin="round" points="${pts}"/></svg>
     <span class="hcl" style="top:${pct(mx)}%">Tertinggi ${px(mx)}</span><span class="hcl" style="top:${pct(mn)}%">Terendah ${px(mn)}</span>
     <span class="hcdot" style="top:${pct(last)}%"></span><span class="hcnow ${up?'up':'dn'}" style="top:${pct(last)}%">${px(last)}</span>
-    <span class="hcd l">${fmtD(d0)}</span><span class="hcd r">${fmtD(d1)} · ${chg>=0?'+':''}${chg.toFixed(1)}%</span></div>`;
+    <span class="hcd l">${fb(d0)}</span><span class="hcd r">${fb(d1)} · ${chg>=0?'+':''}${chg.toFixed(1)}%</span></div>`;
 }
 function heroHTML(){
   const L=latestList();
@@ -1913,7 +1936,7 @@ function heroHTML(){
     <div class="acts"><button class="btn" id="hFocus">Cari saham</button></div></section>`;
   const code=f.code;const nm=nameOf(code);const st=status(code,nm);const m=mk(code);const lc=lastClose(code);
   const inW=S.watch.includes(code);const hide=S.settings.shariahMode&&st==='no';
-  return `<section class="hero" style="--hc:${st==='no'?'#5a1f1c':'#0f5a45'}">${heroChart(code)}<div class="shade"></div>
+  return `<section class="hero" style="--hc:${st==='no'?'#5a1f1c':'#0f5a45'}">${heroTfHTML(code)}${heroChart(code)}<div class="shade"></div>
     <span class="tag">✦ <b>${f.tag}</b> ${badge(st)}</span>
     ${m&&m.va&&!hide?`<div class="hstat">${bestOp(code)?(()=>{const R=rateSignal(bestOp(code));return `<span><small>Isyarat</small><span class="badge ${R.cls}">${R.lbl}</span></span>`;})():`<span><small>Isyarat</small><span class="badge b-na">Tiada isyarat aktif</span></span>`}${(()=>{const V=scoreVerdict(m.sc,m.va);return V?`<span><small>Skor teknikal ${m.sc}/${m.va}</small><span class="badge ${V.cls}">${V.lbl}</span></span>`:'';})()}<button class="sinfo" onclick="openStatusHelp()" aria-label="Maksud status">ⓘ</button></div>`:''}
     <h2>${esc(shortName(nm)||code)}</h2>
@@ -2119,7 +2142,7 @@ function scoreVerdict(sc,va){
 }
 function showInd(A,blocked,code){
   const L=A.last;const tf0=A.tf==='Mingguan'?'W':'D';
-  let h=`<div class="seg tfseg" id="tfSeg">${TFS.map(([k,l])=>`<button data-tf="${k}" class="${k===tf0?'on':''}${(k==='30m'||k==='1j')&&!hasIntra(code)?' dis':''}">${l}</button>`).join('')}</div>
+  let h=`<div class="seg tfseg" id="tfSeg">${TFS.map(([k,l])=>`<button data-tf="${k}" class="${k===tf0?'on':''}${['30m','1j','12j'].includes(k)&&!hasIntra(code)?' dis':''}">${l}</button>`).join('')}</div>
    <div class="muted" id="cvCap">Carta ${A.tf} · harga tutup ${px(L.c)} pada ${fmtD(L.d)}</div><canvas id="cv"></canvas>
    <div class="muted" style="font-size:11px">— Harga · <span style="color:var(--gold)">EMA20</span> · <span style="color:var(--blue)">EMA50</span> · <span style="color:var(--red)">EMA200</span> · kawasan hijau = Bollinger</div>`;
   if(blocked)h+=`<div class="alert a-red" style="margin-top:10px">Isyarat & skor disembunyikan (Mod Patuh Syariah ON).</div>`;
@@ -2133,10 +2156,10 @@ function showInd(A,blocked,code){
   $('#indBody').innerHTML=h;
   requestAnimationFrame(()=>{drawChart($('#cv'),A);bindCanvasHover($('#cv'),A);});
   document.querySelectorAll('#tfSeg [data-tf]').forEach(b=>b.onclick=async()=>{const tf=b.dataset.tf;
-    if((tf==='30m'||tf==='1j')&&!hasIntra(code))return toast('Carta 30 minit / 1 jam hanya untuk saham yang dipantau (isyarat aktif atau skor tinggi).');
+    if(['30m','1j','12j'].includes(tf)&&!hasIntra(code))return toast('Carta 30 minit / 1 jam / 12 jam hanya untuk saham yang dipantau (isyarat aktif atau skor tinggi).');
     document.querySelectorAll('#tfSeg [data-tf]').forEach(x=>x.classList.toggle('on',x===b));$('#cvCap').textContent='Memuatkan…';
     try{const B=await chartFor(code,tf);const cv=$('#cv');if(!cv)return;const l=B.last;
-      $('#cvCap').textContent=(tf==='30m'||tf==='1j')?`Carta ${B.tf} · ${px(l.c)} pada ${fmtBar(l.d,B.tf)} (bukan masa nyata)`:`Carta ${B.tf} · harga tutup ${px(l.c)} pada ${fmtBar(l.d,B.tf)}`;
+      $('#cvCap').textContent=['30m','1j','12j'].includes(tf)?`Carta ${B.tf} · ${px(l.c)} pada ${fmtBar(l.d,B.tf)} (bukan masa nyata)`:`Carta ${B.tf} · harga tutup ${px(l.c)} pada ${fmtBar(l.d,B.tf)}`;
       drawChart(cv,B);bindCanvasHover(cv,B);}catch(e){$('#cvCap').textContent='Data carta tidak tersedia.';}});
 }
 

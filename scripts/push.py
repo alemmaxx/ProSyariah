@@ -139,7 +139,7 @@ def main():
                 mask.append("tokens")
             http.patch(f"https://firestore.googleapis.com/v1/{d['name']}", params=[("updateMask.fieldPaths", m) for m in mask],
                        json={"fields": fields})
-    print(f"✓ Notifikasi push: {users} pengguna disemak, {sent_n} notifikasi dihantar")
+    print(f"✓ Notifikasi push: {len(docs)} akaun dalam Firestore, {users} dengan notifikasi aktif, {sent_n} notifikasi dihantar")
 
 
 if __name__ == "__main__":

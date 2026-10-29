@@ -23,7 +23,7 @@ ROOT = os.path.join(os.path.dirname(__file__), "..")
 LIVE = os.path.join(ROOT, "data", "paper-live.json")
 STAKE = float(os.environ.get("PAPER_STAKE", "20"))
 MAX_OPEN = 5
-HIST_DAYS = 365
+HIST_DAYS = 1095   # 3 tahun
 
 
 def grade(edge, n, ev):
@@ -74,15 +74,18 @@ def _liquid(rows, t):
     return sum(float(r[4]) * float(r[5] or 0) for r in w) / len(w) >= MIN_VALUE
 
 
-def historical(runs, px, compliant, min_score=0, only_a=False):
-    """Simulasi walk-forward 5 terkuat sepanjang HIST_DAYS lalu."""
+def historical(runs, px, compliant, min_score=0, only_a=False, setups=None, max_open=None, days=None):
+    """Simulasi walk-forward 5 terkuat sepanjang HIST_DAYS lalu.
+    setups: hadkan jenis isyarat (termasuk yang dihentikan, untuk eksperimen); max_open=0 → ambil semua isyarat."""
+    max_open = MAX_OPEN if max_open is None else max_open
+    days = days or HIST_DAYS
     events = []
     for code, R in runs.items():
         if code not in compliant:
             continue
         dates = [r[0] for r in px[code]]
         for k, trs in R["trades"].items():
-            if k in BT.DISABLED:
+            if (setups is None and k in BT.DISABLED) or (setups is not None and k not in setups):
                 continue
             for tr in trs:
                 t = tr["t"]
@@ -116,7 +119,7 @@ def historical(runs, px, compliant, min_score=0, only_a=False):
         return n, cw[n], cr[n]
 
     end = max(e["sd"] for e in events)
-    start = (date.fromisoformat(end) - timedelta(days=HIST_DAYS)).isoformat()
+    start = (date.fromisoformat(end) - timedelta(days=days)).isoformat()
     cands = defaultdict(list)
     for e in events:
         if e["sd"] < start or e["sc"] < min_score:
@@ -139,7 +142,7 @@ def historical(runs, px, compliant, min_score=0, only_a=False):
         open_pos = [x for x in open_pos if x["ed"] > d]
         held = {x["code"] for x in open_pos}
         for c in sorted(cands[d], key=lambda x: (x["g"], -x["edge"])):
-            if len(open_pos) >= MAX_OPEN:
+            if max_open and len(open_pos) >= max_open:
                 break
             if c["code"] in held:
                 continue
@@ -147,7 +150,7 @@ def historical(runs, px, compliant, min_score=0, only_a=False):
             done.append({"c": c["code"], "k": c["k"], "d": c["sd"], "exit": c["ed"], "p": c["p"],
                          "res": c["res"], "ret": round(c["ret"], 2), "days": c["days"]})
     done = [t for t in done if t["exit"] <= end]
-    return {"start": start, "end": end, "summary": _summary(done), "curve": _curve(done),
+    return {"start": start, "end": end, "summary": _summary(done), "curve": _curve(done), "all": done,
             "recent": sorted(done, key=lambda t: t["exit"], reverse=True)[:60],
             "bySetup": {k: _summary([t for t in done if t["k"] == k]) for k in BT.SETUPS}}
 
@@ -197,6 +200,37 @@ def build(runs, px, stocks, asof, out_dir):
     # Champion = Isyarat Kuat + skor teknikal Kuat (4/5 ke atas) pada hari isyarat
     champ = historical(runs, px, compliant, min_score=4, only_a=True)
     lv = live(px, stocks, asof)
+    # Eksperimen 3 tahun: setiap jenis isyarat diuji sendiri (semua isyarat diambil), dan beberapa penapis
+    exp = {}
+    def yearly(h):
+        if not h:
+            return {}
+        by = defaultdict(list)
+        for t in h["all"]:
+            by[t["exit"][:4]].append(t)
+        return {y: _summary(v) for y, v in sorted(by.items())}
+    variants = {
+        "robot_5_posisi": dict(),
+        "semua_isyarat": dict(max_open=0),
+        "mc_sahaja": dict(setups={"mc"}, max_open=0),
+        "os_sahaja": dict(setups={"os"}, max_open=0),
+        "gc_sahaja": dict(setups={"gc"}, max_open=0),
+        "pb_sahaja": dict(setups={"pb"}, max_open=0),
+        "skor_3_ke_atas": dict(min_score=3, max_open=0),
+        "skor_4_ke_atas": dict(min_score=4, max_open=0),
+        "gred_A_sahaja": dict(only_a=True, max_open=0),
+        "os_skor_2_ke_atas": dict(setups={"os"}, min_score=2, max_open=0),
+    }
+    for name, kw in variants.items():
+        try:
+            h = historical(runs, px, compliant, **kw)
+            exp[name] = {"summary": h["summary"], "years": yearly(h)} if h else None
+        except Exception as e:
+            exp[name] = {"error": str(e)}
+    json.dump({"asof": asof, "days": HIST_DAYS, "variants": exp}, open(os.path.join(ROOT, "data", "paper-experiments.json"), "w"), indent=1)
+    for hh in (hist, hist3, champ):
+        if hh:
+            hh.pop("all", None)
     out = {"asof": asof, "stake": STAKE, "maxOpen": MAX_OPEN, "fee": BT.FEE, "hist": hist, "hist3": hist3, "champ": champ, "live": lv,
            "names": {c: stocks[c]["n"] for c in {t["c"] for t in (hist["recent"] if hist else [])} | {t["c"] for t in (champ["recent"] if champ else [])} | {p["c"] for p in lv["open"]} if c in stocks}}
     json.dump(out, open(os.path.join(out_dir, "paper.json"), "w"), ensure_ascii=False, separators=(",", ":"))

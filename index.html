@@ -564,6 +564,7 @@ async function syncData(manual){
           if(isNew)msg=`Senarai syariah SC baharu (${fmtD(newLatest.date)}) diterima`;}}}
     try{const r4=await fetch(DATA_BASE+'paper.json?t='+Math.floor(Date.now()/36e5),{cache:'no-cache'});if(r4.ok){const t=await r4.json();if(!S.paper||S.paper.asof!==t.asof||!S.paper.hist!==!t.hist){S.paper=t;changed=true;}}}catch(e){}
     try{const r6=await fetch(DATA_BASE+'i/index.json?t='+Math.floor(Date.now()/36e5),{cache:'no-cache'});if(r6.ok){S.intra=(await r6.json()).codes||[];}}catch(e){}
+    try{const r8=await fetch(DATA_BASE+'holidays.json?t='+Math.floor(Date.now()/36e5),{cache:'no-cache'});if(r8.ok){const H=await r8.json();S.hol=H.days||[];S.hol.forEach(d=>BURSA_HOL.add(d));}}catch(e){}
     try{const r7=await fetch(DATA_BASE+'fund.json?t='+Math.floor(Date.now()/36e5),{cache:'no-cache'});if(r7.ok){S.fund=await r7.json();}}catch(e){}
     try{const r5=await fetch(DATA_BASE+'news.json?t='+Math.floor(Date.now()/36e5),{cache:'no-cache'});if(r5.ok){S.news=await r5.json();}}catch(e){}
     try{const r3=await fetch(DATA_BASE+'track.json?t='+Math.floor(Date.now()/36e5),{cache:'no-cache'});if(r3.ok){const t=await r3.json();if(!S.track||S.track.asof!==t.asof){S.track=t;changed=true;}}}catch(e){}
@@ -700,6 +701,7 @@ const BTH=()=>(S.market&&S.market.meta.bt)||{h:40,tgt:2,stp:1.25,fee:0.003};
 /* Cuti umum Bursa Malaysia (pasaran ditutup). Sumber: notis Bursa / kalendar MYX 2026. */
 const BURSA_HOL=new Set(['2026-01-01','2026-02-02','2026-02-17','2026-02-18','2026-03-20','2026-03-23','2026-05-01','2026-05-27','2026-06-01','2026-06-02','2026-06-17','2026-08-25','2026-08-31','2026-09-16','2026-11-09','2026-12-25','2027-01-01']);
 const isTD=x=>x.getDay()%6!==0&&!BURSA_HOL.has(isoD(x));
+try{(JSON.parse(localStorage.getItem('prosyariah_v1')||'{}').hol||[]).forEach(d=>BURSA_HOL.add(d));}catch(e){}
 function addTradingDays(d,n){const x=parseD(d);let k=0;while(k<n){x.setDate(x.getDate()+1);if(isTD(x))k++;}return isoD(x);}
 function opsFor(code){const m=mk(code);if(!m||!m.op)return [];let o=m.op;if(S.settings.style==='ketat')o=o.filter(x=>(x.md||0)>=5);return o;}
 function bestOp(code){const o=opsFor(code);return o.length?o[0]:null;}

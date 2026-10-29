@@ -14,8 +14,11 @@ from datetime import date, timedelta
 H, FEE = 40, 0.003
 
 
-HOL = {"2026-01-01", "2026-02-02", "2026-02-17", "2026-02-18", "2026-03-20", "2026-03-23", "2026-05-01", "2026-05-27",
-       "2026-06-01", "2026-06-02", "2026-06-17", "2026-08-25", "2026-08-31", "2026-09-16", "2026-11-09", "2026-12-25", "2027-01-01"}
+HOL = set()
+try:
+    HOL = set(json.load(open(os.path.join(os.path.dirname(__file__), "..", "data", "holidays.json")))["days"])
+except Exception:
+    pass
 
 
 def add_td(d, n):

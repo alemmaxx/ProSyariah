@@ -31,6 +31,8 @@ SC = os.path.join(ROOT, "data", "sc-list.json")
 SYMBOLS = os.path.join(ROOT, "data", "klse-symbols.json")
 KEY = os.environ.get("EODHD_API_KEY", "").strip()
 PROVIDER = os.environ.get("PRICE_PROVIDER", "yfinance").lower()
+MIN_PRICE = 0.20        # buang saham "penny" (spread besar)
+MIN_VALUE = 100_000     # nilai dagangan purata 20 hari minimum (RM)
 CODE_RE = re.compile(r"^\d{4,5}(EA)?$")  # saham, REIT, ETF; buang waran & lain-lain
 
 
@@ -195,6 +197,11 @@ def main():
             closes = [float(r[4]) for r in rows]
             vols = [float(r[5] or 0) for r in rows]
             A = analyze(closes, vols)
+            vals = [float(r[4]) * float(r[5] or 0) for r in rows[-20:]]
+            avg_val = sum(vals) / len(vals) if vals else 0
+            liq = closes[-1] >= MIN_PRICE and avg_val >= MIN_VALUE
+            item["liq"] = 1 if liq else 0
+            item["tv"] = round(avg_val)
             item.update({
                 "d": rows[-1][0], "c": r3(closes[-1]),
                 "ch": r3((closes[-1] / closes[-2] - 1) * 100) if len(closes) > 1 and closes[-2] else None,
@@ -221,7 +228,7 @@ def main():
                         "ev": stt["ev"], "ago": act["t"],
                         "en": r3(last), "tg": r3(last * (1 + act["tp"])), "sl": r3(last * (1 - act["sp"])),
                     })
-                if ops:
+                if ops and liq:
                     ops.sort(key=lambda x: -x["p"])
                     item["op"] = ops
             keep = rows[-1300:]  # ~5 tahun: untuk carta bulanan & tahunan

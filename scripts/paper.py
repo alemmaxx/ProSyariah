@@ -62,6 +62,18 @@ def _curve(trades):
     return out
 
 
+MIN_PRICE, MIN_VALUE = 0.20, 100_000
+
+
+def _liquid(rows, t):
+    """Sama seperti market.py: harga >= RM0.20 dan nilai dagangan purata 20 hari >= RM100k pada hari isyarat."""
+    c = float(rows[t][4])
+    if c < MIN_PRICE:
+        return False
+    w = rows[max(0, t - 19):t + 1]
+    return sum(float(r[4]) * float(r[5] or 0) for r in w) / len(w) >= MIN_VALUE
+
+
 def historical(runs, px, compliant, min_score=0, only_a=False):
     """Simulasi walk-forward 5 terkuat sepanjang HIST_DAYS lalu."""
     events = []
@@ -75,6 +87,8 @@ def historical(runs, px, compliant, min_score=0, only_a=False):
                 if t + tr["days"] >= len(dates):
                     continue
                 score = tr.get("sc", 0)
+                if not _liquid(px[code], t):
+                    continue
                 events.append({"code": code, "k": k, "sd": dates[t], "ed": dates[t + tr["days"]],
                                "res": tr["res"], "ret": tr["ret"] * 100, "days": tr["days"],
                                "tp": tr["tp"], "sp": tr["sp"], "sc": score})

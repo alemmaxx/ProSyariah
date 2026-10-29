@@ -555,6 +555,7 @@ async function syncData(manual){
           if(isNew)msg=`Senarai syariah SC baharu (${fmtD(newLatest.date)}) diterima`;}}}
     try{const r4=await fetch(DATA_BASE+'paper.json?t='+Math.floor(Date.now()/36e5),{cache:'no-cache'});if(r4.ok){const t=await r4.json();if(!S.paper||S.paper.asof!==t.asof||!S.paper.hist!==!t.hist){S.paper=t;changed=true;}}}catch(e){}
     try{const r6=await fetch(DATA_BASE+'i/index.json?t='+Math.floor(Date.now()/36e5),{cache:'no-cache'});if(r6.ok){S.intra=(await r6.json()).codes||[];}}catch(e){}
+    try{const r7=await fetch(DATA_BASE+'fund.json?t='+Math.floor(Date.now()/36e5),{cache:'no-cache'});if(r7.ok){S.fund=await r7.json();}}catch(e){}
     try{const r5=await fetch(DATA_BASE+'news.json?t='+Math.floor(Date.now()/36e5),{cache:'no-cache'});if(r5.ok){S.news=await r5.json();}}catch(e){}
     try{const r3=await fetch(DATA_BASE+'track.json?t='+Math.floor(Date.now()/36e5),{cache:'no-cache'});if(r3.ok){const t=await r3.json();if(!S.track||S.track.asof!==t.asof){S.track=t;changed=true;}}}catch(e){}
     updateTop5Track();
@@ -1051,6 +1052,7 @@ function stockStatus(code,name){
     else if(el>BTH().h)out.push({ic:'⌛',cls:'s-na',t:`Isyarat ${fmtD(sig.start)} tamat tanpa keputusan`});
     else if(el>md)out.push({ic:'⏳',cls:'s-warn',t:`Isyarat ${sig.p}% · tempoh indicator trading sudah berlalu (hari ke-${dayNo(sig.start)} daripada ~${md}) · bermula ${fmtD(entryDate(sig.start))} hingga ${fmtD(endFor(sig.start,md))}`});
     else out.push({ic:'🟢',cls:'s-ok',t:`Isyarat aktif ${sig.p}% (${rateSignal({...sig,n:sig.n,w:sig.w}).lbl}) · tempoh indicator trading (hari ke-${dayNo(sig.start)} daripada ~${md}) · bermula ${fmtD(entryDate(sig.start))} hingga ${fmtD(endFor(sig.start,md))}`});}
+  else if(m&&m.liq===0)out.push({ic:'💧',cls:'s-warn',t:`Kecairan rendah: harga bawah RM0.20 atau nilai dagangan bawah RM100k sehari. Isyarat tidak dipaparkan.`});
   else if(m&&m.va)out.push({ic:'⚪',cls:'s-na',t:`Tiada isyarat teknikal aktif · skor ${m.sc}/${m.va} (${scoreVerdict(m.sc,m.va).lbl})`});
   const mp=manOpen(code);if(mp){const now=m&&m.c;const u=now?manPnl(mp,now):null;out.push({ic:'✍️',cls:'s-warn',t:`Robot manual sejak ${fmtD(mp.d)} @ ${px(mp.en)}${u!=null?` · ${rmS(u)}`:''}`});}
   const rp=null;if(rp){const now=m&&m.c;const u=now?(now/rp.en-1-S.paper.fee)*rbStake():null;out.push({ic:'🤖',cls:'s-warn',t:`Dalam robot sejak ${fmtD(rp.d)} @ ${px(rp.en)}${u!=null?` · ${rmS(u)}`:''}`});}
@@ -1085,6 +1087,7 @@ function openStatusHelp(){
     ['⌛','Isyarat tamat tanpa keputusan','40 hari dagangan berlalu tanpa harga sampai paras atas atau paras bawah.'],
     ['⚪','Tiada isyarat teknikal aktif','Tiada isyarat baharu buat masa ini. Skor dan tahap (Kuat / Neutral / Lemah) menunjukkan keadaan indicator sekarang.'],
     ['✍️','Robot manual sejak …','Saham ini sedang diuji dalam Robot Manual anda (tab Robot): tarikh dan harga masuk maya, serta untung atau rugi semasa.'],
+    ['💧','Kecairan rendah','Saham murah (bawah RM0.20) atau jarang didagang (bawah RM100k sehari). Harga belian dan jualan sebenar saham begini selalunya lebih teruk, jadi app tidak memberi isyarat untuknya.'],
     ['💼','Pegangan anda','Untung atau rugi pegangan anda berbanding harga kos yang anda masukkan di Portfolio. "Di bawah paras sokongan mengekor" bermaksud harga tutup jatuh di bawah harga tertinggi sejak tarikh belian tolak 2.5× ATR, iaitu tanda momentum menurun.'],
     ['✕','Tidak patuh syariah','Saham ini tiada dalam senarai patuh syariah terkini Majlis Penasihat Syariah SC.']];
   const lv=[['b-ok','Kuat','4–5 daripada 5 indicator positif: trend dan momentum menaik.'],['b-warn','Neutral – tunggu pengesahan','Kira-kira separuh indicator positif: keadaan bercampur.'],['b-no','Lemah','Kebanyakan indicator negatif: trend atau momentum menurun.']];
@@ -1539,6 +1542,12 @@ const EN_PHRASE=[
 ];
 
 Object.assign(EN_EXACT,{
+'Maklumat asas syarikat':'Company fundamentals','Nilai syarikat':'Market value','Saiz syarikat di pasaran':'Size of the company on the market','Harga berbanding untung. Lebih rendah = lebih murah':'Price compared to profit. Lower = cheaper',
+'Dividen setahun':'Dividend per year','Wang yang dibayar kepada pemegang saham':'Money paid to shareholders','Margin untung':'Profit margin','Untung daripada setiap RM100 jualan':'Profit from every RM100 of sales',
+'Untung berbanding modal pemegang saham':"Profit compared to shareholders' capital",'Hutang / modal':'Debt / capital','Lebih rendah = kurang berhutang':'Lower = less debt',
+'Pertumbuhan jualan':'Sales growth','Pertumbuhan untung':'Profit growth','Berbanding tahun lepas':'Compared to last year',
+'Kecairan rendah: harga bawah RM0.20 atau nilai dagangan bawah RM100k sehari. Isyarat tidak dipaparkan.':'Low liquidity: price below RM0.20 or daily traded value below RM100k. Signals are not shown.',
+'Kecairan rendah':'Low liquidity','Saham murah (bawah RM0.20) atau jarang didagang (bawah RM100k sehari). Harga belian dan jualan sebenar saham begini selalunya lebih teruk, jadi app tidak memberi isyarat untuknya.':'Cheap stocks (below RM0.20) or rarely traded ones (below RM100k a day). Real buy and sell prices for such stocks are usually worse, so the app gives no signals for them.',
 'Lihat analisa saham ↗':'View stock analysis ↗',
 'Masa beli':'Buy time','Masa tutup':'Close time','Harga tutup (ubah jika anda tutup pada harga lain)':'Close price (change it if you closed at a different price)',
 'Harga tutup':'Close price','Tarikh tutup':'Close date','Keputusan':'Result',
@@ -1683,6 +1692,8 @@ Object.assign(EN_EXACT,{
 'Paras ini naik mengikut harga tertinggi sejak tarikh belian dan tidak pernah turun. Harga tutup di bawahnya menandakan momentum menurun.':'This level rises with the highest price since the purchase date and never falls. A close below it signals weakening momentum.',
 });
 EN_RX.unshift(
+[/^RM ([\d.]+) (bilion|juta)$/,(m,a,b)=>`RM ${a} ${b==='bilion'?'billion':'million'}`],
+[/^Sumber: Yahoo Finance, dikemas kini (.+)\. Angka indikatif\.$/,(m,a)=>`Source: Yahoo Finance, updated ${trText(a)}. Indicative figures.`],
 [/^(\S+) · Robot Manual$/,'$1 · Manual Robot'],
 [/^Muncul (\d+) kali; (\d+) kali sampai sasaran dahulu$/,'Appeared $1 times; reached the target first $2 times'],
 [/^Isyarat ini muncul (\d+) kali dalam 5 tahun; (\d+) kali harga sampai sasaran dahulu$/,'This signal appeared $1 times in 5 years; price reached the target first $2 times'],
@@ -2082,6 +2093,20 @@ function openMeterHelp(code){const M=meterOf(code);if(!M)return;
   document.body.appendChild(d);const close=()=>{d.remove();if(!$('#sheet').classList.contains('on'))document.body.classList.remove('ovl');};
   d.onclick=e=>{if(e.target===d)close();};$('#helpX').onclick=close;}
 /* ===== RINGKASAN ANALISA: semua bacaan penting + berita dalam satu pop up ===== */
+function fundHTML(code){const F=S.fund&&S.fund.items&&S.fund.items[code];if(!F||Object.keys(F).length<3)return '';
+  const big=v=>v>=1e9?'RM '+(v/1e9).toFixed(2)+' bilion':v>=1e6?'RM '+(v/1e6).toFixed(0)+' juta':'RM '+Math.round(v).toLocaleString();
+  const pc=v=>(v>0?'+':'')+v+'%';const rows=[];
+  const add=(k,l,v,hint,cls)=>{if(F[k]==null)return;rows.push(`<div class="kv"><span>${l}<br><small class="muted">${hint}</small></span><b class="${cls||''}">${v}</b></div>`);};
+  add('mc','Nilai syarikat',big(F.mc||0),'Saiz syarikat di pasaran');
+  add('pe','P/E',F.pe,'Harga berbanding untung. Lebih rendah = lebih murah');
+  add('dy','Dividen setahun',F.dy+'%','Wang yang dibayar kepada pemegang saham');
+  add('pm','Margin untung',F.pm+'%','Untung daripada setiap RM100 jualan',F.pm>=0?'up':'dn');
+  add('roe','ROE',F.roe+'%','Untung berbanding modal pemegang saham',F.roe>=0?'up':'dn');
+  add('de','Hutang / modal',F.de+'%','Lebih rendah = kurang berhutang',F.de>100?'dn':'');
+  add('rg','Pertumbuhan jualan',pc(F.rg),'Berbanding tahun lepas',F.rg>=0?'up':'dn');
+  add('eg','Pertumbuhan untung',pc(F.eg),'Berbanding tahun lepas',F.eg>=0?'up':'dn');
+  if(!rows.length)return '';
+  return `<h3>Maklumat asas syarikat</h3><div class="card" style="margin:0">${rows.join('')}<p class="muted" style="font-size:12px;margin:8px 0 0">Sumber: Yahoo Finance, dikemas kini ${fmtD(F.at)}. Angka indikatif.</p></div>`;}
 function newsFor(code){return (S.news&&S.news.items&&S.news.items[code])||[];}
 async function openAnalysis(code){
   const nm=nameOf(code);const d=document.createElement('div');d.className='help';d.id='help';document.body.classList.add('ovl');bkEnsure();
@@ -2123,6 +2148,7 @@ function analysisHTML(code,A){
   // Teknikal
   if(A&&st!=='no'){h+=`<h3>Bacaan teknikal (${A.tf==='Mingguan'?'mingguan':'harian'})</h3><div class="card" style="margin:0">${A.checks.map(c=>`<div class="hrow"><span class="hic">${c.ok===true?'✅':c.ok===false?'❌':'➖'}</span><div><b>${esc(c.title)}</b><p class="muted">${esc(c.txt)}</p></div></div>`).join('')}${A.cross?`<p style="margin:8px 0 0">${esc(A.cross)}</p>`:''}</div>`;}
   else if(m&&m.va&&st!=='no')h+=`<h3>Bacaan teknikal</h3><div class="card" style="margin:0"><div class="kv"><span>RSI 14</span><b>${m.r!=null?Math.round(m.r):'-'}</b></div><div class="kv"><span>EMA200</span><b>${m.e2==null?'-':m.e2?'Atas':'Bawah'}</b></div><div class="kv"><span>MACD</span><b>${m.m==null?'-':m.m?'Positif':'Negatif'}</b></div></div>`;
+  h+=fundHTML(code);
   // Berita
   h+=`<h3>Berita terkini</h3>`;
   if(N.length)h+=`<div class="card" style="margin:0">${N.map(x=>`<a class="nrow" href="${esc(x.u)}" target="_blank" rel="noopener"><span class="ntone t${x.x==='+'?'p':x.x==='-'?'n':'z'}">${x.x==='+'?'▲':x.x==='-'?'▼':'•'}</span><span><b>${esc(x.t)}</b><span class="muted">${fmtD(x.d)}${x.s?' · '+esc(x.s):''}</span></span></a>`).join('')}</div>

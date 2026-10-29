@@ -1,0 +1,52 @@
+{
+ "generated": "2026-10-29T01:58+00:00",
+ "asof": "2026-10-28",
+ "provider": "yfinance",
+ "count": 1112,
+ "priced": 1067,
+ "scDate": "2026-05-29",
+ "bt": {
+  "h": 40,
+  "tgt": 2.0,
+  "stp": 1.25,
+  "fee": 0.003
+ },
+ "setups": {
+  "pb": {
+   "name": "Koreksi dalam trend menaik",
+   "n": 1667,
+   "p": 42,
+   "md": 6,
+   "d25": 3,
+   "d75": 12,
+   "ev": 0.26
+  },
+  "gc": {
+   "name": "Golden cross",
+   "n": 2616,
+   "p": 33,
+   "md": 5.0,
+   "d25": 2,
+   "d75": 9,
+   "ev": -0.85
+  },
+  "mc": {
+   "name": "Momentum MACD",
+   "n": 13968,
+   "p": 35,
+   "md": 5,
+   "d25": 2,
+   "d75": 10,
+   "ev": -0.69
+  },
+  "os": {
+   "name": "Lantunan lebih jualan",
+   "n": 10289,
+   "p": 41,
+   "md": 5,
+   "d25": 2,
+   "d75": 10,
+   "ev": 0.1
+  }
+ }
+}

@@ -76,7 +76,8 @@ jobs:
 
       - name: Commit rekod prestasi isyarat
         run: |
-          git add data/signals.json data/paper-live.json data/paper-summary.json 2>/dev/null || true
+          python3 -c "import json;m=json.load(open('_site/data/market.json'))['meta'];json.dump(m,open('data/market-meta.json','w'),indent=1)" || true
+          git add data/signals.json data/paper-live.json data/paper-summary.json data/market-meta.json 2>/dev/null || true
           if ! git diff --cached --quiet; then
             git commit -m "Data: rekod prestasi isyarat"
             git pull --rebase -q || true

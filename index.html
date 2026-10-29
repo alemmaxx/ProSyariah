@@ -690,6 +690,11 @@ function exitPlan(hd){
 }
 
 /* ================= 5 ISYARAT TEKNIKAL TERKUAT ================= */
+/* Tarikh mula (labur) = hari dagangan selepas hari isyarat. Untuk isyarat terkini, jika hari ini sudah lebih lewat, guna hari ini. */
+function entryDate(sd){if(!sd)return sd;const nx=addTradingDays(sd,1),t=today(),asof=S.market&&S.market.meta.asof;
+  return (sd===asof&&parseD(t).getDay()%6&&t>nx)?t:nx;}
+function endFor(sd,md){return addTradingDays(entryDate(sd),Math.max(0,Math.round(md||1)-1));}
+function dayNo(sd){const e=entryDate(sd),t=today();return t<e?0:tdBetween(e,t)+(parseD(t).getDay()%6?1:0);}
 function tdBetween(a,b){if(!a||!b||b<=a)return 0;const x=parseD(a),y=parseD(b);let n=0;while(x<y){x.setDate(x.getDate()+1);if(x.getDay()%6)n++;}return n;}
 function subTradingDays(d,n){const x=parseD(d);let k=0;while(k<n){x.setDate(x.getDate()-1);if(x.getDay()%6)k++;}return isoD(x);}
 function topSignals(n=5){
@@ -700,7 +705,7 @@ function topSignals(n=5){
     const tp=x.tg/x.en-1,sp=1-x.sl/x.en,be=(sp+fee)/(tp+sp),edge=x.p/100-be;if(edge<=0)return;
     const now=m.c,hitUp=now!=null&&now>=x.tg,hitDn=now!=null&&now<=x.sl;if(hitUp||hitDn)return;
     const el=tdBetween(x.start,asof),md=Math.max(1,Math.round(x.md||0));
-    out.push({...x,be,edge,now,el,md,end:addTradingDays(x.start,md),passed:el>md,limitEnd:addTradingDays(x.start,BTH().h)});};
+    out.push({...x,be,edge,now,el,md,end:endFor(x.start,md),passed:el>md,limitEnd:addTradingDays(x.start,BTH().h)});};
   Object.entries(M.stocks).forEach(([c,v])=>(v.op||[]).forEach(o=>{if(o.ev>0)add({code:c,name:v.n,k:o.k,p:o.p,start:subTradingDays(v.d,o.ago||0),en:o.en,tg:o.tg,sl:o.sl,md:o.md,cf:o.cf,w:o.w,n:o.n,ev:o.ev});}));
   ((S.track&&S.track.openList)||[]).forEach(s=>add({code:s.c,name:s.n,k:s.k,p:s.p,start:s.d,en:s.en,tg:s.tg,sl:s.sl,md:s.md,n:s.ns,w:s.ws,ev:s.ev}));
   const best={};out.filter(x=>x.start===asof).forEach(x=>{if(!best[x.code]||x.edge>best[x.code].edge)best[x.code]=x;});
@@ -766,9 +771,9 @@ function top5HTML(){
       <span class="row between"><span><b>${esc(shortName(x.name))}</b> <span class="code">${esc(x.code)}</span>${isChamp(x)?' <span class="badge b-gold">🏆 Champion</span>':''}${(S.t5&&S.t5[x.code+':'+x.k+':'+x.start]&&S.t5[x.code+':'+x.k+':'+x.start].ev.in===S.market.meta.asof)?' <span class="badge b-ok">Baharu</span>':''}</span><b class="t5p">${x.p}%</b></span>
       <span class="muted">${esc(setupName(x.k))}</span>
       ${rateHTML(x)}
-      <span class="t5d"><span>Isyarat bermula <b>${fmtD(x.start)}</b></span><span>Tempoh biasa ${x.md} hari dagangan, hingga <b>${fmtD(x.end)}</b></span></span>
+      <span class="t5d"><span>Mula <b>${fmtD(entryDate(x.start))}</b></span><span>Tempoh biasa ${x.md} hari dagangan, hingga <b>${fmtD(x.end)}</b></span></span>
       <span class="t5bar${x.passed?' over':''}"><span style="width:${pct}%"></span></span>
-      <span class="t5s"><span class="badge ${x.passed?'b-warn':'b-ok'}">${x.passed?`Tempoh biasa sudah berlalu`:`Masih dalam tempoh biasa`}</span><span class="muted">hari dagangan ke-${x.el} daripada ~${x.md}</span></span>
+      <span class="t5s"><span class="badge ${x.passed?'b-warn':'b-ok'}">${x.passed?`Tempoh biasa sudah berlalu`:`Masih dalam tempoh biasa`}</span><span class="muted">hari dagangan ke-${dayNo(x.start)} daripada ~${x.md}</span></span>
       <span class="muted" style="font-size:12px">Harga kini ${px(x.now)} · paras atas ${px(x.tg)} · paras bawah ${px(x.sl)} · isyarat tamat ${fmtD(x.limitEnd)}</span>
     </span></button>`;});
   h+=`</div><p class="disc" style="margin:8px var(--gut) 0">Kekuatan = kebarangkalian sejarah berbanding paras neutral. "Tempoh biasa" ialah median masa harga sampai paras atas dalam sejarah saham ini. Ini bacaan indicator, bukan cadangan beli atau jual.</p></section>`;
@@ -814,7 +819,7 @@ function manLevels(code,en){
   const tp=a?cl(2*a/en,.03,.25):.06,sp=a?cl(1.25*a/en,.02,.15):.04;return {tg:en*(1+tp),sl:en*(1-sp)};}
 function manEval(p){
   const bars=S.cache[p.code]&&S.cache[p.code].bars;if(!bars)return null;
-  const after=bars.filter(b=>b.d>p.d),H=BTH().h;
+  const after=bars.filter(b=>p.inc?b.d>=p.d:b.d>p.d),H=BTH().h;
   for(let i=0;i<Math.min(after.length,H);i++){const b=after[i];
     if(b.l<=p.sl)return {res:'L',exit:p.sl,end:b.d,days:i+1};
     if(b.h>=p.tg)return {res:'W',exit:p.tg,end:b.d,days:i+1};}
@@ -835,7 +840,7 @@ function openManual(code){
     body=`<p class="muted" style="margin:0 0 6px">Ujian maya tanpa wang sebenar. Robot semak setiap hari dan tutup bila harga sampai paras atas (menang), paras bawah (kalah) atau selepas ${BTH().h} hari dagangan.</p>
       <label>Nilai maya (RM)</label><input id="mS" inputmode="decimal" value="${rbStake()}">
       <label>Harga masuk</label><input id="mE" inputmode="decimal" value="${en?(+en).toFixed(3):''}">
-      <label>Tarikh masuk</label><input id="mD" type="date" value="${(S.market&&S.market.meta.asof)||today()}">
+      <label>Tarikh masuk</label><input id="mD" type="date" value="${S.market?entryDate(S.market.meta.asof):today()}">
       <label>Paras atas (sasaran)</label><input id="mT" inputmode="decimal" value="${L.tg?L.tg.toFixed(3):''}">
       <label>Paras bawah (had)</label><input id="mL" inputmode="decimal" value="${L.sl?L.sl.toFixed(3):''}">
       <p class="muted" style="font-size:12px">Paras atas dan bawah diisi automatik daripada isyarat atau ATR saham ini. Anda boleh ubah.</p>
@@ -849,7 +854,7 @@ function openManual(code){
     $('#mxDel').onclick=()=>{S.manual=S.manual.filter(x=>x!==P);save();toast('Dipadam');after();};}
   else $('#mGo').onclick=()=>{const st=num($('#mS').value),en=num($('#mE').value),tg=num($('#mT').value),sl=num($('#mL').value),dt=$('#mD').value;
     if(!(st>0&&en>0))return toast('Masukkan nilai maya dan harga masuk');if(!(tg>en&&sl<en&&sl>0))return toast('Paras atas mesti lebih tinggi dan paras bawah lebih rendah daripada harga masuk');
-    const sg=signalFor(code);S.manual=S.manual||[];S.manual.push({id:uid(),code,name:nm,d:dt||today(),en,stake:st,tg,sl,md:sg&&sg.md?Math.round(sg.md):null});
+    const sg=signalFor(code);S.manual=S.manual||[];S.manual.push({id:uid(),inc:1,code,name:nm,d:dt||today(),en,stake:st,tg,sl,md:sg&&sg.md?Math.round(sg.md):null});
     if(!S.watch.includes(code))S.watch.push(code);save();toast('Ditambah ke Robot Manual');getBars(code).catch(()=>{});close();closeSheet();goTab('robot');};
 }
 function manRow(p){const nm=shortName(p.name||nameOf(p.code));
@@ -969,8 +974,8 @@ function stockStatus(code,name){
     if(now>=sig.tg)out.push({ic:'🎯',cls:'s-up',t:`Sudah sampai paras atas ${px(sig.tg)} (isyarat ${fmtD(sig.start)})`});
     else if(now<=sig.sl)out.push({ic:'🛑',cls:'s-no',t:`Jatuh ke paras bawah ${px(sig.sl)} (isyarat ${fmtD(sig.start)})`});
     else if(el>BTH().h)out.push({ic:'⌛',cls:'s-na',t:`Isyarat ${fmtD(sig.start)} tamat tanpa keputusan`});
-    else if(el>md)out.push({ic:'⏳',cls:'s-warn',t:`Isyarat ${sig.p}% · tempoh indicator trading sudah berlalu (hari ke-${el} daripada ~${md}) · bermula ${fmtD(sig.start)} hingga ${fmtD(addTradingDays(sig.start,md))}`});
-    else out.push({ic:'🟢',cls:'s-ok',t:`Isyarat aktif ${sig.p}% (${rateSignal({...sig,n:sig.n,w:sig.w}).lbl}) · tempoh indicator trading (hari ke-${el} daripada ~${md}) · bermula ${fmtD(sig.start)} hingga ${fmtD(addTradingDays(sig.start,md))}`});}
+    else if(el>md)out.push({ic:'⏳',cls:'s-warn',t:`Isyarat ${sig.p}% · tempoh indicator trading sudah berlalu (hari ke-${dayNo(sig.start)} daripada ~${md}) · bermula ${fmtD(entryDate(sig.start))} hingga ${fmtD(endFor(sig.start,md))}`});
+    else out.push({ic:'🟢',cls:'s-ok',t:`Isyarat aktif ${sig.p}% (${rateSignal({...sig,n:sig.n,w:sig.w}).lbl}) · tempoh indicator trading (hari ke-${dayNo(sig.start)} daripada ~${md}) · bermula ${fmtD(entryDate(sig.start))} hingga ${fmtD(endFor(sig.start,md))}`});}
   else if(m&&m.va)out.push({ic:'⚪',cls:'s-na',t:`Tiada isyarat teknikal aktif · skor ${m.sc}/${m.va} (${scoreVerdict(m.sc,m.va).lbl})`});
   const mp=manOpen(code);if(mp){const now=m&&m.c;const u=now?manPnl(mp,now):null;out.push({ic:'✍️',cls:'s-warn',t:`Robot manual sejak ${fmtD(mp.d)} @ ${px(mp.en)}${u!=null?` · ${rmS(u)}`:''}`});}
   const rp=null;if(rp){const now=m&&m.c;const u=now?(now/rp.en-1-S.paper.fee)*rbStake():null;out.push({ic:'🤖',cls:'s-warn',t:`Dalam robot sejak ${fmtD(rp.d)} @ ${px(rp.en)}${u!=null?` · ${rmS(u)}`:''}`});}
@@ -989,7 +994,7 @@ function openSummary(){
   if(!body)body=`<p class="muted">Tiada isyarat teknikal baharu yang bermula hari ini.</p>`;
   const d=document.createElement('div');d.className='help';d.id='help';document.body.classList.add('ovl');bkEnsure();
   d.innerHTML=`<div class="help-p" role="dialog" aria-modal="true"><div><div class="shd-top" style="margin-bottom:6px"><h2 style="margin:0">Ringkasan isyarat aktif</h2><button class="xbtn" id="helpX" aria-label="Tutup">✕</button></div>
-    <p class="muted" style="margin:0 0 6px">Saham patuh syariah yang isyarat teknikalnya bermula hari ini (${S.market?fmtD(S.market.meta.asof):''}), disusun dari yang terkuat. Tekan nama untuk lihat butiran.</p>
+    <p class="muted" style="margin:0 0 6px">Saham patuh syariah dengan isyarat teknikal baharu untuk mula ${S.market?fmtD(entryDate(S.market.meta.asof)):''} (dari harga tutup ${S.market?fmtD(S.market.meta.asof):''}), disusun dari yang terkuat. Tekan nama untuk lihat butiran.</p>
     <p class="muted" style="margin:0;font-size:12px">🏆 Champion = Isyarat Kuat + Skor teknikal Kuat · ⏳ tempoh biasa sudah berlalu · % = kebarangkalian sejarah</p></div>
     ${body}
     <p class="disc" style="margin-top:12px">Ini bacaan indicator, bukan cadangan beli atau jual.</p></div>`;
@@ -1459,6 +1464,7 @@ const EN_PHRASE=[
 ];
 
 Object.assign(EN_EXACT,{
+'Mula':'Start',
 'Robot manual sejak …':'Manual robot since …','Saham ini sedang diuji dalam Robot Manual anda (tab Robot): tarikh dan harga masuk maya, serta untung atau rugi semasa.':'This stock is being tested in your Manual Robot (Robot tab): virtual entry date and price, and current profit or loss.',
 'Robot Manual (tutup, cut loss, tarikh tutup)':'Manual Robot (close, cut loss, closing date)',
 'Sedang diuji':'Being tested','Untung/rugi kini':'Profit/loss now','Ketepatan':'Accuracy','Untung/rugi selesai':'Closed profit/loss',
@@ -1575,6 +1581,7 @@ Object.assign(EN_EXACT,{
 'Paras ini naik mengikut harga tertinggi sejak tarikh belian dan tidak pernah turun. Harga tutup di bawahnya menandakan momentum menurun.':'This level rises with the highest price since the purchase date and never falls. A close below it signals weakening momentum.',
 });
 EN_RX.unshift(
+[/^Saham patuh syariah dengan isyarat teknikal baharu untuk mula (.+) \(dari harga tutup (.+)\), disusun dari yang terkuat\. Tekan nama untuk lihat butiran\.$/,(m,a,b)=>`Shariah-compliant stocks with a new technical signal to start on ${trText(a)} (from the ${trText(b)} close), strongest first. Tap a name for details.`],
 [/^(.+): sampai paras atas, masa tutup \(jual\)$/,'$1: reached upper level, time to close (sell)'],
 [/^(.+): kena cut loss, force close$/,'$1: hit cut loss, force close'],
 [/^(.+): tarikh tutup sudah sampai$/,'$1: closing date reached'],

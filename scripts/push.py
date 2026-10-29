@@ -80,9 +80,9 @@ def alerts_for(p, M, out_dir, en):
     return out
 
 
-def new_signals(M, en, only=None):
-    """Isyarat Kuat & Champion yang bermula pada hari data terkini (sama seperti app)."""
-    strong, champ = [], []
+def strong_list(M, only=None):
+    """Isyarat Kuat (gred A) yang bermula pada hari data terkini — sama seperti app."""
+    out = []
     for c, v in M["stocks"].items():
         if v.get("s") != "ok" or not v.get("op") or v.get("liq") == 0 or (only is not None and c not in only):
             continue
@@ -94,12 +94,16 @@ def new_signals(M, en, only=None):
             edge = o["p"] / 100 - (sp + FEE) / (tp + sp)
             if edge >= 0.10 and (o.get("n") is None or o["n"] >= 8) and (best is None or edge > best[0]):
                 best = (edge, o)
-        if not best:
-            continue
-        nm = (v.get("n") or c).replace(" Berhad", "").replace(" Bhd", "")
-        strong.append((best[0], nm))
-        if v.get("va") and v.get("sc", 0) / v["va"] >= 0.75:
-            champ.append((best[0], nm))
+        if best:
+            out.append({"code": c, "name": (v.get("n") or c).replace(" Berhad", "").replace(" Bhd", ""), "edge": best[0], "o": best[1],
+                        "c": v.get("c"), "champ": bool(v.get("va") and v.get("sc", 0) / v["va"] >= 0.75)})
+    return sorted(out, key=lambda x: -x["edge"])
+
+
+def new_signals(M, en, only=None):
+    L = strong_list(M, only)
+    strong = [(x["edge"], x["name"]) for x in L]
+    champ = [(x["edge"], x["name"]) for x in L if x["champ"]]
     out, asof = [], M["meta"]["asof"]
     names = lambda L: ", ".join(n for _, n in sorted(L, reverse=True)[:4]) + (f" +{len(L) - 4}" if len(L) > 4 else "")
     if champ:
@@ -107,6 +111,94 @@ def new_signals(M, en, only=None):
     if strong:
         out.append((f"sig:{asof}", (f"🟢 {len(strong)} new Strong signal(s)" if en else f"🟢 {len(strong)} Isyarat Kuat baharu"), names(strong)))
     return out
+
+
+def news_list(M, out_dir):
+    """Saham patuh syariah dengan berita positif hari ini (waktu Malaysia)."""
+    from datetime import datetime, timezone
+    try:
+        N = json.load(open(os.path.join(out_dir, "news.json")))["items"]
+    except Exception:
+        return []
+    cut = datetime.now(timezone(timedelta(hours=8))).date().isoformat()
+    out = []
+    for c, arr in N.items():
+        v = M["stocks"].get(c, {})
+        if v.get("s") != "ok" or v.get("liq") == 0:
+            continue
+        g = [x for x in arr if x.get("x") == "+" and x.get("d", "") == cut]
+        if g:
+            out.append({"code": c, "name": (v.get("n") or c).replace(" Berhad", "").replace(" Bhd", ""), "d": g[0]["d"], "c": v.get("c")})
+    return sorted(out, key=lambda x: x["d"], reverse=True)
+
+
+def atr_of(code, out_dir):
+    try:
+        return json.load(open(os.path.join(out_dir, "s", f"{code}.json"))).get("atr")
+    except Exception:
+        try:
+            import requests
+            r = requests.get(f"https://prosyariah.web.app/data/s/{code}.json", timeout=15)
+            return r.json().get("atr") if r.ok else None
+        except Exception:
+            return None
+
+
+def merged_positions(data, auto):
+    """Senarai Robot Manual + Robot Auto (ikut id; versi yang sudah ditutup diutamakan), tolak yang dipadam."""
+    m = {}
+    for p in list(data.get("manual", [])) + list(auto):
+        o = m.get(p["id"])
+        if o is None or (p.get("closed") and not o.get("closed")):
+            m[p["id"]] = p
+    dele = set(data.get("manDel", []))
+    return [p for p in m.values() if p["id"] not in dele]
+
+
+def auto_adds(f, data, auto, M, out_dir, en, news_only=False):
+    """Robot Auto: cipta posisi maya baharu untuk isyarat/berita yang dipilih pengguna."""
+    b = lambda k, d=False: f.get(k, {}).get("booleanValue", d)
+    if not b("autoOn"):
+        return [], []
+    try:
+        stake = float(f.get("autoStake", {}).get("doubleValue") or f.get("autoStake", {}).get("integerValue") or 20)
+    except Exception:
+        stake = 20.0
+    asof = M["meta"]["asof"]
+    have = {p["code"] for p in merged_positions(data, auto) if not p.get("closed")}
+    seen = {p["id"] for p in auto} | set(data.get("manDel", []))
+    from datetime import datetime, timezone
+    now = datetime.now(timezone(timedelta(hours=8)))
+    entry_sig = add_td(asof, 1)
+    today = now.date().isoformat()
+    entry_news = today if (now.weekday() < 5 and today not in HOL and asof < today) else add_td(max(asof, today), 1) if asof >= today else add_td(asof, 1)
+    new = []
+    if not news_only and (b("autoSig") or b("autoChamp")):
+        for x in strong_list(M):
+            if x["code"] in have or not x["c"] or (not b("autoSig") and not x["champ"]) or f"auto-{x['code']}-{asof}" in seen:
+                continue
+            o, c = x["o"], x["c"]
+            new.append({"id": f"auto-{x['code']}-{asof}", "src": "A", "why": "champ" if x["champ"] else "sig", "inc": 1, "code": x["code"], "name": x["name"],
+                        "d": entry_sig, "en": round(c, 4), "stake": stake, "tg": round(c * o["tg"] / o["en"], 4), "sl": round(c * o["sl"] / o["en"], 4),
+                        "md": round(o["md"]) if o.get("md") else None, "at": now.isoformat()})
+            have.add(x["code"])
+    if b("autoNews"):
+        for x in news_list(M, out_dir):
+            if x["code"] in have or not x["c"] or f"auto-{x['code']}-n{x['d']}" in seen:
+                continue
+            c, a = x["c"], atr_of(x["code"], out_dir)
+            tp = min(max(2 * a / c, 0.03), 0.25) if a else 0.06
+            sp = min(max(1.25 * a / c, 0.02), 0.15) if a else 0.04
+            new.append({"id": f"auto-{x['code']}-n{x['d']}", "src": "A", "why": "news", "inc": 1, "code": x["code"], "name": x["name"],
+                        "d": entry_news, "en": round(c, 4), "stake": stake, "tg": round(c * (1 + tp), 4), "sl": round(c * (1 - sp), 4),
+                        "md": None, "at": now.isoformat()})
+            have.add(x["code"])
+    alerts = []
+    if new:
+        nm = ", ".join(p["name"] for p in new[:4]) + (f" +{len(new) - 4}" if len(new) > 4 else "")
+        alerts.append((f"autoin:{new[0]['id']}", ("🤖 Auto Robot entered " if en else "🤖 Robot Auto masuk ") + str(len(new)) + (" stock(s)" if en else " saham"),
+                       nm + (". Open the Robot tab." if en else ". Buka tab Robot.")))
+    return new, alerts
 
 
 def pot_news(M, out_dir, en):
@@ -188,55 +280,61 @@ def main():
         tok = j.get("nextPageToken")
         if not tok:
             break
-    users = sent_n = 0
+    users = sent_n = auto_n = 0
+    from datetime import datetime, timezone
+    hour = datetime.now(timezone(timedelta(hours=8))).hour
     for d in docs:
         f = d.get("fields", {})
         tokens = [x.get("stringValue") for x in f.get("tokens", {}).get("arrayValue", {}).get("values", []) if x.get("stringValue")]
-        if not tokens:  # setiap phone yang hidupkan notifikasi mendaftar token sendiri
-            continue
         try:
             data = json.loads(f.get("data", {}).get("stringValue") or "{}")
             sent = json.loads(f.get("sent", {}).get("stringValue") or "{}")
+            auto = json.loads(f.get("auto", {}).get("stringValue") or "[]")
         except Exception:
             continue
         en = (f.get("lang", {}).get("stringValue") or "bm") == "en"
-        users += 1
-        new, dead = [], set()
-        items = []
-        if a.only_news:
-            from datetime import datetime, timezone
-            if f.get("pushAm", {}).get("booleanValue") and datetime.now(timezone(timedelta(hours=8))).hour >= 12:
-                continue
-            if f.get("news", {}).get("booleanValue", True):
-                items += pot_news(M, a.out, en)
-        for p in ([] if a.only_news else data.get("manual", [])):
-            if not p.get("closed"):
-                items += alerts_for(p, M, a.out, en)
-        # Masa notifikasi: "pagi sahaja" → hanya hantar pada larian pagi (sebelum 12 tgh MYT)
-        from datetime import datetime, timezone
-        if f.get("pushAm", {}).get("booleanValue") and datetime.now(timezone(timedelta(hours=8))).hour >= 12:
+        b = lambda k, dflt=True: f.get(k, {}).get("booleanValue", dflt)
+        new, dead, items = [], set(), []
+        # 1) Robot Auto — berjalan untuk semua akaun yang hidupkannya (dengan atau tanpa notifikasi)
+        added, aal = auto_adds(f, data, auto, M, a.out, en, news_only=a.only_news)
+        if added:
+            auto = (auto + added)[-200:]
+            auto_n += len(added)
+            http.patch(f"https://firestore.googleapis.com/v1/{d['name']}", params=[("updateMask.fieldPaths", "auto")],
+                       json={"fields": {"auto": {"stringValue": json.dumps(auto)}}})
+        # 2) Notifikasi — hanya untuk phone berdaftar, ikut pilihan masa
+        if not tokens or (b("pushAm", False) and hour >= 12):
             continue
-        if not a.only_news and f.get("sig", {}).get("booleanValue", True):
-            items += new_signals(M, en, set(data.get("watch", [])) if f.get("sigWatch", {}).get("booleanValue") else None)
-        if not a.only_news and f.get("news", {}).get("booleanValue", True):
-            items += pot_news(M, a.out, en)
-        wk = None if a.only_news else weekly(data, M, en)
-        if wk:
-            items.append(wk)
+        users += 1
+        items += aal
+        if a.only_news:
+            if b("news"):
+                items += pot_news(M, a.out, en)
+        else:
+            for p in merged_positions(data, auto):
+                if not p.get("closed"):
+                    items += alerts_for(p, M, a.out, en)
+            if b("sig"):
+                items += new_signals(M, en, set(data.get("watch", [])) if b("sigWatch", False) else None)
+            if b("news"):
+                items += pot_news(M, a.out, en)
+            wk = weekly(data, M, en)
+            if wk:
+                items.append(wk)
         for aid, title, body in items:
-            if True:
-                if aid in sent:
-                    continue
-                for t in tokens:
-                    msg = {"message": {"token": t, "data": {"title": title, "body": body, "tag": aid},
-                                       "webpush": {"headers": {"Urgency": "high"}, "fcm_options": {"link": "https://prosyariah.web.app/#robot"}}}}
-                    rr = http.post(f"https://fcm.googleapis.com/v1/projects/{pid}/messages:send", json=msg)
-                    if rr.status_code in (404, 400) and ("UNREGISTERED" in rr.text or "INVALID_ARGUMENT" in rr.text):
-                        dead.add(t)
-                    elif rr.ok:
-                        sent_n += 1
-                sent[aid] = M["meta"]["asof"]
-                new.append(aid)
+            if aid in sent:
+                continue
+            link = "https://prosyariah.web.app/#robot" if aid.startswith(("man:", "week:", "autoin:")) else "https://prosyariah.web.app/"
+            for t in tokens:
+                msg = {"message": {"token": t, "data": {"title": title, "body": body, "tag": aid},
+                                   "webpush": {"headers": {"Urgency": "high"}, "fcm_options": {"link": link}}}}
+                rr = http.post(f"https://fcm.googleapis.com/v1/projects/{pid}/messages:send", json=msg)
+                if rr.status_code in (404, 400) and ("UNREGISTERED" in rr.text or "INVALID_ARGUMENT" in rr.text):
+                    dead.add(t)
+                elif rr.ok:
+                    sent_n += 1
+            sent[aid] = M["meta"]["asof"]
+            new.append(aid)
         if new or dead:
             keep = sorted(sent.items(), key=lambda x: x[1])[-300:]
             fields = {"sent": {"stringValue": json.dumps(dict(keep))}}
@@ -246,7 +344,7 @@ def main():
                 mask.append("tokens")
             http.patch(f"https://firestore.googleapis.com/v1/{d['name']}", params=[("updateMask.fieldPaths", m) for m in mask],
                        json={"fields": fields})
-    print(f"✓ Notifikasi push: {len(docs)} akaun dalam Firestore, {users} dengan phone berdaftar, {sent_n} notifikasi dihantar")
+    print(f"✓ Notifikasi push: {len(docs)} akaun dalam Firestore, {users} dengan phone berdaftar, {sent_n} notifikasi dihantar, Robot Auto {auto_n} posisi baharu")
 
 
 if __name__ == "__main__":

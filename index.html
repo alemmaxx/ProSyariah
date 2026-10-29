@@ -259,6 +259,9 @@ main>.card,main>.alert,main>.grid2,main>.disc,main>.pad,.search,.results{margin-
 .dstat{margin:12px var(--gut) 0;padding:10px 12px;border-radius:12px;background:var(--card);border:1px solid var(--line);display:flex;flex-direction:column;gap:3px;font-size:13px;color:var(--muted)}.dstat b{color:var(--ink)}.dstat.warn{border-color:var(--amber)}
 .pnb{gap:6px;flex-wrap:wrap;margin:8px 4px 4px}.pnb .btn{text-decoration:none}
 .pnr{border-bottom:1px solid var(--line);padding-bottom:8px}.pnl{display:flex;gap:8px;color:var(--ink);text-decoration:none;font-size:13px;line-height:1.4;padding:0 4px}
+.mtag{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:6px;font:800 11px var(--f);margin-right:6px;vertical-align:1px}.mtag.m{background:var(--card2);color:var(--ink);border:1px solid var(--line)}.mtag.a{background:var(--gold);color:#1b1503}
+.sw{position:relative;display:inline-block;width:46px;height:26px}.sw input{opacity:0;width:0;height:0}.sw span{position:absolute;inset:0;border-radius:99px;background:var(--line);transition:.2s;cursor:pointer}.sw span::before{content:"";position:absolute;width:20px;height:20px;left:3px;top:3px;border-radius:50%;background:#fff;transition:.2s}.sw input:checked+span{background:var(--gold)}.sw input:checked+span::before{transform:translateX(20px)}
+.auopt.off{opacity:.45;pointer-events:none}
 .mrow{padding:14px 0;border-bottom:1px solid var(--line);cursor:pointer}.mrow:last-child{border-bottom:0}
 .mhd{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
 .mrow.mc{padding:12px 0}.help-p .mrow{border-bottom:0;cursor:default}
@@ -873,6 +876,18 @@ const RES3={W:['Menang','up','b-ok'],L:['Kalah','dn','b-no'],T:['Tamat masa','',
 /* ===== ROBOT MANUAL: pengguna pilih saham & harga masuk maya sendiri ===== */
 function fmtDT(iso){const d=new Date(iso);return fmtD(isoD(d))+', '+d.toLocaleTimeString(S.settings.lang==='en'?'en-GB':'ms-MY',{hour:'2-digit',minute:'2-digit',hour12:false});}
 function manStartTxt(p){return p.at&&isoD(new Date(p.at))===p.d?fmtDT(p.at):fmtD(p.d);}
+function AUTO(){S.settings.auto=Object.assign({on:false,sig:true,champ:true,news:false,stake:20},S.settings.auto||{});return S.settings.auto;}
+function autoCardHTML(){const a=AUTO();
+  return `<div class="card autoc"><div class="row between" style="align-items:center"><h2 style="margin:0">🤖 Robot Auto</h2><label class="sw"><input type="checkbox" id="auOn" ${a.on?'checked':''}><span></span></label></div>
+    <p class="muted" style="margin:6px 0 8px;font-size:13px">Bila hidup, robot masuk ujian sendiri setiap petang (selepas data) untuk jenis yang anda pilih, guna harga tutup terakhir. Saham ini ditanda A dalam senarai.</p>
+    <div class="auopt${a.on?'':' off'}"><label class="toggle"><span>🟢 Isyarat Kuat (Ringkasan isyarat aktif)</span><input type="checkbox" id="auSig" ${a.sig?'checked':''}></label>
+    <label class="toggle"><span>🏆 Champion sahaja</span><input type="checkbox" id="auChamp" ${a.champ?'checked':''}></label>
+    <label class="toggle"><span>📰 Berita Berpotensi</span><input type="checkbox" id="auNews" ${a.news?'checked':''}></label>
+    <label>Nilai maya setiap posisi (RM)</label><input id="auStake" inputmode="decimal" value="${a.stake}"></div></div>`;}
+function bindAuto(){const a=AUTO();const upd=()=>{save();rRobot();};
+  const on=$('#auOn');if(!on)return;on.onchange=e=>{a.on=e.target.checked;upd();toast(a.on?'🤖 Robot Auto dihidupkan':'Robot Auto dimatikan');};
+  $('#auSig').onchange=e=>{a.sig=e.target.checked;upd();};$('#auChamp').onchange=e=>{a.champ=e.target.checked;upd();};$('#auNews').onchange=e=>{a.news=e.target.checked;upd();};
+  $('#auStake').onchange=e=>{a.stake=Math.max(1,num(e.target.value)||20);upd();};}
 function manDelete(id){S.manual=(S.manual||[]).filter(x=>x.id!==id);S.manDel=[...new Set([...(S.manDel||[]),id])].slice(-300);save();}
 function manOpen(code){return (S.manual||[]).find(p=>p.code===code&&!p.closed);}
 function manLevels(code,en){
@@ -921,14 +936,15 @@ function openManual(code){if(needLogin()){toast('Log masuk dahulu untuk guna Rob
     const sg=signalFor(code);S.manual=S.manual||[];S.manual.push({id:uid(),inc:1,at:new Date().toISOString(),code,name:nm,d:dt||today(),en,stake:st,tg,sl,md:sg&&sg.md?Math.round(sg.md):null});
     if(!S.watch.includes(code)){S.watch.push(code);S.watchAt=Date.now();}save();toast('Ditambah ke Robot Manual');getBars(code).catch(()=>{});close();closeSheet();goTab('robot');};
 }
+function mtag(p){return p.src==='A'?'<span class="mtag a">A</span>':'<span class="mtag m">M</span>';}
 function manRow(p){const nm=shortName(p.name||nameOf(p.code));const m=mk(p.code),now=m&&m.c;
   if(p.closed){const C=p.closed,r=RES3[C.res],u=manPnl(p,C.exit),xp=(C.exit/p.en-1)*100;
-    return `<div class="mrow mc" data-mid="${esc(p.id)}" role="button"><div class="mhd" style="margin:0"><span><b>${esc(nm)}</b> <span class="code">${esc(p.code)}</span><br><span class="badge ${r[2]}" style="margin-top:4px">${r[0]}</span></span><span class="mnow"><small>Harga kini</small><b>${now?px(now):'-'}</b><em class="${u>=0?'up':'dn'}">${rmS(u)} (${xp>0?'+':''}${xp.toFixed(1)}%)</em></span></div></div>`;}
+    return `<div class="mrow mc" data-mid="${esc(p.id)}" role="button"><div class="mhd" style="margin:0"><span>${mtag(p)}<b>${esc(nm)}</b> <span class="code">${esc(p.code)}</span><br><span class="badge ${r[2]}" style="margin-top:4px">${r[0]}</span></span><span class="mnow"><small>Harga kini</small><b>${now?px(now):'-'}</b><em class="${u>=0?'up':'dn'}">${rmS(u)} (${xp>0?'+':''}${xp.toFixed(1)}%)</em></span></div></div>`;}
   let pct=now?(now/p.en-1)*100:null;if(pct!=null&&Math.abs(pct)<0.05)pct=0;const pc=pct==null||pct===0?'':pct>0?'up':'dn',u=now?manPnl(p,now):null;
-  return `<div class="mrow mc" data-mid="${esc(p.id)}" role="button"><div class="mhd" style="margin:0"><span><b>${esc(nm)}</b> <span class="code">${esc(p.code)}</span></span><span class="mnow"><small>Harga kini</small><b class="${pc}">${now?px(now):'-'}</b>${u==null?'':`<em class="${u>=0?'up':'dn'}">${rmS(u)} (${pct>0?'+':''}${pct.toFixed(1)}%)</em>`}</span></div></div>`;}
+  return `<div class="mrow mc" data-mid="${esc(p.id)}" role="button"><div class="mhd" style="margin:0"><span>${mtag(p)}<b>${esc(nm)}</b> <span class="code">${esc(p.code)}</span>${p.src==='A'&&p.why?`<br><small class="muted">${{sig:'🟢 Isyarat Kuat',champ:'🏆 Champion',news:'📰 Berita'}[p.why]||''}</small>`:''}</span><span class="mnow"><small>Harga kini</small><b class="${pc}">${now?px(now):'-'}</b>${u==null?'':`<em class="${u>=0?'up':'dn'}">${rmS(u)} (${pct>0?'+':''}${pct.toFixed(1)}%)</em>`}</span></div></div>`;}
 function openManDetail(id){const p=(S.manual||[]).find(x=>x.id===id);if(!p)return;
   const d=document.createElement('div');d.className='help';d.id='help';document.body.classList.add('ovl');bkEnsure();
-  d.innerHTML=`<div class="help-p" role="dialog" aria-modal="true"><div><div class="shd-top"><div class="shd-name"><h2 style="margin:0">✍️ ${esc(shortName(p.name||nameOf(p.code)))}</h2><div class="code">${esc(p.code)} · Robot Manual</div></div><button class="xbtn" id="helpX" aria-label="Tutup">✕</button></div></div>
+  d.innerHTML=`<div class="help-p" role="dialog" aria-modal="true"><div><div class="shd-top"><div class="shd-name"><h2 style="margin:0">${p.src==='A'?'🤖':'✍️'} ${esc(shortName(p.name||nameOf(p.code)))}</h2><div class="code">${esc(p.code)} · ${p.src==='A'?'Robot Auto':'Robot Manual'}</div></div><button class="xbtn" id="helpX" aria-label="Tutup">✕</button></div></div>
     ${manFull(p)}<button class="btn sec" style="width:100%;margin-top:12px" id="mdView">Lihat analisa saham ↗</button></div>`;
   document.body.appendChild(d);const close=()=>{d.remove();if(!$('#sheet').classList.contains('on'))document.body.classList.remove('ovl');};
   d.onclick=e=>{const mx=e.target.closest('[data-mx]'),md=e.target.closest('[data-md]');
@@ -954,8 +970,9 @@ function manFull(p){const nm=shortName(p.name||nameOf(p.code));
 function rManual(){
   manRefresh();const M=(S.manual||[]).slice();const op=M.filter(p=>!p.closed),cl=M.filter(p=>p.closed).sort((a,b)=>b.closed.end.localeCompare(a.closed.end));
   const w=cl.filter(p=>p.closed.res==='W').length,pnl=cl.reduce((t,p)=>t+manPnl(p,p.closed.exit),0),opn=op.reduce((t,p)=>{const m=mk(p.code);return t+(m&&m.c?manPnl(p,m.c):0);},0);
-  let h=`<div class="card"><h2>✍️ Robot Manual</h2><p class="muted" style="margin-top:0">Senarai saham yang anda uji. Untuk tambah, buka mana-mana saham dan tekan ✍️ Manual. Robot semak harga setiap hari dan tutup bila sampai paras atas, paras bawah atau ${BTH().h} hari dagangan.</p>
+  let h=`<div class="card"><h2>🤖 Robot</h2><p class="muted" style="margin-top:0">Senarai saham yang diuji: M = Manual (anda tekan ✍️ Manual pada saham), A = Auto (robot masuk sendiri). Semua ditutup automatik bila sampai sasaran, cut loss atau 40 hari dagangan.</p>
     <div class="mstat"><div><b>${op.length}</b><span>Sedang diuji</span></div><div><b class="${opn>=0?'up':'dn'}">${rmS(opn)}</b><span>Untung/rugi kini</span></div><div><b>${cl.length?Math.round(w/cl.length*100)+'%':'-'}</b><span>Ketepatan</span></div><div><b class="${pnl>=0?'up':'dn'}">${cl.length?rmS(pnl):'-'}</b><span>Untung/rugi selesai</span></div></div>${M.length?`<div class="row" style="gap:8px;margin-top:10px;flex-wrap:wrap">${cl.length?'<button class="btn sm sec" id="rsClosed">Kosongkan yang selesai</button>':''}<button class="btn sm sec" id="rsAll">↺ Reset semua</button></div>`:''}</div>`;
+  h+=autoCardHTML();
   if(M.length){const cs=cl.slice().sort((a,b)=>a.closed.end.localeCompare(b.closed.end));let cum=0;const first=M.map(p=>p.d).sort()[0];
     const cv=[[first,0],...cs.map(p=>[p.closed.end,cum+=manPnl(p,p.closed.exit)])];if(op.length||cv.length<2)cv.push([today(),cum+opn]);
     h+=`<div class="card"><h2>Graf untung / rugi</h2><p class="muted" style="margin-top:0;font-size:13px">Jumlah terkumpul dari ujian pertama${op.length?', termasuk ujian yang masih terbuka pada harga kini':''}.</p>${equitySVG(cv,1)}</div>`;}
@@ -966,7 +983,7 @@ function rManual(){
   return h;}
 function manReset(ids){const del=new Set(ids);S.manual=(S.manual||[]).filter(p=>!del.has(p.id));S.manDel=[...new Set([...(S.manDel||[]),...ids])].slice(-300);save();rRobot();}
 function confirm2(btn,msg,fn){if(btn.dataset.armed){fn();return;}btn.dataset.armed=1;const t=btn.textContent;btn.textContent=msg;btn.classList.add('red');setTimeout(()=>{if(btn.isConnected){delete btn.dataset.armed;btn.textContent=t;btn.classList.remove('red');}},3500);}
-function bindManual(){
+function bindManual(){bindAuto();
   const ra=$('#rsAll');if(ra)ra.onclick=()=>confirm2(ra,'Tekan sekali lagi untuk reset',()=>{manReset((S.manual||[]).map(p=>p.id));toast('Robot Manual direset — mula semula dari RM 0');});
   const rc=$('#rsClosed');if(rc)rc.onclick=()=>confirm2(rc,'Tekan sekali lagi untuk kosongkan',()=>{manReset((S.manual||[]).filter(p=>p.closed).map(p=>p.id));toast('Rekod selesai dikosongkan');});
   document.querySelectorAll('#main .mrow[data-mid]').forEach(b=>b.onclick=()=>openManDetail(b.dataset.mid));
@@ -1272,7 +1289,7 @@ function bindAlertSettings(){
    App ditulis dalam BM. Bila EN dipilih, setiap teks yang dipaparkan diterjemah
    (padanan tepat → corak dinamik → frasa), termasuk teks yang muncul kemudian. */
 const EN_EXACT={
-'by ProKuiz':'by ProKuiz','Saham':'Stocks','Portfolio':'Portfolio','Tathir':'Purify','Zakat':'Zakat','Tetapan':'Settings',
+'Saham':'Stocks','Portfolio':'Portfolio','Tathir':'Purify','Zakat':'Zakat','Tetapan':'Settings',
 'Amaran':'Alerts','Tutup':'Close','Kembali':'Back','Simpan':'Save','Padam':'Delete','Ubah':'Edit','Lihat':'View','Hidupkan':'Turn on','Matikan':'Turn off',
 'Cari kod atau nama syarikat':'Search code or company name','Cari saham':'Search stocks','Cuba muat semula':'Try again',
 'Labur ikut syariah.':'Invest the Shariah way.','Cari saham pertama anda.':'Find your first stock.',
@@ -1281,11 +1298,11 @@ const EN_EXACT={
 'Senarai patuh syariah SC dan data pasaran dimuat secara automatik setiap hari.':'The SC Shariah list and market data load automatically every day.',
 'Tekan ⭐ pada mana-mana saham untuk menambahnya ke watchlist.':'Tap ⭐ on any stock to add it to your watchlist.',
 'Data pasaran sedia':'Market data ready',
-'Skor tertinggi dalam watchlist anda':'Top score in your watchlist','Peluang beli tertinggi hari ini':"Today's top buy opportunity",
+'Skor tertinggi dalam watchlist anda':'Top score in your watchlist',
 'Dari senarai anda':'From your list','Pilihan teratas hari ini':"Today's top picks",
 '▶ Lihat analisa':'▶ View analysis','✓ Dalam watchlist':'✓ In watchlist','+ Watchlist':'+ Watchlist',
-'kebarangkalian':'probability','tempoh hold':'holding period','skor teknikal':'technical score','RSI 14':'RSI 14','Atas':'Above','Bawah':'Below',
-'Watchlist anda':'Your watchlist','Pegangan saya':'My holdings','Peluang beli hari ini':"Today's buy opportunities",
+'kebarangkalian':'probability','skor teknikal':'technical score','RSI 14':'RSI 14','Atas':'Above','Bawah':'Below',
+'Watchlist anda':'Your watchlist','Pegangan saya':'My holdings',
 'kebarangkalian dari sejarah 5 tahun':'probability from 5 years of history','skor 4/5 ke atas':'score 4/5 and above',
 'Lebih jualan, RSI bawah 30':'Oversold, RSI below 30','potensi lantunan':'potential rebound',
 'Golden cross terkini':'Recent golden crosses','EMA50 lintas atas EMA200':'EMA50 crossed above EMA200',
@@ -1303,7 +1320,7 @@ const EN_EXACT={
 '(sumbangan aktiviti tidak patuh kepada hasil & untung mesti bawah penanda aras) dan':'(the contribution of non-compliant activities to revenue and profit must be below the benchmarks) and',
 '(tunai dalam akaun konvensional dan hutang berfaedah berbanding jumlah aset, bawah 33%). App ini memaparkan keputusan rasmi SAC, bukan pengiraan sendiri.':'(cash in conventional accounts and interest-bearing debt relative to total assets, below 33%). This app shows the official SAC result, not its own calculation.',
 '☆ Tambah watchlist':'☆ Add to watchlist','★ Dalam watchlist':'★ In watchlist','+ Portfolio':'+ Portfolio','🔔 Amaran harga':'🔔 Price alert',
-'Salin kod untuk moomoo':'Copy code for moomoo','Indicator':'Indicators','Muat semula':'Reload','Memuatkan…':'Loading…',
+'Indicator':'Indicators','Muat semula':'Reload','Memuatkan…':'Loading…',
 'Saham ini':'This stock','tiada':'is not','dalam senarai patuh syariah SC terkini.':'in the latest SC Shariah-compliant list.',
 'dalam senarai patuh syariah SC terkini. Isyarat teknikal disembunyikan kerana Mod Patuh Syariah ON.':'in the latest SC Shariah-compliant list. Technical signals are hidden because Shariah Mode is ON.',
 'Senarai SC belum diimport — status tidak dapat ditentukan.':'SC list not loaded yet — status cannot be determined.',
@@ -1317,20 +1334,20 @@ const EN_EXACT={
 'Isyarat teknikal untuk rujukan sahaja — bukan cadangan beli/jual. Data harga harian bersifat indikatif dan mungkin berbeza sedikit dari harga bursa.':'Technical signals are for reference only — not a buy/sell recommendation. Daily price data is indicative and may differ slightly from exchange prices.',
 '🟢 Golden cross (EMA50 lintas atas EMA200) dalam 5 bar terakhir':'🟢 Golden cross (EMA50 crossed above EMA200) in the last 5 bars',
 '🔴 Death cross (EMA50 lintas bawah EMA200) dalam 5 bar terakhir':'🔴 Death cross (EMA50 crossed below EMA200) in the last 5 bars',
-'Peluang & pelan dagangan':'Opportunity & trade plan',
+
 'Disembunyikan kerana saham ini tidak patuh syariah (Mod Patuh Syariah ON).':'Hidden because this stock is not Shariah-compliant (Shariah Mode ON).',
 'Tiada isyarat teknikal aktif untuk saham ini dalam 3 hari dagangan terakhir.':'No active buy setup for this stock in the last 3 trading days.',
 'Koreksi dalam trend menaik':'Pullback in an uptrend','Golden cross':'Golden cross','Lantunan lebih jualan':'Oversold bounce',
-'Ada kelebihan sejarah':'Historical edge','Kelebihan tipis':'Thin edge','Tiada kelebihan sejarah':'No historical edge','Isyarat hari ini':'Signal today','jangka pendek':'short term',
+'Isyarat hari ini':'Signal today','jangka pendek':'short term',
 'kebarangkalian harga capai sasaran sebelum had rugi':'probability price hits target before stop-loss',
-'Beli sekitar':'Buy around','Jual: sasaran':'Sell: target','Jual: had rugi':'Sell: stop-loss','Tempoh hold dijangka':'Expected holding period',
-'Had masa':'Time limit','Bukti sejarah':'Historical evidence','Titik pulang modal':'Break-even point',
+'Tempoh hold dijangka':'Expected holding period',
+'Bukti sejarah':'Historical evidence','Titik pulang modal':'Break-even point',
 'Bagaimana angka ini dikira?':'How are these numbers calculated?','Rekod persediaan pada saham ini':'Setup record for this stock',
-'Persediaan':'Setup','Berlaku':'Occurred','Kebarangkalian':'Probability','Median hold':'Median hold',
-'Saiz kedudukan':'Position size','1 lot = 100 unit':'1 lot = 100 units','Modal (RM)':'Capital (RM)','Risiko sanggup rugi (% modal)':'Risk you accept (% of capital)',
-'cth. 10000':'e.g. 10000','Masukkan modal untuk mengira bilangan lot yang selamat.':'Enter your capital to calculate a safe number of lots.',
-'Beli':'Buy','Kos':'Cost','Rugi maksimum':'Maximum loss','jika kena had rugi':'if stop-loss is hit','Untung jika capai sasaran':'Profit if target is hit','selepas kos':'after costs',
-'Dihadkan oleh modal tunai, bukan had risiko.':'Limited by available cash, not by the risk limit.',
+'Berlaku':'Occurred','Kebarangkalian':'Probability',
+
+
+'Beli':'Buy','Kos':'Cost','Untung jika capai sasaran':'Profit if target is hit','selepas kos':'after costs',
+
 'Amaran harga':'Price alert','Bila harga':'When price','naik ke / melebihi':'rises to / above','turun ke / di bawah':'falls to / below','Harga (RM)':'Price (RM)',
 'Tetapkan amaran':'Set alert','Amaran aktif':'Active alerts','Disemak setiap kali data harga harian dikemas kini (selepas pasaran tutup).':'Checked each time daily price data updates (after market close).',
 'Tanda semua dibaca':'Mark all as read','Perlu tindakan segera':'Needs immediate action','Perlu perhatian':'Needs attention','Untuk makluman':'For your information',
@@ -1342,10 +1359,10 @@ const EN_EXACT={
 'Senarai syariah SC baharu':'New SC Shariah list','Senarai SC baharu dijangka':'New SC list expected',
 'EMA50 lintas bawah EMA200 pada saham dalam pegangan anda.':'EMA50 crossed below EMA200 on a stock you hold.','EMA50 lintas atas EMA200.':'EMA50 crossed above EMA200.',
 'Lebih jualan, potensi lantunan.':'Oversold, potential rebound.','Lebih belian, berisiko pembetulan.':'Overbought, correction risk.',
-'Ketepatan isyarat':'Signal track record','menang sebenar':'actual win rate','dijangka':'expected','purata sedagangan':'average per trade','isyarat selesai':'signals closed',
+'Ketepatan isyarat':'Signal track record','dijangka':'expected','isyarat selesai':'signals closed',
 'Ringkasan':'Summary','30 hari':'30 days','90 hari':'90 days','Keseluruhan':'All time','Sedang dipantau':'Being monitored','Purata tempoh':'Average duration',
 'Adakah % app tepat?':"Is the app's % accurate?",'Kebarangkalian dijangka berbanding kadar menang sebenar. Bar emas sepatutnya hampir sama panjang dengan garis.':'Expected probability versus actual win rate. The gold bar should be about as long as the line.',
-'Ikut persediaan':'By setup','Selesai':'Closed','Menang':'Won','Purata':'Average','Keputusan terkini':'Latest results',
+'Selesai':'Closed','Menang':'Won','Purata':'Average','Keputusan terkini':'Latest results',
 'Kalah':'Lost','Tamat masa':'Timed out',
 'Perubahan senarai terkini':'Latest list changes','➕ Ditambah':'➕ Added','➖ Digugurkan':'➖ Removed','Lihat senarai penuh':'See full list','Digugurkan':'Removed','Ditambah':'Added',
 '+ Tambah':'+ Add','dalam pegangan anda kini':'in your holdings is now','tidak patuh syariah':'not Shariah-compliant','. Lihat tindakan di bawah.':'. See action below.',
@@ -1358,12 +1375,12 @@ const EN_EXACT={
 'boleh pegang sehingga harga kembali ke paras kos':'may hold until the price returns to cost',', kemudian jual.':', then sell.',
 'Kira penyucian':'Calculate purification','Sahkan dengan dokumen rasmi SAC SC terkini.':'Verify against the latest official SC SAC document.',
 'Saham ini tidak patuh syariah. Panduan SAC: jual segera; pelabur hanya berhak atas modal asal — keuntungan modal & dividen disalurkan ke amal.':'This stock is not Shariah-compliant. SAC guidance: sell promptly; the investor is entitled only to the original capital — capital gains & dividends go to charity.',
-'Muat harga':'Load price','Pelan jual':'Exit plan','Paras henti (trailing)':'Trailing stop','Sasaran pertama':'First target','Harga terakhir':'Last price',
+'Muat harga':'Load price','Harga terakhir':'Last price',
 '✓ dicapai':'✓ reached','biar untung berjalan; lindungi dengan paras henti':'let profits run; protect with the trailing stop','kos + 2× ATR':'cost + 2× ATR',
 '⚠️ Harga tutup di bawah paras henti — pertimbang jual':'⚠️ Close below trailing stop — consider selling',
 'Paras ini naik mengikut harga tertinggi sejak tarikh belian dan tidak pernah turun. Harga tutup di bawahnya menandakan momentum menurun.':'The trailing stop rises with the highest price since purchase and never falls. Sell when the price closes below it to lock in gains or limit losses.',
 'Notifikasi dalam app dipaparkan setiap kali app dibuka. (Notifikasi push dirancang untuk versi akan datang.)':'In-app alerts appear every time the app opens. (Push notifications are planned for a future version.)',
-'Tambah pegangan':'Add holding','Ubah pegangan':'Edit holding','Kod saham':'Stock code','cth. 1155':'e.g. 1155','Nama':'Name','Kuantiti (unit)':'Quantity (units)',
+'Kod saham':'Stock code','cth. 1155':'e.g. 1155','Nama':'Name','Kuantiti (unit)':'Quantity (units)',
 'Harga purata belian (RM)':'Average purchase price (RM)','Tarikh belian':'Purchase date',
 'Penyucian bukan zakat.':'Purification is not zakat.',
 'Zakat dikenakan atas harta halal. Penyucian (tathir) ialah mengeluarkan bahagian pendapatan yang tidak halal dan menyalurkannya ke amal/baitulmal.':'Zakat is due on halal wealth. Purification (tathir) means removing the non-halal portion of income and giving it to charity/baitulmal.',
@@ -1404,31 +1421,31 @@ const EN_EXACT={
 'Mod Patuh Syariah':'Shariah Mode','Sembunyi isyarat untuk saham tidak patuh':'Hide signals for non-compliant stocks','Gaya dagangan':'Trading style',
 'Ikut SC (carta harian)':'Follow SC (daily chart)','Ketat (carta mingguan)':'Strict (weekly chart)',
 'Terdapat perbezaan pandangan ulama tentang dagangan jangka sangat pendek. "Ketat" mengira indicator pada carta mingguan untuk fokus jangka sederhana–panjang. App ini tidak menyokong margin, short selling, options, futures atau waran.':'Scholars differ on very short-term trading. "Strict" calculates indicators on the weekly chart for a medium-to-long-term focus. This app does not support margin, short selling, options, futures or warrants.',
-'Import senarai SC secara manual':'Import SC list manually','(sandaran jika data automatik gagal)':'(backup if automatic data fails)','Senarai semasa:':'Current list:',
-'belum ada':'none yet','Tarikh berkuat kuasa senarai':'List effective date','Tampal senarai (satu saham sebaris: "kod,nama" atau nama sahaja)':'Paste list (one stock per line: "code,name" or name only)',
-'atau pilih fail (.csv / .txt)':'or choose a file (.csv / .txt)','Import senarai':'Import list',
-'Sumber rasmi: Senarai Sekuriti Patuh Syariah oleh SAC SC (sc.com.my), dikemas kini setiap Jumaat terakhir Mei & November. Simpan sejarah setiap import untuk pengesanan perubahan status.':'Official source: List of Shariah-compliant Securities by the SC SAC (sc.com.my), updated on the last Friday of May & November. Each import is kept so status changes can be detected.',
-'Sejarah import':'Import history','Lanjutan: kunci API EODHD sendiri':'Advanced: your own EODHD API key','(pilihan)':'(optional)',
-'Tidak diperlukan. Guna hanya jika anda mahu tarik harga terus dari akaun EODHD anda.':'Not required. Use only if you want to pull prices directly from your EODHD account.',
-'Kunci API EODHD':'EODHD API key','kosongkan untuk guna data automatik':'leave blank to use automatic data',
+'Import senarai SC secara manual':'Import SC list manually',
+
+'Import senarai':'Import list',
+
+
+
+'kosongkan untuk guna data automatik':'leave blank to use automatic data',
 'Sandaran data':'Data backup','Muat turun sandaran':'Download backup','Salin sandaran':'Copy backup','Pulihkan':'Restore','Kosongkan cache harga':'Clear price cache',
 'Pulihkan sandaran':'Restore backup','Tampal sandaran JSON':'Paste JSON backup',
 'Ketelusan & sumber':'Transparency & sources','Status syariah':'Shariah status','Data harga':'Price data','Panduan tindakan & penyucian':'Action & purification guidance','Panduan SAC SC':'SC SAC guidance',
 'Nisab & kaedah zakat':'Nisab & zakat method','Lembaga zakat negeri':'State zakat authority','Penafian:':'Disclaimer:',
 'ProSyariah ialah alat bantu maklumat dan pengiraan, bukan fatwa dan bukan nasihat pelaburan. Isyarat teknikal untuk rujukan sahaja. Data harga daripada penyedia pihak ketiga bersifat indikatif dan mungkin berbeza sedikit dari harga sebenar bursa. Keputusan pelaburan, penyucian dan zakat adalah tanggungjawab pengguna — rujuk SC, lembaga zakat negeri atau penasihat syariah bertauliah.':'ProSyariah is an information and calculation aid — not a fatwa and not investment advice. Technical signals are for reference only. Price data from third-party providers is indicative and may differ slightly from actual exchange prices. Investment, purification and zakat decisions are the user\'s responsibility — consult the SC, your state zakat authority or a qualified Shariah adviser.',
-'ProSyariah by ProKuiz · Versi Percuma v1.0 · Semua data disimpan dalam peranti ini sahaja.':'ProSyariah by ProKuiz · Free Version v1.0 · All data is stored on this device only.',
+
 'Kos dagangan 0.3% ditolak. Prestasi lampau tidak menjamin prestasi masa depan.':'Trading costs of 0.3% deducted. Past performance does not guarantee future results.',
-'Kod saham sudah disalin':'Stock code copied','Disimpan ke portfolio':'Saved to portfolio','Laporan disalin':'Report copied','Sandaran disalin':'Backup copied','Cache dikosongkan':'Cache cleared',
+'Disimpan ke portfolio':'Saved to portfolio','Laporan disalin':'Report copied','Sandaran disalin':'Backup copied','Cache dikosongkan':'Cache cleared',
 'Data sudah terkini':'Data is up to date','✓ Data dikemas kini':'✓ Data updated','✓ Dipulihkan':'✓ Restored','JSON tidak sah':'Invalid JSON',
-'Kunci disimpan':'Key saved','Kunci dikosongkan':'Key cleared','✓ Amaran harga ditetapkan':'✓ Price alert set','Isi harga':'Enter a price',
-'Kod, kuantiti & harga kos wajib diisi':'Code, quantity & cost price are required','Isi tarikh & senarai':'Enter date & list','Tiada entri dikesan':'No entries detected',
-'Imbasan selesai':'Scan complete','✓ Notifikasi dihidupkan':'✓ Notifications on','Kebenaran notifikasi ditolak':'Notification permission denied',
+'Kunci dikosongkan':'Key cleared','✓ Amaran harga ditetapkan':'✓ Price alert set','Isi harga':'Enter a price',
+'Kod, kuantiti & harga kos wajib diisi':'Code, quantity & cost price are required',
+'✓ Notifikasi dihidupkan':'✓ Notifications on','Kebenaran notifikasi ditolak':'Notification permission denied',
 'Peranti ini tidak menyokong notifikasi web. Amaran tetap dipaparkan dalam app.':'This device does not support web notifications. Alerts still appear in the app.',
 'Cache harga dikosongkan untuk gaya baharu':'Price cache cleared for the new style','Muat turun tidak disokong — guna Salin':'Download not supported — use Copy',
 'Storan penuh — buang cache harga di Tetapan':'Storage full — clear the price cache in Settings',
-'Padam pegangan ini?':'Delete this holding?','Padam rekod?':'Delete record?','Padam senarai ini?':'Delete this list?','Senarai bertarikh ini sudah wujud. Tambah juga?':'A list with this date already exists. Add anyway?',
+'Padam pegangan ini?':'Delete this holding?','Padam rekod?':'Delete record?',
 'Gagal muat data harga. Semak sambungan internet.':'Could not load price data. Check your internet connection.',
-'Kunci API EODHD belum dimasukkan (Tetapan).':'EODHD API key not entered (Settings).','Gagal sambung ke EODHD (semak internet).':'Could not connect to EODHD (check internet).',
+
 'Penyucian bukan zakat':'Purification is not zakat','tinggi':'high','sederhana':'medium','rendah':'low',
 'Wilayah Persekutuan':'Federal Territories','Pulau Pinang':'Penang',
 'Lihat tindakan yang disyorkan di Portfolio.':'See the recommended action in Portfolio.',
@@ -1520,6 +1537,12 @@ const EN_PHRASE=[
 ];
 
 Object.assign(EN_EXACT,{
+'Senarai saham yang diuji: M = Manual (anda tekan ✍️ Manual pada saham), A = Auto (robot masuk sendiri). Semua ditutup automatik bila sampai sasaran, cut loss atau 40 hari dagangan.':'Stocks being tested: M = Manual (you tap ✍️ Manual on a stock), A = Auto (the robot enters by itself). All close automatically at the target, cut loss or after 40 trading days.',
+'🤖 Robot Auto':'🤖 Auto Robot','🤖 Robot':'🤖 Robot','🟢 Isyarat Kuat (Ringkasan isyarat aktif)':'🟢 Strong signals (Active signals summary)','🏆 Champion sahaja':'🏆 Champion only','📰 Berita Berpotensi':'📰 Potential news',
+'Nilai maya setiap posisi (RM)':'Virtual amount per position (RM)','🤖 Robot Auto dihidupkan':'🤖 Auto Robot turned on','Robot Auto dimatikan':'Auto Robot turned off','Robot Auto':'Auto Robot',
+'🟢 Isyarat Kuat':'🟢 Strong signal','📰 Berita':'📰 News','Bila hidup, robot masuk ujian sendiri setiap petang (selepas data) untuk jenis yang anda pilih, guna harga tutup terakhir. Saham ini ditanda A dalam senarai.':'When on, the robot enters tests by itself every evening (after the data) for the types you choose, at the last closing price. These stocks are marked A in the list.',
+' setiap hari (selepas data petang) untuk jenis yang anda pilih. Harga masuk = harga tutup terakhir. Ditanda ':' every day (after the evening data) for the types you choose. Entry price = latest close. Marked ',
+' dalam senarai; ujian anda sendiri ':' in the list; your own tests ',
 'Tiada berita positif hari ini setakat ini':'No positive news today so far',
 'Isyarat terkuat hari ini':"Today's strongest signal",'🏆 Champion hari ini':"🏆 Today's Champion",'Pilihan hari ini · Meter tertinggi':"Today's top pick · highest Meter",
 '📊 Buka syarikat':'📊 Open company','📝 Ringkasan analisa':'📝 Analysis summary','📰 Baca berita':'📰 Read news',
@@ -1560,7 +1583,7 @@ Object.assign(EN_EXACT,{
 'Kecairan rendah':'Low liquidity','Saham murah (bawah RM0.20) atau jarang didagang (bawah RM100k sehari). Harga belian dan jualan sebenar saham begini selalunya lebih teruk, jadi app tidak memberi isyarat untuknya.':'Cheap stocks (below RM0.20) or rarely traded ones (below RM100k a day). Real buy and sell prices for such stocks are usually worse, so the app gives no signals for them.',
 'Lihat analisa saham ↗':'View stock analysis ↗',
 'Masa beli':'Buy time','Masa tutup':'Close time','Harga tutup (ubah jika anda tutup pada harga lain)':'Close price (change it if you closed at a different price)',
-'Harga tutup':'Close price','Tarikh tutup':'Close date','Keputusan':'Result',
+'Harga tutup':'Close price','Keputusan':'Result',
 '12J':'12H','Carta 30 minit / 1 jam / 12 jam hanya untuk saham yang dipantau (isyarat aktif atau skor tinggi).':'30-minute / 1-hour / 12-hour charts are only for tracked stocks (active signal or high score).',
 'Meter ProSyariah':'ProSyariah Meter','Sangat Lemah':'Very Weak','Sangat Kuat':'Very Strong','Isyarat (40%)':'Signal (40%)','Skor teknikal (40%)':'Technical score (40%)','Nada berita (20%)':'News tone (20%)','Tiada berita (neutral)':'No news (neutral)',
 'Meter ini dikira oleh ProSyariah daripada bacaan dalam app: penilaian isyarat sejarah, skor teknikal semasa dan nada tajuk berita 30 hari. Ia bukan konsensus penganalisis dan bukan cadangan beli atau jual.':"This meter is calculated by ProSyariah from the app's readings: historical signal rating, current technical score and 30-day news headline tone. It is not an analyst consensus and not a buy or sell recommendation.",
@@ -1584,7 +1607,7 @@ Object.assign(EN_EXACT,{
 'ProSyariah hanya memberi indicator. Untuk melabur, guna platform berlesen di bawah. Semua percuma untuk buka akaun.':'ProSyariah only provides indicators. To invest, use a licensed platform below. All are free to open an account.',
 'ProSyariah tiada kaitan dengan platform ini dan tidak menerima bayaran. Semak lesen SC, yuran dan pilihan akaun Islamik sebelum membuka akaun.':'ProSyariah is not affiliated with these platforms and receives no payment. Check SC licensing, fees and Islamic account options before opening an account.',
 'Tamat tempoh biasa':'Typical trading period end',
-'Sasaran':'Target','Cut loss':'Cut loss','Tarikh mula':'Start date','Tarikh akhir':'End date','Tempoh biasa hingga':'Typical period until',
+'Sasaran':'Target','Cut loss':'Cut loss','Tarikh mula':'Start date','Tempoh biasa hingga':'Typical period until',
 'Mula':'Start',
 'Robot manual sejak …':'Manual robot since …','Saham ini sedang diuji dalam Robot Manual anda (tab Robot): tarikh dan harga masuk maya, serta untung atau rugi semasa.':'This stock is being tested in your Manual Robot (Robot tab): virtual entry date and price, and current profit or loss.',
 'Robot Manual (tutup, cut loss, tarikh tutup)':'Manual Robot (close, cut loss, closing date)',
@@ -1594,15 +1617,15 @@ Object.assign(EN_EXACT,{
 'Senarai saham yang anda uji. Untuk tambah, buka mana-mana saham dan tekan ✍️ Manual. Robot semak harga setiap hari dan tutup bila sampai paras atas, paras bawah atau 40 hari dagangan.':'The stocks you are testing. To add one, open any stock and press ✍️ Manual. The robot checks prices every day and closes when price reaches the upper level, the lower level or 40 trading days.',
 'Isyarat Champion':'Champion signals','Tiada isyarat Champion hari ini':'No Champion signal today','Isyarat Kuat + Skor teknikal Kuat, bermula hari ini.':'Strong signal + Strong technical score, starting today.',
 'Tiada isyarat teknikal baharu yang bermula hari ini.':'No new technical signal starting today.',
-'🤖 Robot Auto':'🤖 Robot Auto','✍️ Robot Manual':'✍️ Robot Manual','✍️ Robot manual':'✍️ Manual robot','✍️ Manual':'✍️ Manual','✍️ Urus':'✍️ Manage','Urus':'Manage',
+'✍️ Robot Manual':'✍️ Robot Manual','✍️ Robot manual':'✍️ Manual robot','✍️ Manual':'✍️ Manual','Urus':'Manage',
 'Nilai maya (RM)':'Virtual amount (RM)','Harga masuk':'Entry price','Tarikh masuk':'Entry date','Paras atas (sasaran)':'Upper level (target)','Paras bawah (had)':'Lower level (limit)',
 'Paras atas dan bawah diisi automatik daripada isyarat atau ATR saham ini. Anda boleh ubah.':"Upper and lower levels are filled automatically from this stock's signal or ATR. You can change them.",
 '✍️ Mula ujian manual':'✍️ Start manual test','Masuk':'Entry','Nilai maya':'Virtual amount','Paras atas / bawah':'Upper / lower level','Harga kini':'Current price','Untung / rugi':'Profit / loss','Tutup paling lewat':'Closes at the latest',
 'Tutup sekarang':'Close now','Padam':'Delete','Ditutup sendiri':'Closed manually','Ujian manual ditutup':'Manual test closed','Dipadam':'Deleted','Ditambah ke Robot manual & favorite':'Added to manual robot & favorites',
 'Masukkan nilai maya dan harga masuk':'Enter the virtual amount and entry price','Paras atas mesti lebih tinggi dan paras bawah lebih rendah daripada harga masuk':'Upper level must be above and lower level below the entry price',
-'Harga kini belum tersedia':'Current price not available yet','terbuka':'open','terbuka kini':'open now','ketepatan':'accuracy','selesai':'closed',
-'Belum ada. Buka saham kegemaran anda dan tekan ✍️ untuk mula ujian manual.':'None yet. Open a favorite stock and press ✍️ to start a manual test.',
-'Semua favorite sedang diuji secara manual.':'All favorites are being tested manually.','Belum ada favorite. Buka saham dan tekan ☆ Tambah watchlist.':'No favorites yet. Open a stock and press ☆ Add to watchlist.',
+'Harga kini belum tersedia':'Current price not available yet','terbuka':'open','ketepatan':'accuracy','selesai':'closed',
+
+'Belum ada favorite. Buka saham dan tekan ☆ Tambah watchlist.':'No favorites yet. Open a stock and press ☆ Add to watchlist.',
 'Anda pilih sendiri saham dan harga masuk maya. Buka mana-mana saham dan tekan butang ✍️ di atas kanan. Robot semak setiap hari dan tutup bila sampai paras atas (menang), paras bawah (kalah) atau 40 hari dagangan.':'You choose the stock and virtual entry price yourself. Open any stock and press the ✍️ button at the top right. The robot checks every day and closes when price reaches the upper level (win), the lower level (loss) or after 40 trading days.',
 'Ujian maya tanpa wang sebenar. Robot semak setiap hari dan tutup bila harga sampai paras atas (menang), paras bawah (kalah) atau selepas 40 hari dagangan.':'Virtual test with no real money. The robot checks every day and closes when price reaches the upper level (win), the lower level (loss) or after 40 trading days.',
 '🏆 Isyarat Champion':'🏆 Champion signals','Isyarat Kuat + Skor teknikal Kuat':'Strong signal + Strong technical score','🏆 Champion sahaja':'🏆 Champions only',
@@ -1615,8 +1638,8 @@ Object.assign(EN_EXACT,{
 'Saham patuh syariah yang ada isyarat teknikal aktif hari ini, disusun dari yang terkuat. Tekan nama untuk lihat butiran.':'Shariah-compliant stocks with an active technical signal today, strongest first. Tap a name for details.',
 '🤖 sedang diuji robot · ⏳ tempoh biasa sudah berlalu · % = kebarangkalian sejarah':'🤖 being tested by robot · ⏳ typical period has passed · % = historical probability',
 'Tiada isyarat teknikal aktif yang melepasi paras neutral pada masa ini.':'No active technical signal above the neutral level right now.',
-'🤖 Dalam robot':'🤖 In robot',
-'Pilihan sebenar robot setiap hari bekerja, disemak dengan harga sebenar. Robot memilih isyarat baharu dengan susunan yang sama seperti 5 isyarat terkuat (Isyarat Kuat dahulu), kemudian memegangnya sehingga paras atas, paras bawah atau 40 hari dagangan — ia tidak bertukar walaupun senarai 5 terkuat berubah esoknya.':"The robot's actual picks every working day, checked against real prices. It picks new signals in the same order as the 5 strongest signals (Strong signals first), then holds them until the upper level, lower level or 40 trading days — it does not switch even if the 5 strongest list changes the next day.",
+
+
 'Isyarat Kuat':'Strong signal','Isyarat Sederhana':'Moderate signal','Isyarat Lemah':'Weak signal','Kuat':'Strong','Sederhana':'Moderate','Isyarat':'Signal','Tiada isyarat aktif':'No active signal',
 'Sentuh dan seret untuk lihat harga':'Touch and drag to see prices',
 'Dalam sejarah saham ini, isyarat ini jelas lebih kerap berjaya daripada gagal, dan disokong banyak contoh.':"In this stock's history, this signal clearly worked more often than random, backed by many examples.",
@@ -1627,7 +1650,7 @@ Object.assign(EN_EXACT,{
 'Melepasi paras neutral, tetapi tidak banyak, atau contoh sejarahnya masih sedikit.':'Above the neutral level, but not by much, or with few past examples.',
 'Tidak melepasi paras neutral. Bukan ramalan harga akan jatuh; cuma isyarat ini kurang boleh dipercayai untuk saham itu.':'Not above the neutral level. Not a prediction that price will fall; only that this signal is less reliable for that stock.',
 'menilai corak isyarat berdasarkan sejarah saham itu sendiri.':"rates the signal pattern using the stock's own history.",'pula menunjukkan trend sekarang. Untuk isyarat lantunan, skor teknikal memang selalu lemah kerana harga baru jatuh — ini normal.':'shows the current trend. For bounce signals the technical score is usually weak because price has just fallen — this is normal.','Skor teknikal':'Technical score',
-'A · Kukuh':'A · Solid','B · Baik':'B · Good','C · Sederhana':'C · Moderate','D · Tidak meyakinkan':'D · Not convincing','Penilaian isyarat':'Signal rating',
+'Penilaian isyarat':'Signal rating',
 'Melepasi paras neutral dengan jelas dan disokong banyak contoh dalam sejarah.':'Clearly above the neutral level and supported by many past examples.',
 'Melepasi paras neutral dengan baik.':'Comfortably above the neutral level.',
 'Sedikit melepasi paras neutral, atau contoh sejarah masih sedikit.':'Slightly above the neutral level, or few past examples.',
@@ -1637,13 +1660,13 @@ Object.assign(EN_EXACT,{
 'Melepasi paras neutral sedikit, atau contoh sejarah masih sedikit.':'Slightly above the neutral level, or few past examples.',
 'Tidak melepasi paras neutral. Bukan ramalan harga akan jatuh; cuma isyarat ini tidak boleh dipercayai untuk saham itu.':'Not above the neutral level. Not a prediction that price will fall; only that this signal is not reliable for that stock.',
 'Penilaian isyarat menilai corak isyarat berdasarkan sejarah saham itu sendiri. Skor teknikal (Kuat / Neutral / Lemah) pula menunjukkan trend sekarang. Untuk isyarat lantunan, skor teknikal memang selalu lemah kerana harga baru jatuh.':"The signal rating judges the signal pattern using the stock's own history. The technical score (Strong / Neutral / Weak) shows the current trend. For bounce signals the technical score is usually weak because price has just fallen.",
-'Rekod sejarah: baik':'Track record: good','Rekod sejarah: sederhana':'Track record: moderate','Rekod sejarah: kurang baik':'Track record: poor','Rekod sejarah isyarat':'Signal track record',
+
 'Rekod sejarah = seberapa kerap isyarat ini berjaya pada saham ini dahulu. Ia berbeza daripada skor teknikal, yang menunjukkan trend sekarang.':'Track record = how often this signal worked on this stock in the past. It is different from the technical score, which shows the current trend.',
 'Pada saham ini, isyarat jenis ini selalu sampai paras atas, jelas melebihi kadar rawak.':'On this stock, this type of signal often reached the upper level, clearly above the random rate.',
 'Sedikit lebih baik daripada rawak.':'Slightly better than random.',
-'Tidak lebih baik daripada rawak. Ini bukan ramalan harga akan jatuh atau melantun; ia cuma bermaksud isyarat ini kurang boleh dipercayai untuk saham ini.':'No better than random. This is not a prediction that price will fall or rebound; it only means this signal is less reliable for this stock.',
-'Saham boleh mempunyai skor teknikal':'A stock can have a technical score of','(trend sekarang naik) tetapi rekod sejarah':'(current trend up) but a','(corak isyarat itu jarang berjaya pada saham itu), atau sebaliknya. Kedua-duanya mengukur perkara yang berbeza.':'track record (that signal pattern rarely worked on that stock), or the other way round. They measure different things.',
-'kurang baik':'poor',
+
+'Saham boleh mempunyai skor teknikal':'A stock can have a technical score of',
+
 'Maksud status':'What the statuses mean','Tahap skor teknikal':'Technical score levels',
 'Isyarat aktif · dalam tempoh biasa':'Active signal · within typical period','Isyarat aktif · tempoh indicator trading':'Active signal · trading indicator period',
 'Ada isyarat teknikal yang masih "segar". Harga belum sampai paras atas atau paras bawah, dan masih dalam tempoh biasa saham ini sampai ke paras atas dalam sejarah. "Hari ke-X daripada ~Y" menunjukkan berapa hari dagangan sudah berlalu sejak isyarat bermula.':'There is a "fresh" technical signal. Price has not reached the upper or lower level and is still within the time this stock typically took to reach the upper level historically. "Day X of ~Y" shows how many trading days have passed since the signal started.',
@@ -1663,32 +1686,32 @@ Object.assign(EN_EXACT,{
 'Kebanyakan indicator menunjukkan trend atau momentum menurun.':'Most indicators show a downward trend or momentum.',
 'Tidak patuh syariah':'Not Shariah-compliant','Ujian sejarah 12 bulan':'12-month historical test',
 'Ujian sejarah menggunakan senarai syariah SC terkini untuk semua tempoh. Keputusan simulasi bukan jaminan prestasi masa depan.':'The historical test uses the latest SC Shariah list for the whole period. Simulated results are not a guarantee of future performance.',
-'Tunjuk kurang':'Show less',
-'Robot':'Robot','Robot Auto':'Auto Robot','Wang maya':'Virtual money','Nilai maya setiap isyarat (RM)':'Virtual amount per signal (RM)',
-'Ujian sejarah 12 bulan':'12-month historical test','Ujian langsung':'Live test','Ketepatan':'Accuracy','Untung / rugi':'Profit / loss',
-'Pulangan atas modal':'Return on capital','Purata setiap dagangan':'Average per trade','Untung / rugi terkumpul':'Cumulative profit / loss',
-'Ikut jenis isyarat':'By signal type','Dagangan':'Trades','Untung/rugi':'Profit/loss','Dagangan maya terkini':'Latest virtual trades',
-'Dagangan maya selesai':'Closed virtual trades','Pilihan sebenar robot setiap hari bekerja, disemak dengan harga sebenar.':"The robot's actual picks every working day, checked against real prices.",
+
+'Robot':'Robot','Robot Auto':'Auto Robot',
+'Ujian sejarah 12 bulan':'12-month historical test','Ketepatan':'Accuracy','Untung / rugi':'Profit / loss',
+'Untung / rugi terkumpul':'Cumulative profit / loss',
+'Ikut jenis isyarat':'By signal type','Untung/rugi':'Profit/loss',
+'Pilihan sebenar robot setiap hari bekerja, disemak dengan harga sebenar.':"The robot's actual picks every working day, checked against real prices.",
 'Belum cukup dagangan selesai untuk melukis graf.':'Not enough closed trades to draw the chart yet.',
-'Belum ada dagangan maya yang selesai. Robot akan mula merekod keputusan sebaik isyarat pertama sampai paras atas, paras bawah atau had masa.':'No virtual trades closed yet. The robot will record results as soon as the first signal reaches its upper level, lower level or time limit.',
-'Tiada kedudukan terbuka. Robot akan masuk bila ada isyarat baharu dalam 5 terkuat.':'No open positions. The robot will enter when a new signal joins the 5 strongest.',
+
+
 'Data Robot Auto belum diterima. Robot GitHub akan menghasilkannya pada larian seterusnya.':'Auto Robot data not received yet. The GitHub robot will produce it on its next run.',
-'Sejarah belum cukup untuk ujian.':'Not enough history for the test yet.',
+
 'Robot mengulang setiap hari dagangan setahun lepas. Pada setiap hari, ia hanya guna statistik daripada dagangan yang sudah selesai sebelum hari itu, jadi tiada maklumat masa depan digunakan.':'The robot replays every trading day of the past year. Each day it only uses statistics from trades already closed before that day, so no future information is used.',
 'Dalam ujian ini, robot':'In this test, the robot','untung':'made a profit','rugi':'made a loss','Menang':'Won',
-'⬇ Pasang':'⬇ Install','Pasang':'Install','Pasang app':'Install app','Pasang ProSyariah':'Install ProSyariah','✓ ProSyariah dipasang':'✓ ProSyariah installed',
+'Pasang':'Install','Pasang app':'Install app','Pasang ProSyariah':'Install ProSyariah','✓ ProSyariah dipasang':'✓ ProSyariah installed',
 'App dibuka dalam tetingkap sendiri tanpa bar alamat, dan sentiasa memuat data terkini.':'The app opens in its own window without an address bar, and always loads the latest data.',
 'Tekan menu':'Tap the menu','di atas kanan Chrome.':'at the top right of Chrome.','Pilih':'Choose','atau':'or','Pasang aplikasi':'Install app','Tambah ke skrin utama':'Add to Home screen','Tekan':'Tap','Pasang':'Install','. Ikon ProSyariah akan muncul dalam senarai app.':'. The ProSyariah icon will appear in your app list.',
 'Tekan butang':'Tap the','Kongsi':'Share','(petak dengan anak panah ke atas) di bawah skrin Safari.':'button (square with an up arrow) at the bottom of Safari.','Tambah ke Skrin Utama':'Add to Home Screen','Pastikan nama':'Make sure the name is',', kemudian tekan':', then tap','Tambah':'Add',
 
 '5 isyarat terkuat (masuk, paras atas/bawah, tempoh)':'5 strongest signals (entry, upper/lower level, period)','Baharu':'New',
-'5 isyarat teknikal terkuat':'5 strongest technical signals','disusun ikut kekuatan sejarah':'ranked by historical strength','disusun ikut penilaian & kekuatan sejarah':'ranked by rating & historical strength',
+'5 isyarat teknikal terkuat':'5 strongest technical signals',
 'Tiada isyarat teknikal yang melepasi paras neutral pada masa ini.':'No technical signal is above the neutral level right now.',
-'Isyarat bermula':'Signal started','Tempoh biasa sudah berlalu':'Typical period has passed','Masih dalam tempoh biasa':'Still within typical period',
+'Tempoh biasa sudah berlalu':'Typical period has passed','Masih dalam tempoh biasa':'Still within typical period',
 'Kekuatan = kebarangkalian sejarah berbanding paras neutral. "Tempoh biasa" ialah median masa harga sampai paras atas dalam sejarah saham ini. Ini bacaan indicator, bukan cadangan beli atau jual.':'Strength = historical probability versus the neutral level. "Typical period" is the median time for price to reach the upper level in this stock\'s history. This is an indicator reading, not a buy or sell recommendation.',
-'ProSyariah · Versi Percuma v1.0 · Semua data disimpan dalam peranti ini sahaja.':'ProSyariah · Free Version v1.0 · All data is stored on this device only.',
+'ProSyariah · Versi Percuma v1.0 · Watchlist, Robot Manual & Robot Auto disimpan dalam akaun Google anda bila log masuk. Portfolio, Tathir & Zakat disimpan dalam peranti ini sahaja.':'ProSyariah · Free Version v1.0 · Watchlist, Manual Robot & Auto Robot are saved in your Google account when signed in. Portfolio, Purify & Zakat are stored on this device only.',
 'Kebarangkalian dijangka berbanding kadar sebenar harga sampai paras atas. Bar emas sepatutnya hampir sama panjang dengan garis.':'Expected probability versus the actual rate at which price reached the upper level. The gold bar should be about as long as the line.',
-'Salin kod saham':'Copy stock code','Isyarat kuat (sejarah)':'Strong signal (historical)','Isyarat sederhana':'Moderate signal','Isyarat lemah':'Weak signal',
+'Salin kod saham':'Copy stock code',
 'kali harga sampai paras atas sebelum paras bawah, dalam sejarah saham ini':"of the time price reached the upper level before the lower level, in this stock's history",
 'Harga semasa':'Current price','Paras atas (+2× ATR)':'Upper level (+2× ATR)','Paras bawah (−1.25× ATR)':'Lower level (−1.25× ATR)',
 'Tempoh biasa ke paras atas':'Typical time to upper level','Tempoh ujian':'Test window','Isyarat & paras harga':'Signal & price levels',
@@ -1702,6 +1725,7 @@ Object.assign(EN_EXACT,{
 'Paras ini naik mengikut harga tertinggi sejak tarikh belian dan tidak pernah turun. Harga tutup di bawahnya menandakan momentum menurun.':'This level rises with the highest price since the purchase date and never falls. A close below it signals weakening momentum.',
 });
 EN_RX.unshift(
+[/^(\S+) · Robot Auto$/,'$1 · Auto Robot'],
 [/^(\d+) saham dengan berita positif hari ini$/,'$1 stocks with positive news today'],
 [/^Saham patuh syariah dengan berita bernada positif \(▲\) hari ini, (.+)\. Senarai bermula baharu setiap hari selepas 12 tengah malam\.$/,(m,a)=>`Shariah-compliant stocks with positive-toned news (▲) today, ${trText(a)}. The list starts fresh every day after midnight.`],
 [/^(\d+) saham dengan berita positif · 3 hari lepas$/,'$1 stocks with positive news · last 3 days'],[/^(\d+) saham dengan berita positif$/,'$1 stocks with positive news'],
@@ -2475,24 +2499,25 @@ function toggleWatch(c){if(needLogin()){toast('Log masuk dahulu untuk guna watch
   if(S.watch.includes(c))S.watch=S.watch.filter(x=>x!==c);else S.watch.push(c);S.watchAt=Date.now();save();return true;}
 const DEV=(()=>{try{let d=localStorage.getItem('ps_dev');if(!d){d=Math.random().toString(36).slice(2,10);localStorage.setItem('ps_dev',d);}return d;}catch(e){return 'x';}})();
 let cloudUnsub=null;
-function applyRemote(R,fromLogin){const del=new Set([...(S.manDel||[]),...(R.manDel||[])]);
-  S.manual=mergeManual(S.manual||[],R.manual||[]).filter(p=>!del.has(p.id));S.manDel=[...del].slice(-300);
+function applyRemote(R,fromLogin,autoRaw){const del=new Set([...(S.manDel||[]),...(R.manDel||[])]);let AU=[];if(autoRaw){S._autoRaw=autoRaw;try{AU=JSON.parse(autoRaw);}catch(e){}}
+  S.manual=mergeManual(mergeManual(S.manual||[],R.manual||[]),AU).filter(p=>!del.has(p.id));S.manDel=[...del].slice(-300);
   if(fromLogin&&!(S.watchAt>(R.watchAt||0)))S.watch=R.watch||[];else if((R.watchAt||0)>(S.watchAt||0))S.watch=R.watch||[];
   S.watchAt=Math.max(S.watchAt||0,R.watchAt||0);
   if(R.settings&&(R.updatedAt||0)>(S.cloudAt||0))Object.entries(R.settings).forEach(([k,v])=>{if(v!=null)S.settings[k]=v;});
   save0();render();}
 function listenCloud(){if(cloudUnsub)cloudUnsub();if(!FBU)return;
   cloudUnsub=FB.db.collection('users').doc(FBU.uid).onSnapshot(d=>{const r=d.exists?d.data():null;if(!r||!r.data)return;
-    let R;try{R=JSON.parse(r.data);}catch(e){return;}if(R.dev===DEV)return;   // perubahan dari phone ini sendiri
-    applyRemote(R,false);},()=>{});}
+    let R;try{R=JSON.parse(r.data);}catch(e){return;}
+    if(R.dev===DEV){if(r.auto&&r.auto!==S._autoRaw)applyRemote({},false,r.auto);return;}   // perubahan dari phone ini sendiri (kecuali posisi Robot Auto dari server)
+    applyRemote(R,false,r.auto);},()=>{});}
 function mergeManual(a,b){const m={};[...a,...b].forEach(p=>{const o=m[p.id];if(!o||(p.closed&&!o.closed))m[p.id]=p;});return Object.values(m);}
 async function cloudPull(){if(!FBU)return;try{const d=await FB.db.collection('users').doc(FBU.uid).get();const r=d.exists?d.data():null;
-    if(r&&r.data)applyRemote(JSON.parse(r.data),true);
+    if(r&&r.data)applyRemote(JSON.parse(r.data),true,r.auto);else if(r&&r.auto)applyRemote({},true,r.auto);
     await cloudPush(true);listenCloud();toast('✓ Data diselaraskan');}catch(e){toast('Segerak awan gagal');}}
 async function cloudPush(now){if(!FBU)return;clearTimeout(cloudT);
   const go=async()=>{try{S.cloudAt=Date.now();save0();
-    const D={dev:DEV,watchAt:S.watchAt||0,manual:S.manual||[],watch:S.watch||[],manDel:S.manDel||[],settings:{lang:S.settings.lang,platform:S.settings.platform??null,paperStake:S.settings.paperStake??null},updatedAt:S.cloudAt};
-    await FB.db.collection('users').doc(FBU.uid).set({data:JSON.stringify(D),email:FBU.email||'',lang:S.settings.lang||'bm',sig:!!(S.alerts&&S.alerts.on&&S.alerts.on.isyarat!==false),news:!!(S.alerts&&S.alerts.on&&S.alerts.on.berita!==false),sigWatch:!!(S.alerts&&S.alerts.sigScope==='watch'),pushAm:!!(S.alerts&&S.alerts.pushTime==='am'),updatedAt:S.cloudAt},{merge:true});}catch(e){}};
+    const D={dev:DEV,watchAt:S.watchAt||0,manual:S.manual||[],watch:S.watch||[],manDel:S.manDel||[],settings:{lang:S.settings.lang,platform:S.settings.platform??null,paperStake:S.settings.paperStake??null,auto:S.settings.auto||null},updatedAt:S.cloudAt};
+    await FB.db.collection('users').doc(FBU.uid).set({data:JSON.stringify(D),email:FBU.email||'',lang:S.settings.lang||'bm',sig:!!(S.alerts&&S.alerts.on&&S.alerts.on.isyarat!==false),news:!!(S.alerts&&S.alerts.on&&S.alerts.on.berita!==false),sigWatch:!!(S.alerts&&S.alerts.sigScope==='watch'),autoOn:!!AUTO().on,autoSig:!!AUTO().sig,autoChamp:!!AUTO().champ,autoNews:!!AUTO().news,autoStake:+AUTO().stake||20,pushAm:!!(S.alerts&&S.alerts.pushTime==='am'),updatedAt:S.cloudAt},{merge:true});}catch(e){}};
   if(now)return go();cloudT=setTimeout(go,2500);}
 async function regPush(){try{if(!FBU||!FB_VAPID||!('serviceWorker' in navigator)||!('Notification' in window)||Notification.permission!=='granted')return;
   const reg=await navigator.serviceWorker.ready;const tok=await firebase.messaging().getToken({vapidKey:FB_VAPID,serviceWorkerRegistration:reg});
@@ -2547,7 +2572,7 @@ function rTetapan(){
    <div class="kv"><span>Panduan tindakan & penyucian</span><span>Panduan SAC SC</span></div>
    <div class="kv"><span>Nisab & kaedah zakat</span><span>Lembaga zakat negeri</span></div>
    <p class="disc"><b>Penafian:</b> ProSyariah ialah alat bantu maklumat dan pengiraan, bukan fatwa dan bukan nasihat pelaburan. Isyarat teknikal untuk rujukan sahaja. Data harga daripada penyedia pihak ketiga bersifat indikatif dan mungkin berbeza sedikit dari harga sebenar bursa. Keputusan pelaburan, penyucian dan zakat adalah tanggungjawab pengguna — rujuk SC, lembaga zakat negeri atau penasihat syariah bertauliah.</p>
-   <p class="disc">ProSyariah · Versi Percuma v1.0 · Semua data disimpan dalam peranti ini sahaja.</p></div>`;
+   <p class="disc">ProSyariah · Versi Percuma v1.0 · Watchlist, Robot Manual & Robot Auto disimpan dalam akaun Google anda bila log masuk. Portfolio, Tathir & Zakat disimpan dalam peranti ini sahaja.</p></div>`;
   $('#main').innerHTML=h;
   $('#syncB').onclick=()=>syncData(true);
   bindAlertSettings();bindAccount();

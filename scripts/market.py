@@ -244,6 +244,12 @@ def main():
     asof = max((v.get("d", "") for v in stocks.values()), default="")
     track.update(px, stocks, asof, a.out)
     paper.build(runs, px, stocks, asof, a.out)
+    try:
+        import exits
+        if exits.due():
+            exits.run(px, {c for c, v in stocks.items() if v.get("s") == "ok"}, asof)
+    except Exception as e:
+        print("! Eksperimen cara keluar gagal:", e)
     meta = {
         "generated": datetime.now(timezone.utc).isoformat(timespec="minutes"),
         "asof": asof, "provider": PROVIDER if not (PROVIDER == "eodhd" and not KEY) else "yfinance",

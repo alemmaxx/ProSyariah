@@ -36,6 +36,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Ambil data terkini (elak konflik dengan larian lepas)
+        run: git pull -q --ff-only origin main || true
+
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -90,7 +93,7 @@ jobs:
           git add data/signals.json data/paper-live.json data/paper-summary.json data/market-meta.json data/news.json 2>/dev/null || true
           if ! git diff --cached --quiet; then
             git commit -m "Data: rekod prestasi isyarat"
-            git pull --rebase -q || true
+            git pull --rebase -X theirs -q || true
             git push
           fi
 
@@ -128,7 +131,7 @@ jobs:
           rm -f "$RUNNER_TEMP/sa.json" fb.log
           cp firebase-debug.txt data/firebase-debug.txt
           git add data/firebase-debug.txt
-          git commit -qm "Log: deploy Firebase" && (git pull --rebase -q; git push -q) || true
+          git commit -qm "Log: deploy Firebase" && (git pull --rebase -X theirs -q; git push -q) || true
           exit $rc
 
       - name: Gagalkan job jika bacaan SC gagal (supaya anda dapat emel)

@@ -80,6 +80,35 @@ def alerts_for(p, M, out_dir, en):
     return out
 
 
+def new_signals(M, en):
+    """Isyarat Kuat & Champion yang bermula pada hari data terkini (sama seperti app)."""
+    strong, champ = [], []
+    for c, v in M["stocks"].items():
+        if v.get("s") != "ok" or not v.get("op") or v.get("liq") == 0:
+            continue
+        best = None
+        for o in v["op"]:
+            if (o.get("ago") or 0) != 0 or not o.get("ev") or o["ev"] <= 0 or not o.get("en"):
+                continue
+            tp, sp = o["tg"] / o["en"] - 1, 1 - o["sl"] / o["en"]
+            edge = o["p"] / 100 - (sp + FEE) / (tp + sp)
+            if edge >= 0.10 and (o.get("n") is None or o["n"] >= 8) and (best is None or edge > best[0]):
+                best = (edge, o)
+        if not best:
+            continue
+        nm = (v.get("n") or c).replace(" Berhad", "").replace(" Bhd", "")
+        strong.append((best[0], nm))
+        if v.get("va") and v.get("sc", 0) / v["va"] >= 0.75:
+            champ.append((best[0], nm))
+    out, asof = [], M["meta"]["asof"]
+    names = lambda L: ", ".join(n for _, n in sorted(L, reverse=True)[:4]) + (f" +{len(L) - 4}" if len(L) > 4 else "")
+    if champ:
+        out.append((f"champ:{asof}", (f"🏆 {len(champ)} new Champion signal(s)" if en else f"🏆 {len(champ)} isyarat Champion baharu"), names(champ)))
+    if strong:
+        out.append((f"sig:{asof}", (f"🟢 {len(strong)} new Strong signal(s)" if en else f"🟢 {len(strong)} Isyarat Kuat baharu"), names(strong)))
+    return out
+
+
 def weekly(data, M, en):
     """Ringkasan mingguan: dihantar sekali setiap minggu, pada larian petang Jumaat (atau Sabtu jika terlepas)."""
     from datetime import datetime, timezone
@@ -152,6 +181,8 @@ def main():
         for p in data.get("manual", []):
             if not p.get("closed"):
                 items += alerts_for(p, M, a.out, en)
+        if f.get("sig", {}).get("booleanValue", True):
+            items += new_signals(M, en)
         wk = weekly(data, M, en)
         if wk:
             items.append(wk)

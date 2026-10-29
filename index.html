@@ -1186,15 +1186,20 @@ function openTrack(){
 }
 
 /* ================= PUSAT AMARAN ================= */
-const ALERT_DEF={on:{robot:true,top5:true,syariah:true,harga:true,teknikal:true,ibadah:true,jadual:true},lossPct:10,price:[],seen:{},notified:{},notify:false};
+const ALERT_DEF={on:{isyarat:true,robot:true,top5:true,syariah:true,harga:true,teknikal:true,ibadah:true,jadual:true},lossPct:10,price:[],seen:{},notified:{},notify:false};
 function AL(){S.alerts=Object.assign(structuredClone(ALERT_DEF),S.alerts||{});S.alerts.on=Object.assign({},ALERT_DEF.on,S.alerts.on);
-  if(!S.alerts.v2){S.alerts.v2=1;Object.keys(S.alerts.on).forEach(k=>S.alerts.on[k]=k==='robot');}   // amaran hanya untuk Robot Manual (boleh hidupkan lain di Tetapan)
+  if(!S.alerts.v2){S.alerts.v2=1;Object.keys(S.alerts.on).forEach(k=>S.alerts.on[k]=k==='robot'||k==='isyarat');}   // amaran hanya untuk Robot Manual (boleh hidupkan lain di Tetapan)
   return S.alerts;}
 /* Amaran Robot Manual: tutup (sasaran), cut loss, hampir cut loss, tarikh tempoh biasa & tutup paling lewat */
 function weeklyAlert(push){const n=new Date(),dw=n.getDay();if(!((dw===5&&n.getHours()>=17)||dw===6))return;const M=S.manual||[];if(!M.length)return;
   const mon=new Date(n);mon.setDate(n.getDate()-((dw+6)%7));const ms=isoD(mon);const op=M.filter(p=>!p.closed),cl=M.filter(p=>p.closed&&p.closed.end>=ms);
   const opl=op.reduce((t,p)=>{const m=mk(p.code);return t+(m&&m.c?manPnl(p,m.c):0);},0),cpl=cl.reduce((t,p)=>t+manPnl(p,p.closed.exit),0),w=cl.filter(p=>p.closed.res==='W').length;
   push({id:'week:'+ms,lv:'action',ic:'🗓️',cat:'robot',go:'robot',title:'Ringkasan minggu ini',body:`Sedang diuji: ${op.length} (${rmS(opl)}). Ditutup minggu ini: ${cl.length}${cl.length?`, ${w} menang (${rmS(cpl)})`:''}.`});}
+/* Amaran isyarat baharu: Isyarat Kuat & Champion yang bermula hari ini */
+function signalAlerts(push){if(!S.market)return;const asof=S.market.meta.asof;const L=topSignals(60).filter(x=>rateSignal(x).g==='A');if(!L.length)return;
+  const C=L.filter(x=>isChamp(x)),nm=a=>a.slice(0,4).map(x=>shortName(x.name)).join(', ')+(a.length>4?` +${a.length-4}`:'');
+  if(C.length)push({id:'champ:'+asof,lv:'critical',ic:'🏆',cat:'isyarat',code:C.length===1?C[0].code:null,title:`${C.length} isyarat Champion baharu`,body:`${nm(C)}. Isyarat Kuat + skor teknikal Kuat, mula ${fmtD(entryDate(asof))}.`});
+  push({id:'sig:'+asof,lv:'action',ic:'🟢',cat:'isyarat',code:L.length===1?L[0].code:null,title:`${L.length} Isyarat Kuat baharu`,body:`${nm(L)}. Mula ${fmtD(entryDate(asof))}. Buka 📋 Ringkasan isyarat aktif.`});}
 function robotAlerts(push){weeklyAlert(push);
   const asof=S.market?S.market.meta.asof:today(),H=BTH().h;
   (S.manual||[]).forEach(p=>{const nm=shortName(p.name||nameOf(p.code));const base='man:'+p.id+':';
@@ -1249,6 +1254,7 @@ function computeAlerts(){
       if(m.r!=null&&m.r<30)push({id:'rsi:'+c+':'+m.d,lv:'info',ic:'🔻',cat:'teknikal',code:c,title:`${nm}: RSI ${m.r.toFixed(0)}`,body:'Lebih jualan, potensi lantunan.'});
       if(m.r!=null&&m.r>70&&own)push({id:'rsih:'+c+':'+m.d,lv:'info',ic:'🔺',cat:'teknikal',code:c,title:`${nm}: RSI ${m.r.toFixed(0)}`,body:'Lebih belian, berisiko pembetulan.'});});
   }
+  if(A.on.isyarat)signalAlerts(push);
   if(A.on.robot)robotAlerts(push);
   if(A.on.top5)top5Alerts(push);
   if(A.on.ibadah){
@@ -1300,7 +1306,7 @@ function openAlerts(){
   openSheet(h);
   $('#alRead').onclick=()=>{list.forEach(a=>A.seen[a.id]=1);save();updateBell();openAlerts();};
   document.querySelectorAll('[data-al]').forEach(b=>b.onclick=()=>{const a=list.find(x=>x.id===b.dataset.al);A.seen[a.id]=1;save();updateBell();
-    if(a.go){closeSheet();goTab(a.go);}else if(a.code)stockSheet(a.code,nameOf(a.code));});
+    if(a.go){closeSheet();goTab(a.go);}else if(a.code)stockSheet(a.code,nameOf(a.code));else if(a.cat==='isyarat'){closeSheet();a.id.startsWith('champ')?openChamp():openSummary();}});
   const n=$('#alNot');if(n)n.onclick=enableNotify;
 }
 async function enableNotify(){
@@ -1324,7 +1330,7 @@ function priceAlertForm(code){
   document.querySelectorAll('[data-pd]').forEach(b=>b.onclick=()=>{A.price=A.price.filter(p=>p.id!==b.dataset.pd);save();updateBell();priceAlertForm(code);});
 }
 function alertSettingsHTML(){
-  const A=AL();const lab={robot:'Robot Manual (tutup, cut loss, tarikh tutup)',top5:'5 isyarat terkuat (masuk, paras atas/bawah, tempoh)',syariah:'Status syariah (pegangan & watchlist)',harga:'Harga (sasaran harga & had penurunan)',teknikal:'Isyarat teknikal (cross, RSI)',ibadah:'Zakat & penyucian',jadual:'Jadual senarai SC'};
+  const A=AL();const lab={isyarat:'Isyarat baharu (Isyarat Kuat & Champion)',robot:'Robot Manual (tutup, cut loss, tarikh tutup)',top5:'5 isyarat terkuat (masuk, paras atas/bawah, tempoh)',syariah:'Status syariah (pegangan & watchlist)',harga:'Harga (sasaran harga & had penurunan)',teknikal:'Isyarat teknikal (cross, RSI)',ibadah:'Zakat & penyucian',jadual:'Jadual senarai SC'};
   return `<div class="card"><h2>Amaran</h2>
    ${Object.entries(lab).map(([k,v])=>`<div class="toggle"><span>${v}</span><input type="checkbox" data-alon="${k}" ${A.on[k]?'checked':''}></div>`).join('')}
    <label>Amaran bila pegangan turun melebihi (% dari kos)</label><input id="alLoss" inputmode="decimal" value="${A.lossPct}">
@@ -1591,6 +1597,7 @@ const EN_PHRASE=[
 ];
 
 Object.assign(EN_EXACT,{
+'Isyarat baharu (Isyarat Kuat & Champion)':'New signals (Strong & Champion)',
 'Selamat datang ke ProSyariah':'Welcome to ProSyariah','Cara baca isyarat':'How to read signals','Uji dengan Robot Manual':'Test with the Manual Robot',
 'Langkau':'Skip','Kembali':'Back','Seterusnya →':'Next →','Mula guna app':'Start using the app','📖 Panduan ringkas app':'📖 Quick app guide',
 'Graf untung / rugi':'Profit / loss chart','Ringkasan minggu ini':'Weekly summary','Belum cukup dagangan selesai untuk melukis graf.':'Not enough closed trades to draw a chart yet.',
@@ -1759,6 +1766,9 @@ Object.assign(EN_EXACT,{
 'Paras ini naik mengikut harga tertinggi sejak tarikh belian dan tidak pernah turun. Harga tutup di bawahnya menandakan momentum menurun.':'This level rises with the highest price since the purchase date and never falls. A close below it signals weakening momentum.',
 });
 EN_RX.unshift(
+[/^(\d+) isyarat Champion baharu$/,'$1 new Champion signal(s)'],[/^(\d+) Isyarat Kuat baharu$/,'$1 new Strong signal(s)'],
+[/^(.+)\. Isyarat Kuat \+ skor teknikal Kuat, mula (.+)\.$/,(m,a,b)=>`${a}. Strong signal + strong technical score, starting ${trText(b)}.`],
+[/^(.+)\. Mula (.+)\. Buka 📋 Ringkasan isyarat aktif\.$/,(m,a,b)=>`${a}. Starting ${trText(b)}. Open 📋 Active signals summary.`],
 [/^Jumlah terkumpul dari ujian pertama(, termasuk ujian yang masih terbuka pada harga kini)?\.$/,(m,a)=>`Running total since the first test${a?', including open tests at the current price':''}.`],
 [/^Sedang diuji: (\d+) \((.+?)\)\. Ditutup minggu ini: (\d+)(?:, (\d+) menang \((.+)\))?\.$/,(m,a,b,c,d,e)=>`Being tested: ${a} (${b}). Closed this week: ${c}${d?`, ${d} won (${e})`:''}.`],
 [/^Keputusan lampau tidak menjamin keputusan masa depan\. Dikemas kini (.+)\.$/,(m,a)=>`Past results do not guarantee future results. Updated ${trText(a)}.`],
@@ -2526,7 +2536,7 @@ async function cloudPull(){if(!FBU)return;try{const d=await FB.db.collection('us
 async function cloudPush(now){if(!FBU)return;clearTimeout(cloudT);
   const go=async()=>{try{S.cloudAt=Date.now();save0();
     const D={manual:S.manual||[],watch:S.watch||[],manDel:S.manDel||[],settings:{lang:S.settings.lang,platform:S.settings.platform??null,paperStake:S.settings.paperStake??null},updatedAt:S.cloudAt};
-    await FB.db.collection('users').doc(FBU.uid).set({data:JSON.stringify(D),email:FBU.email||'',lang:S.settings.lang||'bm',notify:!!(S.alerts&&S.alerts.notify),updatedAt:S.cloudAt},{merge:true});}catch(e){}};
+    await FB.db.collection('users').doc(FBU.uid).set({data:JSON.stringify(D),email:FBU.email||'',lang:S.settings.lang||'bm',notify:!!(S.alerts&&S.alerts.notify),sig:!!(S.alerts&&S.alerts.on&&S.alerts.on.isyarat!==false),updatedAt:S.cloudAt},{merge:true});}catch(e){}};
   if(now)return go();cloudT=setTimeout(go,2500);}
 async function regPush(){try{if(!FBU||!FB_VAPID||!('serviceWorker' in navigator)||!('Notification' in window)||Notification.permission!=='granted')return;
   const reg=await navigator.serviceWorker.ready;const tok=await firebase.messaging().getToken({vapidKey:FB_VAPID,serviceWorkerRegistration:reg});

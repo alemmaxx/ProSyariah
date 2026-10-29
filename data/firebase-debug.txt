@@ -16,10 +16,10 @@ npm warn deprecated glob@10.5.0: Old versions of glob are not supported, and con
 ├──────────────┼────────────────────────────┤
 │ App ID:      │                            │
 └──────────────┴────────────────────────────┘
+[36m[1mi [22m[39m deploying [1mhosting[22m
 [36m[1mi  hosting[prosyariah]:[22m[39m beginning deploy...
 [36m[1mi  hosting[prosyariah]:[22m[39m found 1175 files in [1m_site[22m
-[36m[1mi  hosting:[22m[39m adding files to version [1000/1175] ([1m[32m85%[39m[22m)
-[36m[1mi  hosting:[22m[39m uploading new files [3/111] ([1m[32m2%[39m[22m)
+[36m[1mi  hosting:[22m[39m uploading new files [1/110] ([1m[32m0%[39m[22m)
 [36m[1mi  hosting:[22m[39m upload complete
 [32m[1m✔  hosting[prosyariah]:[22m[39m file upload complete
 [36m[1mi  hosting[prosyariah]:[22m[39m finalizing version...
@@ -33,4 +33,4 @@ npm warn deprecated glob@10.5.0: Old versions of glob are not supported, and con
 [1mHosting URL:[22m https://prosyariah.web.app
 exit=0
 firestore rules OK
-✓ Notifikasi push: 0 pengguna disemak, 0 notifikasi dihantar
+✓ Notifikasi push: 1 akaun dalam Firestore, 1 dengan notifikasi aktif, 0 notifikasi dihantar

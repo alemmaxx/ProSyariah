@@ -6,6 +6,11 @@ self.addEventListener('fetch',e=>{if(e.request.method!=='GET')return;
   e.respondWith(fetch(e.request).then(r=>{if(r.ok&&new URL(e.request.url).origin===location.origin){const cp=r.clone();caches.open(C).then(c=>c.put(e.request,cp));}return r;})
     .catch(()=>caches.match(e.request)));});
 
+// Notifikasi push dari server (Firebase Cloud Messaging) — dihantar oleh robot GitHub
+self.addEventListener('push',e=>{let d={};try{d=e.data?e.data.json():{};}catch(x){}
+  const n=d.notification||{},x=d.data||{};const title=x.title||n.title||'ProSyariah';
+  e.waitUntil(self.registration.showNotification(title,{body:x.body||n.body||'',tag:x.tag||undefined,icon:'icons/icon-192.png',badge:'icons/icon-192.png',data:{url:'./#robot'}}));});
+
 // Tekan notifikasi → buka app di tab Robot
 self.addEventListener('notificationclick',e=>{e.notification.close();
   e.waitUntil(self.clients.matchAll({type:'window',includeUncontrolled:true}).then(ws=>{

@@ -384,7 +384,8 @@ const DEF={
 let S;
 function load(){try{const r=localStorage.getItem(KEY);S=r?Object.assign(structuredClone(DEF),JSON.parse(r)):structuredClone(DEF);}catch(e){S=structuredClone(DEF);}
   S.settings=Object.assign({},DEF.settings,S.settings); S.zakat=Object.assign({},DEF.zakat,S.zakat);}
-function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){toast('Storan penuh — buang cache harga di Tetapan');}}
+function save0(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){toast('Storan penuh — buang cache harga di Tetapan');}}
+function save(){save0();if(typeof FBU!=='undefined'&&FBU)cloudPush();}
 load();
 
 /* ================= UTIL ================= */
@@ -861,6 +862,7 @@ const RES3={W:['Menang','up','b-ok'],L:['Kalah','dn','b-no'],T:['Tamat masa','',
 /* ===== ROBOT MANUAL: pengguna pilih saham & harga masuk maya sendiri ===== */
 function fmtDT(iso){const d=new Date(iso);return fmtD(isoD(d))+', '+d.toLocaleTimeString(S.settings.lang==='en'?'en-GB':'ms-MY',{hour:'2-digit',minute:'2-digit',hour12:false});}
 function manStartTxt(p){return p.at&&isoD(new Date(p.at))===p.d?fmtDT(p.at):fmtD(p.d);}
+function manDelete(id){S.manual=(S.manual||[]).filter(x=>x.id!==id);S.manDel=[...new Set([...(S.manDel||[]),id])].slice(-300);save();}
 function manOpen(code){return (S.manual||[]).find(p=>p.code===code&&!p.closed);}
 function manLevels(code,en){
   const sg=signalFor(code),m=mk(code);
@@ -902,7 +904,7 @@ function openManual(code){
   d.onclick=e=>{if(e.target===d)close();};$('#helpX').onclick=close;
   const after=()=>{close();if($('#sheet').classList.contains('on'))stockSheet(code,nm);if(TAB==='robot')rRobot();};
   if(P){$('#mxClose').onclick=()=>{const now=m&&m.c;if(!now&&!num($('#mX').value))return toast('Harga kini belum tersedia');const xv=num($('#mX').value)||now;P.closed={res:'M',exit:xv,end:today(),at:new Date().toISOString(),days:tdBetween(P.d,today())};save();toast('Ujian manual ditutup');after();};
-    $('#mxDel').onclick=()=>{S.manual=S.manual.filter(x=>x!==P);save();toast('Dipadam');after();};}
+    $('#mxDel').onclick=()=>{manDelete(P.id);toast('Dipadam');after();};}
   else $('#mGo').onclick=()=>{const st=num($('#mS').value),en=num($('#mE').value),tg=num($('#mT').value),sl=num($('#mL').value),dt=$('#mD').value;
     if(!(st>0&&en>0))return toast('Masukkan nilai maya dan harga masuk');if(!(tg>en&&sl<en&&sl>0))return toast('Paras atas mesti lebih tinggi dan paras bawah lebih rendah daripada harga masuk');
     const sg=signalFor(code);S.manual=S.manual||[];S.manual.push({id:uid(),inc:1,at:new Date().toISOString(),code,name:nm,d:dt||today(),en,stake:st,tg,sl,md:sg&&sg.md?Math.round(sg.md):null});
@@ -920,7 +922,7 @@ function openManDetail(id){const p=(S.manual||[]).find(x=>x.id===id);if(!p)retur
   document.body.appendChild(d);const close=()=>{d.remove();if(!$('#sheet').classList.contains('on'))document.body.classList.remove('ovl');};
   d.onclick=e=>{const mx=e.target.closest('[data-mx]'),md=e.target.closest('[data-md]');
     if(mx){close();openManual(mx.dataset.mx);return;}
-    if(md){S.manual=S.manual.filter(x=>x.id!==md.dataset.md);save();close();rRobot();toast('Dipadam dari senarai');return;}
+    if(md){manDelete(md.dataset.md);close();rRobot();toast('Dipadam dari senarai');return;}
     if(e.target===d)close();};
   $('#helpX').onclick=close;$('#mdView').onclick=()=>{close();stockSheet(p.code,nameOf(p.code));};}
 function manFull(p){const nm=shortName(p.name||nameOf(p.code));
@@ -951,7 +953,7 @@ function rManual(){
 function bindManual(){
   document.querySelectorAll('#main .mrow[data-mid]').forEach(b=>b.onclick=()=>openManDetail(b.dataset.mid));
   document.querySelectorAll('[data-mx]').forEach(b=>b.onclick=e=>{e.stopPropagation();openManual(b.dataset.mx);});
-  document.querySelectorAll('[data-md]').forEach(b=>b.onclick=e=>{e.stopPropagation();const x=(S.manual||[]).find(p=>p.id===b.dataset.md);if(!x)return;S.manual=S.manual.filter(p=>p!==x);save();rRobot();toast('Dipadam dari senarai');});
+  document.querySelectorAll('[data-md]').forEach(b=>b.onclick=e=>{e.stopPropagation();const x=(S.manual||[]).find(p=>p.id===b.dataset.md);if(!x)return;manDelete(x.id);rRobot();toast('Dipadam dari senarai');});
   const need=(S.manual||[]).filter(p=>!p.closed&&!(S.cache[p.code]&&S.cache[p.code].asof===(mk(p.code)||{}).d)).map(p=>p.code);
   if(need.length&&!bindManual._busy){bindManual._busy=true;Promise.allSettled([...new Set(need)].map(c=>getBars(c))).then(()=>{bindManual._busy=false;manRefresh();if(TAB==='robot')rRobot();});}
 }
@@ -1258,7 +1260,7 @@ async function enableNotify(){
   const A=AL();
   if(!('Notification' in window)){toast('Peranti ini tidak menyokong notifikasi web. Amaran tetap dipaparkan dalam app.');return;}
   const p=await Notification.requestPermission();
-  if(p==='granted'){A.notify=true;save();toast('✓ Notifikasi dihidupkan');notifyNew();regPeriodic();}else toast('Kebenaran notifikasi ditolak');
+  if(p==='granted'){A.notify=true;save();toast('✓ Notifikasi dihidupkan');notifyNew();regPeriodic();regPush();}else toast('Kebenaran notifikasi ditolak');
   if($('#sheet').classList.contains('on'))openAlerts();else render();
 }
 function priceAlertForm(code){
@@ -1542,6 +1544,9 @@ const EN_PHRASE=[
 ];
 
 Object.assign(EN_EXACT,{
+'Akaun':'Account','Log masuk dengan Google':'Sign in with Google','Log masuk sebagai':'Signed in as','Simpanan awan':'Cloud storage','Aktif':'Active','Segerak sekarang':'Sync now','Log keluar':'Sign out',
+'✓ Data diselaraskan':'✓ Data synced','Segerak awan gagal':'Cloud sync failed','Log masuk gagal':'Sign-in failed','Log masuk belum tersedia':'Sign-in not available yet',
+'Log masuk supaya senarai Robot Manual, watchlist dan tetapan anda disimpan dengan selamat dan sama di semua phone. Notifikasi Robot Manual juga boleh sampai walaupun app ditutup.':'Sign in so your Manual Robot list, watchlist and settings are stored safely and the same on every phone. Manual Robot notifications can also arrive even when the app is closed.',
 'Maklumat asas syarikat':'Company fundamentals','Nilai syarikat':'Market value','Saiz syarikat di pasaran':'Size of the company on the market','Harga berbanding untung. Lebih rendah = lebih murah':'Price compared to profit. Lower = cheaper',
 'Dividen setahun':'Dividend per year','Wang yang dibayar kepada pemegang saham':'Money paid to shareholders','Margin untung':'Profit margin','Untung daripada setiap RM100 jualan':'Profit from every RM100 of sales',
 'Untung berbanding modal pemegang saham':"Profit compared to shareholders' capital",'Hutang / modal':'Debt / capital','Lebih rendah = kurang berhutang':'Lower = less debt',
@@ -2428,6 +2433,42 @@ function download(name,content,type){
   try{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([content],{type}));a.download=name;document.body.appendChild(a);a.click();a.remove();}
   catch(e){toast('Muat turun tidak disokong — guna Salin');}
 }
+/* ===== AKAUN & SEGERAK AWAN (Firebase: log masuk Google, Firestore, notifikasi push) ===== */
+const FB_CONFIG=null;   // firebaseConfig projek prosyariah (diisi selepas web app didaftarkan)
+const FB_VAPID='';      // kunci Web Push (Cloud Messaging)
+const FBV='10.12.2';
+let FB=null,FBU=null,cloudT=null;
+function loadScript(u){return new Promise((ok,no)=>{const x=document.createElement('script');x.src=u;x.onload=ok;x.onerror=no;document.head.appendChild(x);});}
+async function fbInit(){if(!FB_CONFIG)return null;if(FB)return FB;
+  for(const m of ['app','auth','firestore','messaging'])await loadScript(`https://www.gstatic.com/firebasejs/${FBV}/firebase-${m}-compat.js`);
+  firebase.initializeApp(FB_CONFIG);FB={auth:firebase.auth(),db:firebase.firestore()};
+  FB.auth.onAuthStateChanged(async u=>{FBU=u;if(u){await cloudPull();regPush();}if(TAB==='tetapan')render();});
+  try{await FB.auth.getRedirectResult();}catch(e){}
+  return FB;}
+async function login(){const f=await fbInit().catch(()=>null);if(!f)return toast('Log masuk belum tersedia');const pv=new firebase.auth.GoogleAuthProvider();
+  try{await f.auth.signInWithPopup(pv);}catch(e){if(/popup|environment/.test(e.code||''))await f.auth.signInWithRedirect(pv);else toast('Log masuk gagal');}}
+async function logout(){if(FB)await FB.auth.signOut();FBU=null;render();toast('Log keluar');}
+function mergeManual(a,b){const m={};[...a,...b].forEach(p=>{const o=m[p.id];if(!o||(p.closed&&!o.closed))m[p.id]=p;});return Object.values(m);}
+async function cloudPull(){if(!FBU)return;try{const d=await FB.db.collection('users').doc(FBU.uid).get();const r=d.exists?d.data():null;
+    if(r&&r.data){const R=JSON.parse(r.data);const del=new Set([...(S.manDel||[]),...(R.manDel||[])]);
+      S.manual=mergeManual(S.manual||[],R.manual||[]).filter(p=>!del.has(p.id));S.manDel=[...del].slice(-300);
+      S.watch=[...new Set([...(S.watch||[]),...(R.watch||[])])];
+      if(R.settings&&(R.updatedAt||0)>(S.cloudAt||0))Object.entries(R.settings).forEach(([k,v])=>{if(v!=null)S.settings[k]=v;});
+      save0();render();}
+    await cloudPush(true);toast('✓ Data diselaraskan');}catch(e){toast('Segerak awan gagal');}}
+async function cloudPush(now){if(!FBU)return;clearTimeout(cloudT);
+  const go=async()=>{try{S.cloudAt=Date.now();save0();
+    const D={manual:S.manual||[],watch:S.watch||[],manDel:S.manDel||[],settings:{lang:S.settings.lang,platform:S.settings.platform??null,paperStake:S.settings.paperStake??null},updatedAt:S.cloudAt};
+    await FB.db.collection('users').doc(FBU.uid).set({data:JSON.stringify(D),email:FBU.email||'',lang:S.settings.lang||'bm',notify:!!(S.alerts&&S.alerts.notify),updatedAt:S.cloudAt},{merge:true});}catch(e){}};
+  if(now)return go();cloudT=setTimeout(go,2500);}
+async function regPush(){try{if(!FBU||!FB_VAPID||!('serviceWorker' in navigator)||!('Notification' in window)||Notification.permission!=='granted')return;
+  const reg=await navigator.serviceWorker.ready;const tok=await firebase.messaging().getToken({vapidKey:FB_VAPID,serviceWorkerRegistration:reg});
+  if(tok)await FB.db.collection('users').doc(FBU.uid).set({tokens:firebase.firestore.FieldValue.arrayUnion(tok),notify:true},{merge:true});}catch(e){}}
+function accountHTML(){if(!FB_CONFIG)return '';
+  if(!FBU)return `<div class="card"><h2>Akaun</h2><p class="muted" style="margin-top:0">Log masuk supaya senarai Robot Manual, watchlist dan tetapan anda disimpan dengan selamat dan sama di semua phone. Notifikasi Robot Manual juga boleh sampai walaupun app ditutup.</p><button class="btn gold" style="width:100%" id="acIn">Log masuk dengan Google</button></div>`;
+  return `<div class="card"><h2>Akaun</h2><div class="kv"><span>Log masuk sebagai</span><b>${esc(FBU.email||FBU.displayName||'-')}</b></div><div class="kv"><span>Simpanan awan</span><b class="up">Aktif</b></div>
+    <div class="row" style="gap:8px;margin-top:10px"><button class="btn sm sec" id="acSync">Segerak sekarang</button><button class="btn sm sec" id="acOut">Log keluar</button></div></div>`;}
+function bindAccount(){const a=$('#acIn');if(a)a.onclick=login;const b=$('#acOut');if(b)b.onclick=logout;const c=$('#acSync');if(c)c.onclick=()=>cloudPull();}
 function rTetapan(){
   const st=S.settings;const L=latestList();
   const M=S.market;
@@ -2439,6 +2480,7 @@ function rTetapan(){
    ${S.sync.err?`<div class="alert a-amber" style="margin-top:10px">Segerak terakhir gagal: ${esc(S.sync.err)}</div>`:''}
    <button class="btn" style="margin-top:12px;width:100%" id="syncB">Segerak sekarang</button>
    <div class="disc">Robot ProSyariah semak senarai SC dan kira indicator semua saham Bursa selepas pasaran tutup setiap hari bekerja. App terima data terkini setiap kali dibuka.</div></div>`;
+  h+=accountHTML();
   h+=platformHTML();
   h+=alertSettingsHTML();
   h+=`<div class="card"><h2>Mod Patuh Syariah</h2>
@@ -2455,7 +2497,7 @@ function rTetapan(){
    <p class="disc">ProSyariah · Versi Percuma v1.0 · Semua data disimpan dalam peranti ini sahaja.</p></div>`;
   $('#main').innerHTML=h;
   $('#syncB').onclick=()=>syncData(true);
-  bindAlertSettings();
+  bindAlertSettings();bindAccount();
   document.querySelectorAll('[data-pf]').forEach(b=>b.onclick=()=>openPlatform(+b.dataset.pf));
   const pm=$('#pfMain');if(pm)pm.onchange=e=>{S.settings.platform=e.target.value;save();toast('✓ Disimpan');};
   $('#sm').onchange=e=>{st.shariahMode=e.target.checked;save();};
@@ -2476,6 +2518,7 @@ render();
 if(location.hash==='#robot'){try{history.replaceState(history.state,'',location.pathname+location.search);}catch(e){}goTab('robot');}
 updateLangBtn();startI18N();updateInstallBtn();
 if(S.alerts&&S.alerts.notify)regPeriodic();
+if(FB_CONFIG)setTimeout(()=>fbInit().catch(()=>{}),1500);
 syncData(false);
 </script>
 </body>

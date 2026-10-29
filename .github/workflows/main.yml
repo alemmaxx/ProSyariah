@@ -128,10 +128,15 @@ jobs:
           # Cipta laman "prosyariah" (prosyariah.web.app) secara automatik jika belum ada
           npx -y firebase-tools@13.29.1 hosting:sites:get prosyariah --project "$PID" --non-interactive >> firebase-debug.txt 2>&1 \
             || npx -y firebase-tools@13.29.1 hosting:sites:create prosyariah --project "$PID" --non-interactive >> firebase-debug.txt 2>&1
-          npx -y firebase-tools@13.29.1 deploy --only hosting --project "$PID" --non-interactive --debug --message "Kemas kini $(date -u +%F)" > fb.log 2>&1
+          npx -y firebase-tools@13.29.1 deploy --only hosting --project "$PID" --non-interactive --message "Kemas kini $(date -u +%F)" > fb.log 2>&1
           rc=$?
-          grep -v -i "private_key\|bearer\|access_token\|refresh_token" fb.log | tail -80 >> firebase-debug.txt
+          grep -v -i "private_key\|bearer\|access_token\|refresh_token" fb.log | tail -15 >> firebase-debug.txt
           echo "exit=$rc" >> firebase-debug.txt
+          # Peraturan Firestore (setiap pengguna hanya baca/tulis data sendiri) — abaikan jika Firestore belum dihidupkan
+          npx -y firebase-tools@13.29.1 deploy --only firestore:rules --project "$PID" --non-interactive > fr.log 2>&1 && echo "firestore rules OK" >> firebase-debug.txt || (echo "firestore rules: dilangkau" >> firebase-debug.txt; tail -3 fr.log >> firebase-debug.txt)
+          # Notifikasi push Robot Manual untuk pengguna yang log masuk
+          python scripts/push.py --out _site/data >> firebase-debug.txt 2>&1 || echo "push: dilangkau" >> firebase-debug.txt
+          rm -f fr.log
           rm -f "$RUNNER_TEMP/sa.json" fb.log
           cp firebase-debug.txt data/firebase-debug.txt
           git add data/firebase-debug.txt

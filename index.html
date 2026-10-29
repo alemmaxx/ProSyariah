@@ -813,7 +813,7 @@ async function openKlci(){const K=S.market.meta.klci;
     <p style="margin:6px 0 2px"><b class="t3d" style="font-size:26px;font-weight:800">${K.c.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</b> <span class="${K.ch>=0?'up':'dn'}">${K.ch>0?'+':''}${K.ch}% hari ini</span></p>
     <p class="muted" style="margin:0 0 10px;font-size:13px">Pasaran ${klciWord(K.up).toLowerCase()} · data ${fmtD(K.d)}</p>
     <div class="tfs" style="display:flex;gap:6px;margin-bottom:8px">${rng.map(([n,l])=>`<button class="btn sm ${n===KLR?'gold':'sec'}" data-kr="${n}">${l}</button>`).join('')}</div>${svg}
-    <div class="disc">KLCI ialah indeks 30 syarikat terbesar Bursa (bukan semuanya patuh syariah). Ia tunjuk keadaan pasaran secara umum. Menaik = harga atas purata 50 dan 200 hari. Menurun = bawah kedua-duanya. Selain itu Mendatar.</div>`);
+    <div class="alert a-amber" style="margin:10px 0 0">Penunjuk pasaran sahaja. KLCI bukan saham dan tidak boleh didagang atau diuji dengan Robot.</div><div class="disc">KLCI ialah indeks 30 syarikat terbesar Bursa (bukan semuanya patuh syariah). Ia tunjuk keadaan pasaran secara umum. Menaik = harga atas purata 50 dan 200 hari. Menurun = bawah kedua-duanya. Selain itu Mendatar.</div>`);
   document.querySelectorAll('[data-kr]').forEach(b=>b.onclick=()=>{KLR=+b.dataset.kr;openKlci();});}
 /* ===== ALAT: Penapis, Kalendar, Banding ===== */
 function toolsHTML(){if(!S.market)return '';
@@ -1692,6 +1692,7 @@ const EN_PHRASE=[
 ];
 
 Object.assign(EN_EXACT,{
+'Penunjuk pasaran sahaja. KLCI bukan saham dan tidak boleh didagang atau diuji dengan Robot.':'Market indicator only. KLCI is not a stock and cannot be traded or tested with the Robot.',
 'Gaya tajuk & nombor':'Heading & number style','3D berkilat':'Glossy 3D',
 'Paparan':'Display','Saiz tulisan':'Text size','Kecil':'Small','Biasa':'Normal','Besar':'Large','Tema':'Theme','Gelap':'Dark','Cerah':'Light',
 'Bilangan':'Count','Untung/rugi':'Profit/loss',

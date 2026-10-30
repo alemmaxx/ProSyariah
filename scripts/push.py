@@ -9,7 +9,7 @@ Perlu GOOGLE_APPLICATION_CREDENTIALS (akaun servis Firebase).
 import argparse
 import json
 import os
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta, timezone
 
 H, FEE = 40, 0.003
 
@@ -156,6 +156,50 @@ def merged_positions(data, auto):
     return [p for p in m.values() if p["id"] not in dele]
 
 
+def eval_pos(p, out_dir):
+    """Keputusan posisi ikut harga harian (sama seperti app): ('W'|'L'|'T', harga keluar) atau None jika masih terbuka."""
+    if p.get("closed"):
+        return p["closed"].get("res"), p["closed"].get("exit")
+    try:
+        s = json.load(open(os.path.join(out_dir, "s", f"{p['code']}.json")))
+        bars = [(s["h"][i], s["l"][i], s["c"][i]) for i, d in enumerate(s["d"]) if (d >= p["d"] if p.get("inc") else d > p["d"])]
+    except Exception:
+        return None
+    Hp = int(p.get("hz") or H)
+    for hi, lo, c in bars[:Hp]:
+        if lo is not None and lo <= p["sl"]:
+            return "L", p["sl"]
+        if hi is not None and hi >= p["tg"]:
+            return "W", p["tg"]
+    if len(bars) >= Hp:
+        return "T", bars[Hp - 1][2]
+    return None
+
+
+def capital_free(f, data, auto, out_dir):
+    """Baki modal Robot Auto: modal + untung/rugi selesai − nilai posisi terbuka (posisi sejak modal ditetapkan)."""
+    num = lambda k: float(f.get(k, {}).get("doubleValue") or f.get(k, {}).get("integerValue") or 0)
+    cap, cap_at = num("autoCap"), num("autoCapAt")
+    if cap <= 0:
+        return None
+    def ts(x):
+        try:
+            return datetime.fromisoformat(str(x).replace("Z", "+00:00")).timestamp() * 1000
+        except Exception:
+            return 0
+    free = cap
+    for p in merged_positions(data, auto):
+        if p.get("src") != "A" or ts(p.get("at")) < cap_at:
+            continue
+        r = eval_pos(p, out_dir)
+        stake = float(p.get("stake") or 0)
+        if r:
+            free += (float(r[1]) / p["en"] - 1 - FEE) * stake
+        else:
+            free -= stake
+    return free
+
+
 def auto_adds(f, data, auto, M, out_dir, en, news_only=False):
     """Robot Auto: cipta posisi maya baharu untuk isyarat/berita yang dipilih pengguna."""
     b = lambda k, d=False: f.get(k, {}).get("booleanValue", d)
@@ -171,6 +215,7 @@ def auto_adds(f, data, auto, M, out_dir, en, news_only=False):
         tpp = 5.0
     tpp = min(max(tpp, 1.0), 50.0)
     asof = M["meta"]["asof"]
+    free = capital_free(f, data, auto, out_dir)   # None = tiada had modal
     have = {p["code"] for p in merged_positions(data, auto) if not p.get("closed")}
     seen = {p["id"] for p in auto} | set(data.get("manDel", []))
     from datetime import datetime, timezone
@@ -183,6 +228,10 @@ def auto_adds(f, data, auto, M, out_dir, en, news_only=False):
         for x in strong_list(M):
             if x["code"] in have or not x["c"] or (not b("autoSig") and not x["champ"]) or f"auto-{x['code']}-{asof}" in seen:
                 continue
+            if free is not None and free < stake:
+                break  # modal tidak cukup — tunggu posisi lain ditutup
+            if free is not None:
+                free -= stake
             o, c = x["o"], x["c"]
             new.append({"id": f"auto-{x['code']}-{asof}", "src": "A", "why": "champ" if x["champ"] else "sig", "inc": 1, "code": x["code"], "name": x["name"],
                         "d": entry_sig, "en": round(c, 4), "stake": stake, "tg": round(c * (1 + tpp / 100), 4), "sl": round(c * o["sl"] / o["en"], 4),
@@ -193,6 +242,10 @@ def auto_adds(f, data, auto, M, out_dir, en, news_only=False):
         for x in news_list(M, out_dir):
             if x["code"] in have or not x["c"] or f"auto-{x['code']}-n{x['d']}" in seen:
                 continue
+            if free is not None and free < stake:
+                break
+            if free is not None:
+                free -= stake
             c, a = x["c"], atr_of(x["code"], out_dir)
             tp = tpp / 100
             sp = min(max(1.25 * a / c, 0.02), 0.15) if a else 0.04

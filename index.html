@@ -288,6 +288,7 @@ input,textarea,[contenteditable]{-webkit-user-select:text;user-select:text}
 .adm .kv b{text-align:right}.adm textarea{width:100%;min-height:70px;box-sizing:border-box;background:var(--card2);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:8px;font:14px var(--f)}
 .adm .iss{padding:8px 0;border-bottom:1px solid var(--line);font-size:13px}.adm .plan{background:var(--card2);border-radius:12px;padding:10px 12px;margin-top:8px}
 .plink{display:block;text-align:center;margin-top:10px;font-size:13px;color:var(--muted);text-decoration:underline}
+.capbox{margin-top:14px;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--card2)}.capg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:8px}.capg>div{background:var(--card);border-radius:10px;padding:8px 10px}.capg small{display:block;color:var(--muted);font-size:12px}
 .auopt.off{opacity:.45;pointer-events:none}
 .mrow{padding:14px 0;border-bottom:1px solid var(--line);cursor:pointer}.mrow:last-child{border-bottom:0}
 .mhd{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
@@ -1094,11 +1095,15 @@ const RES3={W:['Menang','up','b-ok'],L:['Kalah','dn','b-no'],T:['Tamat masa','',
 /* ===== ROBOT MANUAL: pengguna pilih saham & harga masuk maya sendiri ===== */
 function fmtDT(iso){const d=new Date(iso);return fmtD(isoD(d))+', '+d.toLocaleTimeString(S.settings.lang==='en'?'en-GB':'ms-MY',{hour:'2-digit',minute:'2-digit',hour12:false});}
 function manStartTxt(p){return p.at&&isoD(new Date(p.at))===p.d?fmtDT(p.at):fmtD(p.d);}
-function AUTO(){S.settings.auto=Object.assign({on:false,sig:true,champ:true,news:false,stake:20,tp:5},S.settings.auto||{});return S.settings.auto;}
+function AUTO(){const d={on:false,sig:true,champ:true,news:false,stake:20,tp:5};const x=S.settings.auto||(S.settings.auto={});for(const k in d)if(!(k in x))x[k]=d[k];return x;}   // ubah objek yang sama (rujukan kekal)
+function capState(){const a=AUTO();if(!(a.cap>0))return null;let real=0,lock=0,unreal=0,n=0;
+  (S.manual||[]).forEach(p=>{if(p.src!=='A'||(Date.parse(p.at||0)||0)<(a.capAt||0))return;n++;
+    if(p.closed)real+=manPnl(p,p.closed.exit);else{lock+=+p.stake||0;const m=mk(p.code);if(m&&m.c)unreal+=manPnl(p,m.c);}});
+  const free=a.cap+real-lock;return {cap:a.cap,real,lock,unreal,free,slots:Math.max(0,Math.floor(free/(a.stake||1)+1e-9)),n};}
 function hzOf(p){return p&&p.hz?p.hz:BTH().h;}   // had hari dagangan posisi (Robot Auto: tamat tempoh isyarat)
 function autoCardHTML(){const a=AUTO();const ty=[a.sig&&'🟢',a.champ&&'🏆',a.news&&'📰'].filter(Boolean).join(' ');
-  return `<button class="card autob" id="auBtn"><span class="autob-ic">🤖</span><span class="autob-t"><b>Robot Auto</b><small>${a.on?`Hidup · ${ty||'tiada jenis dipilih'} · RM${a.stake} · untung ${a.tp}%`:'Mati · tekan untuk hidupkan'}</small></span><span class="badge ${a.on?'b-ok':''}">${a.on?'ON':'OFF'}</span><span class="muted" style="font-size:20px">›</span></button>`;}
-function openAuto(){const a=AUTO();
+  return `<button class="card autob" id="auBtn"><span class="autob-ic">🤖</span><span class="autob-t"><b>Robot Auto</b><small>${a.on?`Hidup · ${ty||'tiada jenis dipilih'} · RM${a.stake} · untung ${a.tp}%`+(capState()?` · baki ${rm(capState().free)}`:''):'Mati · tekan untuk hidupkan'}</small></span><span class="badge ${a.on?'b-ok':''}">${a.on?'ON':'OFF'}</span><span class="muted" style="font-size:20px">›</span></button>`;}
+function openAuto(){const a=AUTO();const C=capState();
   openSheet(`<div class="row between" style="align-items:center"><h2 style="margin:0">🤖 Robot Auto</h2><label class="sw"><input type="checkbox" id="auOn" ${a.on?'checked':''}><span></span></label></div>
     <p class="muted" style="margin:6px 0 8px;font-size:13px">Bila hidup, robot masuk ujian sendiri setiap petang (selepas data) untuk jenis yang anda pilih, guna harga tutup terakhir. Saham ini ditanda A dalam senarai.</p>
     <div class="auopt${a.on?'':' off'}"><label class="toggle"><span>🟢 Isyarat Kuat (Ringkasan isyarat aktif)</span><input type="checkbox" id="auSig" ${a.sig?'checked':''}></label>
@@ -1106,13 +1111,24 @@ function openAuto(){const a=AUTO();
     <label class="toggle"><span>📰 Berita Berpotensi</span><input type="checkbox" id="auNews" ${a.news?'checked':''}></label>
     <div class="grid2" style="align-items:end"><div><label>Nilai maya (RM)</label><input id="auStake" inputmode="decimal" value="${a.stake}"></div>
     <div><label>Ambil untung (%)</label><input id="auTp" inputmode="decimal" value="${a.tp}"></div></div>
-    <p class="muted" style="font-size:12.5px;margin:8px 0 0">Robot tutup sendiri bila untung sampai ${a.tp}%, atau bila tempoh isyarat tamat (yang mana dulu). Berita tiada tempoh, jadi ikut % sahaja. Cut loss kekal. Cadangan: 5%.</p></div>
+    <p class="muted" style="font-size:12.5px;margin:8px 0 0">Robot tutup sendiri bila untung sampai ${a.tp}%, atau bila tempoh isyarat tamat (yang mana dulu). Berita tiada tempoh, jadi ikut % sahaja. Cut loss kekal. Cadangan: 5%.</p>
+    <div class="capbox"><div class="row between" style="align-items:center"><b>💰 Modal pelaburan</b>${C?`<span class="badge b-ok">Had modal hidup</span>`:'<span class="badge b-na">Tanpa had</span>'}</div>
+      ${C?`<div class="capg"><div><small>Modal</small><b>${rm(C.cap)}</b></div><div><small>Dalam pasaran</small><b>${rm(C.lock)}</b></div><div><small>Untung/rugi selesai</small><b class="${C.real>=0?'up':'dn'}">${rmS(C.real)}</b></div><div><small>Baki tersedia</small><b class="${C.free>=a.stake?'up':'dn'}">${rm(C.free)}</b></div></div>
+        <p class="muted" style="font-size:12.5px;margin:6px 0 0">${C.slots?`Boleh masuk ${C.slots} posisi lagi (RM${a.stake} setiap satu).`:`Modal tidak cukup untuk posisi baharu. Robot tunggu posisi ditutup, kemudian masuk semula ikut baki.`}</p>`:
+        `<p class="muted" style="font-size:12.5px;margin:6px 0 0">Tetapkan modal supaya robot hanya labur dalam had ini. Bila modal tak cukup, isyarat baru dilangkau sehingga posisi lain ditutup.</p>`}
+      <div class="grid2" style="align-items:end;margin-top:8px"><div><label>${C?'Tukar modal (RM)':'Modal (RM)'}</label><input id="auCap" inputmode="decimal" value="${C?a.cap:''}" placeholder="cth. 1000"></div><div><button class="btn sm gold" style="width:100%;min-height:44px" id="auCapSet">${C?'Kemas kini':'Tetapkan modal'}</button></div></div>
+      ${C?`<div class="grid2" style="align-items:end;margin-top:8px"><div><label>Tambah modal (RM)</label><input id="auCapAdd" inputmode="decimal" placeholder="cth. 500"></div><div><button class="btn sm sec" style="width:100%;min-height:44px" id="auCapAddB">+ Tambah</button></div></div>
+        <div class="row" style="gap:8px;margin-top:10px;flex-wrap:wrap"><button class="btn sm sec" id="auCapReset">↺ Mula semula kiraan</button><button class="btn sm sec" id="auCapOff">Buang had modal</button></div>`:''}</div></div>
     <button class="btn" style="width:100%;margin-top:14px" id="auDone">Siap</button>`);
   const upd=()=>{save();if(TAB==='robot')rRobot();openAuto();};
   $('#auOn').onchange=e=>{a.on=e.target.checked;upd();toast(a.on?'🤖 Robot Auto dihidupkan':'Robot Auto dimatikan');};
   $('#auSig').onchange=e=>{a.sig=e.target.checked;upd();};$('#auChamp').onchange=e=>{a.champ=e.target.checked;upd();};$('#auNews').onchange=e=>{a.news=e.target.checked;upd();};
   $('#auStake').onchange=e=>{a.stake=Math.max(1,num(e.target.value)||20);upd();toast('✓ Nilai maya RM'+a.stake+' disimpan');};
   $('#auTp').onchange=e=>{a.tp=Math.min(50,Math.max(1,num(e.target.value)||5));upd();toast('✓ Ambil untung '+a.tp+'% disimpan');};
+  const cs=$('#auCapSet');if(cs)cs.onclick=()=>{const v=num($('#auCap').value);if(!(v>0)){toast('Isi modal dalam RM');return;}if(!(a.cap>0))a.capAt=Date.now();a.cap=Math.round(v*100)/100;upd();toast('✓ Modal '+rm(a.cap)+' disimpan');};
+  const ca=$('#auCapAddB');if(ca)ca.onclick=()=>{const v=num($('#auCapAdd').value);if(!(v>0)){toast('Isi jumlah tambahan');return;}a.cap=Math.round((a.cap+v)*100)/100;upd();toast('✓ Modal ditambah '+rm(v));};
+  const cr=$('#auCapReset');if(cr)cr.onclick=()=>confirm2(cr,'Tekan lagi: mula semula',()=>{a.capAt=Date.now();upd();toast('Kiraan modal bermula semula');});
+  const co=$('#auCapOff');if(co)co.onclick=()=>confirm2(co,'Tekan lagi: buang had',()=>{a.cap=0;upd();toast('Had modal dibuang');});
   $('#auDone').onclick=()=>{const v=$('#auStake'),t=$('#auTp');let ch=false;if(v&&num(v.value)&&num(v.value)!==a.stake){a.stake=Math.max(1,num(v.value));ch=true;}if(t&&num(t.value)&&num(t.value)!==a.tp){a.tp=Math.min(50,Math.max(1,num(t.value)));ch=true;}if(ch){save();if(TAB==='robot')rRobot();}closeSheet();};}
 function bindAuto(){const b=$('#auBtn');if(b)b.onclick=openAuto;}
 function manDelete(id){S.manual=(S.manual||[]).filter(x=>x.id!==id);S.manDel=[...new Set([...(S.manDel||[]),id])].slice(-300);save();}
@@ -1703,6 +1719,9 @@ const EN_EXACT={
 '🔔 Senarai syariah SC baharu dijangka':'🔔 New SC Shariah list expected','🔔 Tarikh haul anda':'🔔 Your haul date',
 };
 const EN_RX=[
+[/^Boleh masuk (\d+) posisi lagi \(RM([\d.]+) setiap satu\)\.$/,(m,a,b)=>'Can enter '+a+' more position'+(a==='1'?'':'s')+' (RM'+b+' each).'],
+[/^✓ Modal (RM .+) disimpan$/,(m,a)=>'✓ Capital '+a+' saved'],[/^✓ Modal ditambah (RM .+)$/,(m,a)=>'✓ Capital increased by '+a],
+[/^Hidup · (.*) · RM([\d.]+) · untung ([\d.]+)% · baki (.+)$/,(m,a,b,c,d)=>'On · '+(a==='tiada jenis dipilih'?'no type chosen':a)+' · RM'+b+' · profit '+c+'% · balance '+d],
 [/^Robot tutup sendiri bila untung sampai ([\d.]+)%, atau bila tempoh isyarat tamat \(yang mana dulu\)\. Berita tiada tempoh, jadi ikut % sahaja\. Cut loss kekal\. Cadangan: 5%\.$/,(m,a)=>'The robot closes by itself when profit reaches '+a+'%, or when the signal period ends (whichever comes first). News has no period, so it follows the % only. Cut loss stays. Suggested: 5%.'],
 [/^✓ Ambil untung ([\d.]+)% disimpan$/,(m,a)=>'✓ Take profit '+a+'% saved'],
 [/^Hidup · (.*) · RM([\d.]+) · untung ([\d.]+)%$/,(m,a,b,c)=>'On · '+(a==='tiada jenis dipilih'?'no type chosen':a)+' · RM'+b+' · profit '+c+'%'],
@@ -1799,6 +1818,7 @@ const EN_PHRASE=[
 ];
 
 Object.assign(EN_EXACT,{
+'💰 Modal pelaburan':'💰 Investment capital','Had modal hidup':'Capital limit on','Tanpa had':'No limit','Modal':'Capital','Dalam pasaran':'In the market','Baki tersedia':'Available balance','Tukar modal (RM)':'Change capital (RM)','Modal (RM)':'Capital (RM)','Kemas kini':'Update','Tetapkan modal':'Set capital','Tambah modal (RM)':'Add capital (RM)','+ Tambah':'+ Add','↺ Mula semula kiraan':'↺ Restart count','Buang had modal':'Remove capital limit','Tekan lagi: mula semula':'Tap again: restart','Tekan lagi: buang had':'Tap again: remove limit','Isi modal dalam RM':'Enter capital in RM','Isi jumlah tambahan':'Enter the amount to add','Kiraan modal bermula semula':'Capital count restarted','Had modal dibuang':'Capital limit removed','cth. 1000':'e.g. 1000','cth. 500':'e.g. 500','Modal tidak cukup untuk posisi baharu. Robot tunggu posisi ditutup, kemudian masuk semula ikut baki.':'Not enough capital for a new position. The robot waits for positions to close, then enters again with the balance.','Tetapkan modal supaya robot hanya labur dalam had ini. Bila modal tak cukup, isyarat baru dilangkau sehingga posisi lain ditutup.':'Set capital so the robot only invests within this limit. When capital is short, new signals are skipped until other positions close.',
 'Nilai maya (RM)':'Virtual amount (RM)',
 '⚠️ Sistem sedang mengalami gangguan. Data atau notifikasi mungkin lewat. Kami sedang membaikinya.':'⚠️ The system is having a disruption. Data or notifications may be delayed. We are fixing it.','ℹ️ Sistem agak perlahan sekarang. Data mungkin lewat sedikit.':'ℹ️ The system is a little slow right now. Data may be slightly delayed.',
 'Ambil untung (%)':'Take profit (%)','Tutup automatik':'Auto close',
@@ -2803,7 +2823,7 @@ async function cloudPull(){if(!FBU)return;try{const d=await FB.db.collection('us
 async function cloudPush(now){if(!FBU)return;clearTimeout(cloudT);
   const go=async()=>{try{S.cloudAt=Date.now();if(!(S.pfAt>0)){S.pfAt=S.cloudAt;S._pfH=pfHash();}save0();
     const D={dev:DEV,watchAt:S.watchAt||0,manual:S.manual||[],watch:S.watch||[],manDel:S.manDel||[],pf:{holdings:S.holdings||[],tathir:S.tathir||[],zakat:S.zakat||null},pfAt:S.pfAt||0,pxa:(S.alerts&&S.alerts.price)||[],lossPct:(S.alerts&&S.alerts.lossPct)||10,settings:{lang:S.settings.lang,platform:S.settings.platform??null,paperStake:S.settings.paperStake??null,auto:S.settings.auto||null},updatedAt:S.cloudAt};
-    await FB.db.collection('users').doc(FBU.uid).set({data:JSON.stringify(D),email:FBU.email||'',lang:S.settings.lang||'bm',sig:!!(S.alerts&&S.alerts.on&&S.alerts.on.isyarat!==false),news:!!(S.alerts&&S.alerts.on&&S.alerts.on.berita!==false),sigWatch:!!(S.alerts&&S.alerts.sigScope==='watch'),px:!!(S.alerts&&S.alerts.on&&S.alerts.on.harga),autoOn:!!AUTO().on,autoSig:!!AUTO().sig,autoChamp:!!AUTO().champ,autoNews:!!AUTO().news,autoStake:+AUTO().stake||20,autoTp:+AUTO().tp||5,pushAm:!!(S.alerts&&S.alerts.pushTime==='am'),updatedAt:S.cloudAt},{merge:true});}catch(e){}};
+    await FB.db.collection('users').doc(FBU.uid).set({data:JSON.stringify(D),email:FBU.email||'',lang:S.settings.lang||'bm',sig:!!(S.alerts&&S.alerts.on&&S.alerts.on.isyarat!==false),news:!!(S.alerts&&S.alerts.on&&S.alerts.on.berita!==false),sigWatch:!!(S.alerts&&S.alerts.sigScope==='watch'),px:!!(S.alerts&&S.alerts.on&&S.alerts.on.harga),autoOn:!!AUTO().on,autoSig:!!AUTO().sig,autoChamp:!!AUTO().champ,autoNews:!!AUTO().news,autoStake:+AUTO().stake||20,autoTp:+AUTO().tp||5,autoCap:+AUTO().cap||0,autoCapAt:+AUTO().capAt||0,pushAm:!!(S.alerts&&S.alerts.pushTime==='am'),updatedAt:S.cloudAt},{merge:true});}catch(e){}};
   if(now)return go();cloudT=setTimeout(go,2500);}
 async function regPush(){try{if(!FBU||!FB_VAPID||!('serviceWorker' in navigator)||!('Notification' in window)||Notification.permission!=='granted')return;
   const reg=await navigator.serviceWorker.ready;const tok=await firebase.messaging().getToken({vapidKey:FB_VAPID,serviceWorkerRegistration:reg});

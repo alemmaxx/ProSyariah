@@ -291,6 +291,7 @@ input,textarea,[contenteditable]{-webkit-user-select:text;user-select:text}
 .adm .kv b{text-align:right}.adm textarea{width:100%;min-height:70px;box-sizing:border-box;background:var(--card2);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:8px;font:14px var(--f)}
 .adm .iss{padding:8px 0;border-bottom:1px solid var(--line);font-size:13px}.adm .plan{background:var(--card2);border-radius:12px;padding:10px 12px;margin-top:8px}
 .livep{margin:6px 0 0;font-size:13.5px;color:var(--ink);display:flex;align-items:center;gap:6px;flex-wrap:wrap}.ldot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 0 3px rgba(47,191,140,.25);animation:lpulse 2s infinite}@keyframes lpulse{50%{opacity:.35}}
+.how{border-bottom:1px solid var(--line);padding:2px 0}.how summary{cursor:pointer;padding:11px 0;font-weight:600;list-style:none}.how summary::-webkit-details-marker{display:none}.how summary::after{content:'＋';float:right;color:var(--muted)}.how[open] summary::after{content:'－'}.how p{margin:0 0 12px;color:var(--muted);font-size:14px;line-height:1.55}
 .plink{display:block;text-align:center;margin-top:10px;font-size:13px;color:var(--muted);text-decoration:underline}
 .capbox{margin-top:14px;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--card2)}.capg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:8px}.capg>div{background:var(--card);border-radius:10px;padding:8px 10px}.capg small{display:block;color:var(--muted);font-size:12px}
 .auopt.off{opacity:.45;pointer-events:none}
@@ -914,6 +915,8 @@ function rAdmin(){if(!isAdmin()){goTab('tetapan');return;}
   <div class="card"><h2>Pengguna</h2>
     <div class="kv"><span>Akaun log masuk</span><b>${stats.users??'-'}</b></div><div class="kv"><span>Dengan notifikasi phone</span><b>${stats.withPhone??'-'}</b></div><div class="kv"><span>Robot Auto hidup</span><b>${stats.autoOn??'-'}</b></div>
     <p class="muted" style="font-size:12px;margin:6px 0 0">Dikira pada ${esc(stats.at||'-')}</p></div>
+  <div class="card"><h2>📘 Rujukan: cara app berjalan</h2><p class="muted" style="margin-top:0;font-size:13px">Jawapan untuk soalan pengguna. Bahagian atas sama seperti yang pengguna nampak di Tetapan → Cara app berjalan. Bahagian Teknikal untuk anda sahaja.</p>${HOW.map(([ic,qb,ab])=>`<details class="how"><summary>${ic} ${qb}</summary><p>${ab}</p></details>`).join('')}
+    <h3 style="margin:14px 0 4px">🔧 Teknikal (admin sahaja)</h3>${HOW_ADMIN.map(([q,a])=>`<details class="how"><summary>${q}</summary><p>${a}</p></details>`).join('')}</div>
   <div class="card"><h2>Langganan (persediaan)</h2>
     <div class="toggle"><span>Langganan aktif untuk pengguna</span><input type="checkbox" id="admSubOn" ${plans.on?'checked':''} disabled></div>
     <p class="muted" style="font-size:12px;margin:4px 0 8px">Akan dihidupkan selepas HitPay disahkan dan disambung. Kunci HitPay disimpan secara rahsia di pelayan, bukan dalam app.</p>
@@ -928,6 +931,46 @@ function rAdmin(){if(!isAdmin()){goTab('tetapan');return;}
   const readPlans=()=>P.map((x,i)=>({name:$(`[data-pn="${i}"]`).value.trim(),price:$(`[data-pp="${i}"]`).value.trim(),period:$(`[data-pd="${i}"]`).value,feat:$(`[data-pf="${i}"]`).value.trim()}));
   $('#admAddPlan').onclick=()=>{ADM.plans.list=[...readPlans(),{name:'',price:'',period:'bulan',feat:''}];rAdmin();};
   $('#admPlanSave').onclick=async()=>{const L=readPlans().filter(x=>x.name);if(await admSave('plans',{list:L,on:false,updatedAt:Date.now()})){ADM.plans.list=L;}};}
+/* ===== CARA APP BERJALAN (untuk pengguna, Tetapan) & RUJUKAN TEKNIKAL (Admin) ===== */
+const HOW=[
+ ['📊','Bila isyarat dijana?',
+  'Sekali sehari, sekitar 6.30 petang hari bekerja, selepas Bursa tutup pukul 5 petang. Robot ambil harga tutup semua kaunter, kira indicator, dan banding dengan sejarah 5 tahun setiap saham. Notifikasi isyarat keluar sekitar 6.30 – 7 petang, dan isyarat itu untuk hari dagangan esok. Jika data lewat, robot cuba semula pukul 9.15 pagi esoknya. Isyarat guna harga tutup, jadi ia tidak berubah dalam waktu pasaran.',
+  'When are signals generated?','Once a day, around 6.30pm on working days, after Bursa closes at 5pm. The robot takes every counter\'s closing price, computes the indicators and compares them with each stock\'s 5-year history. Signal notifications arrive around 6.30 – 7pm and are for the next trading day. If data is late, the robot retries at 9.15am the next morning. Signals use closing prices, so they do not change during market hours.'],
+ ['🟢','Harga terkini',
+  'Setiap 15 minit dalam waktu pasaran (Isnin – Jumaat, 9.15 pagi – 5.15 petang), app ambil harga terkini semua kaunter. Harga ini lewat lebih kurang 15 minit dan hanya untuk paparan. Isyarat, sasaran, cut loss dan Robot tetap guna harga tutup harian.',
+  'Latest price','Every 15 minutes during market hours (Mon – Fri, 9.15am – 5.15pm), the app fetches the latest price of every counter. It is about 15 minutes delayed and for display only. Signals, targets, cut loss and the Robot still use daily closing prices.'],
+ ['📰','Berita Berpotensi',
+  'Robot berita berjalan setiap jam dari 9 pagi hingga 5 petang, kemudian pukul 7, 9 dan 11 malam. Berita yang keluar pukul 10 pagi biasanya sampai sekitar 11 – 11.20 pagi. Hanya berita hari ini ditunjuk; ia dikosongkan selepas 12 tengah malam.',
+  'Potential news','The news robot runs every hour from 9am to 5pm, then at 7, 9 and 11pm. News published at 10am usually arrives around 11 – 11.20am. Only today\'s news is shown; it clears after midnight.'],
+ ['🤖','Robot Manual & Auto',
+  'M = ujian yang anda mulakan sendiri (✍️ Manual). A = Robot Auto masuk sendiri selepas data petang (isyarat) atau pada larian berita. Robot semak setiap hari dan tutup bila sampai sasaran / ambil untung, kena cut loss, atau tempoh tamat. Ia berjalan walaupun app ditutup, jika anda log masuk.',
+  'Manual & Auto Robot','M = tests you start yourself (✍️ Manual). A = Auto Robot enters by itself after the evening data (signals) or on the news runs. The robot checks daily and closes at the target / take profit, the cut loss, or when the period ends. It runs even when the app is closed, if you are signed in.'],
+ ['💰','Modal & yuran broker',
+  'Bila modal pelaburan ditetapkan, robot bahagi modal kepada 5 bahagian (≈20% setiap saham) dan hanya masuk jika baki cukup. Bila saham ditutup, duit kembali ke baki termasuk untung atau rugi. Jika yuran broker dihidupkan, robot beli ikut lot 100 unit dan tolak yuran broker, yuran penjelasan Bursa dan duti setem setiap beli dan jual.',
+  'Capital & broker fees','When investment capital is set, the robot splits it into 5 parts (≈20% per stock) and only enters if the balance is enough. When a stock closes, the money returns to the balance including profit or loss. If broker fees are on, the robot buys in lots of 100 units and deducts broker, Bursa clearing and stamp duty fees on every buy and sell.'],
+ ['🔔','Notifikasi telefon',
+  'Sampai ke telefon walaupun app ditutup: Isyarat Kuat & Champion, Berita Berpotensi, Robot (tutup, cut loss, masuk saham baru), amaran harga, dan laporan bulanan. Perlu log masuk dan tekan Hidupkan di Tetapan → Notifikasi telefon.',
+  'Phone notifications','Reach your phone even when the app is closed: Strong signals & Champion, Potential news, Robot (close, cut loss, new entries), price alerts and the monthly report. You need to sign in and tap Turn on in Settings → Phone notifications.'],
+ ['☪️','Status syariah',
+  'Hanya saham dalam senarai patuh syariah Majlis Penasihat Syariah SC (dikemas kini Mei & November), serta ETF & REIT Islam yang diluluskan, dipaparkan dengan isyarat. Senarai baru diambil secara automatik.',
+  'Shariah status','Only stocks on the SC Shariah Advisory Council list (updated May & November), plus approved Islamic ETFs & REITs, are shown with signals. New lists are picked up automatically.'],
+ ['💾','Data anda',
+  'Bila log masuk, Watchlist, Robot, Portfolio, Tathir & Zakat disimpan dalam akaun anda dan sama di semua telefon. Tanpa log masuk, data disimpan dalam telefon ini sahaja. Anda boleh padam data akaun bila-bila masa di Tetapan → Akaun.',
+  'Your data','When signed in, Watchlist, Robot, Portfolio, Purify & Zakat are saved in your account and match on every phone. Without signing in, data stays on this phone only. You can delete your account data any time in Settings → Account.'],
+ ['⚠️','Jika sistem bermasalah',
+  'Sistem dipantau setiap 30 minit. Jika ada gangguan, jalur amaran muncul di atas skrin dan hilang sendiri bila pulih. Data atau notifikasi mungkin lewat semasa gangguan.',
+  'If the system has a problem','The system is monitored every 30 minutes. If there is a disruption, a warning bar appears at the top of the screen and disappears when it recovers. Data or notifications may be delayed during a disruption.'],
+ ['ℹ️','Penting',
+  'ProSyariah ialah app indicator. Isyarat ialah bacaan berdasarkan sejarah harga, bukan cadangan beli atau jual, dan bukan jaminan untung.',
+  'Important','ProSyariah is an indicator app. Signals are readings based on price history, not buy or sell recommendations, and not a guarantee of profit.']];
+const HOW_ADMIN=[
+ ['Jadual robot (waktu Malaysia)','• Data harian & isyarat: 6.30 ptg hari bekerja (GitHub Actions "Kemas kini data ProSyariah"), sandaran 9.15 pagi, Sabtu 10 pagi (senarai SC).<br>• Harga terkini: setiap 15 minit, 9.15 pagi – 5.15 ptg, Isnin – Jumaat (workflow "Harga terkini").<br>• Berita: setiap jam 9 pagi – 5 ptg, kemudian 7, 9, 11 malam (workflow "Berita terkini").<br>• Pemantau sistem: setiap 30 minit (workflow "Pemantau sistem").<br>• Jadual GitHub biasanya lewat 5 – 20 minit.'],
+ ['Di mana apa disimpan','• GitHub (repo alemmaxx/ProSyariah): kod, semua robot, data harga/isyarat/berita, laman GitHub Pages (sumber data utama app).<br>• Firebase (projek prosyariah-26a55): laman prosyariah.web.app, log masuk Google, Firestore (data akaun pengguna, tetapan admin), notifikasi telefon (FCM).<br>• Data besar dimuat dari GitHub Pages untuk jimat kuota Firebase percuma; Firebase hanya sandaran.'],
+ ['Sumber data','• Harga harian, 15 minit & maklumat asas: Yahoo Finance (percuma, tidak rasmi, lewat ±15 minit).<br>• Senarai syariah: PDF Majlis Penasihat Syariah SC.<br>• Berita: Google News RSS.<br>• Cuti Bursa: pustaka exchange_calendars (XKLS).'],
+ ['Jika ada masalah','• Emel amaran dihantar ke alamat dalam tab Admin (perlu secret SMTP_USER & SMTP_PASS di GitHub).<br>• Larian gagal juga menghantar emel GitHub kepada pemilik repo.<br>• Ujian app automatik berjalan sebelum setiap kemas kini; jika gagal, versi lama dikekalkan.<br>• Senarai SC gagal dibaca: muat naik PDF ke data/sc-upload/ dalam repo.'],
+ ['Rahsia (GitHub → Settings → Secrets)','FIREBASE_SERVICE_ACCOUNT (kunci Firebase), SMTP_USER & SMTP_PASS (emel amaran), EODHD_API_KEY (pilihan, sumber harga berbayar). Jangan kongsi nilai-nilai ini dengan sesiapa.']];
+function howHTML(){const en=S.settings.lang==='en';return HOW.map(([ic,qb,ab,qe,ae])=>`<details class="how"><summary>${ic} ${en?qe:qb}</summary><p>${en?ae:ab}</p></details>`).join('');}
+function openHow(){openSheet(`<div class="row between" style="align-items:center"><h2 style="margin:0">📘 ${S.settings.lang==='en'?'How the app works':'Cara app berjalan'}</h2><button class="xbtn" onclick="closeSheet()" aria-label="Tutup">✕</button></div><div class="notr" style="margin-top:8px">${howHTML()}</div>`);}
 /* ===== ALAT: Penapis, Kalendar, Banding ===== */
 function toolsHTML(){if(!S.market)return '';
   return `<div class="pad tools3" style="margin-top:12px"><button onclick="openScreener()"><span>🔎</span>Penapis</button><button onclick="openCal()"><span>📅</span>Kalendar</button><button onclick="openCompare()"><span>⚖️</span>Banding</button></div>`;}
@@ -1852,6 +1895,7 @@ const EN_PHRASE=[
 ];
 
 Object.assign(EN_EXACT,{
+'📘 Cara app berjalan':'📘 How the app works',
 'Harga terkini':'Latest price','Latest price':'Latest price',
 '🧾 Kira yuran broker sebenar':'🧾 Count real broker fees','Beli ikut lot 100 unit. Yuran broker + yuran penjelasan Bursa + duti setem, setiap beli & jual.':'Buys in lots of 100 units. Broker fee + Bursa clearing fee + stamp duty, on every buy & sell.','Broker':'Broker','🧾 Yuran broker dikira':'🧾 Broker fees counted','Yuran broker tidak dikira':'Broker fees not counted',
 '🧾 Kira yuran moomoo sebenar':'🧾 Count real moomoo fees','Beli ikut lot 100 unit. Yuran: platform RM3 + komisen 0.03% + penjelasan 0.03% + duti setem, setiap beli & jual.':'Buys in lots of 100 units. Fees: RM3 platform + 0.03% commission + 0.03% clearing + stamp duty, on every buy & sell.','Komisen percuma (180 hari pengguna baharu)':'Free commission (180 days for new users)','🧾 Yuran moomoo dikira':'🧾 moomoo fees counted','Yuran moomoo tidak dikira':'moomoo fees not counted','Unit · kos+yuran':'Units · cost+fees',
@@ -2355,7 +2399,7 @@ function heroChart(code){
 }
 function liveLine(code){const l=livePx(code);if(!l)return '';const t=l.t.slice(11,16);
   const en=S.settings.lang==='en';
-  return `<p class="livep" translate="no" data-notr="1"><span class="ldot"></span>${en?'Latest price':'Harga terkini'} <b class="${l.ch>=0?'up':'dn'}">${px(l.p)} (${l.ch>0?'+':''}${l.ch.toFixed(2)}%)</b> · ${fmtD(l.t.slice(0,10))} ${t} · ${en?'~15 min delayed':'lewat ±15 min'}</p>`;}
+  return `<p class="livep notr"><span class="ldot"></span>${en?'Latest price':'Harga terkini'} <b class="${l.ch>=0?'up':'dn'}">${px(l.p)} (${l.ch>0?'+':''}${l.ch.toFixed(2)}%)</b> · ${fmtD(l.t.slice(0,10))} ${t} · ${en?'~15 min delayed':'lewat ±15 min'}</p>`;}
 function heroHTML(){
   const L=latestList();
   if(!L&&!S.market)return `<section class="hero" style="--hc:#0f5a45"><span class="tag">✦ <b>${S.sync.err?'Tiada sambungan':'Menyediakan data'}</b></span>
@@ -2909,7 +2953,7 @@ function rTetapan(){
    ${S.sync.err?`<div class="alert a-amber" style="margin-top:10px">Segerak terakhir gagal: ${esc(S.sync.err)}</div>`:''}
    <button class="btn" style="margin-top:12px;width:100%" id="syncB">Segerak sekarang</button>
    <div class="disc">Robot ProSyariah semak senarai SC dan kira indicator semua saham Bursa selepas pasaran tutup setiap hari bekerja. App terima data terkini setiap kali dibuka.</div></div>`;
-  h+=`<div class="card"><button class="btn sec" style="width:100%" onclick="openOnboard(0)">📖 Panduan ringkas app</button></div>`;
+  h+=`<div class="card"><button class="btn sec" style="width:100%" onclick="openOnboard(0)">📖 Panduan ringkas app</button><button class="btn sec" style="width:100%;margin-top:8px" onclick="openHow()">📘 Cara app berjalan</button></div>`;
   h+=displayHTML();
   h+=accountHTML();
   h+=platformHTML();

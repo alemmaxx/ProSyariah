@@ -914,6 +914,13 @@ function rAdmin(){if(!isAdmin()){goTab('tetapan');return;}const en=S.settings.la
     ${status.lastMail?`<div class="kv"><span>${T('Emel terakhir','Last email')}</span><b>${esc(dt(status.lastMail))} ${status.lastMailOk?'✓':'✕'}</b></div>`:''}
     ${testTxt?`<div class="kv"><span>${T('Emel ujian','Test email')}</span><b>${testTxt}</b></div>`:''}
     <p class="muted" style="font-size:12px;margin:8px 0 0">${T('Emel dihantar bila masalah bermula dan bila sistem pulih.','Emails are sent when a problem starts and when the system recovers.')}${status.mailer?'':' '+T('Penghantar emel perlu disediakan sekali sahaja: secret SMTP_USER & SMTP_PASS di GitHub.','The email sender needs a one-time setup: SMTP_USER & SMTP_PASS secrets on GitHub.')}</p></div>
+  <div class="card"><h2>⏰ ${T('Peringatan','Reminders')}</h2>
+    ${(()=>{const exp=(admin.tokenExp||'2027-10-29').slice(0,10),left=Math.round((parseD(exp)-parseD(today()))/864e5),cls=left<=30?'dn':left<=60?'':'up';
+      return `<div class="kv"><span>${T('Token GitHub (cron-job.org) tamat','GitHub token (cron-job.org) expires')}</span><b class="${cls}">${fmtD(exp)} · ${left} ${T('hari lagi','days left')}</b></div>
+      <div class="grid2" style="margin-top:8px"><div><label>${T('Tarikh tamat token','Token expiry date')}</label><input id="admTokExp" type="date" value="${exp}"></div><div><button class="btn sm gold" style="width:100%;min-height:46px" id="admTokSave">${T('Simpan','Save')}</button></div></div>
+      <p class="muted" style="font-size:12px;margin:8px 0 0">${T('30 hari sebelum tamat, amaran keluar di sini dan emel dihantar. Bila buat token baru: tukar di cron-job.org (header Authorization), kemudian kemas kini tarikh di atas.','30 days before expiry, a warning shows here and an email is sent. When you create a new token: replace it in cron-job.org (Authorization header), then update the date above.')}</p>
+      ${left<=30?`<div class="alert a-red" style="margin:8px 0 0">⚠️ ${T('Token hampir tamat. Buat token baru sekarang.','Token is about to expire. Create a new token now.')}</div>`:''}`;})()}
+    <p class="muted" style="font-size:12px;margin:8px 0 0">${T('Pemantau juga beri amaran jika jam penggera cron-job.org berhenti lebih 45 minit.','The monitor also warns if the cron-job.org alarm clock stops for more than 45 minutes.')}</p></div>
   <div class="card"><h2>${T('Pengguna','Users')}</h2>
     <div class="kv"><span>${T('Akaun log masuk','Signed-in accounts')}</span><b>${stats.users??'-'}</b></div><div class="kv"><span>${T('Dengan notifikasi phone','With phone notifications')}</span><b>${stats.withPhone??'-'}</b></div><div class="kv"><span>${T('Robot Auto hidup','Auto Robot on')}</span><b>${stats.autoOn??'-'}</b></div>
     <p class="muted" style="font-size:12px;margin:6px 0 0">${T('Dikira pada','Counted at')} ${esc(dt(stats.at))}</p></div>
@@ -928,6 +935,7 @@ function rAdmin(){if(!isAdmin()){goTab('tetapan');return;}const en=S.settings.la
     <div class="row" style="gap:8px;margin-top:10px"><button class="btn sm sec" id="admAddPlan">+ ${T('Tambah pelan','Add plan')}</button><button class="btn sm gold" id="admPlanSave">${T('Simpan pelan','Save plans')}</button></div></div></div>`;
   $('#main').innerHTML=h;
   $('#admRe').onclick=()=>{ADM=null;checkStatus();rAdmin();};
+  $('#admTokSave').onclick=async()=>{const v=$('#admTokExp').value;if(!v){toast(T('Pilih tarikh','Pick a date'));return;}if(await admSave('admin',{tokenExp:v})){ADM.admin.tokenExp=v;rAdmin();}};
   $('#admEmailSave').onclick=async()=>{const v=$('#admEmail').value.trim();if(v&&!/^[^@\s]+@[^@\s]+\.[^@\s]+(\s*,\s*[^@\s]+@[^@\s]+\.[^@\s]+)*$/.test(v)){toast(T('Format emel tidak sah','Invalid email format'));return;}if(await admSave('admin',{alertEmail:v})){ADM.admin.alertEmail=v;}};
   $('#admTest').onclick=async()=>{if(!(ADM.admin.alertEmail||'').trim()){toast(T('Simpan emel dahulu','Save the email first'));return;}const t=Date.now();if(await admSave('admin',{testReq:t})){ADM.admin.testReq=t;toast(T('Emel ujian akan dihantar dalam 30 minit','The test email will be sent within 30 minutes'));rAdmin();}};
   const readPlans=()=>P.map((x,i)=>({name:$(`[data-pn="${i}"]`).value.trim(),price:$(`[data-pp="${i}"]`).value.trim(),period:$(`[data-pd="${i}"]`).value,feat:$(`[data-pf="${i}"]`).value.trim()}));

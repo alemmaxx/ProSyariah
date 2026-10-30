@@ -65,6 +65,39 @@ def check_data(issues):
     return asof
 
 
+def check_tick(issues, tok):
+    """Jam penggera (cron-job.org) sepatutnya hidupkan tick.yml setiap 15 minit. Senyap > 45 minit = token tamat / job dimatikan."""
+    if not tok:
+        return
+    try:
+        r = requests.get(f"https://api.github.com/repos/{REPO}/actions/workflows/tick.yml/runs", params={"per_page": 1},
+                         headers={"Authorization": f"Bearer {tok}", "Accept": "application/vnd.github+json"}, timeout=20)
+        runs = r.json().get("workflow_runs", [])
+    except Exception:
+        return
+    if not runs:
+        return
+    last = datetime.fromisoformat(runs[0]["created_at"].replace("Z", "+00:00"))
+    mins = (datetime.now(timezone.utc) - last).total_seconds() / 60
+    if mins > 45:
+        issues.append({"k": "tick", "pub": False, "lv": "warn",
+                       "msg": f"Jam penggera (cron-job.org) tidak berjalan sejak {int(mins)} minit. Semak job di cron-job.org atau token GitHub (mungkin tamat).",
+                       "en": f"Alarm clock (cron-job.org) has not run for {int(mins)} minutes. Check the cron-job.org job or the GitHub token (may have expired)."})
+
+
+def check_reminders(issues, admin):
+    """Peringatan tarikh tamat token GitHub cron-job.org (dari tab Admin)."""
+    exp = (admin.get("tokenExp") or "2027-10-29")[:10]
+    try:
+        left = (datetime.fromisoformat(exp).date() - now_myt().date()).days
+    except Exception:
+        return
+    if left <= 30:
+        issues.append({"k": "token_exp", "pub": False, "lv": "warn",
+                       "msg": f"Token GitHub untuk cron-job.org tamat pada {exp} ({left} hari lagi). Buat token baru dan tukar di cron-job.org.",
+                       "en": f"The GitHub token for cron-job.org expires on {exp} ({left} days left). Create a new token and replace it in cron-job.org."})
+
+
 def check_runs(issues, tok):
     if not tok:
         return
@@ -194,6 +227,7 @@ def main():
     issues = []
     asof = check_data(issues)
     check_runs(issues, os.environ.get("GITHUB_TOKEN"))
+    check_tick(issues, os.environ.get("GITHUB_TOKEN"))
     check_site(issues)
     check_push_log(issues)
     http, base = None, None
@@ -202,6 +236,7 @@ def main():
         http, base = fs_session()
         if http:
             admin = fs_get(http, base, "config/admin")
+            check_reminders(issues, admin)
     except Exception as e:
         issues.append({"k": "db", "pub": True, "lv": "down", "msg": f"Pangkalan data akaun (Firestore) tidak dapat dicapai ({type(e).__name__}).", "en": f"Account database (Firestore) unreachable ({type(e).__name__})."})
         http = None

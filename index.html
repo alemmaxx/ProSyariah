@@ -84,6 +84,8 @@ label{display:block;font-size:13px;color:var(--muted);margin:10px 0 4px}
 .a-gold{background:var(--gold2);border-left:3px solid var(--gold)}
 .big{font-size:28px;font-weight:800;letter-spacing:-.5px;font-variant-numeric:tabular-nums}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.grid2>div:has(>label){display:flex;flex-direction:column;justify-content:flex-end}
+select,input:not([type=checkbox]):not([type=radio]):not([type=range]){min-height:46px}
 .kv{display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-bottom:1px solid var(--line);font-size:14px}
 .kv:last-child{border-bottom:0}
 .check{display:flex;gap:10px;padding:7px 0;font-size:14px}

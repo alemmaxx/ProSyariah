@@ -247,7 +247,8 @@ def main():
         ok = send_mail(to, "🔔 ProSyariah: emel ujian", f"Emel ujian dari tab Admin. Pemantau sistem berjalan setiap 30 minit.\nTahap sekarang: {level}\nMasa: {stamp} (MYT)")
         test_done = test_req if ok else test_done
         if http:
-            fs_set(http, base, "config/admin_status", {"testDone": test_req, "testOk": bool(ok)})
+            # tandakan "selesai" hanya bila berjaya; jika gagal, larian seterusnya cuba lagi
+            fs_set(http, base, "config/admin_status", {"testDone": test_req, "testOk": True} if ok else {"testOk": False})
 
     if http:
         try:

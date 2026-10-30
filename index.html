@@ -1028,22 +1028,26 @@ const RES3={W:['Menang','up','b-ok'],L:['Kalah','dn','b-no'],T:['Tamat masa','',
 /* ===== ROBOT MANUAL: pengguna pilih saham & harga masuk maya sendiri ===== */
 function fmtDT(iso){const d=new Date(iso);return fmtD(isoD(d))+', '+d.toLocaleTimeString(S.settings.lang==='en'?'en-GB':'ms-MY',{hour:'2-digit',minute:'2-digit',hour12:false});}
 function manStartTxt(p){return p.at&&isoD(new Date(p.at))===p.d?fmtDT(p.at):fmtD(p.d);}
-function AUTO(){S.settings.auto=Object.assign({on:false,sig:true,champ:true,news:false,stake:20},S.settings.auto||{});return S.settings.auto;}
+function AUTO(){S.settings.auto=Object.assign({on:false,sig:true,champ:true,news:false,stake:20,tp:5},S.settings.auto||{});return S.settings.auto;}
+function hzOf(p){return p&&p.hz?p.hz:BTH().h;}   // had hari dagangan posisi (Robot Auto: tamat tempoh isyarat)
 function autoCardHTML(){const a=AUTO();const ty=[a.sig&&'🟢',a.champ&&'🏆',a.news&&'📰'].filter(Boolean).join(' ');
-  return `<button class="card autob" id="auBtn"><span class="autob-ic">🤖</span><span class="autob-t"><b>Robot Auto</b><small>${a.on?`Hidup · ${ty||'tiada jenis dipilih'} · RM${a.stake}`:'Mati · tekan untuk hidupkan'}</small></span><span class="badge ${a.on?'b-ok':''}">${a.on?'ON':'OFF'}</span><span class="muted" style="font-size:20px">›</span></button>`;}
+  return `<button class="card autob" id="auBtn"><span class="autob-ic">🤖</span><span class="autob-t"><b>Robot Auto</b><small>${a.on?`Hidup · ${ty||'tiada jenis dipilih'} · RM${a.stake} · untung ${a.tp}%`:'Mati · tekan untuk hidupkan'}</small></span><span class="badge ${a.on?'b-ok':''}">${a.on?'ON':'OFF'}</span><span class="muted" style="font-size:20px">›</span></button>`;}
 function openAuto(){const a=AUTO();
   openSheet(`<div class="row between" style="align-items:center"><h2 style="margin:0">🤖 Robot Auto</h2><label class="sw"><input type="checkbox" id="auOn" ${a.on?'checked':''}><span></span></label></div>
     <p class="muted" style="margin:6px 0 8px;font-size:13px">Bila hidup, robot masuk ujian sendiri setiap petang (selepas data) untuk jenis yang anda pilih, guna harga tutup terakhir. Saham ini ditanda A dalam senarai.</p>
     <div class="auopt${a.on?'':' off'}"><label class="toggle"><span>🟢 Isyarat Kuat (Ringkasan isyarat aktif)</span><input type="checkbox" id="auSig" ${a.sig?'checked':''}></label>
     <label class="toggle"><span>🏆 Champion sahaja</span><input type="checkbox" id="auChamp" ${a.champ?'checked':''}></label>
     <label class="toggle"><span>📰 Berita Berpotensi</span><input type="checkbox" id="auNews" ${a.news?'checked':''}></label>
-    <label>Nilai maya setiap posisi (RM)</label><input id="auStake" inputmode="decimal" value="${a.stake}"></div>
+    <div class="grid2"><div><label>Nilai maya setiap posisi (RM)</label><input id="auStake" inputmode="decimal" value="${a.stake}"></div>
+    <div><label>Ambil untung (%)</label><input id="auTp" inputmode="decimal" value="${a.tp}"></div></div>
+    <p class="muted" style="font-size:12.5px;margin:8px 0 0">Robot tutup sendiri bila untung sampai ${a.tp}%, atau bila tempoh isyarat tamat (yang mana dulu). Berita tiada tempoh, jadi ikut % sahaja. Cut loss kekal. Cadangan: 5%.</p></div>
     <button class="btn" style="width:100%;margin-top:14px" id="auDone">Siap</button>`);
   const upd=()=>{save();if(TAB==='robot')rRobot();openAuto();};
   $('#auOn').onchange=e=>{a.on=e.target.checked;upd();toast(a.on?'🤖 Robot Auto dihidupkan':'Robot Auto dimatikan');};
   $('#auSig').onchange=e=>{a.sig=e.target.checked;upd();};$('#auChamp').onchange=e=>{a.champ=e.target.checked;upd();};$('#auNews').onchange=e=>{a.news=e.target.checked;upd();};
   $('#auStake').onchange=e=>{a.stake=Math.max(1,num(e.target.value)||20);upd();toast('✓ Nilai maya RM'+a.stake+' disimpan');};
-  $('#auDone').onclick=()=>{const v=$('#auStake');if(v&&num(v.value)&&num(v.value)!==a.stake){a.stake=Math.max(1,num(v.value));save();if(TAB==='robot')rRobot();}closeSheet();};}
+  $('#auTp').onchange=e=>{a.tp=Math.min(50,Math.max(1,num(e.target.value)||5));upd();toast('✓ Ambil untung '+a.tp+'% disimpan');};
+  $('#auDone').onclick=()=>{const v=$('#auStake'),t=$('#auTp');let ch=false;if(v&&num(v.value)&&num(v.value)!==a.stake){a.stake=Math.max(1,num(v.value));ch=true;}if(t&&num(t.value)&&num(t.value)!==a.tp){a.tp=Math.min(50,Math.max(1,num(t.value)));ch=true;}if(ch){save();if(TAB==='robot')rRobot();}closeSheet();};}
 function bindAuto(){const b=$('#auBtn');if(b)b.onclick=openAuto;}
 function manDelete(id){S.manual=(S.manual||[]).filter(x=>x.id!==id);S.manDel=[...new Set([...(S.manDel||[]),id])].slice(-300);save();}
 function manOpen(code){return (S.manual||[]).find(p=>p.code===code&&!p.closed);}
@@ -1054,7 +1058,7 @@ function manLevels(code,en){
   const tp=a?cl(2*a/en,.03,.25):.06,sp=a?cl(1.25*a/en,.02,.15):.04;return {tg:en*(1+tp),sl:en*(1-sp)};}
 function manEval(p){
   const bars=S.cache[p.code]&&S.cache[p.code].bars;if(!bars)return null;
-  const after=bars.filter(b=>p.inc?b.d>=p.d:b.d>p.d),H=BTH().h;
+  const after=bars.filter(b=>p.inc?b.d>=p.d:b.d>p.d),H=hzOf(p);
   for(let i=0;i<Math.min(after.length,H);i++){const b=after[i];
     if(b.l<=p.sl)return {res:'L',exit:p.sl,end:b.d,days:i+1};
     if(b.h>=p.tg)return {res:'W',exit:p.tg,end:b.d,days:i+1};}
@@ -1069,7 +1073,7 @@ function openManual(code){if(needLogin()){toast('Log masuk dahulu untuk guna Rob
   if(P){const now=m&&m.c;const u=now?manPnl(P,now):null;
     body=`<div class="card" style="margin:0 0 10px"><div class="kv"><span>Masuk</span><b>${fmtD(P.d)} @ ${px(P.en)}</b></div><div class="kv"><span>Nilai maya</span><b>${rm(P.stake)}</b></div>
       <div class="kv"><span>Paras atas / bawah</span><b>${px(P.tg)} / ${px(P.sl)}</b></div><div class="kv"><span>Harga kini</span><b>${now?px(now):'-'}</b></div>
-      <div class="kv"><span>Untung / rugi</span><b class="${u==null?'':u>=0?'up':'dn'}">${u==null?'-':rmS(u)}</b></div><div class="kv"><span>Tutup paling lewat</span><b>${fmtD(addTradingDays(P.d,BTH().h))}</b></div></div>
+      <div class="kv"><span>Untung / rugi</span><b class="${u==null?'':u>=0?'up':'dn'}">${u==null?'-':rmS(u)}</b></div><div class="kv"><span>Tutup paling lewat</span><b>${fmtD(addTradingDays(P.d,P.inc?hzOf(P)-1:hzOf(P)))}</b></div></div>
       <label>Harga tutup (ubah jika anda tutup pada harga lain)</label><input id="mX" inputmode="decimal" value="${now?(+now).toFixed(3):''}">
       <div class="row" style="gap:8px;margin-top:10px"><button class="btn" id="mxClose">Tutup sekarang</button><button class="btn sec" id="mxDel">Padam</button></div>`;}
   else{const en=(m&&m.c)||0;const L=en?manLevels(code,en):{tg:0,sl:0};
@@ -1121,8 +1125,8 @@ function manFull(p){const nm=shortName(p.name||nameOf(p.code));
   const cell=(l,v,c='',w='')=>`<div${w?' class="mw"':''}><span>${l}</span><b class="${c}">${v}</b></div>`;
   return `<div class="mrow" data-code="${esc(p.code)}" role="button">
     <div class="mhd"><span><b>${esc(nm)}</b> <span class="code">${esc(p.code)}</span></span><span class="mnow"><small>Harga kini</small><b class="${pc}">${now?px(now):'-'}</b>${u==null?'':`<em class="${u>=0?'up':'dn'}">${rmS(u)} (${pct>0?'+':''}${pct.toFixed(1)}%)</em>`}</span></div>
-    <div class="mgrid">${cell('Harga masuk',px(p.en))}${cell('Nilai maya',rm(p.stake))}${cell('Sasaran',px(p.tg),'up')}${cell('Cut loss',px(p.sl),'dn')}
-      ${cell('Masa beli',manStartTxt(p))}${cell('Tamat tempoh biasa',p.md?fmtD(addTradingDays(p.d,p.inc?p.md-1:p.md)):'-')}</div>
+    <div class="mgrid">${cell('Harga masuk',px(p.en))}${cell('Nilai maya',rm(p.stake))}${cell('Sasaran',px(p.tg)+(p.tp?` (+${p.tp}%)`:''),'up')}${cell('Cut loss',px(p.sl),'dn')}
+      ${cell('Masa beli',manStartTxt(p))}${p.hz?cell('Tutup automatik',fmtD(addTradingDays(p.d,p.inc?p.hz-1:p.hz))):cell('Tamat tempoh biasa',p.md?fmtD(addTradingDays(p.d,p.inc?p.md-1:p.md)):'-')}</div>
     <div class="mft">${statusHTML(p.code,nameOf(p.code),true).replace(/<span class="s-warn">(✍️|🤖)[^]*?<\/span>/g,'').replace(/ · bermula [^<]*? hingga [^<]*?(?= <button)/g,'')}<span class="row" style="gap:6px;flex:none"><button class="btn sm sec" data-mx="${esc(p.code)}">Urus</button><button class="mdel" data-md="${esc(p.id)}" aria-label="Padam">🗑</button></span></div></div>`;}
 function maSplitHTML(M){const g=k=>M.filter(p=>(p.src==='A')===(k==='A'));const A=g('A'),Mm=g('M');if(!A.length||!Mm.length)return '';
   const st=L=>{const cl=L.filter(p=>p.closed),w=cl.filter(p=>p.closed.res==='W').length;const pl=L.reduce((t,p)=>{if(p.closed)return t+manPnl(p,p.closed.exit);const m=mk(p.code);return t+(m&&m.c?manPnl(p,m.c):0);},0);return {n:L.length,acc:cl.length?Math.round(w/cl.length*100)+'%':'-',pl};};
@@ -1298,16 +1302,16 @@ function signalAlerts(push){if(!S.market)return;const asof=S.market.meta.asof;co
   push({id:'sig:'+asof,lv:'action',ic:'🟢',cat:'isyarat',code:L.length===1?L[0].code:null,title:`${L.length} Isyarat Kuat baharu`,body:`${nm(L)}. Mula ${fmtD(entryDate(asof))}. Buka 📋 Ringkasan isyarat aktif.`});}
 function robotAlerts(push){weeklyAlert(push);
   const asof=S.market?S.market.meta.asof:today(),H=BTH().h;
-  (S.manual||[]).forEach(p=>{const nm=shortName(p.name||nameOf(p.code));const base='man:'+p.id+':';
+  (S.manual||[]).forEach(p=>{const H=hzOf(p);const nm=shortName(p.name||nameOf(p.code));const base='man:'+p.id+':';
     if(p.closed){const C=p.closed;if(daysBetween(C.end,today())>14)return;const u=manPnl(p,C.exit);
       if(C.res==='W')push({id:base+'W',lv:'critical',ic:'🎯',cat:'robot',code:p.code,go:'robot',title:`${nm}: sampai paras atas, masa tutup (jual)`,body:`Harga capai ${px(p.tg)} pada ${fmtD(C.end)}. Ujian manual ditutup, ${rmS(u)}.`});
       else if(C.res==='L')push({id:base+'L',lv:'critical',ic:'🛑',cat:'robot',code:p.code,go:'robot',title:`${nm}: kena cut loss, force close`,body:`Harga jatuh ke had ${px(p.sl)} pada ${fmtD(C.end)}. Ujian manual ditutup, ${rmS(u)}.`});
-      else if(C.res==='T')push({id:base+'T',lv:'critical',ic:'⌛',cat:'robot',code:p.code,go:'robot',title:`${nm}: tarikh tutup sudah sampai`,body:`${H} hari dagangan tamat pada ${fmtD(C.end)}. Ujian manual ditutup pada ${px(C.exit)}, ${rmS(u)}.`});
+      else if(C.res==='T')push({id:base+'T',lv:'critical',ic:'⌛',cat:'robot',code:p.code,go:'robot',title:`${nm}: tarikh tutup sudah sampai`,body:p.hz?`Tempoh isyarat tamat pada ${fmtD(C.end)}. Ujian ditutup pada ${px(C.exit)}, ${rmS(u)}.`:`${H} hari dagangan tamat pada ${fmtD(C.end)}. Ujian manual ditutup pada ${px(C.exit)}, ${rmS(u)}.`});
       return;}
     const m=mk(p.code),now=m&&m.c;const last=addTradingDays(p.d,H);const u=now?manPnl(p,now):null;
     if(now&&now>p.sl&&(now/p.sl-1)*100<=2)push({id:base+'N:'+(m.d||asof),lv:'critical',ic:'⚠️',cat:'robot',code:p.code,go:'robot',title:`${nm}: hampir cut loss`,body:`Harga kini ${px(now)}, had cut loss ${px(p.sl)} (${((now/p.sl-1)*100).toFixed(1)}% lagi).`});
     if(addTradingDays(p.d,H-1)<=asof)push({id:base+'E',lv:'critical',ic:'📅',cat:'robot',code:p.code,go:'robot',title:`${nm}: tutup esok (tarikh tutup paling lewat)`,body:`Ujian manual akan ditutup pada ${fmtD(last)}${u!=null?`. Untung/rugi kini ${rmS(u)}`:''}.`});
-    else if(p.md&&addTradingDays(p.d,p.md)<=asof)push({id:base+'D',lv:'action',ic:'⏳',cat:'robot',code:p.code,go:'robot',title:`${nm}: tempoh biasa sudah tamat`,body:`Tempoh biasa hingga ${fmtD(addTradingDays(p.d,p.md))}${u!=null?`. Untung/rugi kini ${rmS(u)}`:''}. Pertimbang untuk tutup.`});
+    else if(!p.hz&&p.md&&addTradingDays(p.d,p.md)<=asof)push({id:base+'D',lv:'action',ic:'⏳',cat:'robot',code:p.code,go:'robot',title:`${nm}: tempoh biasa sudah tamat`,body:`Tempoh biasa hingga ${fmtD(addTradingDays(p.d,p.md))}${u!=null?`. Untung/rugi kini ${rmS(u)}`:''}. Pertimbang untuk tutup.`});
   });
 }
 const LV={critical:{t:'Perlu tindakan segera',c:'a-red'},action:{t:'Perlu perhatian',c:'a-amber'},info:{t:'Untuk makluman',c:'a-green'}};
@@ -1381,7 +1385,7 @@ function notifyNew(){
 /* Salinan kecil untuk pekerja servis: semakan latar (periodic sync) bila app ditutup */
 async function robotStateSync(){
   try{if(!('caches' in window))return;const A=AL();const H=BTH().h;
-    const open=(S.manual||[]).filter(p=>!p.closed).map(p=>({id:p.id,code:p.code,name:shortName(p.name||nameOf(p.code)),en:p.en,tg:p.tg,sl:p.sl,stake:p.stake,last:addTradingDays(p.d,H),pre:addTradingDays(p.d,H-1),mdEnd:p.md?addTradingDays(p.d,p.md):null}));
+    const open=(S.manual||[]).filter(p=>!p.closed).map(p=>({id:p.id,code:p.code,name:shortName(p.name||nameOf(p.code)),en:p.en,tg:p.tg,sl:p.sl,stake:p.stake,last:addTradingDays(p.d,hzOf(p)),pre:addTradingDays(p.d,hzOf(p)-1),mdEnd:p.md&&!p.hz?addTradingDays(p.d,p.md):null}));
     const c=await caches.open('prosyariah-state');const old=await c.match('./__robot.json');let sent={};
     if(old){try{sent=(await old.json()).sent||{};}catch(e){}}
     Object.keys(sent).forEach(k=>{A.notified[k]=1;});Object.keys(A.notified).filter(k=>k.startsWith('man:')).forEach(k=>sent[k]=1);
@@ -1633,6 +1637,10 @@ const EN_EXACT={
 '🔔 Senarai syariah SC baharu dijangka':'🔔 New SC Shariah list expected','🔔 Tarikh haul anda':'🔔 Your haul date',
 };
 const EN_RX=[
+[/^Robot tutup sendiri bila untung sampai ([\d.]+)%, atau bila tempoh isyarat tamat \(yang mana dulu\)\. Berita tiada tempoh, jadi ikut % sahaja\. Cut loss kekal\. Cadangan: 5%\.$/,(m,a)=>'The robot closes by itself when profit reaches '+a+'%, or when the signal period ends (whichever comes first). News has no period, so it follows the % only. Cut loss stays. Suggested: 5%.'],
+[/^✓ Ambil untung ([\d.]+)% disimpan$/,(m,a)=>'✓ Take profit '+a+'% saved'],
+[/^Hidup · (.*) · RM([\d.]+) · untung ([\d.]+)%$/,(m,a,b,c)=>'On · '+(a==='tiada jenis dipilih'?'no type chosen':a)+' · RM'+b+' · profit '+c+'%'],
+[/^Tempoh isyarat tamat pada (.*)\. Ujian ditutup pada (.*)$/,(m,a,b)=>'Signal period ended on '+a+'. Test closed at '+b],
 [/^(\d+) saham patuh syariah( · 60 teratas ditunjuk)?$/,(m,a,b)=>a+' Shariah-compliant stocks'+(b?' · top 60 shown':'')],
 [/^Meter (\d+)$/,(m,a)=>'Meter '+a],[/^Buka (\S+)$/,(m,a)=>'Open '+a],
 [/^💰 Ex-dividen( · RM[\d.]+)?$/,(m,a)=>'💰 Ex-dividend'+(a||'')],
@@ -1725,6 +1733,7 @@ const EN_PHRASE=[
 ];
 
 Object.assign(EN_EXACT,{
+'Ambil untung (%)':'Take profit (%)','Tutup automatik':'Auto close',
 '📤 Kongsi':'📤 Share',
 'Penunjuk pasaran sahaja. KLCI bukan saham dan tidak boleh didagang atau diuji dengan Robot.':'Market indicator only. KLCI is not a stock and cannot be traded or tested with the Robot.',
 'Gaya tajuk & nombor':'Heading & number style','3D berkilat':'Glossy 3D',
@@ -2726,7 +2735,7 @@ async function cloudPull(){if(!FBU)return;try{const d=await FB.db.collection('us
 async function cloudPush(now){if(!FBU)return;clearTimeout(cloudT);
   const go=async()=>{try{S.cloudAt=Date.now();if(!(S.pfAt>0)){S.pfAt=S.cloudAt;S._pfH=pfHash();}save0();
     const D={dev:DEV,watchAt:S.watchAt||0,manual:S.manual||[],watch:S.watch||[],manDel:S.manDel||[],pf:{holdings:S.holdings||[],tathir:S.tathir||[],zakat:S.zakat||null},pfAt:S.pfAt||0,pxa:(S.alerts&&S.alerts.price)||[],lossPct:(S.alerts&&S.alerts.lossPct)||10,settings:{lang:S.settings.lang,platform:S.settings.platform??null,paperStake:S.settings.paperStake??null,auto:S.settings.auto||null},updatedAt:S.cloudAt};
-    await FB.db.collection('users').doc(FBU.uid).set({data:JSON.stringify(D),email:FBU.email||'',lang:S.settings.lang||'bm',sig:!!(S.alerts&&S.alerts.on&&S.alerts.on.isyarat!==false),news:!!(S.alerts&&S.alerts.on&&S.alerts.on.berita!==false),sigWatch:!!(S.alerts&&S.alerts.sigScope==='watch'),px:!!(S.alerts&&S.alerts.on&&S.alerts.on.harga),autoOn:!!AUTO().on,autoSig:!!AUTO().sig,autoChamp:!!AUTO().champ,autoNews:!!AUTO().news,autoStake:+AUTO().stake||20,pushAm:!!(S.alerts&&S.alerts.pushTime==='am'),updatedAt:S.cloudAt},{merge:true});}catch(e){}};
+    await FB.db.collection('users').doc(FBU.uid).set({data:JSON.stringify(D),email:FBU.email||'',lang:S.settings.lang||'bm',sig:!!(S.alerts&&S.alerts.on&&S.alerts.on.isyarat!==false),news:!!(S.alerts&&S.alerts.on&&S.alerts.on.berita!==false),sigWatch:!!(S.alerts&&S.alerts.sigScope==='watch'),px:!!(S.alerts&&S.alerts.on&&S.alerts.on.harga),autoOn:!!AUTO().on,autoSig:!!AUTO().sig,autoChamp:!!AUTO().champ,autoNews:!!AUTO().news,autoStake:+AUTO().stake||20,autoTp:+AUTO().tp||5,pushAm:!!(S.alerts&&S.alerts.pushTime==='am'),updatedAt:S.cloudAt},{merge:true});}catch(e){}};
   if(now)return go();cloudT=setTimeout(go,2500);}
 async function regPush(){try{if(!FBU||!FB_VAPID||!('serviceWorker' in navigator)||!('Notification' in window)||Notification.permission!=='granted')return;
   const reg=await navigator.serviceWorker.ready;const tok=await firebase.messaging().getToken({vapidKey:FB_VAPID,serviceWorkerRegistration:reg});

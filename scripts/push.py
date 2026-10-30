@@ -50,6 +50,7 @@ def alerts_for(p, M, out_dir, en):
         return []
     nm = p.get("name") or v.get("n") or p["code"]
     now, asof, base = v["c"], M["meta"]["asof"], f"man:{p['id']}:"
+    Hp = int(p.get("hz") or H)  # Robot Auto: tutup bila tempoh isyarat tamat
     pnl = lambda x: (x / p["en"] - 1 - FEE) * p["stake"]
     # semak paras atas/bawah dengan harga tinggi/rendah harian sejak masuk
     try:
@@ -58,23 +59,23 @@ def alerts_for(p, M, out_dir, en):
                 if (d >= p["d"] if p.get("inc") else d > p["d"])]
     except Exception:
         bars = []
-    for i, (d, hi, lo, c) in enumerate(bars[:H]):
+    for i, (d, hi, lo, c) in enumerate(bars[:Hp]):
         if lo is not None and lo <= p["sl"]:
             return [(base + "L", f"{nm}: " + ("hit cut loss, force close" if en else "kena cut loss, force close"),
                      ("Price fell to " if en else "Harga jatuh ke ") + f"{p['sl']:.3f} · {rm(pnl(p['sl']))}")]
         if hi is not None and hi >= p["tg"]:
             return [(base + "W", f"{nm}: " + ("reached upper level, time to close (sell)" if en else "sampai paras atas, masa tutup (jual)"),
                      ("Price reached " if en else "Harga capai ") + f"{p['tg']:.3f} · {rm(pnl(p['tg']))}")]
-    if len(bars) >= H:
-        return [(base + "T", f"{nm}: " + ("closing date reached" if en else "tarikh tutup sudah sampai"), rm(pnl(bars[H - 1][3])))]
+    if len(bars) >= Hp:
+        return [(base + "T", f"{nm}: " + ("closing date reached" if en else "tarikh tutup sudah sampai"), rm(pnl(bars[Hp - 1][3])))]
     out = []
     if now > p["sl"] and (now / p["sl"] - 1) * 100 <= 2:
         out.append((base + "N:" + asof, f"{nm}: " + ("close to cut loss" if en else "hampir cut loss"),
                     ("Price now " if en else "Harga kini ") + f"{now:.3f}, cut loss {p['sl']:.3f}"))
-    if add_td(p["d"], H - 1) <= asof:
+    if add_td(p["d"], Hp - 1) <= asof:
         out.append((base + "E", f"{nm}: " + ("closes tomorrow (latest closing date)" if en else "tutup esok (tarikh tutup paling lewat)"),
-                    ("Closes on " if en else "Ditutup pada ") + fmt(add_td(p["d"], H), en) + f" · {rm(pnl(now))}"))
-    elif p.get("md") and add_td(p["d"], p["md"]) <= asof:
+                    ("Closes on " if en else "Ditutup pada ") + fmt(add_td(p["d"], Hp), en) + f" · {rm(pnl(now))}"))
+    elif not p.get("hz") and p.get("md") and add_td(p["d"], p["md"]) <= asof:
         out.append((base + "D", f"{nm}: " + ("typical period has ended" if en else "tempoh biasa sudah tamat"),
                     (f"Profit/loss now {rm(pnl(now))}. Consider closing." if en else f"Untung/rugi kini {rm(pnl(now))}. Pertimbang untuk tutup.")))
     return out
@@ -164,6 +165,11 @@ def auto_adds(f, data, auto, M, out_dir, en, news_only=False):
         stake = float(f.get("autoStake", {}).get("doubleValue") or f.get("autoStake", {}).get("integerValue") or 20)
     except Exception:
         stake = 20.0
+    try:
+        tpp = float(f.get("autoTp", {}).get("doubleValue") or f.get("autoTp", {}).get("integerValue") or 5)
+    except Exception:
+        tpp = 5.0
+    tpp = min(max(tpp, 1.0), 50.0)
     asof = M["meta"]["asof"]
     have = {p["code"] for p in merged_positions(data, auto) if not p.get("closed")}
     seen = {p["id"] for p in auto} | set(data.get("manDel", []))
@@ -179,19 +185,20 @@ def auto_adds(f, data, auto, M, out_dir, en, news_only=False):
                 continue
             o, c = x["o"], x["c"]
             new.append({"id": f"auto-{x['code']}-{asof}", "src": "A", "why": "champ" if x["champ"] else "sig", "inc": 1, "code": x["code"], "name": x["name"],
-                        "d": entry_sig, "en": round(c, 4), "stake": stake, "tg": round(c * o["tg"] / o["en"], 4), "sl": round(c * o["sl"] / o["en"], 4),
-                        "md": round(o["md"]) if o.get("md") else None, "at": now.isoformat()})
+                        "d": entry_sig, "en": round(c, 4), "stake": stake, "tg": round(c * (1 + tpp / 100), 4), "sl": round(c * o["sl"] / o["en"], 4),
+                        "tp": tpp, "md": round(o["md"]) if o.get("md") else None, "hz": max(1, round(o["md"])) if o.get("md") else None,
+                        "at": now.isoformat()})
             have.add(x["code"])
     if b("autoNews"):
         for x in news_list(M, out_dir):
             if x["code"] in have or not x["c"] or f"auto-{x['code']}-n{x['d']}" in seen:
                 continue
             c, a = x["c"], atr_of(x["code"], out_dir)
-            tp = min(max(2 * a / c, 0.03), 0.25) if a else 0.06
+            tp = tpp / 100
             sp = min(max(1.25 * a / c, 0.02), 0.15) if a else 0.04
             new.append({"id": f"auto-{x['code']}-n{x['d']}", "src": "A", "why": "news", "inc": 1, "code": x["code"], "name": x["name"],
                         "d": entry_news, "en": round(c, 4), "stake": stake, "tg": round(c * (1 + tp), 4), "sl": round(c * (1 - sp), 4),
-                        "md": None, "at": now.isoformat()})
+                        "tp": tpp, "md": None, "at": now.isoformat()})
             have.add(x["code"])
     alerts = []
     if new:

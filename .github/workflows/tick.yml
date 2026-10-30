@@ -1,0 +1,47 @@
+name: Jam penggera (cron-job.org)
+
+# Dipanggil setiap 15 minit oleh cron-job.org (lebih tepat daripada jadual GitHub yang kerap lewat).
+# Ia memutuskan robot mana perlu jalan ikut waktu Malaysia, kemudian menghidupkannya.
+on:
+  workflow_dispatch: {}
+
+permissions:
+  actions: write
+  contents: read
+
+concurrency:
+  group: prosyariah-tick
+  cancel-in-progress: false
+
+jobs:
+  tick:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      REPO: ${{ github.repository }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: data
+      - name: Pilih & jalankan robot
+        run: |
+          H=$(TZ=Asia/Kuala_Lumpur date +%H); M=$(TZ=Asia/Kuala_Lumpur date +%M); D=$(TZ=Asia/Kuala_Lumpur date +%u)
+          T=$((10#$H*60+10#$M)); TODAY=$(TZ=Asia/Kuala_Lumpur date +%F)
+          HOL=$(python3 -c "import json;print('1' if '$TODAY' in json.load(open('data/holidays.json')).get('days',[]) else '0')" 2>/dev/null || echo 0)
+          WD=0; if [ "$D" -le 5 ] && [ "$HOL" = "0" ]; then WD=1; fi
+          echo "MYT $H:$M hari=$D cuti=$HOL"
+          run(){ echo "→ $1"; gh workflow run "$1" -R "$REPO" || echo "  gagal hidupkan $1"; }
+          # Harga terkini: setiap 15 minit, 9.15 pagi – 5.15 ptg hari dagangan
+          if [ "$WD" = 1 ] && [ $T -ge 555 ] && [ $T -le 1035 ]; then run live.yml; fi
+          # Berita: setiap jam 9 pagi – 5 ptg, kemudian 7, 9, 11 malam (pada suku jam pertama)
+          if [ $((10#$M)) -lt 15 ] && { { [ $T -ge 540 ] && [ $T -le 1020 ]; } || [ "$H" = "19" ] || [ "$H" = "21" ] || [ "$H" = "23" ]; }; then run news.yml; fi
+          # Pemantau sistem: setiap 30 minit
+          if [ $((10#$M % 30)) -lt 15 ]; then run health.yml; fi
+          # Data harian & isyarat: sandaran jika jadual GitHub lewat (data hari ini belum ada)
+          ASOF=$(python3 -c "import json;print(json.load(open('data/market-meta.json')).get('asof',''))" 2>/dev/null || echo "")
+          if [ "$WD" = 1 ] && [ $T -ge 1110 ] && [ $T -le 1320 ] && [ "$ASOF" \< "$TODAY" ]; then
+            BUSY=$(gh run list -R "$REPO" --workflow main.yml --status in_progress --json databaseId --jq 'length' 2>/dev/null || echo 0)
+            Q=$(gh run list -R "$REPO" --workflow main.yml --status queued --json databaseId --jq 'length' 2>/dev/null || echo 0)
+            if [ "$BUSY" = "0" ] && [ "$Q" = "0" ]; then run main.yml; else echo "main.yml sedang berjalan"; fi
+          fi

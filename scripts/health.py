@@ -60,7 +60,8 @@ def check_data(issues):
                 lag += 1
             d -= timedelta(days=1)
         issues.append({"k": "data", "pub": True, "lv": "down" if lag >= 2 or not asof else "warn",
-                       "msg": f"Data harga lewat {lag} hari dagangan: terakhir {asof or '-'}, sepatutnya {exp}."})
+                       "msg": f"Data harga lewat {lag} hari dagangan: terakhir {asof or '-'}, sepatutnya {exp}.",
+                       "en": f"Price data {lag} trading day(s) late: last {asof or '-'}, expected {exp}."})
     return asof
 
 
@@ -68,21 +69,22 @@ def check_runs(issues, tok):
     if not tok:
         return
     h = {"Authorization": f"Bearer {tok}", "Accept": "application/vnd.github+json"}
-    for wf, key, label in [("main.yml", "run_main", "Robot data harian"), ("news.yml", "run_news", "Robot berita")]:
+    for wf, key, label, len_ in [("main.yml", "run_main", "Robot data harian", "Daily data robot"), ("news.yml", "run_news", "Robot berita", "News robot")]:
         try:
             r = requests.get(f"https://api.github.com/repos/{REPO}/actions/workflows/{wf}/runs",
                              params={"per_page": 5, "status": "completed"}, headers=h, timeout=20)
             runs = [x for x in r.json().get("workflow_runs", []) if x.get("event") != "push"] or r.json().get("workflow_runs", [])
         except Exception as e:
-            issues.append({"k": key + "_api", "pub": False, "lv": "warn", "msg": f"{label}: status larian tidak dapat dibaca ({e})."})
+            issues.append({"k": key + "_api", "pub": False, "lv": "warn", "msg": f"{label}: status larian tidak dapat dibaca ({e}).", "en": f"{len_}: run status could not be read ({e})."})
             continue
         if runs and runs[0].get("conclusion") not in ("success", "skipped", "cancelled"):
             issues.append({"k": key, "pub": False, "lv": "warn",
-                           "msg": f"{label} gagal pada {runs[0].get('created_at', '')[:16]}Z ({runs[0].get('html_url')})."})
+                           "msg": f"{label} gagal pada {runs[0].get('created_at', '')[:16]}Z ({runs[0].get('html_url')}).",
+                           "en": f"{len_} failed at {runs[0].get('created_at', '')[:16]}Z ({runs[0].get('html_url')})."})
 
 
 def check_site(issues):
-    for url, key, label in [(SITE, "site_fb", "Laman app (prosyariah.web.app)"), (PAGES + "data/holidays.json", "site_pages", "Data app (GitHub Pages)")]:
+    for url, key, label, len_ in [(SITE, "site_fb", "Laman app (prosyariah.web.app)", "App site (prosyariah.web.app)"), (PAGES + "data/holidays.json", "site_pages", "Data app (GitHub Pages)", "App data (GitHub Pages)")]:
         r, dt, err = None, 0.0, None
         for attempt in range(2):  # cuba dua kali supaya gangguan sekejap tidak dikira masalah
             t0 = time.time()
@@ -98,11 +100,11 @@ def check_site(issues):
             if err:
                 raise err
             if not r.ok:
-                issues.append({"k": key, "pub": True, "lv": "down", "msg": f"{label}: HTTP {r.status_code}."})
+                issues.append({"k": key, "pub": True, "lv": "down", "msg": f"{label}: HTTP {r.status_code}.", "en": f"{len_}: HTTP {r.status_code}."})
             elif dt > SLOW_S:
-                issues.append({"k": key + "_slow", "pub": True, "lv": "warn", "msg": f"{label}: perlahan ({dt:.1f}s)."})
+                issues.append({"k": key + "_slow", "pub": True, "lv": "warn", "msg": f"{label}: perlahan ({dt:.1f}s).", "en": f"{len_}: slow ({dt:.1f}s)."})
         except Exception as e:
-            issues.append({"k": key, "pub": True, "lv": "down", "msg": f"{label}: tidak dapat dibuka ({type(e).__name__})."})
+            issues.append({"k": key, "pub": True, "lv": "down", "msg": f"{label}: tidak dapat dibuka ({type(e).__name__}).", "en": f"{len_}: could not be opened ({type(e).__name__})."})
 
 
 def fs_session():
@@ -166,7 +168,7 @@ def check_push_log(issues):
     except Exception:
         return
     if "push: dilangkau" in t or "Traceback" in t:
-        issues.append({"k": "push", "pub": False, "lv": "warn", "msg": "Notifikasi telefon: larian terakhir gagal (lihat data/firebase-debug.txt)."})
+        issues.append({"k": "push", "pub": False, "lv": "warn", "msg": "Notifikasi telefon: larian terakhir gagal (lihat data/firebase-debug.txt).", "en": "Phone notifications: last run failed (see data/firebase-debug.txt)."})
 
 
 def send_mail(to, subject, body):
@@ -201,7 +203,7 @@ def main():
         if http:
             admin = fs_get(http, base, "config/admin")
     except Exception as e:
-        issues.append({"k": "db", "pub": True, "lv": "down", "msg": f"Pangkalan data akaun (Firestore) tidak dapat dicapai ({type(e).__name__})."})
+        issues.append({"k": "db", "pub": True, "lv": "down", "msg": f"Pangkalan data akaun (Firestore) tidak dapat dicapai ({type(e).__name__}).", "en": f"Account database (Firestore) unreachable ({type(e).__name__})."})
         http = None
 
     old = json.load(open(STATUS)) if os.path.exists(STATUS) else {}

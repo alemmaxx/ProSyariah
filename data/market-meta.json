@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-30T05:52+00:00",
+ "generated": "2026-10-30T06:01+00:00",
  "asof": "2026-10-29",
  "provider": "yfinance",
  "count": 1117,
@@ -46,10 +46,10 @@
    "name": "Lantunan lebih jualan",
    "n": 10293,
    "p": 41,
-   "md": 5.0,
+   "md": 5,
    "d25": 2,
    "d75": 10,
-   "ev": 0.14
+   "ev": 0.15
   }
  },
  "klci": {

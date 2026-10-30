@@ -292,7 +292,7 @@ def main():
             fs_set(http, base, "config/admin_status", {
                 "level": level, "at": stamp, "keys": json.dumps(keys), "raw": json.dumps(raw),
                 "issues": json.dumps(issues, ensure_ascii=False), "asof": asof,
-                "mailer": bool(os.environ.get("SMTP_USER") and os.environ.get("SMTP_PASS")),
+                "mailer": bool(os.environ.get("SMTP_USER") and os.environ.get("SMTP_PASS")), "smtpUser": bool(os.environ.get("SMTP_USER")), "smtpPass": bool(os.environ.get("SMTP_PASS")),
                 **({"lastMail": stamp, "lastMailOk": bool(mailed)} if mailed is not None else {})})
             fs_set(http, base, "config/admin_stats", {**user_stats(http, base), "at": stamp})
         except Exception as e:

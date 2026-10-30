@@ -411,6 +411,10 @@ canvas#cv{touch-action:pan-y;cursor:crosshair}
    Untuk APK (fail tempatan), tukar USERNAME & REPO di bawah kepada repo GitHub anda. */
 const PAGES_URL='https://alemmaxx.github.io/ProSyariah/';
 const DATA_BASE=(location.protocol.startsWith('http')?'':PAGES_URL)+'data/';
+/* Data besar diambil dari GitHub Pages (kuota percuma lebih besar); Firebase Hosting hanya sandaran. */
+const DATA_REMOTE=/(\.web\.app|\.firebaseapp\.com)$/.test(location.hostname)?PAGES_URL+'data/':DATA_BASE;
+function dfetch(p,o){const local=()=>fetch(DATA_BASE+p,o);if(DATA_REMOTE===DATA_BASE)return local();
+  return fetch(DATA_REMOTE+p,o).then(r=>r.ok?r:local()).catch(local);}
 const KEY='prosyariah_v1';
 const DEF={
   settings:{shariahMode:true,style:'sc',capital:0,riskPct:1,lang:'bm'},
@@ -508,7 +512,7 @@ async function getBars(code,force){
   const c=S.cache[code];const m=mk(code);
   if(m&&m.d&&c&&c.asof===m.d&&!force)return c.bars;
   if(!m||!m.d){if(c&&c.bars)return c.bars;throw new Error('Data harga untuk '+code+' belum tersedia.');}
-  try{const r=await fetch(DATA_BASE+'s/'+encodeURIComponent(code)+'.json?v='+m.d);
+  try{const r=await dfetch('s/'+encodeURIComponent(code)+'.json?v='+m.d);
     if(r.ok){const j=await r.json();const bars=j.d.map((d,i)=>({d,o:j.o[i],h:j.h[i],l:j.l[i],c:j.c[i],v:j.v[i]})).filter(b=>b.c>0);
       S.cache[code]={fetched:today(),asof:m.d,bars,bt:j.bt||null,atr:j.atr||null};trimCache();save();return bars;}}catch(e){}
   if(c&&c.bars)return c.bars;
@@ -526,12 +530,12 @@ function convertList(x){const names={};(x.names||[]).forEach(n=>{const k=normNam
 async function syncData(manual){
   let changed=false,msg='';
   try{
-    const r=await fetch(DATA_BASE+'market.json?t='+Math.floor(Date.now()/36e5),{cache:'no-cache'});
+    const r=await dfetch('market.json?t='+Math.floor(Date.now()/36e5),{cache:'no-cache'});
     if(!r.ok)throw new Error('market.json '+r.status);
     const m=await r.json();
     if(!S.market||S.market.meta.generated!==m.meta.generated){S.market=m;changed=true;
       S.symbols=Object.entries(m.stocks).map(([code,v])=>({code,name:v.n}));S.symbolsDate=m.meta.asof;}
-    const r2=await fetch(DATA_BASE+'sc-list.json?t='+Math.floor(Date.now()/36e5),{cache:'no-cache'});
+    const r2=await dfetch('sc-list.json?t='+Math.floor(Date.now()/36e5),{cache:'no-cache'});
     if(r2.ok){const sc=await r2.json();
       if(sc.lists&&sc.lists.length){const conv=sc.lists.map(convertList);
         const curLatest=latestList();const newLatest=conv[conv.length-1];
@@ -544,13 +548,13 @@ async function syncData(manual){
           const isNew=curLatest&&newLatest.date>curLatest.date;
           S.lists=conv;changed=true;S.sync.scAuto=true;
           if(isNew)msg=`Senarai syariah SC baharu (${fmtD(newLatest.date)}) diterima`;}}}
-    try{const r6=await fetch(DATA_BASE+'i/index.json?t='+Math.floor(Date.now()/36e5),{cache:'no-cache'});if(r6.ok){S.intra=(await r6.json()).codes||[];}}catch(e){}
-    try{const r8=await fetch(DATA_BASE+'holidays.json?t='+Math.floor(Date.now()/36e5),{cache:'no-cache'});if(r8.ok){const H=await r8.json();S.hol=H.days||[];S.hol.forEach(d=>BURSA_HOL.add(d));}}catch(e){}
-    try{const r7=await fetch(DATA_BASE+'fund.json?t='+Math.floor(Date.now()/36e5),{cache:'no-cache'});if(r7.ok){S.fund=await r7.json();}}catch(e){}
+    try{const r6=await dfetch('i/index.json?t='+Math.floor(Date.now()/36e5),{cache:'no-cache'});if(r6.ok){S.intra=(await r6.json()).codes||[];}}catch(e){}
+    try{const r8=await dfetch('holidays.json?t='+Math.floor(Date.now()/36e5),{cache:'no-cache'});if(r8.ok){const H=await r8.json();S.hol=H.days||[];S.hol.forEach(d=>BURSA_HOL.add(d));}}catch(e){}
+    try{const r7=await dfetch('fund.json?t='+Math.floor(Date.now()/36e5),{cache:'no-cache'});if(r7.ok){S.fund=await r7.json();}}catch(e){}
     // Berita dikemas kini setiap 2 jam (robot berita) — ambil terus dari repo; jika gagal, guna salinan laman
     try{let r5=null;if(location.protocol.startsWith('http')&&!/localhost/.test(location.hostname))r5=await fetch('https://raw.githubusercontent.com/alemmaxx/ProSyariah/main/data/news.json?t='+Math.floor(Date.now()/6e5)).catch(()=>null);
-      if(!r5||!r5.ok)r5=await fetch(DATA_BASE+'news.json?t='+Math.floor(Date.now()/36e5),{cache:'no-cache'});if(r5.ok){S.news=await r5.json();}}catch(e){}
-    try{const r3=await fetch(DATA_BASE+'track.json?t='+Math.floor(Date.now()/36e5),{cache:'no-cache'});if(r3.ok){const t=await r3.json();if(!S.track||S.track.asof!==t.asof){S.track=t;changed=true;}}}catch(e){}
+      if(!r5||!r5.ok)r5=await dfetch('news.json?t='+Math.floor(Date.now()/36e5),{cache:'no-cache'});if(r5.ok){S.news=await r5.json();}}catch(e){}
+    try{const r3=await dfetch('track.json?t='+Math.floor(Date.now()/36e5),{cache:'no-cache'});if(r3.ok){const t=await r3.json();if(!S.track||S.track.asof!==t.asof){S.track=t;changed=true;}}}catch(e){}
     updateTop5Track();
     S.sync.at=new Date().toISOString();S.sync.err='';
   }catch(e){S.sync.err=e.message;if(manual)toast('Gagal segerak: '+e.message);}
@@ -571,7 +575,7 @@ function aggBars(b,keyFn){const out=[];let cur=null,key='';for(const x of b){con
   if(k!==key){if(cur)out.push(cur);key=k;cur={d:x.d,o:x.o,h:x.h,l:x.l,c:x.c,v:x.v};}else{cur.d=x.d;cur.h=Math.max(cur.h,x.h);cur.l=Math.min(cur.l,x.l);cur.c=x.c;cur.v+=x.v;}}if(cur)out.push(cur);return out;}
 const INTRA={};
 async function getIntra(code){if(INTRA[code])return INTRA[code];
-  const r=await fetch(DATA_BASE+'i/'+encodeURIComponent(code)+'.json?v='+((S.market&&S.market.meta.generated)||today()));if(!r.ok)throw new Error('Tiada data 30 minit');
+  const r=await dfetch('i/'+encodeURIComponent(code)+'.json?v='+((S.market&&S.market.meta.generated)||today()));if(!r.ok)throw new Error('Tiada data 30 minit');
   const j=await r.json();const bars=j.t.map((d,i)=>({d,o:j.o[i],h:j.h[i],l:j.l[i],c:j.c[i],v:j.v[i]})).filter(b=>b.c>0);INTRA[code]=bars;return bars;}
 const TFS=[['30m','30m'],['1j','1J'],['12j','12J'],['D','Hari'],['W','Minggu'],['M','Bulan'],['Y','Tahun']];
 function hasIntra(code){return !!(S.intra&&S.intra.includes(code));}
@@ -800,7 +804,7 @@ function klciHTML(){const K=S.market&&S.market.meta&&S.market.meta.klci;if(!K)re
   return `<div class="pad" style="margin-top:12px"><button class="smbtn klb" onclick="openKlci()"><span>📊</span><span><b>FBM KLCI ${K.c.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})} <span class="${cls}">${K.ch>0?'+':''}${K.ch}%</span></b><small>Pasaran: ${klciWord(K.up)}${K.m1!=null?` · 1 bulan ${K.m1>0?'+':''}${K.m1}%`:''}</small></span><span class="go">Carta</span></button></div>`;}
 let KLCI=null,KLR=260;
 async function openKlci(){const K=S.market.meta.klci;
-  if(!KLCI){openSheet('<p class="muted">Memuatkan carta KLCI…</p>');try{const r=await fetch(DATA_BASE+'klci.json?t='+Math.floor(Date.now()/36e5),{cache:'no-cache'});if(r.ok)KLCI=await r.json();}catch(e){}}
+  if(!KLCI){openSheet('<p class="muted">Memuatkan carta KLCI…</p>');try{const r=await dfetch('klci.json?t='+Math.floor(Date.now()/36e5),{cache:'no-cache'});if(r.ok)KLCI=await r.json();}catch(e){}}
   const B=(KLCI&&KLCI.bars)||[];const rng=[[22,'1B'],[130,'6B'],[260,'1T'],[1300,'5T']];
   const v=B.slice(-KLR);let svg='<p class="muted">Carta tidak tersedia.</p>';
   if(v.length>2){const W=340,H=170,ys=v.map(x=>x[1]),lo=Math.min(...ys),hi=Math.max(...ys),sp=(hi-lo)||1;
@@ -984,7 +988,7 @@ async function openAccuracy(){
   d.innerHTML=`<div class="help-p" role="dialog" aria-modal="true"><div><div class="shd-top"><h2 style="margin:0">📊 Ketepatan isyarat</h2><button class="xbtn" id="helpX" aria-label="Tutup">✕</button></div></div><div id="acBody"><p class="muted">Memuatkan…</p></div></div>`;
   document.body.appendChild(d);const close=()=>{d.remove();if(!$('#sheet').classList.contains('on'))document.body.classList.remove('ovl');};
   d.onclick=e=>{if(e.target===d)close();};$('#helpX').onclick=close;
-  let X=null;try{const r=await fetch(DATA_BASE+'paper-experiments.json?t='+Math.floor(Date.now()/36e5),{cache:'no-cache'});if(r.ok)X=await r.json();}catch(e){}
+  let X=null;try{const r=await dfetch('paper-experiments.json?t='+Math.floor(Date.now()/36e5),{cache:'no-cache'});if(r.ok)X=await r.json();}catch(e){}
   const B=$('#acBody');if(!B)return;if(!X||!X.variants){B.innerHTML='<p class="muted">Keputusan ujian belum tersedia.</p>';return;}
   const V=X.variants,row=(l,v,b)=>{const s=v&&v.summary;if(!s||!s.n)return '';return `<tr${b?' class="hl"':''}><td>${l}</td><td>${s.n}</td><td>${s.win}%</td><td class="${s.avg>=0?'up':'dn'}">${s.avg>0?'+':''}${s.avg}%</td></tr>`;};
   const A=V.gred_A_sahaja;

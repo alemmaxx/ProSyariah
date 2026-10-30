@@ -1,9 +1,10 @@
-name: Berita terkini (setiap 2 jam)
+name: Berita terkini (setiap jam waktu pasaran)
 
 on:
   schedule:
-    # 9 pagi – 11 malam waktu Malaysia, setiap 2 jam
-    - cron: "0 1-15/2 * * *"
+    # Waktu Malaysia: setiap jam 9 pagi – 5 petang, kemudian 7, 9, 11 malam
+    - cron: "0 1-9 * * *"      # setiap jam 9 pagi – 5 petang MYT (waktu pasaran)
+    - cron: "0 11-15/2 * * *"  # 7, 9, 11 malam MYT
   workflow_dispatch: {}
 
 permissions:

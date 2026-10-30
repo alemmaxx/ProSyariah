@@ -1104,7 +1104,7 @@ function openAuto(){const a=AUTO();
     <div class="auopt${a.on?'':' off'}"><label class="toggle"><span>🟢 Isyarat Kuat (Ringkasan isyarat aktif)</span><input type="checkbox" id="auSig" ${a.sig?'checked':''}></label>
     <label class="toggle"><span>🏆 Champion sahaja</span><input type="checkbox" id="auChamp" ${a.champ?'checked':''}></label>
     <label class="toggle"><span>📰 Berita Berpotensi</span><input type="checkbox" id="auNews" ${a.news?'checked':''}></label>
-    <div class="grid2"><div><label>Nilai maya setiap posisi (RM)</label><input id="auStake" inputmode="decimal" value="${a.stake}"></div>
+    <div class="grid2" style="align-items:end"><div><label>Nilai maya (RM)</label><input id="auStake" inputmode="decimal" value="${a.stake}"></div>
     <div><label>Ambil untung (%)</label><input id="auTp" inputmode="decimal" value="${a.tp}"></div></div>
     <p class="muted" style="font-size:12.5px;margin:8px 0 0">Robot tutup sendiri bila untung sampai ${a.tp}%, atau bila tempoh isyarat tamat (yang mana dulu). Berita tiada tempoh, jadi ikut % sahaja. Cut loss kekal. Cadangan: 5%.</p></div>
     <button class="btn" style="width:100%;margin-top:14px" id="auDone">Siap</button>`);
@@ -1799,6 +1799,7 @@ const EN_PHRASE=[
 ];
 
 Object.assign(EN_EXACT,{
+'Nilai maya (RM)':'Virtual amount (RM)',
 '⚠️ Sistem sedang mengalami gangguan. Data atau notifikasi mungkin lewat. Kami sedang membaikinya.':'⚠️ The system is having a disruption. Data or notifications may be delayed. We are fixing it.','ℹ️ Sistem agak perlahan sekarang. Data mungkin lewat sedikit.':'ℹ️ The system is a little slow right now. Data may be slightly delayed.',
 'Ambil untung (%)':'Take profit (%)','Tutup automatik':'Auto close',
 '📤 Kongsi':'📤 Share',

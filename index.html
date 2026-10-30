@@ -290,6 +290,7 @@ input,textarea,[contenteditable]{-webkit-user-select:text;user-select:text}
 .sysban.down{background:var(--red2);border:1px solid var(--red);color:var(--ink)}.sysban.warn{background:var(--amber2);border:1px solid var(--amber);color:var(--ink)}
 .adm .kv b{text-align:right}.adm textarea{width:100%;min-height:70px;box-sizing:border-box;background:var(--card2);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:8px;font:14px var(--f)}
 .adm .iss{padding:8px 0;border-bottom:1px solid var(--line);font-size:13px}.adm .plan{background:var(--card2);border-radius:12px;padding:10px 12px;margin-top:8px}
+.livep{margin:6px 0 0;font-size:13.5px;color:var(--ink);display:flex;align-items:center;gap:6px;flex-wrap:wrap}.ldot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 0 3px rgba(47,191,140,.25);animation:lpulse 2s infinite}@keyframes lpulse{50%{opacity:.35}}
 .plink{display:block;text-align:center;margin-top:10px;font-size:13px;color:var(--muted);text-decoration:underline}
 .capbox{margin-top:14px;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--card2)}.capg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:8px}.capg>div{background:var(--card);border-radius:10px;padding:8px 10px}.capg small{display:block;color:var(--muted);font-size:12px}
 .auopt.off{opacity:.45;pointer-events:none}
@@ -322,7 +323,7 @@ input,textarea,[contenteditable]{-webkit-user-select:text;user-select:text}
 .t5s{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 
 /* ---- GRAF HERO DENGAN BACAAN ---- */
-.hero .tag{order:1}.hero h2{order:2}.hero .sub{order:3}.hero .stats{order:4}.hero .hc{order:5}.hero .acts{order:6}
+.hero .tag{order:1}.hero h2{order:2}.hero .sub{order:3}.hero .livep{order:3}.hero .stats{order:4}.hero .hc{order:5}.hero .acts{order:6}
 .hero .htf{order:6;position:relative;z-index:2;margin:16px 0 10px}
 .hero .hc{position:relative;height:150px;margin:18px 62px 26px 0;z-index:0}
 .hero .hc svg{position:absolute;inset:0;width:100%;height:100%;opacity:.7}
@@ -389,7 +390,7 @@ body.ovl{overflow:hidden}
 .hstat{order:2;display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end;margin:10px 0 2px}
 .hstat>span{display:flex;flex-direction:column;gap:3px}
 .hstat small{font-size:11px;color:var(--muted)}
-.hero h2{order:3}.hero .sub{order:4}.hero .stats{order:5}.hero .hc{order:6}.hero .acts{order:7}
+.hero h2{order:3}.hero .sub{order:4}.hero .livep{order:4}.hero .stats{order:5}.hero .hc{order:6}.hero .acts{order:7}
 .hero .hc{touch-action:pan-y;cursor:crosshair}
 .hcline{position:absolute;top:0;bottom:0;width:1px;background:var(--muted);opacity:.7;display:none;pointer-events:none}
 .hctip{position:absolute;transform:translate(-50%,-130%);display:none;flex-direction:column;align-items:center;gap:1px;background:var(--card2);border:1px solid var(--line);border-radius:8px;padding:5px 9px;font-size:11px;white-space:nowrap;pointer-events:none;z-index:2}
@@ -528,6 +529,15 @@ async function getBars(code,force){
   if(c&&c.bars)return c.bars;
   throw new Error('Gagal muat data harga. Semak sambungan internet.');
 }
+/* ===== HARGA TERKINI (lewat ±15 minit, waktu pasaran) — paparan sahaja; isyarat & Robot guna harga tutup ===== */
+let LIVE=null;
+function livePx(code){const L=LIVE;if(!L||!L.p||!S.market)return null;if(!(L.d>S.market.meta.asof))return null;const x=L.p[code];return x?{p:x[0],ch:x[1],hi:x[2],lo:x[3],t:L.t}:null;}
+function nowPx(code){const l=livePx(code);if(l)return l.p;const m=mk(code);return m?m.c:null;}
+function mktOpen(){const n=new Date(Date.now()+(8*60+new Date().getTimezoneOffset())*6e4),d=n.getDay(),hm=n.getHours()*60+n.getMinutes();return d>0&&d<6&&hm>=540&&hm<=1050;}
+async function loadLive(){let j=null;
+  try{if(location.protocol.startsWith('http')&&!/localhost|127\.0\.0\.1/.test(location.hostname)){const r=await fetch('https://raw.githubusercontent.com/alemmaxx/ProSyariah/main/data/live.json?t='+Math.floor(Date.now()/6e4)).catch(()=>null);if(r&&r.ok)j=await r.json();}}catch(e){}
+  if(!j){try{const r=await dfetch('live.json?t='+Math.floor(Date.now()/6e4),{cache:'no-cache'});if(r.ok)j=await r.json();}catch(e){}}
+  const old=LIVE&&LIVE.t;if(j&&j.p)LIVE=j;if(LIVE&&LIVE.t!==old&&(TAB==='saham'||TAB==='robot')&&!document.querySelector('#sheet.on'))render();}
 const lastClose=code=>{const c=S.cache[code];const m=mk(code);
   if(m&&m.c!=null&&(!c||!c.bars.length||m.d>=c.bars[c.bars.length-1].d))return {d:m.d,c:m.c};
   return c&&c.bars.length?c.bars[c.bars.length-1]:null;};
@@ -1170,7 +1180,7 @@ function openManual(code){if(needLogin()){toast('Log masuk dahulu untuk guna Rob
   code=code||'';const nm=nameOf(code);const m=mk(code);const P=manOpen(code);
   const d=document.createElement('div');d.className='help';d.id='help';document.body.classList.add('ovl');bkEnsure();
   let body;
-  if(P){const now=m&&m.c;const u=now?manPnl(P,now):null;
+  if(P){const now=nowPx(code);const u=now?manPnl(P,now):null;
     body=`<div class="card" style="margin:0 0 10px"><div class="kv"><span>Masuk</span><b>${fmtD(P.d)} @ ${px(P.en)}</b></div><div class="kv"><span>Nilai maya</span><b>${rm(P.stake)}</b></div>
       <div class="kv"><span>Paras atas / bawah</span><b>${px(P.tg)} / ${px(P.sl)}</b></div><div class="kv"><span>Harga kini</span><b>${now?px(now):'-'}</b></div>
       <div class="kv"><span>Untung / rugi</span><b class="${u==null?'':u>=0?'up':'dn'}">${u==null?'-':rmS(u)}</b></div><div class="kv"><span>Tutup paling lewat</span><b>${fmtD(addTradingDays(P.d,P.inc?hzOf(P)-1:hzOf(P)))}</b></div></div>
@@ -1190,7 +1200,7 @@ function openManual(code){if(needLogin()){toast('Log masuk dahulu untuk guna Rob
   const close=()=>{d.remove();if(!$('#sheet').classList.contains('on'))document.body.classList.remove('ovl');};
   d.onclick=e=>{if(e.target===d)close();};$('#helpX').onclick=close;
   const after=()=>{close();if($('#sheet').classList.contains('on'))stockSheet(code,nm);if(TAB==='robot')rRobot();};
-  if(P){$('#mxClose').onclick=()=>{const now=m&&m.c;if(!now&&!num($('#mX').value))return toast('Harga kini belum tersedia');const xv=num($('#mX').value)||now;P.closed={res:'M',exit:xv,end:today(),at:new Date().toISOString(),days:tdBetween(P.d,today())};save();toast('Ujian manual ditutup');after();};
+  if(P){$('#mxClose').onclick=()=>{const now=nowPx(code);if(!now&&!num($('#mX').value))return toast('Harga kini belum tersedia');const xv=num($('#mX').value)||now;P.closed={res:'M',exit:xv,end:today(),at:new Date().toISOString(),days:tdBetween(P.d,today())};save();toast('Ujian manual ditutup');after();};
     $('#mxDel').onclick=()=>{manDelete(P.id);toast('Dipadam');after();};}
   else $('#mGo').onclick=()=>{const st=num($('#mS').value),en=num($('#mE').value),tg=num($('#mT').value),sl=num($('#mL').value),dt=$('#mD').value;
     if(!(st>0&&en>0))return toast('Masukkan nilai maya dan harga masuk');if(!(tg>en&&sl<en&&sl>0))return toast('Paras atas mesti lebih tinggi dan paras bawah lebih rendah daripada harga masuk');
@@ -1198,7 +1208,7 @@ function openManual(code){if(needLogin()){toast('Log masuk dahulu untuk guna Rob
     if(!S.watch.includes(code)){S.watch.push(code);S.watchAt=Date.now();}save();toast('Ditambah ke Robot Manual');getBars(code).catch(()=>{});close();closeSheet();goTab('robot');};
 }
 function mtag(p){return p.src==='A'?'<span class="mtag a">A</span>':'<span class="mtag m">M</span>';}
-function manRow(p){const nm=shortName(p.name||nameOf(p.code));const m=mk(p.code),now=m&&m.c;
+function manRow(p){const nm=shortName(p.name||nameOf(p.code));const m=mk(p.code),now=nowPx(p.code);
   if(p.closed){const C=p.closed,r=RES3[C.res],u=manPnl(p,C.exit),xp=p.qty?u/p.stake*100:(C.exit/p.en-1)*100;
     return `<div class="mrow mc" data-mid="${esc(p.id)}" role="button"><div class="mhd" style="margin:0"><span>${mtag(p)}<b>${esc(nm)}</b> <span class="code">${esc(p.code)}</span><br><span class="badge ${r[2]}" style="margin-top:4px">${r[0]}</span></span><span class="mnow"><small>Harga kini</small><b>${now?px(now):'-'}</b><em class="${u>=0?'up':'dn'}">${rmS(u)} (${xp>0?'+':''}${xp.toFixed(1)}%)</em></span></div></div>`;}
   const u=now?manPnl(p,now):null;let pct=now?(p.qty&&u!=null?u/p.stake*100:(now/p.en-1)*100):null;if(pct!=null&&Math.abs(pct)<0.05)pct=0;const pc=pct==null||pct===0?'':pct>0?'up':'dn';
@@ -1215,13 +1225,13 @@ function openManDetail(id){const p=(S.manual||[]).find(x=>x.id===id);if(!p)retur
   $('#helpX').onclick=close;$('#mdView').onclick=()=>{close();stockSheet(p.code,nameOf(p.code));};}
 function manFull(p){const nm=shortName(p.name||nameOf(p.code));
   if(p.closed){const C=p.closed,r=RES3[C.res];const u=manPnl(p,C.exit),xp=(C.exit/p.en-1)*100;
-    const m=mk(p.code),now=m&&m.c,since=now?(now/C.exit-1)*100:null,sc=since==null||Math.abs(since)<0.05?'':since>0?'up':'dn';
+    const m=mk(p.code),now=nowPx(p.code),since=now?(now/C.exit-1)*100:null,sc=since==null||Math.abs(since)<0.05?'':since>0?'up':'dn';
     const cell=(l,v,c='')=>`<div><span>${l}</span><b class="${c}">${v}</b></div>`;
     return `<div class="mrow" data-code="${esc(p.code)}" role="button">
     <div class="mhd"><span><b>${esc(nm)}</b> <span class="code">${esc(p.code)}</span><br><span class="badge ${r[2]}" style="margin-top:4px">${r[0]}</span></span><span class="mnow"><small>Harga kini</small><b class="${sc}">${now?px(now):'-'}</b>${since==null?'':`<em class="${sc}">${since>0?'+':''}${since.toFixed(1)}% sejak ditutup</em>`}</span></div>
     <div class="mgrid">${cell('Harga masuk',px(p.en))}${cell('Harga tutup',px(C.exit),xp>=0?'up':'dn')}${cell('Masa beli',manStartTxt(p))}${cell('Masa tutup',`${C.at?fmtDT(C.at):fmtD(C.end<p.d?p.d:C.end)} (${Math.max(0,C.days)} hari)`)}<div class="mw"><span>Keputusan</span><b class="${u>=0?'up':'dn'}">${rmS(u)} (${xp>0?'+':''}${xp.toFixed(1)}%)</b></div></div>
     <div class="mft"><span class="muted" style="font-size:12px">${rm(p.stake)} nilai maya · sasaran ${px(p.tg)} · cut loss ${px(p.sl)}</span><button class="mdel" data-md="${esc(p.id)}" aria-label="Padam">🗑</button></div></div>`;}
-  const m=mk(p.code),now=m&&m.c,u=now?manPnl(p,now):null,H=BTH().h;let pct=now?(p.qty&&u!=null?u/p.stake*100:(now/p.en-1)*100):null;if(pct!=null&&Math.abs(pct)<0.05)pct=0;const pc=pct==null||pct===0?'':pct>0?'up':'dn';
+  const m=mk(p.code),now=nowPx(p.code),u=now?manPnl(p,now):null,H=BTH().h;let pct=now?(p.qty&&u!=null?u/p.stake*100:(now/p.en-1)*100):null;if(pct!=null&&Math.abs(pct)<0.05)pct=0;const pc=pct==null||pct===0?'':pct>0?'up':'dn';
   const cell=(l,v,c='',w='')=>`<div${w?' class="mw"':''}><span>${l}</span><b class="${c}">${v}</b></div>`;
   return `<div class="mrow" data-code="${esc(p.code)}" role="button">
     <div class="mhd"><span><b>${esc(nm)}</b> <span class="code">${esc(p.code)}</span></span><span class="mnow"><small>Harga kini</small><b class="${pc}">${now?px(now):'-'}</b>${u==null?'':`<em class="${u>=0?'up':'dn'}">${rmS(u)} (${pct>0?'+':''}${pct.toFixed(1)}%)</em>`}</span></div>
@@ -1300,7 +1310,7 @@ function stockStatus(code,name){
     else out.push({ic:'🟢',cls:'s-ok',t:`Isyarat aktif ${sig.p}% (${rateSignal({...sig,n:sig.n,w:sig.w}).lbl}) · tempoh indicator trading (hari ke-${dayNo(sig.start)} daripada ~${md}) · bermula ${fmtD(entryDate(sig.start))} hingga ${fmtD(endFor(sig.start,md))}`});}
   else if(m&&m.liq===0)out.push({ic:'💧',cls:'s-warn',t:`Kecairan rendah: harga bawah RM0.20 atau nilai dagangan bawah RM100k sehari. Isyarat tidak dipaparkan.`});
   else if(m&&m.va)out.push({ic:'⚪',cls:'s-na',t:`Tiada isyarat teknikal aktif · skor ${m.sc}/${m.va} (${scoreVerdict(m.sc,m.va).lbl})`});
-  const mp=manOpen(code);if(mp){const now=m&&m.c;const u=now?manPnl(mp,now):null;out.push({ic:'✍️',cls:'s-warn',t:`Robot manual sejak ${fmtD(mp.d)} @ ${px(mp.en)}${u!=null?` · ${rmS(u)}`:''}`});}
+  const mp=manOpen(code);if(mp){const now=nowPx(code);const u=now?manPnl(mp,now):null;out.push({ic:'✍️',cls:'s-warn',t:`Robot manual sejak ${fmtD(mp.d)} @ ${px(mp.en)}${u!=null?` · ${rmS(u)}`:''}`});}
   if(hd){const lc=lastClose(code);if(lc){const pl=(lc.c-hd.cost)*hd.qty,pct=(lc.c/hd.cost-1)*100;const XP=exitPlan(hd);
     out.push({ic:'💼',cls:pl>=0?'s-up':'s-no',t:`Pegangan anda ${pl>=0?'untung':'rugi'} ${rmS(pl)} (${pct>=0?'+':''}${pct.toFixed(1)}%)${XP?(XP.hit?' · harga tutup di bawah paras sokongan mengekor':' · di atas paras sokongan mengekor'):''}`});}}
   return out.length?out:null;
@@ -1737,6 +1747,7 @@ const EN_EXACT={
 '🔔 Senarai syariah SC baharu dijangka':'🔔 New SC Shariah list expected','🔔 Tarikh haul anda':'🔔 Your haul date',
 };
 const EN_RX=[
+
 [/^(moomoo: platform RM3 \+ komisen 0\.03%\.|Rakuten Trade: .*|Webull: .*) Contoh beli RM940 → yuran ≈ (RM [\d.,]+)\. Jika nilai setiap posisi kurang daripada harga 1 lot, saham itu dilangkau\.$/,(m,a,b)=>({'moomoo: platform RM3 + komisen 0.03%.':'moomoo: RM3 platform + 0.03% commission.'}[a]||a.replace('Rakuten Trade: RM2.88 (RM100–RM9,999), 0.1% (RM10k–RM99k), RM100 (RM100k ke atas).','Rakuten Trade: RM2.88 (RM100–RM9,999), 0.1% (RM10k–RM99k), RM100 (RM100k and above).').replace('Webull: komisen 0.05%, minimum RM2.50, tiada yuran platform.','Webull: 0.05% commission, minimum RM2.50, no platform fee.'))+' Example buy RM940 → fees ≈ '+b+'. If each position is worth less than 1 lot, that stock is skipped.'],
 [/^✓ Broker: (.+)$/,(m,a)=>'✓ Broker: '+a],
 [/^Contoh: beli RM940 → yuran ≈ (RM [\d.,]+), jual juga ≈ (RM [\d.,]+)\. Jika nilai setiap posisi kurang daripada harga 1 lot, saham itu dilangkau\.$/,(m,a,b)=>'Example: buy RM940 → fees ≈ '+a+', sell also ≈ '+b+'. If each position is worth less than 1 lot, that stock is skipped.'],
@@ -1841,6 +1852,7 @@ const EN_PHRASE=[
 ];
 
 Object.assign(EN_EXACT,{
+'Harga terkini':'Latest price','Latest price':'Latest price',
 '🧾 Kira yuran broker sebenar':'🧾 Count real broker fees','Beli ikut lot 100 unit. Yuran broker + yuran penjelasan Bursa + duti setem, setiap beli & jual.':'Buys in lots of 100 units. Broker fee + Bursa clearing fee + stamp duty, on every buy & sell.','Broker':'Broker','🧾 Yuran broker dikira':'🧾 Broker fees counted','Yuran broker tidak dikira':'Broker fees not counted',
 '🧾 Kira yuran moomoo sebenar':'🧾 Count real moomoo fees','Beli ikut lot 100 unit. Yuran: platform RM3 + komisen 0.03% + penjelasan 0.03% + duti setem, setiap beli & jual.':'Buys in lots of 100 units. Fees: RM3 platform + 0.03% commission + 0.03% clearing + stamp duty, on every buy & sell.','Komisen percuma (180 hari pengguna baharu)':'Free commission (180 days for new users)','🧾 Yuran moomoo dikira':'🧾 moomoo fees counted','Yuran moomoo tidak dikira':'moomoo fees not counted','Unit · kos+yuran':'Units · cost+fees',
 '💰 Modal pelaburan':'💰 Investment capital','Had modal hidup':'Capital limit on','Tanpa had':'No limit','Modal':'Capital','Dalam pasaran':'In the market','Baki tersedia':'Available balance','Tukar modal (RM)':'Change capital (RM)','Modal (RM)':'Capital (RM)','Kemas kini':'Update','Tetapkan modal':'Set capital','Tambah modal (RM)':'Add capital (RM)','+ Tambah':'+ Add','↺ Mula semula kiraan':'↺ Restart count','Buang had modal':'Remove capital limit','Tekan lagi: mula semula':'Tap again: restart','Tekan lagi: buang had':'Tap again: remove limit','Isi modal dalam RM':'Enter capital in RM','Isi jumlah tambahan':'Enter the amount to add','Kiraan modal bermula semula':'Capital count restarted','Had modal dibuang':'Capital limit removed','cth. 1000':'e.g. 1000','cth. 500':'e.g. 500','Modal tidak cukup untuk posisi baharu. Robot tunggu posisi ditutup, kemudian masuk semula ikut baki.':'Not enough capital for a new position. The robot waits for positions to close, then enters again with the balance.','Tetapkan modal supaya robot hanya labur dalam had ini. Bila modal tak cukup, isyarat baru dilangkau sehingga posisi lain ditutup.':'Set capital so the robot only invests within this limit. When capital is short, new signals are skipped until other positions close.',
@@ -2282,7 +2294,7 @@ function poster(code,name,wide){
   const lbl={ok:'✓ Patuh',no:'✕ Tidak patuh',na:'Belum disaring'}[st];
   return `<button class="poster${wide?' wide':''}" style="--p1:${p1};--p2:${p2}" data-code="${esc(code)}" data-name="${esc(name)}" aria-label="${esc(name)}">
     <span class="pc">${esc(code||'—')}</span>${sc}${code?spark(code,100,40,up?'#d9b44a':'#ef6b5c'):''}
-    <span class="pn${bo&&st==='ok'?' up2':''}">${esc(shortName(name)||code)}</span><span class="pb ${st}${bo&&st==='ok'?' up2':''}">${lbl}${lc?` · ${px(lc.c)}`:''}</span>${bo&&st==='ok'?platChips(code,'ppf'):''}</button>`;
+    <span class="pn${bo&&st==='ok'?' up2':''}">${esc(shortName(name)||code)}</span><span class="pb ${st}${bo&&st==='ok'?' up2':''}">${lbl}${lc?` · ${px(nowPx(code)??lc.c)}`:''}</span>${bo&&st==='ok'?platChips(code,'ppf'):''}</button>`;
 }
 function rail(title,note,items,wide,empty){
   if(!items.length&&!empty)return '';
@@ -2305,7 +2317,8 @@ function featured(){
 }
 
 let HERO_TF='D';
-function heroSeries(code,tf){
+function heroSeries(code,tf){const R=heroSeries0(code,tf);const l=livePx(code);if(R&&l&&R.d.length){const last=R.d[R.d.length-1],intra=last.length>10;const lt=intra?l.t:l.t.slice(0,10);if(lt>last){if(intra||tf==='D'){R.v=[...R.v,l.p];R.d=[...R.d,lt];}else{R.v=[...R.v.slice(0,-1),l.p];}}}return R;}
+function heroSeries0(code,tf){
   const c=S.cache[code],m=mk(code),daily=c&&c.bars.length>=5?c.bars:null,ib=INTRA[code];
   const pick=(b,n)=>{const x=b.slice(-n);return {v:x.map(y=>y.c),d:x.map(y=>y.d)};};
   if(tf==='30m')return ib?pick(ib,72):null;
@@ -2340,6 +2353,9 @@ function heroChart(code){
     <span class="hcdot" style="top:${pct(last)}%"></span><span class="hcnow ${up?'up':'dn'}" style="top:${pct(last)}%">${px(last)}</span>
     <span class="hcd l">${fb(d0)}</span><span class="hcd r">${fb(d1)} · ${chg>=0?'+':''}${chg.toFixed(1)}%</span></div>`;
 }
+function liveLine(code){const l=livePx(code);if(!l)return '';const t=l.t.slice(11,16);
+  const en=S.settings.lang==='en';
+  return `<p class="livep" translate="no" data-notr="1"><span class="ldot"></span>${en?'Latest price':'Harga terkini'} <b class="${l.ch>=0?'up':'dn'}">${px(l.p)} (${l.ch>0?'+':''}${l.ch.toFixed(2)}%)</b> · ${fmtD(l.t.slice(0,10))} ${t} · ${en?'~15 min delayed':'lewat ±15 min'}</p>`;}
 function heroHTML(){
   const L=latestList();
   if(!L&&!S.market)return `<section class="hero" style="--hc:#0f5a45"><span class="tag">✦ <b>${S.sync.err?'Tiada sambungan':'Menyediakan data'}</b></span>
@@ -2355,7 +2371,7 @@ function heroHTML(){
     <span class="tag">✦ <b>${f.tag}</b> ${badge(st)}</span>
     ${m&&m.va&&!hide?`<div class="hstat">${bestOp(code)?(()=>{const R=rateSignal(bestOp(code));return `<span><small>Isyarat</small><span class="badge ${R.cls}">${R.lbl}</span></span>`;})():`<span><small>Isyarat</small><span class="badge b-na">Tiada isyarat aktif</span></span>`}${(()=>{const V=scoreVerdict(m.sc,m.va);return V?`<span><small>Skor teknikal ${m.sc}/${m.va}</small><span class="badge ${V.cls}">${V.lbl}</span></span>`:'';})()}<button class="sinfo" onclick="openStatusHelp()" aria-label="Maksud status">ⓘ</button></div>`:''}
     <h2>${esc(shortName(nm)||code)}</h2>
-    <p class="sub">${esc(code)} di Bursa Malaysia${lc?`, ditutup ${px(lc.c)} pada ${fmtD(lc.d)}${m&&m.ch!=null?` (${m.ch>=0?'+':''}${m.ch.toFixed(2)}%)`:''}.`:'.'}</p>
+    <p class="sub">${esc(code)} di Bursa Malaysia${lc?`, ditutup ${px(lc.c)} pada ${fmtD(lc.d)}${m&&m.ch!=null?` (${m.ch>=0?'+':''}${m.ch.toFixed(2)}%)`:''}.`:'.'}</p>${liveLine(code)}
     ${m&&m.va&&!hide?`<div class="stats">${bestOp(code)?`<div><b>${bestOp(code).p}%</b>kebarangkalian sejarah</div><div><b>${Math.round(bestOp(code).md||0)} hari</b>tempoh biasa</div>`:''}<div><b>${m.r!=null?Math.round(m.r):'-'}</b>RSI 14</div><div><b>${m.e2==null?'-':m.e2?'Atas':'Bawah'}</b>EMA200</div></div>`:''}
     ${m&&m.va&&!hide&&st==='ok'&&bestOp(code)?platChips(code,'pfl hpf'):''}
     <div class="acts"><button class="btn" data-open="${esc(code)}">▶ Lihat analisa</button><button class="btn sec" data-wt="${esc(code)}">${inW?'✓ Dalam watchlist':'+ Watchlist'}</button></div></section>`;
@@ -2539,6 +2555,7 @@ function stockSheet(code,name){
   const inW=code&&S.watch.includes(code);
   let h=`<div class="shd"><div class="shd-top"><div class="shd-name"><h2 class="shn">${esc(name||code)}</h2><div class="code">${esc(code||'tiada kod')} · KLSE · ${badge(st)}${islTag(code)}</div></div><div class="row" style="gap:8px;flex:none;flex-wrap:nowrap">${code&&st!=='no'&&mk(code)&&mk(code).c?`<button class="mbtn" onclick="openManual('${esc(code)}')" aria-label="Robot manual">✍️ ${manOpen(code)?'Urus':'Manual'}</button>`:''}<button class="xbtn" onclick="closeSheet()" aria-label="Tutup">✕</button></div></div>
     ${code&&st!=='no'?`<div class="shrow">${sheetStatHTML(code)}${meterHTML(code,false,true)}</div>`:''}
+    ${code?liveLine(code):''}
     ${code?statusHTML(code,name,true):''}
     ${code&&mk(code)?`<button class="anbtn" onclick="openAnalysis('${esc(code)}')">📝 Ringkasan analisa${newsFor(code).length?` · 📰 ${newsFor(code).length} berita`:''}</button>`:''}${code&&st!=='no'&&mk(code)&&mk(code).c!=null?`<div class="row cmprow" style="gap:8px"><button class="anbtn cmpb" onclick="CMP=[];openCompare('${esc(code)}')">⚖️ Banding</button><button class="anbtn cmpb" onclick="shareCard('${esc(code)}')">📤 Kongsi</button></div>`:''}</div>`;
   if(st==='no')h+=`<div class="alert a-red">Saham ini <b>tiada</b> dalam senarai patuh syariah SC terkini.${blocked?' Isyarat teknikal disembunyikan kerana Mod Patuh Syariah ON.':''}</div>`;
@@ -2935,7 +2952,7 @@ if(location.hash==='#robot'){try{history.replaceState(history.state,'',location.
 updateLangBtn();startI18N();updateInstallBtn();
 if(S.alerts&&S.alerts.notify)regPeriodic();
 if(FB_CONFIG)fbInit().catch(()=>{FBREADY=true;if(TAB==='robot')render();});
-checkStatus();setInterval(checkStatus,12e4);document.addEventListener('visibilitychange',()=>{if(!document.hidden)checkStatus();});
+checkStatus();setInterval(checkStatus,12e4);loadLive();setInterval(()=>{if(mktOpen())loadLive();},3e5);document.addEventListener('visibilitychange',()=>{if(!document.hidden)checkStatus();});
 syncData(false);
 if(!S.onb)setTimeout(()=>openOnboard(0),600);else if(S.onb<2)setTimeout(()=>openOnboard(2),600);   // pengguna lama: tunjuk slaid ciri baharu sahaja
 </script>

@@ -83,7 +83,8 @@ label{display:block;font-size:13px;color:var(--muted);margin:10px 0 4px}
 .a-green{background:var(--green2);border-left:3px solid var(--green)}
 .a-gold{background:var(--gold2);border-left:3px solid var(--gold)}
 .big{font-size:28px;font-weight:800;letter-spacing:-.5px;font-variant-numeric:tabular-nums}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;align-items:end}.grid2>div{min-width:0}
+input:not([type=checkbox]):not([type=radio]),select{height:46px;box-sizing:border-box;line-height:normal}input[type=date]{-webkit-appearance:none;appearance:none;display:block;min-width:0}
 .grid2>div:has(>label){display:flex;flex-direction:column;justify-content:flex-end}
 select,input:not([type=checkbox]):not([type=radio]):not([type=range]){min-height:46px}
 .kv{display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-bottom:1px solid var(--line);font-size:14px}
@@ -1679,7 +1680,7 @@ const EN_EXACT={
 'Tetapan zakat':'Zakat settings','Negeri':'State','Tarikh haul':'Haul date','Kaedah pengiraan':'Calculation method',
 'Nilai semasa akhir haul + dividen':'Current value at end of haul + dividends','Nilai terendah dalam setahun + dividen':'Lowest value in the year + dividends',
 'Kaedah berbeza antara negeri dan lembaga zakat. Sahkan kaedah yang diguna pakai oleh lembaga zakat negeri anda.':'Methods differ between states and zakat authorities. Verify the method used by your state zakat authority.',
-'Tarikh rujukan nisab':'Nisab reference date','dari laman rasmi':'from the official website',
+'Tarikh rujukan nisab':'Nisab reference date','cth. 25000':'e.g. 25000',
 'Nilai pegangan saham':'Value of shareholdings','Tiada pegangan dalam Portfolio.':'No holdings in Portfolio.',
 'Harga akhir haul':'Price at end of haul','Harga terendah setahun':'Lowest price of the year','muat harga / isi manual':'load price / enter manually',
 'Dividen diterima setahun (RM)':'Dividends received in the year (RM)','Hutang berkaitan saham (RM)':'Debt related to shares (RM)',
@@ -2756,7 +2757,7 @@ function rZakat(){
    <div><label>Tarikh haul</label><input type="date" id="zh" value="${Z.haulDate}"></div></div>
    <label>Kaedah pengiraan</label><select id="zm">${Object.entries(METHODS).map(([k,v])=>`<option value="${k}" ${k===Z.method?'selected':''}>${v}</option>`).join('')}</select>
    <div class="disc">Kaedah berbeza antara negeri dan lembaga zakat. Sahkan kaedah yang diguna pakai oleh lembaga zakat negeri anda.</div>
-   <div class="grid2"><div><label>Nisab ${STATES[Z.state]} (RM)</label><input id="zn" inputmode="decimal" value="${ns.v??''}" placeholder="dari laman rasmi"></div><div><label>Tarikh rujukan nisab</label><input type="date" id="znd" value="${ns.d||''}"></div></div>
+   <div class="grid2"><div><label>Nisab ${STATES[Z.state]} (RM)</label><input id="zn" inputmode="decimal" value="${ns.v??''}" placeholder="cth. 25000"></div><div><label>Tarikh rujukan nisab</label><input type="date" id="znd" value="${ns.d||''}"></div></div>
    ${ns.v?'':`<div class="alert a-amber" style="margin-top:8px">Masukkan nisab terkini dari laman rasmi lembaga zakat ${STATES[Z.state]}. Nisab berubah ikut harga emas.</div>`}
    </div>`;
   const rows=S.holdings.map(hd=>{const st=status(hd.code,hd.name);const p=zakatPrice(hd,Z.method);const nonc=st==='no';const val=nonc?hd.cost*hd.qty:(p!=null?p*hd.qty:null);return{hd,st,p,val,nonc};});

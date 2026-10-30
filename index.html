@@ -292,6 +292,9 @@ input,textarea,[contenteditable]{-webkit-user-select:text;user-select:text}
 .adm .iss{padding:8px 0;border-bottom:1px solid var(--line);font-size:13px}.adm .plan{background:var(--card2);border-radius:12px;padding:10px 12px;margin-top:8px}
 .livep{margin:6px 0 0;font-size:13.5px;color:var(--ink);display:flex;align-items:center;gap:6px;flex-wrap:wrap}.ldot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 0 3px rgba(47,191,140,.25);animation:lpulse 2s infinite}@keyframes lpulse{50%{opacity:.35}}
 .how{border-bottom:1px solid var(--line);padding:2px 0}.how summary{cursor:pointer;padding:11px 0;font-weight:600;list-style:none}.how summary::-webkit-details-marker{display:none}.how summary::after{content:'＋';float:right;color:var(--muted)}.how[open] summary::after{content:'－'}.how p{margin:0 0 12px;color:var(--muted);font-size:14px;line-height:1.55}
+.robotlist .mrow.mc{padding:7px 0}.robotlist .mrow.mc .mhd{margin:0;gap:8px}.robotlist .mrow.mc .mhd b{font-size:13.5px}.robotlist .mrow.mc .code{font-size:11px}.robotlist .mrow.mc .badge{font-size:10.5px;padding:1px 6px;margin-top:2px!important}
+.robotlist .mrow.mc .mnow small{font-size:10px}.robotlist .mrow.mc .mnow b{font-size:15px;line-height:1.15}.robotlist .mrow.mc .mnow em{font-size:11.5px}.robotlist .mrow.mc .mtag{width:17px;height:17px;font-size:10px;margin-right:4px}.robotlist .mrow.mc .mhd>span:first-child{font-size:12px;line-height:1.3}
+.robotlist h2{font-size:17px;margin-bottom:4px}
 .plink{display:block;text-align:center;margin-top:10px;font-size:13px;color:var(--muted);text-decoration:underline}
 .capbox{margin-top:14px;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--card2)}.capg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:8px}.capg>div{background:var(--card);border-radius:10px;padding:8px 10px}.capg small{display:block;color:var(--muted);font-size:12px}
 .auopt.off{opacity:.45;pointer-events:none}
@@ -345,7 +348,7 @@ input,textarea,[contenteditable]{-webkit-user-select:text;user-select:text}
 .rbk span{font-size:12px;color:var(--muted)}
 .rbk .big{font-size:24px;white-space:nowrap}.rbk small{font-size:12px;color:var(--muted)}
 @media (min-width:820px){.rbk{grid-template-columns:repeat(4,1fr)}}
-.eq{position:relative;height:200px;margin:8px 70px 24px 0}
+.eq{position:relative;height:110px;margin:6px 70px 22px 0}
 .eq svg{position:absolute;inset:0;width:100%;height:100%}
 .eq .eq0{stroke:var(--muted);stroke-dasharray:3 4;stroke-width:1;vector-effect:non-scaling-stroke;opacity:.6}
 .eqz{position:absolute;left:calc(100% + 8px);transform:translateY(-50%);font-size:11px;color:var(--muted)}
@@ -1311,8 +1314,8 @@ function rManual(){
     const cv=[[first,0],...cs.map(p=>[p.closed.end,cum+=manPnl(p,p.closed.exit)])];if(op.length||cv.length<2)cv.push([today(),cum+opn]);
     h+=`<div class="card"><h2>Graf untung / rugi</h2><p class="muted" style="margin-top:0;font-size:13px">Jumlah terkumpul dari ujian pertama${op.length?', termasuk ujian yang masih terbuka pada harga kini':''}.</p>${equitySVG(cv,1)}</div>`;}
   if(!M.length)h+=`<div class="card"><p class="muted" style="margin:0">Belum ada saham. Buka mana-mana saham dan tekan butang ✍️ Manual di atas kanan untuk mula ujian.</p></div>`;
-  if(op.length)h+=`<div class="card"><h2>Sedang diuji (${op.length})</h2>${op.map(manRow).join('')}</div>`;
-  if(cl.length)h+=`<div class="card"><h2>Selesai (${cl.length})</h2>${cl.map(manRow).join('')}</div>`;
+  if(op.length)h+=`<div class="card robotlist"><h2>Sedang diuji (${op.length})</h2>${op.map(manRow).join('')}</div>`;
+  if(cl.length)h+=`<div class="card robotlist"><h2>Selesai (${cl.length})</h2>${cl.map(manRow).join('')}</div>`;
   if(M.length)h+=`<p class="disc" style="margin:6px var(--gut) 0">Ujian maya tanpa wang sebenar, kos dagangan ${(BTH().fee*100).toFixed(1)}% diambil kira. Ini bacaan indicator, bukan cadangan beli atau jual.</p>`;
   return h;}
 function manReset(ids){const del=new Set(ids);S.manual=(S.manual||[]).filter(p=>!del.has(p.id));S.manDel=[...new Set([...(S.manDel||[]),...ids])].slice(-300);save();rRobot();}

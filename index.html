@@ -861,8 +861,8 @@ async function shareCard(code){const m=mk(code);if(!m||m.c==null)return;const en
 /* ===== STATUS SISTEM (jalur amaran untuk semua pengguna) ===== */
 let SYS={level:'ok'};
 async function checkStatus(){let st=null;
-  try{if(location.protocol.startsWith('http')&&!/localhost|127\.0\.0\.1/.test(location.hostname)){const r=await fetch('https://raw.githubusercontent.com/alemmaxx/ProSyariah/main/data/status.json?t='+Math.floor(Date.now()/3e5)).catch(()=>null);if(r&&r.ok)st=await r.json();}}catch(e){}
-  if(!st){try{const r=await dfetch('status.json?t='+Math.floor(Date.now()/3e5),{cache:'no-cache'});if(r.ok)st=await r.json();}catch(e){}}
+  try{if(location.protocol.startsWith('http')&&!/localhost|127\.0\.0\.1/.test(location.hostname)){const r=await fetch('https://raw.githubusercontent.com/alemmaxx/ProSyariah/main/data/status.json?t='+Math.floor(Date.now()/6e4)).catch(()=>null);if(r&&r.ok)st=await r.json();}}catch(e){}
+  if(!st){try{const r=await dfetch('status.json?t='+Math.floor(Date.now()/6e4),{cache:'no-cache'});if(r.ok)st=await r.json();}catch(e){}}
   if(st&&st.level)SYS=st;showSysBan();}
 function showSysBan(){const b=$('#sysban');if(!b)return;const lv=SYS.level;if(lv!=='down'&&lv!=='warn'){b.style.display='none';return;}
   b.className='sysban '+lv;b.textContent=lv==='down'?'⚠️ Sistem sedang mengalami gangguan. Data atau notifikasi mungkin lewat. Kami sedang membaikinya.':'ℹ️ Sistem agak perlahan sekarang. Data mungkin lewat sedikit.';
@@ -887,6 +887,7 @@ function rAdmin(){if(!isAdmin()){goTab('tetapan');return;}
     <div class="kv"><span>Semakan terakhir</span><b>${esc(status.at||'-')}</b></div>
     <div class="kv"><span>Data harga terakhir</span><b>${status.asof?fmtD(status.asof):'-'}</b></div>
     <div class="kv"><span>Pengguna nampak jalur amaran</span><b>${SYS.level==='down'||SYS.level==='warn'?'Ya':'Tidak'}</b></div>
+    ${(SYS.level==='down'||SYS.level==='warn')&&(status.level||'ok')==='ok'?'<p class="muted" style="font-size:12px;margin:6px 0 0">Sistem sudah pulih. Jalur amaran akan hilang sendiri dalam beberapa minit (salinan status sedang dikemas kini).</p>':''}
     ${iss.length?iss.map(i=>`<div class="iss">${i.pub?'👥':'🔧'} ${esc(i.msg)}</div>`).join(''):'<p class="muted" style="margin:8px 0 0">Tiada masalah dikesan.</p>'}
     <p class="muted" style="font-size:12px;margin:8px 0 0">👥 = pengguna nampak jalur amaran umum (tanpa nama sistem). 🔧 = untuk anda sahaja.</p></div>
   <div class="card"><h2>Emel amaran</h2>
@@ -2888,7 +2889,7 @@ if(location.hash==='#robot'){try{history.replaceState(history.state,'',location.
 updateLangBtn();startI18N();updateInstallBtn();
 if(S.alerts&&S.alerts.notify)regPeriodic();
 if(FB_CONFIG)fbInit().catch(()=>{FBREADY=true;if(TAB==='robot')render();});
-checkStatus();setInterval(checkStatus,6e5);document.addEventListener('visibilitychange',()=>{if(!document.hidden)checkStatus();});
+checkStatus();setInterval(checkStatus,12e4);document.addEventListener('visibilitychange',()=>{if(!document.hidden)checkStatus();});
 syncData(false);
 if(!S.onb)setTimeout(()=>openOnboard(0),600);else if(S.onb<2)setTimeout(()=>openOnboard(2),600);   // pengguna lama: tunjuk slaid ciri baharu sahaja
 </script>

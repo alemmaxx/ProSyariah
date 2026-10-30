@@ -205,6 +205,17 @@ def main():
         http = None
 
     old = json.load(open(STATUS)) if os.path.exists(STATUS) else {}
+    st_prev = {}
+    if http:
+        try:
+            st_prev = fs_get(http, base, "config/admin_status")
+        except Exception:
+            st_prev = {}
+    seen_before = set(json.loads(st_prev.get("raw") or "[]"))
+    # Elak amaran palsu: isu laman/pangkalan data mesti berlaku 2 semakan berturut-turut (≈30 minit).
+    # Isu data lewat terus dikira kerana ia sudah disemak dengan jadual hari dagangan.
+    raw = sorted(i["k"] for i in issues)
+    issues = [i for i in issues if i["k"] == "data" or i["k"] in seen_before]
     pub = [i for i in issues if i["pub"]]
     level = "down" if any(i["lv"] == "down" for i in pub) else ("warn" if pub else "ok")
     stamp = now_myt().isoformat(timespec="minutes")
@@ -214,18 +225,12 @@ def main():
     if {k: old.get(k) for k in new_status} != new_status:
         json.dump(new_status, open(STATUS, "w"), indent=1)
         print("status.json dikemas kini:", new_status)
-    print(f"Tahap: {level} · isu: {keys or 'tiada'} · data {asof}")
+    print(f"Tahap: {level} · isu disahkan: {keys or 'tiada'} · dikesan kali ini: {raw or 'tiada'} · data {asof}")
     for i in issues:
         print("  -", i["k"], "|", i["msg"])
 
     # ---- emel ----
     to = (admin.get("alertEmail") or os.environ.get("ALERT_EMAIL") or "").strip()
-    st_prev = {}
-    if http:
-        try:
-            st_prev = fs_get(http, base, "config/admin_status")
-        except Exception:
-            st_prev = {}
     prev = set(json.loads(st_prev.get("keys") or "[]"))
     cur = set(keys)
     mailed = None
@@ -247,7 +252,7 @@ def main():
     if http:
         try:
             fs_set(http, base, "config/admin_status", {
-                "level": level, "at": stamp, "keys": json.dumps(keys),
+                "level": level, "at": stamp, "keys": json.dumps(keys), "raw": json.dumps(raw),
                 "issues": json.dumps(issues, ensure_ascii=False), "asof": asof,
                 "mailer": bool(os.environ.get("SMTP_USER") and os.environ.get("SMTP_PASS")),
                 **({"lastMail": stamp, "lastMailOk": bool(mailed)} if mailed is not None else {})})

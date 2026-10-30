@@ -14,23 +14,31 @@ from datetime import date, datetime, timedelta, timezone
 H, FEE = 40, 0.003
 
 
-def fee_side(v, etf=False, free_comm=False):
-    """Yuran moomoo MY + Bursa untuk SATU transaksi (beli ATAU jual) bernilai v RM.
-    Komisen 0.03% (percuma 180 hari pengguna baharu), platform RM3, yuran penjelasan 0.03% (maks RM1,000),
-    duti setem RM1 setiap RM1,000 atau sebahagian (maks RM200), SST 8% atas komisen+platform+penjelasan
-    untuk ETF/REIT sahaja (saham biasa dikecualikan)."""
+def fee_side(v, kind=None, free_comm=False, bk="moomoo"):
+    """Yuran broker + Bursa untuk SATU transaksi (beli ATAU jual) bernilai v RM.
+    kind: None = saham biasa, "etf", "reit". bk: moomoo | rakuten | webull.
+    Bursa: penjelasan 0.03% (maks RM1,000); duti setem RM1 setiap RM1,000 atau sebahagian
+    (saham maks RM1,000, REIT maks RM200, ETF dikecualikan); SST 8% atas yuran broker+penjelasan untuk ETF/REIT."""
     import math
-    comm = 0.0 if free_comm else math.ceil(v * 0.0003 * 100) / 100
+    if kind is True:
+        kind = "etf"
+    if bk == "rakuten":
+        brk = 1.0 if v <= 100 else 2.88 if v < 10000 else round(v * 0.001, 2) if v < 100000 else 100.0
+        plat = 0.0
+    elif bk == "webull":
+        brk, plat = max(round(v * 0.0005, 2), 2.50), 0.0
+    else:  # moomoo
+        brk, plat = (0.0 if free_comm else math.ceil(v * 0.0003 * 100) / 100), 3.0
     clear = min(round(v * 0.0003, 2), 1000.0)
-    stamp = min(float(math.ceil(v / 1000.0)), 200.0)
-    sst = round(0.08 * (comm + 3.0 + clear), 2) if etf else 0.0
-    return round(comm + 3.0 + clear + stamp + sst, 2)
+    stamp = 0.0 if kind == "etf" else min(float(math.ceil(v / 1000.0)), 200.0 if kind == "reit" else 1000.0)
+    sst = round(0.08 * (brk + plat + clear), 2) if kind in ("etf", "reit") else 0.0
+    return round(brk + plat + clear + stamp + sst, 2)
 
 
 def pos_pnl(p, x):
     """Untung/rugi RM. Posisi mod moomoo (ada qty): nilai jual − yuran jual − kos (termasuk yuran beli)."""
     if p.get("qty"):
-        return p["qty"] * x - fee_side(p["qty"] * x, p.get("etf"), p.get("fc")) - p["stake"]
+        return p["qty"] * x - fee_side(p["qty"] * x, p.get("kd") or p.get("etf"), p.get("fc"), p.get("bk") or "moomoo") - p["stake"]
     return (x / p["en"] - 1 - FEE) * p["stake"]
 
 
@@ -240,21 +248,23 @@ def auto_adds(f, data, auto, M, out_dir, en, news_only=False):
     cf = capital_free(f, data, auto, out_dir)   # None = tiada had modal
     free, equity = cf if cf else (None, None)
     fm, fc = b("autoFm"), b("autoFree")   # mod yuran moomoo sebenar (lot 100 unit), komisen percuma
-    ETFS = {"0821EA", "0824EA", "0825EA", "0827EA", "0828EA", "0838EA", "0839EA", "5116", "5106", "5235SS", "5269"}
+    bk = (f.get("autoBk", {}).get("stringValue") or "moomoo")
+    KIND = {"0821EA": "etf", "0824EA": "etf", "0825EA": "etf", "0827EA": "etf", "0828EA": "etf", "0838EA": "etf", "0839EA": "etf",
+            "5116": "reit", "5106": "reit", "5235SS": "reit", "5269": "reit"}
 
     def lot(code, c, amt):
         """Mod moomoo: beli dalam lot 100 unit; pulangkan (qty, kos termasuk yuran beli) atau None jika tak cukup 1 lot."""
         nonlocal free
-        etf = code in ETFS
+        etf = KIND.get(code)
         lots = int(amt // (c * 100))
-        while lots > 0 and lots * 100 * c + fee_side(lots * 100 * c, etf, fc) > amt:
+        while lots > 0 and lots * 100 * c + fee_side(lots * 100 * c, etf, fc, bk) > amt:
             lots -= 1
         if lots <= 0:
             if free is not None:
                 free += amt   # pulangkan bahagian modal; cuba saham lain
             return None
         qty = lots * 100
-        cost = round(qty * c + fee_side(qty * c, etf, fc), 2)
+        cost = round(qty * c + fee_side(qty * c, etf, fc, bk), 2)
         if free is not None:
             free += amt - cost
         return qty, cost, etf
@@ -291,7 +301,7 @@ def auto_adds(f, data, auto, M, out_dir, en, news_only=False):
                 L = lot(x["code"], c, amt)
                 if not L:
                     continue
-                ex = {"qty": L[0], "etf": L[2], "fc": fc, "fm": 1}
+                ex = {"qty": L[0], "kd": L[2], "fc": fc, "bk": bk, "fm": 1}
                 amt = L[1]
             new.append({"id": f"auto-{x['code']}-{asof}", "src": "A", "why": "champ" if x["champ"] else "sig", "inc": 1, "code": x["code"], "name": x["name"],
                         "d": entry_sig, "en": round(c, 4), "stake": amt, "tg": round(c * (1 + tpp / 100), 4), "sl": round(c * o["sl"] / o["en"], 4),
@@ -311,7 +321,7 @@ def auto_adds(f, data, auto, M, out_dir, en, news_only=False):
                 L = lot(x["code"], c, amt)
                 if not L:
                     continue
-                ex = {"qty": L[0], "etf": L[2], "fc": fc, "fm": 1}
+                ex = {"qty": L[0], "kd": L[2], "fc": fc, "bk": bk, "fm": 1}
                 amt = L[1]
             tp = tpp / 100
             sp = min(max(1.25 * a / c, 0.02), 0.15) if a else 0.04

@@ -1095,7 +1095,7 @@ const RES3={W:['Menang','up','b-ok'],L:['Kalah','dn','b-no'],T:['Tamat masa','',
 /* ===== ROBOT MANUAL: pengguna pilih saham & harga masuk maya sendiri ===== */
 function fmtDT(iso){const d=new Date(iso);return fmtD(isoD(d))+', '+d.toLocaleTimeString(S.settings.lang==='en'?'en-GB':'ms-MY',{hour:'2-digit',minute:'2-digit',hour12:false});}
 function manStartTxt(p){return p.at&&isoD(new Date(p.at))===p.d?fmtDT(p.at):fmtD(p.d);}
-function AUTO(){const d={on:false,sig:true,champ:true,news:false,stake:20,tp:5,fm:false,fc:false};const x=S.settings.auto||(S.settings.auto={});for(const k in d)if(!(k in x))x[k]=d[k];return x;}   // ubah objek yang sama (rujukan kekal)
+function AUTO(){const d={on:false,sig:true,champ:true,news:false,stake:20,tp:5,fm:false,fc:false,bk:'moomoo'};const x=S.settings.auto||(S.settings.auto={});for(const k in d)if(!(k in x))x[k]=d[k];return x;}   // ubah objek yang sama (rujukan kekal)
 function capState(){const a=AUTO();if(!(a.cap>0))return null;let real=0,lock=0,unreal=0,n=0;
   (S.manual||[]).forEach(p=>{if(p.src!=='A'||(Date.parse(p.at||0)||0)<(a.capAt||0))return;n++;
     if(p.closed)real+=manPnl(p,p.closed.exit);else{lock+=+p.stake||0;const m=mk(p.code);if(m&&m.c)unreal+=manPnl(p,m.c);}});
@@ -1112,9 +1112,10 @@ function openAuto(){const a=AUTO();const C=capState();
     ${C?`<div><label>Ambil untung (%)</label><input id="auTp" inputmode="decimal" value="${a.tp}"></div>`:`<div class="grid2" style="align-items:end"><div><label>Nilai maya (RM)</label><input id="auStake" inputmode="decimal" value="${a.stake}"></div>
     <div><label>Ambil untung (%)</label><input id="auTp" inputmode="decimal" value="${a.tp}"></div></div>`}
     <p class="muted" style="font-size:12.5px;margin:8px 0 0">Robot tutup sendiri bila untung sampai ${a.tp}%, atau bila tempoh isyarat tamat (yang mana dulu). Berita tiada tempoh, jadi ikut % sahaja. Cut loss kekal. Cadangan: 5%.</p>
-    <div class="capbox"><label class="toggle" style="padding:0"><span><b>🧾 Kira yuran moomoo sebenar</b><small style="display:block;color:var(--muted);font-size:12px;margin-top:2px">Beli ikut lot 100 unit. Yuran: platform RM3 + komisen 0.03% + penjelasan 0.03% + duti setem, setiap beli & jual.</small></span><input type="checkbox" id="auFm" ${a.fm?'checked':''}></label>
-      ${a.fm?`<label class="toggle" style="padding:8px 0 0"><span>Komisen percuma (180 hari pengguna baharu)</span><input type="checkbox" id="auFc" ${a.fc?'checked':''}></label>
-      <p class="muted" style="font-size:12px;margin:6px 0 0">Contoh: beli RM940 → yuran ≈ ${rm(feeSide(940,false,a.fc))}, jual juga ≈ ${rm(feeSide(940,false,a.fc))}. Jika nilai setiap posisi kurang daripada harga 1 lot, saham itu dilangkau.</p>`:''}</div>
+    <div class="capbox"><label class="toggle" style="padding:0"><span><b>🧾 Kira yuran broker sebenar</b><small style="display:block;color:var(--muted);font-size:12px;margin-top:2px">Beli ikut lot 100 unit. Yuran broker + yuran penjelasan Bursa + duti setem, setiap beli & jual.</small></span><input type="checkbox" id="auFm" ${a.fm?'checked':''}></label>
+      ${a.fm?`<label style="margin-top:8px">Broker</label><select id="auBk">${Object.entries(BROKERS).map(([k,v])=>`<option value="${k}"${(a.bk||'moomoo')===k?' selected':''}>${v}</option>`).join('')}</select>
+      ${(a.bk||'moomoo')==='moomoo'?`<label class="toggle" style="padding:8px 0 0"><span>Komisen percuma (180 hari pengguna baharu)</span><input type="checkbox" id="auFc" ${a.fc?'checked':''}></label>`:''}
+      <p class="muted" style="font-size:12px;margin:6px 0 0">${{moomoo:'moomoo: platform RM3 + komisen 0.03%.',rakuten:'Rakuten Trade: RM2.88 (RM100–RM9,999), 0.1% (RM10k–RM99k), RM100 (RM100k ke atas).',webull:'Webull: komisen 0.05%, minimum RM2.50, tiada yuran platform.'}[a.bk||'moomoo']} Contoh beli RM940 → yuran ≈ ${rm(feeSide(940,undefined,a.fc,a.bk))}. Jika nilai setiap posisi kurang daripada harga 1 lot, saham itu dilangkau.</p>`:''}</div>
     <div class="capbox"><div class="row between" style="align-items:center"><b>💰 Modal pelaburan</b>${C?`<span class="badge b-ok">Had modal hidup</span>`:'<span class="badge b-na">Tanpa had</span>'}</div>
       ${C?`<div class="capg"><div><small>Modal</small><b>${rm(C.cap)}</b></div><div><small>Dalam pasaran</small><b>${rm(C.lock)}</b></div><div><small>Untung/rugi selesai</small><b class="${C.real>=0?'up':'dn'}">${rmS(C.real)}</b></div><div><small>Baki tersedia</small><b class="${C.free>=a.stake?'up':'dn'}">${rm(C.free)}</b></div></div>
         <p class="muted" style="font-size:12.5px;margin:6px 0 0">Robot bahagi modal sendiri: setiap posisi ≈ ${rm(C.per)} (20% daripada modal semasa). ${C.slots?`Boleh masuk ${C.slots} posisi lagi.`:`Modal tidak cukup untuk posisi baharu. Robot tunggu posisi ditutup, kemudian masuk semula ikut baki.`}</p>`:
@@ -1128,7 +1129,7 @@ function openAuto(){const a=AUTO();const C=capState();
   $('#auSig').onchange=e=>{a.sig=e.target.checked;upd();};$('#auChamp').onchange=e=>{a.champ=e.target.checked;upd();};$('#auNews').onchange=e=>{a.news=e.target.checked;upd();};
   const stI=$('#auStake');if(stI)stI.onchange=e=>{a.stake=Math.max(1,num(e.target.value)||20);upd();toast('✓ Nilai maya RM'+a.stake+' disimpan');};
   $('#auTp').onchange=e=>{a.tp=Math.min(50,Math.max(1,num(e.target.value)||5));upd();toast('✓ Ambil untung '+a.tp+'% disimpan');};
-  $('#auFm').onchange=e=>{a.fm=e.target.checked;upd();toast(a.fm?'🧾 Yuran moomoo dikira':'Yuran moomoo tidak dikira');};const fcI=$('#auFc');if(fcI)fcI.onchange=e=>{a.fc=e.target.checked;upd();};
+  $('#auFm').onchange=e=>{a.fm=e.target.checked;upd();toast(a.fm?'🧾 Yuran broker dikira':'Yuran broker tidak dikira');};const fcI=$('#auFc');if(fcI)fcI.onchange=e=>{a.fc=e.target.checked;upd();};const bkI=$('#auBk');if(bkI)bkI.onchange=e=>{a.bk=e.target.value;upd();toast('✓ Broker: '+BROKERS[a.bk]);};
   const cs=$('#auCapSet');if(cs)cs.onclick=()=>{const v=num($('#auCap').value);if(!(v>0)){toast('Isi modal dalam RM');return;}if(!(a.cap>0))a.capAt=Date.now();a.cap=Math.round(v*100)/100;upd();toast('✓ Modal '+rm(a.cap)+' disimpan');};
   const ca=$('#auCapAddB');if(ca)ca.onclick=()=>{const v=num($('#auCapAdd').value);if(!(v>0)){toast('Isi jumlah tambahan');return;}a.cap=Math.round((a.cap+v)*100)/100;upd();toast('✓ Modal ditambah '+rm(v));};
   const cr=$('#auCapReset');if(cr)cr.onclick=()=>confirm2(cr,'Tekan lagi: mula semula',()=>{a.capAt=Date.now();upd();toast('Kiraan modal bermula semula');});
@@ -1150,10 +1151,17 @@ function manEval(p){
     if(b.h>=p.tg)return {res:'W',exit:p.tg,end:b.d,days:i+1};}
   if(after.length>=H){const b=after[H-1];return {res:'T',exit:b.c,end:b.d,days:H};}
   return null;}
-/* Yuran moomoo MY + Bursa satu transaksi (sama seperti pelayan): komisen 0.03% (boleh percuma), platform RM3,
-   penjelasan 0.03% (maks RM1,000), duti setem RM1/RM1,000 atau sebahagian (maks RM200), SST 8% untuk ETF/REIT sahaja. */
-function feeSide(v,etf,fc){const comm=fc?0:Math.ceil(v*0.0003*100)/100,clear=Math.min(Math.round(v*0.0003*100)/100,1000),stamp=Math.min(Math.ceil(v/1000),200),sst=etf?Math.round(0.08*(comm+3+clear)*100)/100:0;return Math.round((comm+3+clear+stamp+sst)*100)/100;}
-function manPnl(p,exit){if(p.qty)return p.qty*exit-feeSide(p.qty*exit,p.etf,p.fc)-p.stake;return (exit/p.en-1-BTH().fee)*p.stake;}
+/* Yuran broker + Bursa satu transaksi (sama seperti pelayan). kind: undefined=saham, 'etf', 'reit'. bk: moomoo|rakuten|webull.
+   Bursa: penjelasan 0.03% (maks RM1,000); duti setem RM1/RM1,000 atau sebahagian (saham maks RM1,000, REIT maks RM200, ETF dikecualikan);
+   SST 8% atas yuran broker+penjelasan untuk ETF/REIT. */
+const BROKERS={moomoo:'moomoo',rakuten:'Rakuten Trade',webull:'Webull'};
+function feeSide(v,kind,fc,bk){if(kind===true)kind='etf';bk=bk||'moomoo';let brk,plat;
+  if(bk==='rakuten'){brk=v<=100?1:v<10000?2.88:v<100000?Math.round(v*0.1)/100:100;plat=0;}
+  else if(bk==='webull'){brk=Math.max(Math.round(v*0.05)/100,2.5);plat=0;}
+  else{brk=fc?0:Math.ceil(v*0.0003*100)/100;plat=3;}
+  const clear=Math.min(Math.round(v*0.03)/100,1000),stamp=kind==='etf'?0:Math.min(Math.ceil(v/1000),kind==='reit'?200:1000),sst=(kind==='etf'||kind==='reit')?Math.round(0.08*(brk+plat+clear)*100)/100:0;
+  return Math.round((brk+plat+clear+stamp+sst)*100)/100;}
+function manPnl(p,exit){if(p.qty)return p.qty*exit-feeSide(p.qty*exit,p.kd||p.etf,p.fc,p.bk)-p.stake;return (exit/p.en-1-BTH().fee)*p.stake;}
 function manRefresh(){setTimeout(robotStateSync,0);let ch=false;(S.manual||[]).forEach(p=>{if(p.closed)return;const r=manEval(p);if(r){p.closed=r;ch=true;}});if(ch)save();}
 function openManual(code){if(needLogin()){toast('Log masuk dahulu untuk guna Robot Manual');closeSheet();goTab('robot');return;}
   code=code||'';const nm=nameOf(code);const m=mk(code);const P=manOpen(code);
@@ -1726,6 +1734,8 @@ const EN_EXACT={
 '🔔 Senarai syariah SC baharu dijangka':'🔔 New SC Shariah list expected','🔔 Tarikh haul anda':'🔔 Your haul date',
 };
 const EN_RX=[
+[/^(moomoo: platform RM3 \+ komisen 0\.03%\.|Rakuten Trade: .*|Webull: .*) Contoh beli RM940 → yuran ≈ (RM [\d.,]+)\. Jika nilai setiap posisi kurang daripada harga 1 lot, saham itu dilangkau\.$/,(m,a,b)=>({'moomoo: platform RM3 + komisen 0.03%.':'moomoo: RM3 platform + 0.03% commission.'}[a]||a.replace('Rakuten Trade: RM2.88 (RM100–RM9,999), 0.1% (RM10k–RM99k), RM100 (RM100k ke atas).','Rakuten Trade: RM2.88 (RM100–RM9,999), 0.1% (RM10k–RM99k), RM100 (RM100k and above).').replace('Webull: komisen 0.05%, minimum RM2.50, tiada yuran platform.','Webull: 0.05% commission, minimum RM2.50, no platform fee.'))+' Example buy RM940 → fees ≈ '+b+'. If each position is worth less than 1 lot, that stock is skipped.'],
+[/^✓ Broker: (.+)$/,(m,a)=>'✓ Broker: '+a],
 [/^Contoh: beli RM940 → yuran ≈ (RM [\d.,]+), jual juga ≈ (RM [\d.,]+)\. Jika nilai setiap posisi kurang daripada harga 1 lot, saham itu dilangkau\.$/,(m,a,b)=>'Example: buy RM940 → fees ≈ '+a+', sell also ≈ '+b+'. If each position is worth less than 1 lot, that stock is skipped.'],
 [/^Robot bahagi modal sendiri: setiap posisi ≈ (RM [\d,.]+) \(20% daripada modal semasa\)\. (Boleh masuk (\d+) posisi lagi\.|Modal tidak cukup.*)$/,(m,a,b,c)=>'The robot sizes positions itself: each position ≈ '+a+' (20% of current capital). '+(c?'Can enter '+c+' more position'+(c==='1'?'':'s')+'.':'Not enough capital for a new position. The robot waits for positions to close, then enters again with the balance.')],
 [/^Hidup · (.*) · modal (RM [\d,.]+) · untung ([\d.]+)% · baki (.+)$/,(m,a,b,c,d)=>'On · '+(a==='tiada jenis dipilih'?'no type chosen':a)+' · capital '+b+' · profit '+c+'% · balance '+d],
@@ -1828,6 +1838,7 @@ const EN_PHRASE=[
 ];
 
 Object.assign(EN_EXACT,{
+'🧾 Kira yuran broker sebenar':'🧾 Count real broker fees','Beli ikut lot 100 unit. Yuran broker + yuran penjelasan Bursa + duti setem, setiap beli & jual.':'Buys in lots of 100 units. Broker fee + Bursa clearing fee + stamp duty, on every buy & sell.','Broker':'Broker','🧾 Yuran broker dikira':'🧾 Broker fees counted','Yuran broker tidak dikira':'Broker fees not counted',
 '🧾 Kira yuran moomoo sebenar':'🧾 Count real moomoo fees','Beli ikut lot 100 unit. Yuran: platform RM3 + komisen 0.03% + penjelasan 0.03% + duti setem, setiap beli & jual.':'Buys in lots of 100 units. Fees: RM3 platform + 0.03% commission + 0.03% clearing + stamp duty, on every buy & sell.','Komisen percuma (180 hari pengguna baharu)':'Free commission (180 days for new users)','🧾 Yuran moomoo dikira':'🧾 moomoo fees counted','Yuran moomoo tidak dikira':'moomoo fees not counted','Unit · kos+yuran':'Units · cost+fees',
 '💰 Modal pelaburan':'💰 Investment capital','Had modal hidup':'Capital limit on','Tanpa had':'No limit','Modal':'Capital','Dalam pasaran':'In the market','Baki tersedia':'Available balance','Tukar modal (RM)':'Change capital (RM)','Modal (RM)':'Capital (RM)','Kemas kini':'Update','Tetapkan modal':'Set capital','Tambah modal (RM)':'Add capital (RM)','+ Tambah':'+ Add','↺ Mula semula kiraan':'↺ Restart count','Buang had modal':'Remove capital limit','Tekan lagi: mula semula':'Tap again: restart','Tekan lagi: buang had':'Tap again: remove limit','Isi modal dalam RM':'Enter capital in RM','Isi jumlah tambahan':'Enter the amount to add','Kiraan modal bermula semula':'Capital count restarted','Had modal dibuang':'Capital limit removed','cth. 1000':'e.g. 1000','cth. 500':'e.g. 500','Modal tidak cukup untuk posisi baharu. Robot tunggu posisi ditutup, kemudian masuk semula ikut baki.':'Not enough capital for a new position. The robot waits for positions to close, then enters again with the balance.','Tetapkan modal supaya robot hanya labur dalam had ini. Bila modal tak cukup, isyarat baru dilangkau sehingga posisi lain ditutup.':'Set capital so the robot only invests within this limit. When capital is short, new signals are skipped until other positions close.',
 'Nilai maya (RM)':'Virtual amount (RM)',
@@ -2834,7 +2845,7 @@ async function cloudPull(){if(!FBU)return;try{const d=await FB.db.collection('us
 async function cloudPush(now){if(!FBU)return;clearTimeout(cloudT);
   const go=async()=>{try{S.cloudAt=Date.now();if(!(S.pfAt>0)){S.pfAt=S.cloudAt;S._pfH=pfHash();}save0();
     const D={dev:DEV,watchAt:S.watchAt||0,manual:S.manual||[],watch:S.watch||[],manDel:S.manDel||[],pf:{holdings:S.holdings||[],tathir:S.tathir||[],zakat:S.zakat||null},pfAt:S.pfAt||0,pxa:(S.alerts&&S.alerts.price)||[],lossPct:(S.alerts&&S.alerts.lossPct)||10,settings:{lang:S.settings.lang,platform:S.settings.platform??null,paperStake:S.settings.paperStake??null,auto:S.settings.auto||null},updatedAt:S.cloudAt};
-    await FB.db.collection('users').doc(FBU.uid).set({data:JSON.stringify(D),email:FBU.email||'',lang:S.settings.lang||'bm',sig:!!(S.alerts&&S.alerts.on&&S.alerts.on.isyarat!==false),news:!!(S.alerts&&S.alerts.on&&S.alerts.on.berita!==false),sigWatch:!!(S.alerts&&S.alerts.sigScope==='watch'),px:!!(S.alerts&&S.alerts.on&&S.alerts.on.harga),autoOn:!!AUTO().on,autoSig:!!AUTO().sig,autoChamp:!!AUTO().champ,autoNews:!!AUTO().news,autoStake:+AUTO().stake||20,autoTp:+AUTO().tp||5,autoFm:!!AUTO().fm,autoFree:!!AUTO().fc,autoCap:+AUTO().cap||0,autoCapAt:+AUTO().capAt||0,pushAm:!!(S.alerts&&S.alerts.pushTime==='am'),updatedAt:S.cloudAt},{merge:true});}catch(e){}};
+    await FB.db.collection('users').doc(FBU.uid).set({data:JSON.stringify(D),email:FBU.email||'',lang:S.settings.lang||'bm',sig:!!(S.alerts&&S.alerts.on&&S.alerts.on.isyarat!==false),news:!!(S.alerts&&S.alerts.on&&S.alerts.on.berita!==false),sigWatch:!!(S.alerts&&S.alerts.sigScope==='watch'),px:!!(S.alerts&&S.alerts.on&&S.alerts.on.harga),autoOn:!!AUTO().on,autoSig:!!AUTO().sig,autoChamp:!!AUTO().champ,autoNews:!!AUTO().news,autoStake:+AUTO().stake||20,autoTp:+AUTO().tp||5,autoFm:!!AUTO().fm,autoFree:!!AUTO().fc,autoBk:AUTO().bk||'moomoo',autoCap:+AUTO().cap||0,autoCapAt:+AUTO().capAt||0,pushAm:!!(S.alerts&&S.alerts.pushTime==='am'),updatedAt:S.cloudAt},{merge:true});}catch(e){}};
   if(now)return go();cloudT=setTimeout(go,2500);}
 async function regPush(){try{if(!FBU||!FB_VAPID||!('serviceWorker' in navigator)||!('Notification' in window)||Notification.permission!=='granted')return;
   const reg=await navigator.serviceWorker.ready;const tok=await firebase.messaging().getToken({vapidKey:FB_VAPID,serviceWorkerRegistration:reg});

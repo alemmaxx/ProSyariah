@@ -82,7 +82,7 @@ def check_runs(issues, tok):
 
 
 def check_site(issues):
-    for url, key, label in [(SITE, "site_fb", "Laman app (prosyariah.web.app)"), (PAGES + "data/market-meta.json", "site_pages", "Data app (GitHub Pages)")]:
+    for url, key, label in [(SITE, "site_fb", "Laman app (prosyariah.web.app)"), (PAGES + "data/holidays.json", "site_pages", "Data app (GitHub Pages)")]:
         r, dt, err = None, 0.0, None
         for attempt in range(2):  # cuba dua kali supaya gangguan sekejap tidak dikira masalah
             t0 = time.time()

@@ -187,17 +187,19 @@ def capital_free(f, data, auto, out_dir):
             return datetime.fromisoformat(str(x).replace("Z", "+00:00")).timestamp() * 1000
         except Exception:
             return 0
-    free = cap
+    free = equity = cap
     for p in merged_positions(data, auto):
         if p.get("src") != "A" or ts(p.get("at")) < cap_at:
             continue
         r = eval_pos(p, out_dir)
         stake = float(p.get("stake") or 0)
         if r:
-            free += (float(r[1]) / p["en"] - 1 - FEE) * stake
+            pl = (float(r[1]) / p["en"] - 1 - FEE) * stake
+            free += pl
+            equity += pl
         else:
             free -= stake
-    return free
+    return free, equity
 
 
 def auto_adds(f, data, auto, M, out_dir, en, news_only=False):
@@ -215,7 +217,20 @@ def auto_adds(f, data, auto, M, out_dir, en, news_only=False):
         tpp = 5.0
     tpp = min(max(tpp, 1.0), 50.0)
     asof = M["meta"]["asof"]
-    free = capital_free(f, data, auto, out_dir)   # None = tiada had modal
+    cf = capital_free(f, data, auto, out_dir)   # None = tiada had modal
+    free, equity = cf if cf else (None, None)
+    SLOTS = 5  # modal dibahagi 5: setiap posisi ≈ 20% daripada modal semasa (modal + untung/rugi selesai)
+
+    def size():
+        """Saiz posisi seterusnya. None = modal tidak cukup."""
+        nonlocal free
+        if free is None:
+            return stake
+        per = round(equity / SLOTS, 2)
+        amt = per if free >= per else (round(free, 2) if free >= per * 0.5 else None)
+        if amt is not None:
+            free -= amt
+        return amt
     have = {p["code"] for p in merged_positions(data, auto) if not p.get("closed")}
     seen = {p["id"] for p in auto} | set(data.get("manDel", []))
     from datetime import datetime, timezone
@@ -228,13 +243,13 @@ def auto_adds(f, data, auto, M, out_dir, en, news_only=False):
         for x in strong_list(M):
             if x["code"] in have or not x["c"] or (not b("autoSig") and not x["champ"]) or f"auto-{x['code']}-{asof}" in seen:
                 continue
-            if free is not None and free < stake:
+            amt = size()
+            if amt is None:
                 break  # modal tidak cukup — tunggu posisi lain ditutup
-            if free is not None:
-                free -= stake
+
             o, c = x["o"], x["c"]
             new.append({"id": f"auto-{x['code']}-{asof}", "src": "A", "why": "champ" if x["champ"] else "sig", "inc": 1, "code": x["code"], "name": x["name"],
-                        "d": entry_sig, "en": round(c, 4), "stake": stake, "tg": round(c * (1 + tpp / 100), 4), "sl": round(c * o["sl"] / o["en"], 4),
+                        "d": entry_sig, "en": round(c, 4), "stake": amt, "tg": round(c * (1 + tpp / 100), 4), "sl": round(c * o["sl"] / o["en"], 4),
                         "tp": tpp, "md": round(o["md"]) if o.get("md") else None, "hz": max(1, round(o["md"])) if o.get("md") else None,
                         "at": now.isoformat()})
             have.add(x["code"])
@@ -242,15 +257,15 @@ def auto_adds(f, data, auto, M, out_dir, en, news_only=False):
         for x in news_list(M, out_dir):
             if x["code"] in have or not x["c"] or f"auto-{x['code']}-n{x['d']}" in seen:
                 continue
-            if free is not None and free < stake:
+            amt = size()
+            if amt is None:
                 break
-            if free is not None:
-                free -= stake
+
             c, a = x["c"], atr_of(x["code"], out_dir)
             tp = tpp / 100
             sp = min(max(1.25 * a / c, 0.02), 0.15) if a else 0.04
             new.append({"id": f"auto-{x['code']}-n{x['d']}", "src": "A", "why": "news", "inc": 1, "code": x["code"], "name": x["name"],
-                        "d": entry_news, "en": round(c, 4), "stake": stake, "tg": round(c * (1 + tp), 4), "sl": round(c * (1 - sp), 4),
+                        "d": entry_news, "en": round(c, 4), "stake": amt, "tg": round(c * (1 + tp), 4), "sl": round(c * (1 - sp), 4),
                         "tp": tpp, "md": None, "at": now.isoformat()})
             have.add(x["code"])
     alerts = []

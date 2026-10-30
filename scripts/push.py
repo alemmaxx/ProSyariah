@@ -14,6 +14,26 @@ from datetime import date, datetime, timedelta, timezone
 H, FEE = 40, 0.003
 
 
+def fee_side(v, etf=False, free_comm=False):
+    """Yuran moomoo MY + Bursa untuk SATU transaksi (beli ATAU jual) bernilai v RM.
+    Komisen 0.03% (percuma 180 hari pengguna baharu), platform RM3, yuran penjelasan 0.03% (maks RM1,000),
+    duti setem RM1 setiap RM1,000 atau sebahagian (maks RM200), SST 8% atas komisen+platform+penjelasan
+    untuk ETF/REIT sahaja (saham biasa dikecualikan)."""
+    import math
+    comm = 0.0 if free_comm else math.ceil(v * 0.0003 * 100) / 100
+    clear = min(round(v * 0.0003, 2), 1000.0)
+    stamp = min(float(math.ceil(v / 1000.0)), 200.0)
+    sst = round(0.08 * (comm + 3.0 + clear), 2) if etf else 0.0
+    return round(comm + 3.0 + clear + stamp + sst, 2)
+
+
+def pos_pnl(p, x):
+    """Untung/rugi RM. Posisi mod moomoo (ada qty): nilai jual − yuran jual − kos (termasuk yuran beli)."""
+    if p.get("qty"):
+        return p["qty"] * x - fee_side(p["qty"] * x, p.get("etf"), p.get("fc")) - p["stake"]
+    return (x / p["en"] - 1 - FEE) * p["stake"]
+
+
 HOL = set()
 try:
     HOL = set(json.load(open(os.path.join(os.path.dirname(__file__), "..", "data", "holidays.json")))["days"])
@@ -51,7 +71,7 @@ def alerts_for(p, M, out_dir, en):
     nm = p.get("name") or v.get("n") or p["code"]
     now, asof, base = v["c"], M["meta"]["asof"], f"man:{p['id']}:"
     Hp = int(p.get("hz") or H)  # Robot Auto: tutup bila tempoh isyarat tamat
-    pnl = lambda x: (x / p["en"] - 1 - FEE) * p["stake"]
+    pnl = lambda x: pos_pnl(p, x)
     # semak paras atas/bawah dengan harga tinggi/rendah harian sejak masuk
     try:
         s = json.load(open(os.path.join(out_dir, "s", f"{p['code']}.json")))
@@ -194,7 +214,7 @@ def capital_free(f, data, auto, out_dir):
         r = eval_pos(p, out_dir)
         stake = float(p.get("stake") or 0)
         if r:
-            pl = (float(r[1]) / p["en"] - 1 - FEE) * stake
+            pl = pos_pnl(p, float(r[1]))
             free += pl
             equity += pl
         else:
@@ -219,6 +239,25 @@ def auto_adds(f, data, auto, M, out_dir, en, news_only=False):
     asof = M["meta"]["asof"]
     cf = capital_free(f, data, auto, out_dir)   # None = tiada had modal
     free, equity = cf if cf else (None, None)
+    fm, fc = b("autoFm"), b("autoFree")   # mod yuran moomoo sebenar (lot 100 unit), komisen percuma
+    ETFS = {"0821EA", "0824EA", "0825EA", "0827EA", "0828EA", "0838EA", "0839EA", "5116", "5106", "5235SS", "5269"}
+
+    def lot(code, c, amt):
+        """Mod moomoo: beli dalam lot 100 unit; pulangkan (qty, kos termasuk yuran beli) atau None jika tak cukup 1 lot."""
+        nonlocal free
+        etf = code in ETFS
+        lots = int(amt // (c * 100))
+        while lots > 0 and lots * 100 * c + fee_side(lots * 100 * c, etf, fc) > amt:
+            lots -= 1
+        if lots <= 0:
+            if free is not None:
+                free += amt   # pulangkan bahagian modal; cuba saham lain
+            return None
+        qty = lots * 100
+        cost = round(qty * c + fee_side(qty * c, etf, fc), 2)
+        if free is not None:
+            free += amt - cost
+        return qty, cost, etf
     SLOTS = 5  # modal dibahagi 5: setiap posisi ≈ 20% daripada modal semasa (modal + untung/rugi selesai)
 
     def size():
@@ -246,12 +285,18 @@ def auto_adds(f, data, auto, M, out_dir, en, news_only=False):
             amt = size()
             if amt is None:
                 break  # modal tidak cukup — tunggu posisi lain ditutup
-
             o, c = x["o"], x["c"]
+            ex = {}
+            if fm:
+                L = lot(x["code"], c, amt)
+                if not L:
+                    continue
+                ex = {"qty": L[0], "etf": L[2], "fc": fc, "fm": 1}
+                amt = L[1]
             new.append({"id": f"auto-{x['code']}-{asof}", "src": "A", "why": "champ" if x["champ"] else "sig", "inc": 1, "code": x["code"], "name": x["name"],
                         "d": entry_sig, "en": round(c, 4), "stake": amt, "tg": round(c * (1 + tpp / 100), 4), "sl": round(c * o["sl"] / o["en"], 4),
                         "tp": tpp, "md": round(o["md"]) if o.get("md") else None, "hz": max(1, round(o["md"])) if o.get("md") else None,
-                        "at": now.isoformat()})
+                        "at": now.isoformat(), **ex})
             have.add(x["code"])
     if b("autoNews"):
         for x in news_list(M, out_dir):
@@ -260,13 +305,19 @@ def auto_adds(f, data, auto, M, out_dir, en, news_only=False):
             amt = size()
             if amt is None:
                 break
-
             c, a = x["c"], atr_of(x["code"], out_dir)
+            ex = {}
+            if fm:
+                L = lot(x["code"], c, amt)
+                if not L:
+                    continue
+                ex = {"qty": L[0], "etf": L[2], "fc": fc, "fm": 1}
+                amt = L[1]
             tp = tpp / 100
             sp = min(max(1.25 * a / c, 0.02), 0.15) if a else 0.04
             new.append({"id": f"auto-{x['code']}-n{x['d']}", "src": "A", "why": "news", "inc": 1, "code": x["code"], "name": x["name"],
                         "d": entry_news, "en": round(c, 4), "stake": amt, "tg": round(c * (1 + tp), 4), "sl": round(c * (1 - sp), 4),
-                        "tp": tpp, "md": None, "at": now.isoformat()})
+                        "tp": tpp, "md": None, "at": now.isoformat(), **ex})
             have.add(x["code"])
     alerts = []
     if new:
@@ -379,7 +430,7 @@ def weekly(data, M, en):
     mon = (now.date() - timedelta(days=now.weekday())).isoformat()
     op = [p for p in man if not p.get("closed")]
     cl = [p for p in man if p.get("closed") and p["closed"].get("end", "") >= mon]
-    pnl = lambda p, x: (x / p["en"] - 1 - FEE) * p["stake"]
+    pnl = pos_pnl
     o_pl = sum(pnl(p, M["stocks"][p["code"]]["c"]) for p in op if M["stocks"].get(p["code"], {}).get("c"))
     c_pl = sum(pnl(p, p["closed"]["exit"]) for p in cl)
     win = sum(1 for p in cl if p["closed"].get("res") == "W")

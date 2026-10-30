@@ -939,8 +939,8 @@ const HOW=[
   'Sekali sehari, sekitar 6.30 petang hari bekerja, selepas Bursa tutup pukul 5 petang. Robot ambil harga tutup semua kaunter, kira indicator, dan banding dengan sejarah 5 tahun setiap saham. Notifikasi isyarat keluar sekitar 6.30 – 7 petang, dan isyarat itu untuk hari dagangan esok. Jika data lewat, robot cuba semula pukul 9.15 pagi esoknya. Isyarat guna harga tutup, jadi ia tidak berubah dalam waktu pasaran.',
   'When are signals generated?','Once a day, around 6.30pm on working days, after Bursa closes at 5pm. The robot takes every counter\'s closing price, computes the indicators and compares them with each stock\'s 5-year history. Signal notifications arrive around 6.30 – 7pm and are for the next trading day. If data is late, the robot retries at 9.15am the next morning. Signals use closing prices, so they do not change during market hours.'],
  ['🟢','Harga terkini',
-  'Setiap 15 minit dalam waktu pasaran (Isnin – Jumaat, 9.15 pagi – 5.15 petang), app ambil harga terkini semua kaunter. Harga ini lewat lebih kurang 15 minit dan hanya untuk paparan. Isyarat, sasaran, cut loss dan Robot tetap guna harga tutup harian.',
-  'Latest price','Every 15 minutes during market hours (Mon – Fri, 9.15am – 5.15pm), the app fetches the latest price of every counter. It is about 15 minutes delayed and for display only. Signals, targets, cut loss and the Robot still use daily closing prices.'],
+  'Setiap 15 minit dalam waktu pasaran (Isnin – Jumaat, 9.15 pagi – 5.15 petang), app kemas kini harga terkini semua kaunter. Harga ini untuk paparan. Isyarat, sasaran, cut loss dan Robot tetap guna harga tutup harian.',
+  'Latest price','Every 15 minutes during market hours (Mon – Fri, 9.15am – 5.15pm), the app updates the latest price of every counter. This price is for display. Signals, targets, cut loss and the Robot still use daily closing prices.'],
  ['📰','Berita Berpotensi',
   'Robot berita berjalan setiap jam dari 9 pagi hingga 5 petang, kemudian pukul 7, 9 dan 11 malam. Berita yang keluar pukul 10 pagi biasanya sampai sekitar 11 – 11.20 pagi. Hanya berita hari ini ditunjuk; ia dikosongkan selepas 12 tengah malam.',
   'Potential news','The news robot runs every hour from 9am to 5pm, then at 7, 9 and 11pm. News published at 10am usually arrives around 11 – 11.20am. Only today\'s news is shown; it clears after midnight.'],
@@ -2406,7 +2406,7 @@ function heroChart(code){
 }
 function liveLine(code){const l=livePx(code);if(!l)return '';const t=l.t.slice(11,16);
   const en=S.settings.lang==='en';
-  return `<p class="livep notr"><span class="ldot"></span>${en?'Latest price':'Harga terkini'} <b class="${l.ch>=0?'up':'dn'}">${px(l.p)} (${l.ch>0?'+':''}${l.ch.toFixed(2)}%)</b> · ${fmtD(l.t.slice(0,10))} ${t} · ${en?'~15 min delayed':'lewat ±15 min'}</p>`;}
+  return `<p class="livep notr"><span class="ldot"></span>${en?'Latest price':'Harga terkini'} <b class="${l.ch>=0?'up':'dn'}">${px(l.p)} (${l.ch>0?'+':''}${l.ch.toFixed(2)}%)</b><span class="muted">· ${l.t.slice(0,10)===today()?(en?'today':'hari ini'):fmtD(l.t.slice(0,10))} ${t}</span></p>`;}
 function heroHTML(){
   const L=latestList();
   if(!L&&!S.market)return `<section class="hero" style="--hc:#0f5a45"><span class="tag">✦ <b>${S.sync.err?'Tiada sambungan':'Menyediakan data'}</b></span>

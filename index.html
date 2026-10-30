@@ -296,6 +296,7 @@ input,textarea,[contenteditable]{-webkit-user-select:text;user-select:text}
 .robotlist .mrow.mc .mnow small{font-size:10px}.robotlist .mrow.mc .mnow b{font-size:15px;line-height:1.15}.robotlist .mrow.mc .mnow em{font-size:11.5px}.robotlist .mrow.mc .mtag{width:17px;height:17px;font-size:10px;margin-right:4px}.robotlist .mrow.mc .mhd>span:first-child{font-size:12px;line-height:1.3}
 .robotlist h2{font-size:17px;margin-bottom:4px}
 .plink{display:block;text-align:center;margin-top:10px;font-size:13px;color:var(--muted);text-decoration:underline}
+.capdash{margin-top:12px;padding:12px;border:1px solid var(--gold);border-radius:12px;background:var(--gold2)}.capbar{height:8px;border-radius:99px;background:var(--card2);margin-top:10px;overflow:hidden}.capbar span{display:block;height:100%;background:var(--gold);border-radius:99px}
 .capbox{margin-top:14px;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--card2)}.capg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:8px}.capg>div{background:var(--card);border-radius:10px;padding:8px 10px}.capg small{display:block;color:var(--muted);font-size:12px}
 .auopt.off{opacity:.45;pointer-events:none}
 .mrow{padding:14px 0;border-bottom:1px solid var(--line);cursor:pointer}.mrow:last-child{border-bottom:0}
@@ -1300,6 +1301,11 @@ function manFull(p){const nm=shortName(p.name||nameOf(p.code));
     <div class="mgrid">${cell('Harga masuk',px(p.en))}${p.qty?cell('Unit · kos+yuran',p.qty+' · '+rm(p.stake)):cell('Nilai maya',rm(p.stake))}${cell('Sasaran',px(p.tg)+(p.tp?` (+${p.tp}%)`:''),'up')}${cell('Cut loss',px(p.sl),'dn')}
       ${cell('Masa beli',manStartTxt(p))}${p.hz?cell('Tutup automatik',fmtD(addTradingDays(p.d,p.inc?p.hz-1:p.hz))):cell('Tamat tempoh biasa',p.md?fmtD(addTradingDays(p.d,p.inc?p.md-1:p.md)):'-')}</div>
     <div class="mft">${statusHTML(p.code,nameOf(p.code),true).replace(/<span class="s-warn">(✍️|🤖)[^]*?<\/span>/g,'').replace(/ · bermula [^<]*? hingga [^<]*?(?= <button)/g,'')}<span class="row" style="gap:6px;flex:none"><button class="btn sm sec" data-mx="${esc(p.code)}">Urus</button><button class="mdel" data-md="${esc(p.id)}" aria-label="Padam">🗑</button></span></div></div>`;}
+function capDashHTML(){const C=capState();if(!C)return '';const a=AUTO();const pct=Math.max(0,Math.min(100,C.lock/(C.eq||1)*100));const gain=C.eq-C.cap;
+  return `<div class="capdash"><div class="row between" style="align-items:center"><b>💰 Modal pelaburan Robot Auto</b><span class="muted" style="font-size:12px">${BROKERS[a.bk||'moomoo']&&a.fm?'🧾 '+BROKERS[a.bk||'moomoo']:''}</span></div>
+    <div class="capg"><div><small>Modal</small><b>${rm(C.cap)}</b></div><div><small>Modal semasa</small><b class="${gain>=0?'up':'dn'}">${rm(C.eq)}</b></div><div><small>Dalam pasaran</small><b>${rm(C.lock)}</b></div><div><small>Baki tersedia</small><b class="${C.free>=C.per*.5?'up':'dn'}">${rm(C.free)}</b></div></div>
+    <div class="capbar" aria-label="Modal digunakan"><span style="width:${pct.toFixed(0)}%"></span></div>
+    <p class="muted" style="font-size:12px;margin:6px 0 0">${pct.toFixed(0)}% modal digunakan · untung/rugi selesai ${rmS(C.real)}${C.unreal?` · terbuka ${rmS(C.unreal)}`:''} · setiap posisi ≈ ${rm(C.per)} · ${C.slots?`boleh masuk ${C.slots} lagi`:'tunggu posisi ditutup'}</p></div>`;}
 function maSplitHTML(M){const g=k=>M.filter(p=>(p.src==='A')===(k==='A'));const A=g('A'),Mm=g('M');if(!A.length||!Mm.length)return '';
   const st=L=>{const cl=L.filter(p=>p.closed),w=cl.filter(p=>p.closed.res==='W').length;const pl=L.reduce((t,p)=>{if(p.closed)return t+manPnl(p,p.closed.exit);const m=mk(p.code);return t+(m&&m.c?manPnl(p,m.c):0);},0);return {n:L.length,acc:cl.length?Math.round(w/cl.length*100)+'%':'-',pl};};
   const a=st(A),m=st(Mm);
@@ -1308,7 +1314,7 @@ function rManual(){
   manRefresh();const M=(S.manual||[]).slice();const op=M.filter(p=>!p.closed),cl=M.filter(p=>p.closed).sort((a,b)=>b.closed.end.localeCompare(a.closed.end));
   const w=cl.filter(p=>p.closed.res==='W').length,pnl=cl.reduce((t,p)=>t+manPnl(p,p.closed.exit),0),opn=op.reduce((t,p)=>{const m=mk(p.code);return t+(m&&m.c?manPnl(p,m.c):0);},0);
   let h=`<div class="card"><h2>🤖 Robot</h2><p class="muted" style="margin-top:0">Senarai saham yang diuji: M = Manual (anda tekan ✍️ Manual pada saham), A = Auto (robot masuk sendiri). Semua ditutup automatik bila sampai sasaran, cut loss atau 40 hari dagangan.</p>
-    <div class="mstat"><div><b>${op.length}</b><span>Sedang diuji</span></div><div><b class="${opn>=0?'up':'dn'}">${rmS(opn)}</b><span>Untung/rugi kini</span></div><div><b>${cl.length?Math.round(w/cl.length*100)+'%':'-'}</b><span>Ketepatan</span></div><div><b class="${pnl>=0?'up':'dn'}">${cl.length?rmS(pnl):'-'}</b><span>Untung/rugi selesai</span></div></div>${maSplitHTML(M)}${M.length?`<div class="row" style="gap:8px;margin-top:10px;flex-wrap:wrap">${cl.length?'<button class="btn sm sec" id="rsClosed">Kosongkan yang selesai</button>':''}<button class="btn sm sec" id="rsAll">↺ Reset semua</button></div>`:''}</div>`;
+    <div class="mstat"><div><b>${op.length}</b><span>Sedang diuji</span></div><div><b class="${opn>=0?'up':'dn'}">${rmS(opn)}</b><span>Untung/rugi kini</span></div><div><b>${cl.length?Math.round(w/cl.length*100)+'%':'-'}</b><span>Ketepatan</span></div><div><b class="${pnl>=0?'up':'dn'}">${cl.length?rmS(pnl):'-'}</b><span>Untung/rugi selesai</span></div></div>${capDashHTML()}${maSplitHTML(M)}${M.length?`<div class="row" style="gap:8px;margin-top:10px;flex-wrap:wrap">${cl.length?'<button class="btn sm sec" id="rsClosed">Kosongkan yang selesai</button>':''}<button class="btn sm sec" id="rsAll">↺ Reset semua</button></div>`:''}</div>`;
   h+=autoCardHTML();
   if(M.length){const cs=cl.slice().sort((a,b)=>a.closed.end.localeCompare(b.closed.end));let cum=0;const first=M.map(p=>p.d).sort()[0];
     const cv=[[first,0],...cs.map(p=>[p.closed.end,cum+=manPnl(p,p.closed.exit)])];if(op.length||cv.length<2)cv.push([today(),cum+opn]);
@@ -1809,6 +1815,7 @@ const EN_EXACT={
 '🔔 Senarai syariah SC baharu dijangka':'🔔 New SC Shariah list expected','🔔 Tarikh haul anda':'🔔 Your haul date',
 };
 const EN_RX=[
+[/^(\d+)% modal digunakan · untung\/rugi selesai (.+?)( · terbuka (.+?))? · setiap posisi ≈ (RM [\d,.]+) · (boleh masuk (\d+) lagi|tunggu posisi ditutup)$/,(m,a,b,c,d,e,f,g)=>a+'% of capital used · closed P/L '+b+(c?' · open '+d:'')+' · each position ≈ '+e+' · '+(g?'can enter '+g+' more':'waiting for positions to close')],
 
 [/^(moomoo: platform RM3 \+ komisen 0\.03%\.|Rakuten Trade: .*|Webull: .*) Contoh beli RM940 → yuran ≈ (RM [\d.,]+)\. Jika nilai setiap posisi kurang daripada harga 1 lot, saham itu dilangkau\.$/,(m,a,b)=>({'moomoo: platform RM3 + komisen 0.03%.':'moomoo: RM3 platform + 0.03% commission.'}[a]||a.replace('Rakuten Trade: RM2.88 (RM100–RM9,999), 0.1% (RM10k–RM99k), RM100 (RM100k ke atas).','Rakuten Trade: RM2.88 (RM100–RM9,999), 0.1% (RM10k–RM99k), RM100 (RM100k and above).').replace('Webull: komisen 0.05%, minimum RM2.50, tiada yuran platform.','Webull: 0.05% commission, minimum RM2.50, no platform fee.'))+' Example buy RM940 → fees ≈ '+b+'. If each position is worth less than 1 lot, that stock is skipped.'],
 [/^✓ Broker: (.+)$/,(m,a)=>'✓ Broker: '+a],
@@ -1914,6 +1921,7 @@ const EN_PHRASE=[
 ];
 
 Object.assign(EN_EXACT,{
+'💰 Modal pelaburan Robot Auto':'💰 Auto Robot investment capital','Modal semasa':'Current capital',
 '📘 Cara app berjalan':'📘 How the app works',
 'Harga terkini':'Latest price','Latest price':'Latest price',
 '🧾 Kira yuran broker sebenar':'🧾 Count real broker fees','Beli ikut lot 100 unit. Yuran broker + yuran penjelasan Bursa + duti setem, setiap beli & jual.':'Buys in lots of 100 units. Broker fee + Bursa clearing fee + stamp duty, on every buy & sell.','Broker':'Broker','🧾 Yuran broker dikira':'🧾 Broker fees counted','Yuran broker tidak dikira':'Broker fees not counted',

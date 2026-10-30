@@ -1,9 +1,17 @@
 rules_version = '2';
 // Setiap pengguna hanya boleh baca & tulis dokumen dirinya sendiri.
+// config/*: tetapan admin. "plans" (pelan langganan) boleh dibaca semua; selebihnya admin sahaja.
 service cloud.firestore {
   match /databases/{database}/documents {
+    function isAdmin() {
+      return request.auth != null && request.auth.uid == 'aYMLtPb0xTPi9Y7SaOPibe5OMKR2';
+    }
     match /users/{uid} {
       allow read, write: if request.auth != null && request.auth.uid == uid;
+    }
+    match /config/{doc} {
+      allow read: if doc == 'plans' || isAdmin();
+      allow write: if isAdmin() && (doc == 'admin' || doc == 'plans');
     }
   }
 }

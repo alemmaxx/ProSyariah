@@ -283,6 +283,10 @@ input,textarea,[contenteditable]{-webkit-user-select:text;user-select:text}
 .sclist{display:flex;flex-direction:column}.scr{display:flex;align-items:center;gap:10px;padding:10px 2px;border:0;border-bottom:1px solid var(--line);background:none;color:var(--ink);font:14px var(--f);text-align:left;cursor:pointer;width:100%}.scr small{display:block;color:var(--muted);font-size:12px}.scn{flex:1;min-width:0}.scn b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.scv{text-align:right}.scm{text-align:right;min-width:74px}
 .cmpt{width:100%;border-collapse:collapse;font-size:13.5px}.cmpt td,.cmpt th{padding:7px 4px;border-bottom:1px solid var(--line);text-align:right;vertical-align:top}.cmpt td:first-child,.cmpt th:first-child{text-align:left;color:var(--muted)}.cmpt th small{display:block;color:var(--muted);font-weight:400}
 .cmpb{margin-top:6px}.cmprow>.cmpb{flex:1}
+.sysban{margin:0 var(--gut) 10px;padding:10px 14px;border-radius:12px;font-size:13.5px;line-height:1.4;position:sticky;top:64px;z-index:4}
+.sysban.down{background:var(--red2);border:1px solid var(--red);color:var(--ink)}.sysban.warn{background:var(--amber2);border:1px solid var(--amber);color:var(--ink)}
+.adm .kv b{text-align:right}.adm textarea{width:100%;min-height:70px;box-sizing:border-box;background:var(--card2);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:8px;font:14px var(--f)}
+.adm .iss{padding:8px 0;border-bottom:1px solid var(--line);font-size:13px}.adm .plan{background:var(--card2);border-radius:12px;padding:10px 12px;margin-top:8px}
 .plink{display:block;text-align:center;margin-top:10px;font-size:13px;color:var(--muted);text-decoration:underline}
 .auopt.off{opacity:.45;pointer-events:none}
 .mrow{padding:14px 0;border-bottom:1px solid var(--line);cursor:pointer}.mrow:last-child{border-bottom:0}
@@ -392,6 +396,7 @@ canvas#cv{touch-action:pan-y;cursor:crosshair}
 </head>
 <body translate="no">
 <header><div class="mark" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M3 20h18" stroke="#1b1503" stroke-width="1.6" stroke-linecap="round"/><path d="M6 6v12M12 3v14M18 8v9" stroke="#1b1503" stroke-width="1.4" stroke-linecap="round"/><rect x="4.4" y="9" width="3.2" height="6" rx=".8" fill="#1b1503"/><rect x="10.4" y="5.5" width="3.2" height="8" rx=".8" fill="#0f5a45"/><rect x="16.4" y="10" width="3.2" height="5" rx=".8" fill="#1b1503"/></svg></div><h1>ProSyariah</h1><button id="instB" class="instb" onclick="installApp()" style="display:none" aria-label="Pasang app">⬇<span class="lbl"> Pasang</span></button><button id="langB" class="langb" aria-label="Bahasa / Language" onclick="setLang(S.settings.lang==='en'?'bm':'en')"></button><button id="bell" class="bell" aria-label="Amaran" onclick="openAlerts()">🔔<span id="bellN"></span></button></header>
+<div id="sysban" class="sysban" role="status" style="display:none"></div>
 <main id="main"></main>
 <nav id="nav">
   <button data-tab="saham" class="on"><span class="ic">📈</span>Saham</button>
@@ -400,6 +405,7 @@ canvas#cv{touch-action:pan-y;cursor:crosshair}
   <button data-tab="tathir"><span class="ic">🤲</span>Tathir</button>
   <button data-tab="zakat"><span class="ic">🕌</span>Zakat</button>
   <button data-tab="tetapan"><span class="ic">⚙️</span>Tetapan</button>
+  <button data-tab="admin" id="navAdmin" style="display:none"><span class="ic">🛡️</span>Admin</button>
 </nav>
 <div class="sheet" id="sheet"><div class="panel" id="sheetBody"></div></div>
 <div class="toast" id="toast"></div>
@@ -852,6 +858,61 @@ async function shareCard(code){const m=mk(code);if(!m||m.c==null)return;const en
   const blob=await new Promise(r=>c.toBlob(r,'image/png'));const file=new File([blob],`ProSyariah-${code}.png`,{type:'image/png'});
   try{if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:'ProSyariah',text:`${shortName(m.n)} (${code}) · prosyariah.web.app`});return;}}catch(e){if(e&&e.name==='AbortError')return;}
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=file.name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},2000);toast(en?'✓ Image saved':'✓ Gambar disimpan');}
+/* ===== STATUS SISTEM (jalur amaran untuk semua pengguna) ===== */
+let SYS={level:'ok'};
+async function checkStatus(){let st=null;
+  try{if(location.protocol.startsWith('http')&&!/localhost|127\.0\.0\.1/.test(location.hostname)){const r=await fetch('https://raw.githubusercontent.com/alemmaxx/ProSyariah/main/data/status.json?t='+Math.floor(Date.now()/3e5)).catch(()=>null);if(r&&r.ok)st=await r.json();}}catch(e){}
+  if(!st){try{const r=await dfetch('status.json?t='+Math.floor(Date.now()/3e5),{cache:'no-cache'});if(r.ok)st=await r.json();}catch(e){}}
+  if(st&&st.level)SYS=st;showSysBan();}
+function showSysBan(){const b=$('#sysban');if(!b)return;const lv=SYS.level;if(lv!=='down'&&lv!=='warn'){b.style.display='none';return;}
+  b.className='sysban '+lv;b.textContent=lv==='down'?'⚠️ Sistem sedang mengalami gangguan. Data atau notifikasi mungkin lewat. Kami sedang membaikinya.':'ℹ️ Sistem agak perlahan sekarang. Data mungkin lewat sedikit.';
+  b.style.display='';if(S.settings.lang==='en')b.textContent=trText(b.textContent);}
+
+/* ===== ADMIN (hanya akaun admin) ===== */
+const ADMIN_UID='aYMLtPb0xTPi9Y7SaOPibe5OMKR2';
+function isAdmin(){return !!(typeof FBU!=='undefined'&&FBU&&FBU.uid===ADMIN_UID);}
+function updateAdminNav(){const n=$('#navAdmin');if(n)n.style.display=isAdmin()?'':'none';}
+let ADM=null;
+async function admLoad(){const g=async d=>{try{const x=await FB.db.collection('config').doc(d).get();return x.exists?x.data():{};}catch(e){return {_err:e.code||e.message};}};
+  const [admin,status,stats,plans]=await Promise.all(['admin','admin_status','admin_stats','plans'].map(g));ADM={admin,status,stats,plans};}
+async function admSave(doc,data){try{await FB.db.collection('config').doc(doc).set(data,{merge:true});toast('✓ Disimpan');return true;}catch(e){toast('Gagal simpan: '+(e.code||e.message));return false;}}
+function rAdmin(){if(!isAdmin()){goTab('tetapan');return;}
+  if(!ADM){$('#main').innerHTML='<div class="card"><p class="muted">Memuatkan data admin…</p></div>';admLoad().then(()=>{if(TAB==='admin')rAdmin();});return;}
+  const {admin,status,stats,plans}=ADM;let iss=[];try{iss=JSON.parse(status.issues||'[]');}catch(e){}
+  const lvl={ok:['🟢','Normal'],warn:['🟠','Perlahan / amaran'],down:['🔴','Gangguan']}[status.level||'ok']||['⚪','-'];
+  const P=(plans.list&&Array.isArray(plans.list))?plans.list:[{name:'Premium Bulanan',price:'',period:'bulan',feat:''},{name:'Premium Tahunan',price:'',period:'tahun',feat:''}];
+  let h=`<div class="adm"><div class="card"><h2>🛡️ Admin</h2><p class="muted" style="margin-top:0">Hanya akaun anda nampak tab ini. Data dikemas kini oleh pemantau setiap 30 minit.</p><button class="btn sm sec" id="admRe">↻ Muat semula</button></div>
+  <div class="card"><h2>Status sistem</h2>
+    <div class="kv"><span>Tahap</span><b>${lvl[0]} ${lvl[1]}</b></div>
+    <div class="kv"><span>Semakan terakhir</span><b>${esc(status.at||'-')}</b></div>
+    <div class="kv"><span>Data harga terakhir</span><b>${status.asof?fmtD(status.asof):'-'}</b></div>
+    <div class="kv"><span>Pengguna nampak jalur amaran</span><b>${SYS.level==='down'||SYS.level==='warn'?'Ya':'Tidak'}</b></div>
+    ${iss.length?iss.map(i=>`<div class="iss">${i.pub?'👥':'🔧'} ${esc(i.msg)}</div>`).join(''):'<p class="muted" style="margin:8px 0 0">Tiada masalah dikesan.</p>'}
+    <p class="muted" style="font-size:12px;margin:8px 0 0">👥 = pengguna nampak jalur amaran umum (tanpa nama sistem). 🔧 = untuk anda sahaja.</p></div>
+  <div class="card"><h2>Emel amaran</h2>
+    <label>Hantar amaran ke (boleh lebih dari satu, pisah dengan koma)</label><input id="admEmail" type="email" inputmode="email" value="${esc(admin.alertEmail||'')}" placeholder="nama@contoh.com">
+    <div class="row" style="gap:8px;margin-top:10px;flex-wrap:wrap"><button class="btn sm gold" id="admEmailSave">Simpan emel</button><button class="btn sm sec" id="admTest">Hantar emel ujian</button></div>
+    <div class="kv" style="margin-top:8px"><span>Penghantar emel</span><b>${status.mailer?'<span class="up">Sedia</span>':'<span class="dn">Belum disediakan</span>'}</b></div>
+    ${status.lastMail?`<div class="kv"><span>Emel terakhir</span><b>${esc(status.lastMail)} ${status.lastMailOk?'✓':'✕'}</b></div>`:''}
+    ${admin.testReq?`<div class="kv"><span>Emel ujian</span><b>${status.testDone>=admin.testReq?(status.testOk?'✓ Dihantar':'✕ Gagal'):'⏳ Menunggu semakan seterusnya (≤30 minit)'}</b></div>`:''}
+    <p class="muted" style="font-size:12px;margin:8px 0 0">Emel dihantar bila masalah bermula dan bila sistem pulih.${status.mailer?'':' Penghantar emel perlu disediakan sekali sahaja (lihat panduan dalam perbualan).'}</p></div>
+  <div class="card"><h2>Pengguna</h2>
+    <div class="kv"><span>Akaun log masuk</span><b>${stats.users??'-'}</b></div><div class="kv"><span>Dengan notifikasi phone</span><b>${stats.withPhone??'-'}</b></div><div class="kv"><span>Robot Auto hidup</span><b>${stats.autoOn??'-'}</b></div>
+    <p class="muted" style="font-size:12px;margin:6px 0 0">Dikira pada ${esc(stats.at||'-')}</p></div>
+  <div class="card"><h2>Langganan (persediaan)</h2>
+    <div class="toggle"><span>Langganan aktif untuk pengguna</span><input type="checkbox" id="admSubOn" ${plans.on?'checked':''} disabled></div>
+    <p class="muted" style="font-size:12px;margin:4px 0 8px">Akan dihidupkan selepas HitPay disahkan dan disambung. Kunci HitPay disimpan secara rahsia di pelayan, bukan dalam app.</p>
+    ${P.map((x,i)=>`<div class="plan"><div class="grid2"><div><label>Nama pelan</label><input data-pn="${i}" value="${esc(x.name||'')}"></div><div><label>Harga (RM)</label><input data-pp="${i}" inputmode="decimal" value="${esc(x.price||'')}" placeholder="[HARGA]"></div></div>
+      <label>Tempoh</label><select data-pd="${i}"><option value="bulan"${x.period==='bulan'?' selected':''}>Sebulan</option><option value="tahun"${x.period==='tahun'?' selected':''}>Setahun</option></select>
+      <label>Kelebihan (satu baris satu)</label><textarea data-pf="${i}">${esc(x.feat||'')}</textarea></div>`).join('')}
+    <div class="row" style="gap:8px;margin-top:10px"><button class="btn sm sec" id="admAddPlan">+ Tambah pelan</button><button class="btn sm gold" id="admPlanSave">Simpan pelan</button></div></div></div>`;
+  $('#main').innerHTML=h;
+  $('#admRe').onclick=()=>{ADM=null;checkStatus();rAdmin();};
+  $('#admEmailSave').onclick=async()=>{const v=$('#admEmail').value.trim();if(v&&!/^[^@\s]+@[^@\s]+\.[^@\s]+(\s*,\s*[^@\s]+@[^@\s]+\.[^@\s]+)*$/.test(v)){toast('Format emel tidak sah');return;}if(await admSave('admin',{alertEmail:v})){ADM.admin.alertEmail=v;}};
+  $('#admTest').onclick=async()=>{if(!(ADM.admin.alertEmail||'').trim()){toast('Simpan emel dahulu');return;}const t=Date.now();if(await admSave('admin',{testReq:t})){ADM.admin.testReq=t;toast('Emel ujian akan dihantar dalam 30 minit');rAdmin();}};
+  const readPlans=()=>P.map((x,i)=>({name:$(`[data-pn="${i}"]`).value.trim(),price:$(`[data-pp="${i}"]`).value.trim(),period:$(`[data-pd="${i}"]`).value,feat:$(`[data-pf="${i}"]`).value.trim()}));
+  $('#admAddPlan').onclick=()=>{ADM.plans.list=[...readPlans(),{name:'',price:'',period:'bulan',feat:''}];rAdmin();};
+  $('#admPlanSave').onclick=async()=>{const L=readPlans().filter(x=>x.name);if(await admSave('plans',{list:L,on:false,updatedAt:Date.now()})){ADM.plans.list=L;}};}
 /* ===== ALAT: Penapis, Kalendar, Banding ===== */
 function toolsHTML(){if(!S.market)return '';
   return `<div class="pad tools3" style="margin-top:12px"><button onclick="openScreener()"><span>🔎</span>Penapis</button><button onclick="openCal()"><span>📅</span>Kalendar</button><button onclick="openCompare()"><span>⚖️</span>Banding</button></div>`;}
@@ -1737,6 +1798,7 @@ const EN_PHRASE=[
 ];
 
 Object.assign(EN_EXACT,{
+'⚠️ Sistem sedang mengalami gangguan. Data atau notifikasi mungkin lewat. Kami sedang membaikinya.':'⚠️ The system is having a disruption. Data or notifications may be delayed. We are fixing it.','ℹ️ Sistem agak perlahan sekarang. Data mungkin lewat sedikit.':'ℹ️ The system is a little slow right now. Data may be slightly delayed.',
 'Ambil untung (%)':'Take profit (%)','Tutup automatik':'Auto close',
 '📤 Kongsi':'📤 Share',
 'Penunjuk pasaran sahaja. KLCI bukan saham dan tidak boleh didagang atau diuji dengan Robot.':'Market indicator only. KLCI is not a stock and cannot be traded or tested with the Robot.',
@@ -2138,7 +2200,7 @@ window.addEventListener('popstate',()=>{
 });
 try{history.replaceState({ps:0},'');}catch(e){}bkGuard();
 document.querySelectorAll('#nav button').forEach(b=>b.onclick=()=>goTab(b.dataset.tab));
-function render(){document.body.dataset.tab=TAB;setTimeout(updateBell,0);({saham:rSaham,robot:rRobot,portfolio:rPortfolio,tathir:rTathir,zakat:rZakat,tetapan:rTetapan})[TAB]();}
+function render(){document.body.dataset.tab=TAB;setTimeout(updateBell,0);if(TAB==='admin'&&!isAdmin())TAB='tetapan';updateAdminNav();({saham:rSaham,robot:rRobot,portfolio:rPortfolio,tathir:rTathir,zakat:rZakat,tetapan:rTetapan,admin:rAdmin})[TAB]();}
 
 /* ================= TAB: SAHAM ================= */
 let Q='';let SCAN={};
@@ -2703,7 +2765,7 @@ function loadScript(u){return new Promise((ok,no)=>{const x=document.createEleme
 async function fbInit(){if(!FB_CONFIG)return null;if(FB)return FB;
   const U=m=>`https://www.gstatic.com/firebasejs/${FBV}/firebase-${m}-compat.js`;await loadScript(U('app'));await Promise.all(['auth','firestore','messaging'].map(m=>loadScript(U(m))));   // muat serentak, lebih laju
   firebase.initializeApp(FB_CONFIG);FB={auth:firebase.auth(),db:firebase.firestore()};
-  FB.auth.onAuthStateChanged(async u=>{FBU=u;FBREADY=true;if(u){await cloudPull();regPush();}else{if(cloudUnsub){cloudUnsub();cloudUnsub=null;}S.manual=[];S.manDel=[];S.watch=[];S.watchAt=0;save0();robotStateSync();}if(TAB==='tetapan'||TAB==='robot')render();});
+  FB.auth.onAuthStateChanged(async u=>{FBU=u;FBREADY=true;ADM=null;updateAdminNav();if(u){await cloudPull();regPush();}else{if(cloudUnsub){cloudUnsub();cloudUnsub=null;}S.manual=[];S.manDel=[];S.watch=[];S.watchAt=0;save0();robotStateSync();}if(TAB==='tetapan'||TAB==='robot'||TAB==='admin')render();});
   try{await FB.auth.getRedirectResult();}catch(e){}
   return FB;}
 async function login(){const f=await fbInit().catch(()=>null);if(!f)return toast('Log masuk belum tersedia');const pv=new firebase.auth.GoogleAuthProvider();
@@ -2712,7 +2774,7 @@ async function login(){const f=await fbInit().catch(()=>null);if(!f)return toast
     if(/popup-blocked|operation-not-supported|environment/.test(c)){try{await f.auth.signInWithRedirect(pv);}catch(x){toast('Log masuk gagal ('+(x.code||x.message)+')');}return;}
     if(c==='auth/popup-closed-by-user'||c==='auth/cancelled-popup-request')return;
     toast('Log masuk gagal ('+(c||e.message)+')');}}
-async function logout(){if(cloudUnsub){cloudUnsub();cloudUnsub=null;}if(FB)await FB.auth.signOut();FBU=null;S.manual=[];S.manDel=[];S.watch=[];S.watchAt=0;S.holdings=[];S.tathir=[];S.zakat=structuredClone(DEF.zakat);S.pfAt=0;S._pfH=pfHash();save0();robotStateSync();render();toast('Log keluar');}
+async function logout(){if(cloudUnsub){cloudUnsub();cloudUnsub=null;}if(FB)await FB.auth.signOut();FBU=null;S.manual=[];S.manDel=[];S.watch=[];S.watchAt=0;S.holdings=[];S.tathir=[];S.zakat=structuredClone(DEF.zakat);S.pfAt=0;S._pfH=pfHash();save0();robotStateSync();if(TAB==='admin')TAB='tetapan';render();toast('Log keluar');}
 function toggleWatch(c){if(needLogin()){toast('Log masuk dahulu untuk guna watchlist');login();return false;}
   if(S.watch.includes(c))S.watch=S.watch.filter(x=>x!==c);else S.watch.push(c);S.watchAt=Date.now();save();return true;}
 const DEV=(()=>{try{let d=localStorage.getItem('ps_dev');if(!d){d=Math.random().toString(36).slice(2,10);localStorage.setItem('ps_dev',d);}return d;}catch(e){return 'x';}})();
@@ -2826,6 +2888,7 @@ if(location.hash==='#robot'){try{history.replaceState(history.state,'',location.
 updateLangBtn();startI18N();updateInstallBtn();
 if(S.alerts&&S.alerts.notify)regPeriodic();
 if(FB_CONFIG)fbInit().catch(()=>{FBREADY=true;if(TAB==='robot')render();});
+checkStatus();setInterval(checkStatus,6e5);document.addEventListener('visibilitychange',()=>{if(!document.hidden)checkStatus();});
 syncData(false);
 if(!S.onb)setTimeout(()=>openOnboard(0),600);else if(S.onb<2)setTimeout(()=>openOnboard(2),600);   // pengguna lama: tunjuk slaid ciri baharu sahaja
 </script>

@@ -108,7 +108,7 @@ jobs:
       - name: Sediakan laman
         run: |
           cp index.html privacy.html manifest.webmanifest sw.js _site/
-          cp data/paper-experiments.json data/exit-experiments.json _site/data/ 2>/dev/null || true
+          cp data/paper-experiments.json data/exit-experiments.json data/status.json _site/data/ 2>/dev/null || true
           cp -r icons _site/icons
           touch _site/.nojekyll
 

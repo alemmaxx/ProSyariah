@@ -291,7 +291,7 @@ def main():
     tg_token = os.environ.get("TELEGRAM_BOT_TOKEN")
     if tg_req and tg_req > tg_done and http:
         okt, err = False, ""
-        chat = (admin.get("tgChat") or os.environ.get("TELEGRAM_CHAT") or "").strip()
+        chat = (admin.get("tgChat") or os.environ.get("TELEGRAM_CHAT") or "@prosyariahsignal").strip()
         if chat and not chat.startswith("@") and not chat.lstrip("-").isdigit():
             chat = "@" + chat.replace("https://t.me/", "").replace("t.me/", "").lstrip("@")
         if not tg_token:

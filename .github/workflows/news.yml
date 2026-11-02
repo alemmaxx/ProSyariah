@@ -61,5 +61,5 @@ jobs:
           if [ -n "$FIREBASE_SA" ]; then printf '%s' "$FIREBASE_SA" > "$RUNNER_TEMP/sa.json"; export GOOGLE_APPLICATION_CREDENTIALS="$RUNNER_TEMP/sa.json"; fi
           python scripts/telegram.py --out tmp/data --kind news
           rm -f "$RUNNER_TEMP/sa.json"
-          git add data/tg-sent.json 2>/dev/null || true
+          git add data/tg-sent.json data/tg-debug.txt 2>/dev/null || true
           git commit -qm "Telegram: rekod mesej" && (git pull --rebase -X theirs -q; git push -q) || true

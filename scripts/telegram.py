@@ -25,10 +25,12 @@ SENT = os.path.join(ROOT, "data", "tg-sent.json")
 APP = "https://prosyariah.web.app/"
 NOTE = "ℹ️ <i>Bacaan indicator, bukan cadangan beli atau jual.</i>"
 MYT = timezone(timedelta(hours=8))
+DEFAULT_CHAT = "@prosyariahsignal"
+DEBUG = os.path.join(ROOT, "data", "tg-debug.txt")
 
 
 def chat_id():
-    c = (os.environ.get("TELEGRAM_CHAT") or "").strip()
+    c = (os.environ.get("TELEGRAM_CHAT") or "").strip() or DEFAULT_CHAT
     key = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS")
     if key and os.path.exists(key):
         try:
@@ -54,7 +56,17 @@ def send(token, chat, text):
     ok = r.ok and r.json().get("ok")
     if not ok:
         print("  ! Telegram:", r.status_code, r.text[:300])
+    log(f"{'OK' if ok else 'GAGAL'} {chat} {'' if ok else r.text[:200]}")
     return bool(ok)
+
+
+def log(line):
+    """Log ringkas (tanpa token) supaya status boleh disemak dari repo."""
+    try:
+        old = open(DEBUG).read().splitlines()[-30:] if os.path.exists(DEBUG) else []
+        open(DEBUG, "w").write("\n".join(old + [datetime.now(MYT).strftime("%Y-%m-%d %H:%M ") + line]) + "\n")
+    except Exception:
+        pass
 
 
 def pct(a, b):
@@ -109,6 +121,7 @@ def main():
     token = os.environ.get("TELEGRAM_BOT_TOKEN")
     if not token:
         print("Telegram dilangkau: tiada TELEGRAM_BOT_TOKEN")
+        log("DILANGKAU tiada TELEGRAM_BOT_TOKEN")
         return
     chat = chat_id()
     if not chat:

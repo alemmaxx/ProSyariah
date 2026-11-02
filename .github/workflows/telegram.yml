@@ -1,0 +1,40 @@
+name: Telegram (manual)
+
+on:
+  workflow_dispatch:
+    inputs:
+      kind:
+        description: "test / evening / news / monthly"
+        default: test
+
+permissions:
+  contents: write
+
+jobs:
+  tg:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      TELEGRAM_CHAT: ${{ secrets.TELEGRAM_CHAT }}
+      FIREBASE_SA: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -q requests google-auth
+      - name: Hantar
+        run: |
+          mkdir -p tmp/data
+          curl -sSfL "https://alemmaxx.github.io/ProSyariah/data/market.json" -o tmp/data/market.json || true
+          curl -sSfL "https://raw.githubusercontent.com/alemmaxx/ProSyariah/main/data/news.json" -o tmp/data/news.json || cp data/news.json tmp/data/ || true
+          if [ -n "$FIREBASE_SA" ]; then printf '%s' "$FIREBASE_SA" > "$RUNNER_TEMP/sa.json"; export GOOGLE_APPLICATION_CREDENTIALS="$RUNNER_TEMP/sa.json"; fi
+          python scripts/telegram.py --out tmp/data --kind "${{ inputs.kind }}"
+          rm -f "$RUNNER_TEMP/sa.json"
+      - name: Simpan rekod
+        run: |
+          git config user.name "prosyariah-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/tg-sent.json data/tg-debug.txt 2>/dev/null || true
+          git commit -qm "Telegram: rekod" && (git pull --rebase -X theirs -q; git push -q) || true

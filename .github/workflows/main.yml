@@ -33,6 +33,7 @@ jobs:
       EODHD_API_KEY: ${{ secrets.EODHD_API_KEY }}
       PRICE_PROVIDER: ${{ vars.PRICE_PROVIDER || 'yfinance' }}
       FIREBASE_SA: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
     steps:
       - uses: actions/checkout@v4
 
@@ -161,6 +162,19 @@ jobs:
           git add data/firebase-debug.txt
           git commit -qm "Log: deploy Firebase" && (git pull --rebase -X theirs -q; git push -q) || true
           exit $rc
+
+      - name: Saluran Telegram (isyarat petang)
+        if: env.TELEGRAM_BOT_TOKEN != ''
+        continue-on-error: true
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT: ${{ secrets.TELEGRAM_CHAT }}
+        run: |
+          if [ -n "$FIREBASE_SA" ]; then printf '%s' "$FIREBASE_SA" > "$RUNNER_TEMP/sa.json"; export GOOGLE_APPLICATION_CREDENTIALS="$RUNNER_TEMP/sa.json"; fi
+          python scripts/telegram.py --out _site/data --kind evening
+          rm -f "$RUNNER_TEMP/sa.json"
+          git add data/tg-sent.json 2>/dev/null || true
+          git commit -qm "Telegram: rekod mesej" && (git pull --rebase -X theirs -q; git push -q) || true
 
       - name: Gagalkan job jika bacaan SC gagal (supaya anda dapat emel)
         if: steps.sc.outcome == 'failure'

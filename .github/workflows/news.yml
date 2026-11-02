@@ -20,6 +20,8 @@ jobs:
     timeout-minutes: 15
     env:
       FIREBASE_SA: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      TELEGRAM_CHAT: ${{ secrets.TELEGRAM_CHAT }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -51,3 +53,13 @@ jobs:
           printf '%s' "$FIREBASE_SA" > "$RUNNER_TEMP/sa.json"
           GOOGLE_APPLICATION_CREDENTIALS="$RUNNER_TEMP/sa.json" python scripts/push.py --out tmp/data --only-news
           rm -f "$RUNNER_TEMP/sa.json"
+
+      - name: Saluran Telegram (Berita Berpotensi)
+        if: env.TELEGRAM_BOT_TOKEN != ''
+        continue-on-error: true
+        run: |
+          if [ -n "$FIREBASE_SA" ]; then printf '%s' "$FIREBASE_SA" > "$RUNNER_TEMP/sa.json"; export GOOGLE_APPLICATION_CREDENTIALS="$RUNNER_TEMP/sa.json"; fi
+          python scripts/telegram.py --out tmp/data --kind news
+          rm -f "$RUNNER_TEMP/sa.json"
+          git add data/tg-sent.json 2>/dev/null || true
+          git commit -qm "Telegram: rekod mesej" && (git pull --rebase -X theirs -q; git push -q) || true

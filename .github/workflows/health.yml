@@ -23,6 +23,8 @@ jobs:
       SMTP_PASS: ${{ secrets.SMTP_PASS }}
       SMTP_HOST: ${{ secrets.SMTP_HOST }}
       ALERT_EMAIL: ${{ secrets.ALERT_EMAIL }}
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      TELEGRAM_CHAT: ${{ secrets.TELEGRAM_CHAT }}
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v4

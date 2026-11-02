@@ -286,13 +286,34 @@ def main():
         if http:
             # tandakan "selesai" hanya bila berjaya; jika gagal, larian seterusnya cuba lagi
             fs_set(http, base, "config/admin_status", {"testDone": test_req, "testOk": True} if ok else {"testOk": False})
+    # ---- Telegram: mesej ujian dari tab Admin ----
+    tg_req, tg_done = int(admin.get("tgTestReq") or 0), int(st_prev.get("tgTestDone") or 0)
+    tg_token = os.environ.get("TELEGRAM_BOT_TOKEN")
+    if tg_req and tg_req > tg_done and http:
+        okt, err = False, ""
+        chat = (admin.get("tgChat") or os.environ.get("TELEGRAM_CHAT") or "").strip()
+        if chat and not chat.startswith("@") and not chat.lstrip("-").isdigit():
+            chat = "@" + chat.replace("https://t.me/", "").replace("t.me/", "").lstrip("@")
+        if not tg_token:
+            err = "no_token"
+        elif not chat:
+            err = "no_chat"
+        else:
+            try:
+                r = requests.post(f"https://api.telegram.org/bot{tg_token}/sendMessage", timeout=20,
+                                  json={"chat_id": chat, "text": f"✅ ProSyariah\nSaluran Telegram berjaya disambung ({stamp} MYT).\nhttps://prosyariah.web.app/"})
+                okt = bool(r.ok and r.json().get("ok"))
+                err = "" if okt else (r.json().get("description") or str(r.status_code))[:160]
+            except Exception as e:
+                err = type(e).__name__
+        fs_set(http, base, "config/admin_status", {"tgTestDone": tg_req, "tgTestOk": True, "tgErr": ""} if okt else {"tgTestOk": False, "tgErr": err})
 
     if http:
         try:
             fs_set(http, base, "config/admin_status", {
                 "level": level, "at": stamp, "keys": json.dumps(keys), "raw": json.dumps(raw),
                 "issues": json.dumps(issues, ensure_ascii=False), "asof": asof,
-                "mailer": bool(os.environ.get("SMTP_USER") and os.environ.get("SMTP_PASS")), "smtpUser": bool(os.environ.get("SMTP_USER")), "smtpPass": bool(os.environ.get("SMTP_PASS")),
+                "mailer": bool(os.environ.get("SMTP_USER") and os.environ.get("SMTP_PASS")), "smtpUser": bool(os.environ.get("SMTP_USER")), "tgToken": bool(os.environ.get("TELEGRAM_BOT_TOKEN")), "smtpPass": bool(os.environ.get("SMTP_PASS")),
                 **({"lastMail": stamp, "lastMailOk": bool(mailed)} if mailed is not None else {})})
             fs_set(http, base, "config/admin_stats", {**user_stats(http, base), "at": stamp})
         except Exception as e:

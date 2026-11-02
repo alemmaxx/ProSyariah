@@ -483,6 +483,7 @@ def main():
         if not tok:
             break
     users = sent_n = auto_n = 0
+    auto_log, auto_cfg = [], []
     from datetime import datetime, timezone
     hour = datetime.now(timezone(timedelta(hours=8))).hour
     for d in docs:
@@ -498,10 +499,13 @@ def main():
         b = lambda k, dflt=True: f.get(k, {}).get("booleanValue", dflt)
         new, dead, items = [], set(), []
         # 1) Robot Auto — berjalan untuk semua akaun yang hidupkannya (dengan atau tanpa notifikasi)
+        if b("autoOn", False):
+            auto_cfg.append("/".join(k for k, on in (("Isyarat", b("autoSig", False)), ("Champion", b("autoChamp", False)), ("Berita", b("autoNews", False))) if on) or "tiada jenis dipilih")
         added, aal = auto_adds(f, data, auto, M, a.out, en, news_only=a.only_news)
         if added:
             auto = (auto + added)[-200:]
             auto_n += len(added)
+            auto_log.extend(f"{x['code']} {x['name']} ({'Champion' if x['why'] == 'champ' else 'Berita' if x['why'] == 'news' else 'Isyarat Kuat'})" for x in added)
             http.patch(f"https://firestore.googleapis.com/v1/{d['name']}", params=[("updateMask.fieldPaths", "auto")],
                        json={"fields": {"auto": {"stringValue": json.dumps(auto)}}})
         # 2) Notifikasi — hanya untuk phone berdaftar, ikut pilihan masa
@@ -550,6 +554,10 @@ def main():
                 mask.append("tokens")
             http.patch(f"https://firestore.googleapis.com/v1/{d['name']}", params=[("updateMask.fieldPaths", m) for m in mask],
                        json={"fields": fields})
+    if auto_cfg:
+        print(f"  Robot Auto hidup: {len(auto_cfg)} akaun · jenis: {', '.join(auto_cfg)}")
+    if auto_log:
+        print("  Robot Auto masuk: " + "; ".join(auto_log))
     print(f"✓ Notifikasi push: {len(docs)} akaun dalam Firestore, {users} dengan phone berdaftar, {sent_n} notifikasi dihantar, Robot Auto {auto_n} posisi baharu")
 
 

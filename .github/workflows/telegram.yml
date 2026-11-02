@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       kind:
-        description: "test / evening / news / monthly"
+        description: "test / welcome / evening / news / monthly"
         default: test
 
 permissions:

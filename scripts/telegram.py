@@ -116,7 +116,7 @@ def news(M, out_dir, sent):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", default=os.path.join(ROOT, "_site", "data"))
-    ap.add_argument("--kind", choices=["evening", "news", "monthly", "test"], required=True)
+    ap.add_argument("--kind", choices=["evening", "news", "monthly", "test", "welcome"], required=True)
     a = ap.parse_args()
     token = os.environ.get("TELEGRAM_BOT_TOKEN")
     if not token:
@@ -130,7 +130,15 @@ def main():
     sent = json.load(open(SENT)) if os.path.exists(SENT) else {}
     now = datetime.now(MYT).strftime("%Y-%m-%d %H:%M")
     todo = []
-    if a.kind == "test":
+    if a.kind == "welcome":
+        todo = [("welcome:" + now, "🕌 <b>Selamat datang ke ProSyariah Signal</b>\n\n"
+                 "Saluran rasmi app <b>ProSyariah</b>: app indicator saham <b>patuh syariah</b> Bursa Malaysia.\n\n"
+                 "📊 Ringkasan Isyarat Kuat & Champion setiap petang hari dagangan (selepas 6.30 ptg)\n"
+                 "📰 Berita Berpotensi untuk saham patuh syariah\n"
+                 "📈 Laporan ketepatan isyarat setiap bulan\n\n"
+                 f"📱 Buka app (percuma, BM | EN):\n{APP}\n\n"
+                 "ℹ️ <i>Semua kandungan ialah bacaan indicator untuk rujukan, bukan cadangan beli atau jual dan bukan nasihat pelaburan.</i>", [])]
+    elif a.kind == "test":
         todo = [("test:" + now, f"✅ <b>ProSyariah</b>\nSaluran Telegram berjaya disambung ({now} MYT).\n🔗 {APP}", [])]
     else:
         M = json.load(open(os.path.join(a.out, "market.json")))

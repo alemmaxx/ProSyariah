@@ -116,6 +116,8 @@ jobs:
           [ -d .well-known ] && cp -r .well-known _site/ || true
           touch _site/.nojekyll
           gh release download latest -p ProSyariah.apk -D _site --clobber || echo "APK belum ada"
+          V=$(gh release view latest --json name -q .name 2>/dev/null | grep -o '[0-9]*$' || true)
+          [ -n "$V" ] && [ -f _site/ProSyariah.apk ] && echo "{\"v\": $V}" > _site/data/apk.json || true
 
       - name: Ujian app sebelum dinaikkan (gagal = versi lama dikekalkan & anda dapat emel)
         id: smoke

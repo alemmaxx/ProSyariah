@@ -80,13 +80,7 @@ jobs:
           body: "Muat turun ProSyariah.apk di bawah dan pasang di telefon Android."
           files: ProSyariah.apk
           make_latest: true
-      - name: Umum versi baharu (butang Kemas kini dalam app) & terbit semula laman
+      - name: Terbit semula laman (APK baharu + nombor versi di laman muat turun)
         env:
           GH_TOKEN: ${{ github.token }}
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          echo '{"v": ${{ github.run_number }}}' > data/apk.json
-          git add data/apk.json
-          git commit -qm "APK v${{ github.run_number }}" && (git pull --rebase -X theirs -q; git push -q) || true
-          gh api -X POST repos/${{ github.repository }}/actions/workflows/main.yml/dispatches -f ref=main || true
+        run: gh api -X POST repos/${{ github.repository }}/actions/workflows/main.yml/dispatches -f ref=main || true

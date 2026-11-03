@@ -3021,7 +3021,7 @@ const IS_APK=NATIVE||(()=>{try{if(/[?&]src=apk/.test(location.search)||document.
 const APK_URL='https://alemmaxx.github.io/ProSyariah/download.html';   // GitHub Pages (Firebase percuma tidak benarkan .apk)
 const APK_BUILD=0;   // diganti nombor binaan semasa APK dibina (GitHub Actions)
 let APK_NEW=0;
-async function apkCheck(){if(!NATIVE)return;try{const r=await fetch('https://raw.githubusercontent.com/alemmaxx/ProSyariah/main/data/apk.json?t='+Math.floor(Date.now()/36e5),{cache:'no-store'});
+async function apkCheck(){if(!NATIVE)return;try{const r=await fetch(PAGES_URL+'data/apk.json?t='+Math.floor(Date.now()/6e5),{cache:'no-store'});
   if(!r.ok)return;const j=await r.json();if((j.v||0)>APK_BUILD){APK_NEW=j.v;let seen=0;try{seen=+localStorage.getItem('ps_apkseen')||0;}catch(e){}
     if(seen<j.v){toast('Versi baharu APK tersedia — Tetapan → App Android');try{localStorage.setItem('ps_apkseen',j.v);}catch(e){}}if(TAB==='tetapan')render();}}catch(e){}}
 function apkHTML(){if(NATIVE)return `<div class="card"><h2>📱 App Android</h2><div class="kv"><span>Versi</span><b>APK v${APK_BUILD}</b></div>

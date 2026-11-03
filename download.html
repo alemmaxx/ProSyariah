@@ -41,8 +41,8 @@ ol li{margin-bottom:6px}
   </div>
 
   <div class="card">
-    <h2><span data-bm>1. Muat turun APK</span><span data-en>1. Download the APK</span></h2>
-    <a class="btn gold" href="https://alemmaxx.github.io/ProSyariah/ProSyariah.apk" download="ProSyariah.apk">⬇ <span data-bm>Muat Turun ProSyariah.apk</span><span data-en>Download ProSyariah.apk</span></a>
+    <h2><span data-bm>1. Muat turun APK</span><span data-en>1. Download the APK</span> <span id="ver" style="float:right;color:var(--gold);font-size:14px"></span></h2>
+    <a class="btn gold" id="dlA" href="https://alemmaxx.github.io/ProSyariah/ProSyariah.apk?t=0" download="ProSyariah.apk">⬇ <span data-bm>Muat Turun ProSyariah.apk</span><span data-en>Download ProSyariah.apk</span></a>
     <a class="btn sec" href="https://github.com/alemmaxx/ProSyariah/releases/tag/latest" target="_blank" rel="noopener">↗ <span data-bm>Pautan alternatif (GitHub)</span><span data-en>Alternative link (GitHub)</span></a>
     <p class="muted"><span data-bm>Kalau muat turun tersekat atau gagal, cuba pautan alternatif. Di halaman GitHub, tekan <b>ProSyariah.apk</b> di bawah "Assets". Pastikan internet stabil dan buka dalam <b>Chrome</b>.</span><span data-en>If the download stalls or fails, try the alternative link. On the GitHub page, tap <b>ProSyariah.apk</b> under "Assets". Make sure your internet is stable and use <b>Chrome</b>.</span></p>
   </div>
@@ -78,6 +78,7 @@ ol li{margin-bottom:6px}
 </div>
 <script>
 function setL(l){document.body.classList.toggle('en',l==='en');document.getElementById('bBM').classList.toggle('on',l==='bm');document.getElementById('bEN').classList.toggle('on',l==='en');try{localStorage.setItem('prosyariah_dl_lang',l)}catch(e){}}
+fetch('data/apk.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{if(!j.v)return;document.getElementById('ver').textContent='v'+j.v;document.getElementById('dlA').href='ProSyariah.apk?v='+j.v;}).catch(()=>{});
 try{if(localStorage.getItem('prosyariah_dl_lang')==='en')setL('en')}catch(e){}
 </script>
 </body>

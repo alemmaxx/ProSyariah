@@ -1964,7 +1964,7 @@ Object.assign(EN_EXACT,{
 'Data, harga & isyarat dikemas kini automatik. Bila ada versi baharu app, butang kemas kini akan muncul di sini.':'Data, prices & signals update automatically. When a new app version is out, an update button will appear here.',
 'Muat turun & pasang atas app ini. Data anda kekal.':'Download & install over this app. Your data stays.',
 'Versi baharu APK tersedia — Tetapan → App Android':'New APK version available — Settings → Android app',
-'Disalin ke clipboard — tampal dalam Notes / Excel':'Copied to clipboard — paste into Notes / Excel','Gagal salin':'Copy failed',
+'Keluar dari ProSyariah?':'Exit ProSyariah?','Notifikasi isyarat & amaran tetap diterima walaupun app ditutup.':'Signal & alert notifications still arrive even when the app is closed.','Batal':'Cancel','Keluar':'Exit','Disalin ke clipboard — tampal dalam Notes / Excel':'Copied to clipboard — paste into Notes / Excel','Gagal salin':'Copy failed',
 'Anda sedang guna APK ProSyariah. Data, isyarat & ciri baharu dikemas kini sendiri, tak perlu muat turun semula.':'You are using the ProSyariah APK. Data, signals & new features update by themselves, no need to download again.',
 'Pasang sekali sahaja. Buka fail ProSyariah.apk, benarkan “pasang dari sumber ini” jika diminta. Log masuk Google & notifikasi berfungsi sama seperti web, dan app sentiasa terkini tanpa muat turun semula.':'Install once. Open the ProSyariah.apk file and allow “install from this source” if asked. Google sign-in & notifications work the same as the web, and the app stays up to date without downloading again.',
 'Paparan':'Display','Saiz tulisan':'Text size','Kecil':'Small','Biasa':'Normal','Besar':'Large','Tema':'Theme','Gelap':'Dark','Cerah':'Light',
@@ -3082,8 +3082,12 @@ if(!NATIVE&&'serviceWorker' in navigator&&location.protocol==='https:')navigator
 if(NATIVE){const App=CAP('App');
   if(App)App.addListener('backButton',()=>{const sh=$('#sheet');
     if(sh&&sh.classList.contains('on')){closeSheet();return;}
-    const hp=$('#help');if(hp){hp.remove();document.body.classList.remove('ovl');return;}
-    if(TAB!=='saham'){goTab('saham');return;}App.minimizeApp?App.minimizeApp():App.exitApp();});
+    const hp=document.querySelector('.help');if(hp){hp.remove();document.body.classList.remove('ovl');return;}
+    if(TAB!=='saham'){goTab('saham');return;}openExit();});
+  window.openExit=()=>{openSheet(`<div style="text-align:center;padding:6px 4px 2px"><div style="font-size:40px">👋</div><h2 style="margin:6px 0 4px">Keluar dari ProSyariah?</h2>
+     <p class="muted" style="margin:0 0 16px">Notifikasi isyarat & amaran tetap diterima walaupun app ditutup.</p>
+     <div class="grid2"><button class="btn sec" id="exNo" style="justify-content:center;text-align:center">Batal</button><button class="btn gold" id="exYes" style="justify-content:center;text-align:center">Keluar</button></div></div>`);
+    $('#exNo').onclick=closeSheet;$('#exYes').onclick=()=>{closeSheet();App.exitApp();};};
   setTimeout(apkCheck,4000);}
 if('serviceWorker' in navigator)navigator.serviceWorker.addEventListener('message',e=>{if(e.data&&e.data.go)goTab(e.data.go);});
 render();

@@ -1,0 +1,14 @@
+[
+ {
+  "relation": [
+   "delegate_permission/common.handle_all_urls"
+  ],
+  "target": {
+   "namespace": "android_app",
+   "package_name": "com.prokuiz.prosyariah",
+   "sha256_cert_fingerprints": [
+    "F7:0E:F8:2B:5C:1A:A1:83:1B:FB:B5:08:6E:96:9B:77:69:7A:04:2C:12:DE:23:A8:67:1F:B1:CE:5C:0D:A1:B6"
+   ]
+  }
+ }
+]

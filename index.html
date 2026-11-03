@@ -427,9 +427,25 @@ canvas#cv{touch-action:pan-y;cursor:crosshair}
    Bila app dibuka dari GitHub Pages, data dibaca dari folder data/ yang sama.
    Untuk APK (fail tempatan), tukar USERNAME & REPO di bawah kepada repo GitHub anda. */
 const PAGES_URL='https://alemmaxx.github.io/ProSyariah/';
-const DATA_BASE=(location.protocol.startsWith('http')?'':PAGES_URL)+'data/';
+/* APK Android (Capacitor): fail app dibungkus dalam APK; data tetap diambil dari internet */
+const NATIVE=!!(window.Capacitor&&window.Capacitor.isNativePlatform&&window.Capacitor.isNativePlatform());
+const CAP=n=>window.Capacitor&&window.Capacitor.Plugins&&window.Capacitor.Plugins[n];
+const ONLINE_HOST=NATIVE||(location.protocol.startsWith('http')&&!/localhost|127\.0\.0\.1/.test(location.hostname));
+const DATA_BASE=NATIVE?'https://prosyariah.web.app/data/':(location.protocol.startsWith('http')?'':PAGES_URL)+'data/';
 /* Data besar diambil dari GitHub Pages (kuota percuma lebih besar); Firebase Hosting hanya sandaran. */
-const DATA_REMOTE=/(\.web\.app|\.firebaseapp\.com)$/.test(location.hostname)?PAGES_URL+'data/':DATA_BASE;
+const DATA_REMOTE=(NATIVE||/(\.web\.app|\.firebaseapp\.com)$/.test(location.hostname))?PAGES_URL+'data/':DATA_BASE;
+/* APK: notifikasi telefon guna plugin asli (WebView Android tiada Notification API) */
+if(NATIVE){
+  const NP=()=>{try{return localStorage.getItem('ps_np')||'default';}catch(e){return 'default';}};
+  window.Notification=function(title,o){o=o||{};const LN=CAP('LocalNotifications');if(!LN)return;
+    let id=0;for(const ch of String(o.tag||title))id=(id*31+ch.charCodeAt(0))|0;
+    LN.schedule({notifications:[{id:Math.abs(id)%2000000000,title:String(title),body:String(o.body||''),smallIcon:'ic_stat_ps',iconColor:'#d9b44a'}]}).catch(()=>{});};
+  Object.defineProperty(window.Notification,'permission',{get:NP});
+  window.Notification.requestPermission=async()=>{let ok=false;
+    try{const PN=CAP('PushNotifications');if(PN){const r=await PN.requestPermissions();ok=r.receive==='granted';}}catch(e){}
+    try{const LN=CAP('LocalNotifications');if(LN){const r=await LN.requestPermissions();ok=ok||r.display==='granted';}}catch(e){}
+    const p=ok?'granted':'denied';try{localStorage.setItem('ps_np',p);}catch(e){}return p;};
+}
 function dfetch(p,o){const local=()=>fetch(DATA_BASE+p,o);if(DATA_REMOTE===DATA_BASE)return local();
   return fetch(DATA_REMOTE+p,o).then(r=>r.ok?r:local()).catch(local);}
 const KEY='prosyariah_v1';
@@ -541,7 +557,7 @@ function livePx(code){const L=LIVE;if(!L||!L.p||!S.market)return null;if(!(L.d>S
 function nowPx(code){const l=livePx(code);if(l)return l.p;const m=mk(code);return m?m.c:null;}
 function mktOpen(){const n=new Date(Date.now()+(8*60+new Date().getTimezoneOffset())*6e4),d=n.getDay(),hm=n.getHours()*60+n.getMinutes();return d>0&&d<6&&hm>=540&&hm<=1050;}
 async function loadLive(){let j=null;
-  try{if(location.protocol.startsWith('http')&&!/localhost|127\.0\.0\.1/.test(location.hostname)){const r=await fetch('https://raw.githubusercontent.com/alemmaxx/ProSyariah/main/data/live.json?t='+Math.floor(Date.now()/6e4)).catch(()=>null);if(r&&r.ok)j=await r.json();}}catch(e){}
+  try{if(ONLINE_HOST){const r=await fetch('https://raw.githubusercontent.com/alemmaxx/ProSyariah/main/data/live.json?t='+Math.floor(Date.now()/6e4)).catch(()=>null);if(r&&r.ok)j=await r.json();}}catch(e){}
   if(!j){try{const r=await dfetch('live.json?t='+Math.floor(Date.now()/6e4),{cache:'no-cache'});if(r.ok)j=await r.json();}catch(e){}}
   const old=LIVE&&LIVE.t;if(j&&j.p)LIVE=j;if(LIVE&&LIVE.t!==old&&(TAB==='saham'||TAB==='robot')&&!document.querySelector('#sheet.on'))render();}
 const lastClose=code=>{const c=S.cache[code];const m=mk(code);
@@ -578,7 +594,7 @@ async function syncData(manual){
     try{const r8=await dfetch('holidays.json?t='+Math.floor(Date.now()/36e5),{cache:'no-cache'});if(r8.ok){const H=await r8.json();S.hol=H.days||[];S.hol.forEach(d=>BURSA_HOL.add(d));}}catch(e){}
     try{const r7=await dfetch('fund.json?t='+Math.floor(Date.now()/36e5),{cache:'no-cache'});if(r7.ok){S.fund=await r7.json();}}catch(e){}
     // Berita dikemas kini setiap 2 jam (robot berita) — ambil terus dari repo; jika gagal, guna salinan laman
-    try{let r5=null;if(location.protocol.startsWith('http')&&!/localhost/.test(location.hostname))r5=await fetch('https://raw.githubusercontent.com/alemmaxx/ProSyariah/main/data/news.json?t='+Math.floor(Date.now()/6e5)).catch(()=>null);
+    try{let r5=null;if(ONLINE_HOST)r5=await fetch('https://raw.githubusercontent.com/alemmaxx/ProSyariah/main/data/news.json?t='+Math.floor(Date.now()/6e5)).catch(()=>null);
       if(!r5||!r5.ok)r5=await dfetch('news.json?t='+Math.floor(Date.now()/36e5),{cache:'no-cache'});if(r5.ok){S.news=await r5.json();}}catch(e){}
     try{const r3=await dfetch('track.json?t='+Math.floor(Date.now()/36e5),{cache:'no-cache'});if(r3.ok){const t=await r3.json();if(!S.track||S.track.asof!==t.asof){S.track=t;changed=true;}}}catch(e){}
     updateTop5Track();
@@ -881,7 +897,7 @@ async function shareCard(code){const m=mk(code);if(!m||m.c==null)return;const en
 /* ===== STATUS SISTEM (jalur amaran untuk semua pengguna) ===== */
 let SYS={level:'ok'};
 async function checkStatus(){let st=null;
-  try{if(location.protocol.startsWith('http')&&!/localhost|127\.0\.0\.1/.test(location.hostname)){const r=await fetch('https://raw.githubusercontent.com/alemmaxx/ProSyariah/main/data/status.json?t='+Math.floor(Date.now()/6e4)).catch(()=>null);if(r&&r.ok)st=await r.json();}}catch(e){}
+  try{if(ONLINE_HOST){const r=await fetch('https://raw.githubusercontent.com/alemmaxx/ProSyariah/main/data/status.json?t='+Math.floor(Date.now()/6e4)).catch(()=>null);if(r&&r.ok)st=await r.json();}}catch(e){}
   if(!st){try{const r=await dfetch('status.json?t='+Math.floor(Date.now()/6e4),{cache:'no-cache'});if(r.ok)st=await r.json();}catch(e){}}
   if(st&&st.level)SYS=st;showSysBan();}
 function showSysBan(){const b=$('#sysban');if(!b)return;const lv=SYS.level;if(lv!=='down'&&lv!=='warn'){b.style.display='none';return;}
@@ -1944,6 +1960,11 @@ Object.assign(EN_EXACT,{
 'Penunjuk pasaran sahaja. KLCI bukan saham dan tidak boleh didagang atau diuji dengan Robot.':'Market indicator only. KLCI is not a stock and cannot be traded or tested with the Robot.',
 'Gaya tajuk & nombor':'Heading & number style','3D berkilat':'Glossy 3D',
 '📱 App Android':'📱 Android app','Versi':'Version','⬇ Muat Turun APK Android':'⬇ Download Android APK',
+'Buka fail ProSyariah.apk, benarkan “pasang dari sumber ini” jika diminta. Log masuk dengan akaun Google yang sama, data anda akan muncul.':'Open the ProSyariah.apk file and allow “install from this source” if asked. Sign in with the same Google account and your data will appear.',
+'Data, harga & isyarat dikemas kini automatik. Bila ada versi baharu app, butang kemas kini akan muncul di sini.':'Data, prices & signals update automatically. When a new app version is out, an update button will appear here.',
+'Muat turun & pasang atas app ini. Data anda kekal.':'Download & install over this app. Your data stays.',
+'Versi baharu APK tersedia — Tetapan → App Android':'New APK version available — Settings → Android app',
+'Disalin ke clipboard — tampal dalam Notes / Excel':'Copied to clipboard — paste into Notes / Excel','Gagal salin':'Copy failed',
 'Anda sedang guna APK ProSyariah. Data, isyarat & ciri baharu dikemas kini sendiri, tak perlu muat turun semula.':'You are using the ProSyariah APK. Data, signals & new features update by themselves, no need to download again.',
 'Pasang sekali sahaja. Buka fail ProSyariah.apk, benarkan “pasang dari sumber ini” jika diminta. Log masuk Google & notifikasi berfungsi sama seperti web, dan app sentiasa terkini tanpa muat turun semula.':'Install once. Open the ProSyariah.apk file and allow “install from this source” if asked. Google sign-in & notifications work the same as the web, and the app stays up to date without downloading again.',
 'Paparan':'Display','Saiz tulisan':'Text size','Kecil':'Small','Biasa':'Normal','Besar':'Large','Tema':'Theme','Gelap':'Dark','Cerah':'Light',
@@ -2901,6 +2922,7 @@ function rZakat(){
 
 /* ================= TAB: TETAPAN + KETELUSAN (MODUL 6) ================= */
 function download(name,content,type){
+  if(NATIVE){try{navigator.clipboard.writeText(String(content));toast('Disalin ke clipboard — tampal dalam Notes / Excel');}catch(e){toast('Gagal salin');}return;}
   try{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([content],{type}));a.download=name;document.body.appendChild(a);a.click();a.remove();}
   catch(e){toast('Muat turun tidak disokong — guna Salin');}
 }
@@ -2917,12 +2939,17 @@ async function fbInit(){if(!FB_CONFIG)return null;if(FB)return FB;
   try{await FB.auth.getRedirectResult();}catch(e){}
   return FB;}
 async function login(){const f=await fbInit().catch(()=>null);if(!f)return toast('Log masuk belum tersedia');const pv=new firebase.auth.GoogleAuthProvider();
+  if(NATIVE){const FA=CAP('FirebaseAuthentication');if(!FA)return toast('Log masuk belum tersedia');
+    try{const r=await FA.signInWithGoogle({skipNativeAuth:true});const t=r&&r.credential&&r.credential.idToken;if(!t)return;
+      await f.auth.signInWithCredential(firebase.auth.GoogleAuthProvider.credential(t));}
+    catch(e){const m=String(e&&(e.message||e.code)||e);if(!/cancel/i.test(m))toast('Log masuk gagal ('+m.slice(0,80)+')');}
+    return;}
   try{await f.auth.signInWithPopup(pv);}catch(e){const c=e.code||'';
     if(c==='auth/unauthorized-domain')return toast('Log masuk gagal: domain '+location.hostname+' belum dibenarkan di Firebase (Authentication → Settings → Authorized domains).');
     if(/popup-blocked|operation-not-supported|environment/.test(c)){try{await f.auth.signInWithRedirect(pv);}catch(x){toast('Log masuk gagal ('+(x.code||x.message)+')');}return;}
     if(c==='auth/popup-closed-by-user'||c==='auth/cancelled-popup-request')return;
     toast('Log masuk gagal ('+(c||e.message)+')');}}
-async function logout(){if(cloudUnsub){cloudUnsub();cloudUnsub=null;}if(FB)await FB.auth.signOut();FBU=null;S.manual=[];S.manDel=[];S.watch=[];S.watchAt=0;S.holdings=[];S.tathir=[];S.zakat=structuredClone(DEF.zakat);S.pfAt=0;S._pfH=pfHash();save0();robotStateSync();if(TAB==='admin')TAB='tetapan';render();toast('Log keluar');}
+async function logout(){if(cloudUnsub){cloudUnsub();cloudUnsub=null;}if(NATIVE){try{await CAP('FirebaseAuthentication').signOut();}catch(e){}}if(FB)await FB.auth.signOut();FBU=null;S.manual=[];S.manDel=[];S.watch=[];S.watchAt=0;S.holdings=[];S.tathir=[];S.zakat=structuredClone(DEF.zakat);S.pfAt=0;S._pfH=pfHash();save0();robotStateSync();if(TAB==='admin')TAB='tetapan';render();toast('Log keluar');}
 function toggleWatch(c){if(needLogin()){toast('Log masuk dahulu untuk guna watchlist');login();return false;}
   if(S.watch.includes(c))S.watch=S.watch.filter(x=>x!==c);else S.watch.push(c);S.watchAt=Date.now();save();return true;}
 const DEV=(()=>{try{let d=localStorage.getItem('ps_dev');if(!d){d=Math.random().toString(36).slice(2,10);localStorage.setItem('ps_dev',d);}return d;}catch(e){return 'x';}})();
@@ -2951,10 +2978,17 @@ async function cloudPush(now){if(!FBU)return;clearTimeout(cloudT);
     const D={dev:DEV,watchAt:S.watchAt||0,manual:S.manual||[],watch:S.watch||[],manDel:S.manDel||[],pf:{holdings:S.holdings||[],tathir:S.tathir||[],zakat:S.zakat||null},pfAt:S.pfAt||0,pxa:(S.alerts&&S.alerts.price)||[],lossPct:(S.alerts&&S.alerts.lossPct)||10,settings:{lang:S.settings.lang,platform:S.settings.platform??null,paperStake:S.settings.paperStake??null,auto:S.settings.auto||null},updatedAt:S.cloudAt};
     await FB.db.collection('users').doc(FBU.uid).set({data:JSON.stringify(D),email:FBU.email||'',lang:S.settings.lang||'bm',sig:!!(S.alerts&&S.alerts.on&&S.alerts.on.isyarat!==false),news:!!(S.alerts&&S.alerts.on&&S.alerts.on.berita!==false),sigWatch:!!(S.alerts&&S.alerts.sigScope==='watch'),px:!!(S.alerts&&S.alerts.on&&S.alerts.on.harga),autoOn:!!AUTO().on,autoSig:!!AUTO().sig,autoChamp:!!AUTO().champ,autoNews:!!AUTO().news,autoStake:+AUTO().stake||20,autoTp:+AUTO().tp||5,autoFm:!!AUTO().fm,autoFree:!!AUTO().fc,autoBk:AUTO().bk||'moomoo',autoCap:+AUTO().cap||0,autoCapAt:+AUTO().capAt||0,pushAm:!!(S.alerts&&S.alerts.pushTime==='am'),updatedAt:S.cloudAt},{merge:true});}catch(e){}};
   if(now)return go();cloudT=setTimeout(go,2500);}
-async function regPush(){try{if(!FBU||!FB_VAPID||!('serviceWorker' in navigator)||!('Notification' in window)||Notification.permission!=='granted')return;
+let NPUSH=null;
+async function regPushNative(){const PN=CAP('PushNotifications');if(!PN||!FBU)return;
+  try{if((await PN.checkPermissions()).receive!=='granted')return;
+    if(!NPUSH){NPUSH=1;await PN.addListener('registration',async t=>{try{if(FBU&&t&&t.value)await FB.db.collection('users').doc(FBU.uid).set({tokens:firebase.firestore.FieldValue.arrayUnion('and:'+t.value),notify:true},{merge:true});}catch(e){}});
+      await PN.addListener('pushNotificationActionPerformed',a=>{const u=(a.notification&&a.notification.data&&a.notification.data.url)||'';if(/#robot/.test(u))goTab('robot');});
+      try{await PN.createChannel({id:'prosyariah',name:'ProSyariah',importance:5,visibility:1});}catch(e){}}
+    await PN.register();}catch(e){}}
+async function regPush(){if(NATIVE)return regPushNative();try{if(!FBU||!FB_VAPID||!('serviceWorker' in navigator)||!('Notification' in window)||Notification.permission!=='granted')return;
   const reg=await navigator.serviceWorker.ready;const tok=await firebase.messaging().getToken({vapidKey:FB_VAPID,serviceWorkerRegistration:reg});
   if(tok)await FB.db.collection('users').doc(FBU.uid).set({tokens:firebase.firestore.FieldValue.arrayUnion(tok),notify:true},{merge:true});}catch(e){}}
-async function unregPush(){try{if(!FBU||!FB_VAPID)return;const reg=await navigator.serviceWorker.ready;const tok=await firebase.messaging().getToken({vapidKey:FB_VAPID,serviceWorkerRegistration:reg});
+async function unregPush(){if(NATIVE)return;try{if(!FBU||!FB_VAPID)return;const reg=await navigator.serviceWorker.ready;const tok=await firebase.messaging().getToken({vapidKey:FB_VAPID,serviceWorkerRegistration:reg});
   if(tok)await FB.db.collection('users').doc(FBU.uid).set({tokens:firebase.firestore.FieldValue.arrayRemove(tok)},{merge:true});}catch(e){}}
 function accountHTML(){if(!FB_CONFIG)return '';
   if(!FBU)return `<div class="card"><h2>Akaun</h2><p class="muted" style="margin-top:0">Log masuk supaya Watchlist, Robot, Portfolio, Tathir, Zakat dan tetapan anda disimpan dengan selamat dan sama di semua phone. Notifikasi juga boleh sampai walaupun app ditutup.</p><button class="btn gold" style="width:100%" id="acIn">Log masuk dengan Google</button><a class="plink" href="privacy.html" target="_blank" rel="noopener">🔒 Privasi & Terma</a></div>`;
@@ -2983,12 +3017,18 @@ function openOnboard(i){i=i||0;const old=$('#onb');if(old)old.remove();const d=d
   $('#onNext').onclick=()=>{if(i<ONB.length-1)openOnboard(i+1);else done();};
   $('#onSkip').onclick=()=>{if(i<ONB.length-1)done();else openOnboard(i-1);};}
 /* APK Android (Trusted Web Activity: app ini dalam Chrome skrin penuh) */
-const IS_APK=(()=>{try{if(/[?&]src=apk/.test(location.search)||document.referrer.startsWith('android-app://com.prokuiz.prosyariah')){sessionStorage.setItem('ps_apk','1');if(/[?&]src=apk/.test(location.search))history.replaceState(null,'',location.pathname+location.hash);}return sessionStorage.getItem('ps_apk')==='1';}catch(e){return false;}})();
+const IS_APK=NATIVE||(()=>{try{if(/[?&]src=apk/.test(location.search)||document.referrer.startsWith('android-app://com.prokuiz.prosyariah')){sessionStorage.setItem('ps_apk','1');if(/[?&]src=apk/.test(location.search))history.replaceState(null,'',location.pathname+location.hash);}return sessionStorage.getItem('ps_apk')==='1';}catch(e){return false;}})();
 const APK_URL='https://alemmaxx.github.io/ProSyariah/ProSyariah.apk';   // GitHub Pages (Firebase percuma tidak benarkan .apk)
-function apkHTML(){if(IS_APK)return `<div class="card"><h2>📱 App Android</h2><div class="kv"><span>Versi</span><b>APK ✓</b></div><div class="disc">Anda sedang guna APK ProSyariah. Data, isyarat & ciri baharu dikemas kini sendiri, tak perlu muat turun semula.</div></div>`;
+const APK_BUILD=0;   // diganti nombor binaan semasa APK dibina (GitHub Actions)
+let APK_NEW=0;
+async function apkCheck(){if(!NATIVE)return;try{const r=await fetch('https://raw.githubusercontent.com/alemmaxx/ProSyariah/main/data/apk.json?t='+Math.floor(Date.now()/36e5),{cache:'no-store'});
+  if(!r.ok)return;const j=await r.json();if((j.v||0)>APK_BUILD){APK_NEW=j.v;let seen=0;try{seen=+localStorage.getItem('ps_apkseen')||0;}catch(e){}
+    if(seen<j.v){toast('Versi baharu APK tersedia — Tetapan → App Android');try{localStorage.setItem('ps_apkseen',j.v);}catch(e){}}if(TAB==='tetapan')render();}}catch(e){}}
+function apkHTML(){if(NATIVE)return `<div class="card"><h2>📱 App Android</h2><div class="kv"><span>Versi</span><b>APK v${APK_BUILD}</b></div>
+   ${APK_NEW?`<a class="btn gold" style="display:block;text-align:center;width:100%;text-decoration:none;margin-top:10px" href="${APK_URL}">⬇ Kemas kini ke v${APK_NEW}</a><div class="disc" style="margin-top:8px">Muat turun & pasang atas app ini. Data anda kekal.</div>`:`<div class="disc">Data, harga & isyarat dikemas kini automatik. Bila ada versi baharu app, butang kemas kini akan muncul di sini.</div>`}</div>`;
   if(!/Android/i.test(navigator.userAgent))return '';
   return `<div class="card"><h2>📱 App Android</h2><a class="btn gold" style="display:block;text-align:center;width:100%;text-decoration:none" href="${APK_URL}" download="ProSyariah.apk">⬇ Muat Turun APK Android</a>
-   <div class="disc" style="margin-top:10px">Pasang sekali sahaja. Buka fail ProSyariah.apk, benarkan “pasang dari sumber ini” jika diminta. Log masuk Google & notifikasi berfungsi sama seperti web, dan app sentiasa terkini tanpa muat turun semula.</div></div>`;}
+   <div class="disc" style="margin-top:10px">Buka fail ProSyariah.apk, benarkan “pasang dari sumber ini” jika diminta. Log masuk dengan akaun Google yang sama, data anda akan muncul.</div></div>`;}
 function rTetapan(){
   const st=S.settings;const L=latestList();
   const M=S.market;
@@ -3037,7 +3077,14 @@ function rTetapan(){
 }
 
 document.documentElement.lang=S.settings.lang==='en'?'en':'ms';
-if('serviceWorker' in navigator&&location.protocol==='https:')navigator.serviceWorker.register('sw.js').catch(()=>{});
+if(!NATIVE&&'serviceWorker' in navigator&&location.protocol==='https:')navigator.serviceWorker.register('sw.js').catch(()=>{});
+/* APK: butang Kembali Android, semakan versi baharu, warna bar status */
+if(NATIVE){const App=CAP('App');
+  if(App)App.addListener('backButton',()=>{const sh=$('#sheet');
+    if(sh&&sh.classList.contains('on')){closeSheet();return;}
+    const hp=$('#help');if(hp){hp.remove();document.body.classList.remove('ovl');return;}
+    if(TAB!=='saham'){goTab('saham');return;}App.minimizeApp?App.minimizeApp():App.exitApp();});
+  setTimeout(apkCheck,4000);}
 if('serviceWorker' in navigator)navigator.serviceWorker.addEventListener('message',e=>{if(e.data&&e.data.go)goTab(e.data.go);});
 render();
 if(location.hash==='#robot'){try{history.replaceState(history.state,'',location.pathname+location.search);}catch(e){}goTab('robot');}

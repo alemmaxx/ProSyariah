@@ -536,8 +536,12 @@ def main():
                 continue
             link = "https://prosyariah.web.app/#robot" if aid.startswith(("man:", "week:", "autoin:")) else "https://prosyariah.web.app/"
             for t in tokens:
-                msg = {"message": {"token": t, "data": {"title": title, "body": body, "tag": aid},
-                                   "webpush": {"headers": {"Urgency": "high"}, "fcm_options": {"link": link}}}}
+                if t.startswith("and:"):   # APK Android (FCM asli)
+                    msg = {"message": {"token": t[4:], "notification": {"title": title, "body": body}, "data": {"tag": aid, "url": link},
+                                       "android": {"priority": "high", "notification": {"tag": aid, "channel_id": "prosyariah", "icon": "ic_stat_ps", "color": "#d9b44a"}}}}
+                else:
+                    msg = {"message": {"token": t, "data": {"title": title, "body": body, "tag": aid},
+                                       "webpush": {"headers": {"Urgency": "high"}, "fcm_options": {"link": link}}}}
                 rr = http.post(f"https://fcm.googleapis.com/v1/projects/{pid}/messages:send", json=msg)
                 if rr.status_code in (404, 400) and ("UNREGISTERED" in rr.text or "INVALID_ARGUMENT" in rr.text):
                     dead.add(t)

@@ -1,0 +1,12 @@
+{
+  "appId": "com.prokuiz.prosyariah",
+  "appName": "ProSyariah",
+  "webDir": "www",
+  "backgroundColor": "#0a1210",
+  "android": { "allowMixedContent": false },
+  "plugins": {
+    "FirebaseAuthentication": { "skipNativeAuth": true, "providers": ["google.com"] },
+    "PushNotifications": { "presentationOptions": ["badge", "sound", "alert"] },
+    "LocalNotifications": { "smallIcon": "ic_stat_ps", "iconColor": "#d9b44a" }
+  }
+}

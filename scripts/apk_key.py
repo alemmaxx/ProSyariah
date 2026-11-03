@@ -50,6 +50,9 @@ def main(out):
     txt = subprocess.run(["keytool", "-list", "-v", "-keystore", ks, "-alias", "prosyariah", "-storepass", pw],
                          capture_output=True, text=True, check=True).stdout
     fp = next(l.split("SHA256:")[1].strip() for l in txt.splitlines() if "SHA256:" in l)
+    sha1 = next(l.split("SHA1:")[1].strip() for l in txt.splitlines() if "SHA1:" in l)
+    open(os.path.join(out, "sha1"), "w").write(sha1)
+    open(os.path.join(out, "sha256"), "w").write(fp)
     os.makedirs(os.path.join(ROOT, ".well-known"), exist_ok=True)
     al = [{"relation": ["delegate_permission/common.handle_all_urls"],
            "target": {"namespace": "android_app", "package_name": PKG, "sha256_cert_fingerprints": [fp]}}]

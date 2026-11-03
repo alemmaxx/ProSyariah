@@ -2,3 +2,6 @@ __pycache__/
 *.pyc
 sc-debug.txt
 _site/
+apk/node_modules/
+apk/android/
+apk/www/

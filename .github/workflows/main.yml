@@ -11,7 +11,7 @@ on:
   workflow_dispatch: {}
   push:
     branches: [main]
-    paths: ["index.html", "privacy.html", "manifest.webmanifest", "sw.js", "icons/**", "data/sc-upload/**"]
+    paths: ["index.html", "privacy.html", "manifest.webmanifest", "sw.js", "icons/**", "data/sc-upload/**", ".well-known/**", "firebase.json"]
 
 permissions:
   contents: write
@@ -111,6 +111,7 @@ jobs:
           cp index.html privacy.html manifest.webmanifest sw.js _site/
           cp data/paper-experiments.json data/exit-experiments.json data/status.json data/live.json _site/data/ 2>/dev/null || true
           cp -r icons _site/icons
+          [ -d .well-known ] && cp -r .well-known _site/ || true
           touch _site/.nojekyll
 
       - name: Ujian app sebelum dinaikkan (gagal = versi lama dikekalkan & anda dapat emel)

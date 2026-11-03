@@ -4,7 +4,8 @@
     "public": "_site",
     "ignore": [
       "firebase.json",
-      "**/.*"
+      "**/.nojekyll",
+      "**/.git/**"
     ],
     "headers": [
       {

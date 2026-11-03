@@ -1,0 +1,63 @@
+name: Bina APK Android
+# APK = Trusted Web Activity: buka prosyariah.web.app skrin penuh dalam Chrome.
+# Data & ciri sentiasa terkini tanpa bina semula; bina semula hanya bila folder apk/ berubah.
+on:
+  push:
+    branches: [main]
+    paths: ["apk/**", ".github/workflows/apk.yml", "scripts/apk_key.py"]
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: write
+concurrency:
+  group: apk
+  cancel-in-progress: true
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.7"
+      - name: Kunci tandatangan (sama setiap kali)
+        env:
+          FIREBASE_SA: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: |
+          pip install -q google-auth requests
+          printf '%s' "$FIREBASE_SA" > "$RUNNER_TEMP/sa.json"
+          GOOGLE_APPLICATION_CREDENTIALS="$RUNNER_TEMP/sa.json" python scripts/apk_key.py "$RUNNER_TEMP/k"
+          rm -f "$RUNNER_TEMP/sa.json"
+      - name: Bina APK
+        run: |
+          cd apk
+          KS_FILE="$RUNNER_TEMP/k/prosyariah.jks" KS_PASS="$(cat $RUNNER_TEMP/k/pw)" APK_VER="${{ github.run_number }}" gradle assembleRelease --no-daemon -q
+          cp app/build/outputs/apk/release/app-release.apk ../ProSyariah.apk
+          rm -rf "$RUNNER_TEMP/k"
+      - name: Simpan assetlinks (skrin penuh tanpa bar alamat)
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .well-known/assetlinks.json
+          if git commit -qm "APK: assetlinks"; then
+            git pull --rebase -X theirs -q; git push -q
+            # terbit semula laman supaya assetlinks aktif
+            gh api -X POST repos/${{ github.repository }}/actions/workflows/main.yml/dispatches -f ref=main || true
+          else echo "assetlinks tiada perubahan"; fi
+        env:
+          GH_TOKEN: ${{ github.token }}
+      - name: Terbit ke Release "latest" (muat turun terus dari telefon)
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: latest
+          name: ProSyariah APK (terkini)
+          body: "Muat turun ProSyariah.apk di bawah dan pasang di telefon Android."
+          files: ProSyariah.apk
+          make_latest: true

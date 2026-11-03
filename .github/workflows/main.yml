@@ -139,6 +139,7 @@ jobs:
         env:
           SMOKE: ${{ steps.smoke.outcome }}
         run: |
+          rm -f _site/ProSyariah.apk   # pelan Firebase percuma tolak fail .apk; APK dihoskan di GitHub Pages
           printf '%s' "$FIREBASE_SA" > "$RUNNER_TEMP/sa.json"
           export GOOGLE_APPLICATION_CREDENTIALS="$RUNNER_TEMP/sa.json"
           set +e

@@ -34,6 +34,23 @@
             "value": "no-cache"
           }
         ]
+      },
+      {
+        "source": "/ProSyariah.apk",
+        "headers": [
+          {
+            "key": "Content-Type",
+            "value": "application/vnd.android.package-archive"
+          },
+          {
+            "key": "Content-Disposition",
+            "value": "attachment; filename=\"ProSyariah.apk\""
+          },
+          {
+            "key": "Cache-Control",
+            "value": "no-cache"
+          }
+        ]
       }
     ]
   },

@@ -2984,10 +2984,10 @@ function openOnboard(i){i=i||0;const old=$('#onb');if(old)old.remove();const d=d
   $('#onSkip').onclick=()=>{if(i<ONB.length-1)done();else openOnboard(i-1);};}
 /* APK Android (Trusted Web Activity: app ini dalam Chrome skrin penuh) */
 const IS_APK=(()=>{try{if(/[?&]src=apk/.test(location.search)||document.referrer.startsWith('android-app://com.prokuiz.prosyariah')){sessionStorage.setItem('ps_apk','1');if(/[?&]src=apk/.test(location.search))history.replaceState(null,'',location.pathname+location.hash);}return sessionStorage.getItem('ps_apk')==='1';}catch(e){return false;}})();
-const APK_URL='https://github.com/alemmaxx/ProSyariah/releases/download/latest/ProSyariah.apk';
+const APK_URL=(location.hostname==='prosyariah.web.app'?'':'https://prosyariah.web.app/')+'ProSyariah.apk';
 function apkHTML(){if(IS_APK)return `<div class="card"><h2>📱 App Android</h2><div class="kv"><span>Versi</span><b>APK ✓</b></div><div class="disc">Anda sedang guna APK ProSyariah. Data, isyarat & ciri baharu dikemas kini sendiri, tak perlu muat turun semula.</div></div>`;
   if(!/Android/i.test(navigator.userAgent))return '';
-  return `<div class="card"><h2>📱 App Android</h2><a class="btn gold" style="display:block;text-align:center;width:100%;text-decoration:none" href="${APK_URL}">⬇ Muat Turun APK Android</a>
+  return `<div class="card"><h2>📱 App Android</h2><a class="btn gold" style="display:block;text-align:center;width:100%;text-decoration:none" href="${APK_URL}" download="ProSyariah.apk">⬇ Muat Turun APK Android</a>
    <div class="disc" style="margin-top:10px">Pasang sekali sahaja. Buka fail ProSyariah.apk, benarkan “pasang dari sumber ini” jika diminta. Log masuk Google & notifikasi berfungsi sama seperti web, dan app sentiasa terkini tanpa muat turun semula.</div></div>`;}
 function rTetapan(){
   const st=S.settings;const L=latestList();

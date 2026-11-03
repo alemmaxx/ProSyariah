@@ -3018,7 +3018,7 @@ function openOnboard(i){i=i||0;const old=$('#onb');if(old)old.remove();const d=d
   $('#onSkip').onclick=()=>{if(i<ONB.length-1)done();else openOnboard(i-1);};}
 /* APK Android (Trusted Web Activity: app ini dalam Chrome skrin penuh) */
 const IS_APK=NATIVE||(()=>{try{if(/[?&]src=apk/.test(location.search)||document.referrer.startsWith('android-app://com.prokuiz.prosyariah')){sessionStorage.setItem('ps_apk','1');if(/[?&]src=apk/.test(location.search))history.replaceState(null,'',location.pathname+location.hash);}return sessionStorage.getItem('ps_apk')==='1';}catch(e){return false;}})();
-const APK_URL='https://alemmaxx.github.io/ProSyariah/ProSyariah.apk';   // GitHub Pages (Firebase percuma tidak benarkan .apk)
+const APK_URL='https://alemmaxx.github.io/ProSyariah/download.html';   // GitHub Pages (Firebase percuma tidak benarkan .apk)
 const APK_BUILD=0;   // diganti nombor binaan semasa APK dibina (GitHub Actions)
 let APK_NEW=0;
 async function apkCheck(){if(!NATIVE)return;try{const r=await fetch('https://raw.githubusercontent.com/alemmaxx/ProSyariah/main/data/apk.json?t='+Math.floor(Date.now()/36e5),{cache:'no-store'});
@@ -3027,7 +3027,7 @@ async function apkCheck(){if(!NATIVE)return;try{const r=await fetch('https://raw
 function apkHTML(){if(NATIVE)return `<div class="card"><h2>📱 App Android</h2><div class="kv"><span>Versi</span><b>APK v${APK_BUILD}</b></div>
    ${APK_NEW?`<a class="btn gold" style="display:block;text-align:center;width:100%;text-decoration:none;margin-top:10px" href="${APK_URL}">⬇ Kemas kini ke v${APK_NEW}</a><div class="disc" style="margin-top:8px">Muat turun & pasang atas app ini. Data anda kekal.</div>`:`<div class="disc">Data, harga & isyarat dikemas kini automatik. Bila ada versi baharu app, butang kemas kini akan muncul di sini.</div>`}</div>`;
   if(!/Android/i.test(navigator.userAgent))return '';
-  return `<div class="card"><h2>📱 App Android</h2><a class="btn gold" style="display:block;text-align:center;width:100%;text-decoration:none" href="${APK_URL}" download="ProSyariah.apk">⬇ Muat Turun APK Android</a>
+  return `<div class="card"><h2>📱 App Android</h2><a class="btn gold" style="display:block;text-align:center;width:100%;text-decoration:none" href="${APK_URL}" target="_blank" rel="noopener">⬇ Muat Turun APK Android</a>
    <div class="disc" style="margin-top:10px">Buka fail ProSyariah.apk, benarkan “pasang dari sumber ini” jika diminta. Log masuk dengan akaun Google yang sama, data anda akan muncul.</div></div>`;}
 function rTetapan(){
   const st=S.settings;const L=latestList();

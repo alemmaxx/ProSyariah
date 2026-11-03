@@ -11,7 +11,7 @@ on:
   workflow_dispatch: {}
   push:
     branches: [main]
-    paths: ["index.html", "privacy.html", "manifest.webmanifest", "sw.js", "icons/**", "data/sc-upload/**", ".well-known/**", "firebase.json"]
+    paths: ["index.html", "privacy.html", "download.html", "manifest.webmanifest", "sw.js", "icons/**", "data/sc-upload/**", ".well-known/**", "firebase.json"]
 
 permissions:
   contents: write
@@ -110,7 +110,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          cp index.html privacy.html manifest.webmanifest sw.js _site/
+          cp index.html privacy.html download.html manifest.webmanifest sw.js _site/
           cp data/paper-experiments.json data/exit-experiments.json data/status.json data/live.json _site/data/ 2>/dev/null || true
           cp -r icons _site/icons
           [ -d .well-known ] && cp -r .well-known _site/ || true

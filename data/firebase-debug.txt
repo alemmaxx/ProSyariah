@@ -16,22 +16,20 @@ npm warn deprecated glob@10.5.0: Old versions of glob are not supported, and con
 ├──────────────┼────────────────────────────┤
 │ App ID:      │                            │
 └──────────────┴────────────────────────────┘
+
+[1m[37m===[39m Deploying to 'prosyariah-26a55'...[22m
+
 [36m[1mi [22m[39m deploying [1mhosting[22m
 [36m[1mi  hosting[prosyariah]:[22m[39m beginning deploy...
-[36m[1mi  hosting[prosyariah]:[22m[39m found 1188 files in [1m_site[22m
-[36m[1mi  hosting:[22m[39m adding files to version [1000/1188] ([1m[32m84%[39m[22m)
-[36m[1mi  hosting:[22m[39m upload complete
-[32m[1m✔  hosting[prosyariah]:[22m[39m file upload complete
-[36m[1mi  hosting[prosyariah]:[22m[39m finalizing version...
-[32m[1m✔  hosting[prosyariah]:[22m[39m version finalized
-[36m[1mi  hosting[prosyariah]:[22m[39m releasing new version...
-[32m[1m✔  hosting[prosyariah]:[22m[39m release complete
+[36m[1mi  hosting[prosyariah]:[22m[39m found 1189 files in [1m_site[22m
+[36m[1mi  hosting:[22m[39m adding files to version [1000/1189] ([1m[32m84%[39m[22m)
+[36m[1mi  hosting:[22m[39m adding files to version [1000/1189] ([1m[32m84%[39m[22m)
+[36m[1mi  hosting:[22m[39m adding files to version [1189/1189] ([1m[32m100%[39m[22m)
 
-[32m[1m✔ [22m[39m [1m[4mDeploy complete![24m[22m
+[1m[31mError:[39m[22m Task index 0 failed: retries exhausted after 4 attempts, with error: Request to https://firebasehosting.googleapis.com/v1beta1/projects/449079095972/sites/prosyariah/versions/99f439bfd3103b9b:populateFiles had HTTP Error: 400, Executable files are forbidden on the Spark billing plan. For more details, see https://firebase.google.com/support/faq#hosting-exe-restrictions
 
-[1mProject Console:[22m https://console.firebase.google.com/project/prosyariah-26a55/overview
-[1mHosting URL:[22m https://prosyariah.web.app
-exit=0
+[1m[31mError:[39m[22m Task index 0 failed: retries exhausted after 4 attempts, with error: Request to https://firebasehosting.googleapis.com/v1beta1/projects/449079095972/sites/prosyariah/versions/99f439bfd3103b9b:populateFiles had HTTP Error: 400, Executable files are forbidden on the Spark billing plan. For more details, see https://firebase.google.com/support/faq#hosting-exe-restrictions
+exit=1
 firestore rules OK
   Robot Auto hidup: 2 akaun · jenis: Isyarat/Champion/Berita, Isyarat/Champion/Berita
 ✓ Notifikasi push: 2 akaun dalam Firestore, 1 dengan phone berdaftar, 0 notifikasi dihantar, Robot Auto 0 posisi baharu

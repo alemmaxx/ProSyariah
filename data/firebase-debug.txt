@@ -16,10 +16,10 @@ npm warn deprecated glob@10.5.0: Old versions of glob are not supported, and con
 ├──────────────┼────────────────────────────┤
 │ App ID:      │                            │
 └──────────────┴────────────────────────────┘
-[36m[1mi  hosting[prosyariah]:[22m[39m found 1190 files in [1m_site[22m
-[36m[1mi  hosting:[22m[39m adding files to version [1000/1190] ([1m[32m84%[39m[22m)
-[36m[1mi  hosting:[22m[39m adding files to version [1000/1190] ([1m[32m84%[39m[22m)
-[36m[1mi  hosting:[22m[39m uploading new files [206/207] ([1m[32m99%[39m[22m)
+[36m[1mi  hosting[prosyariah]:[22m[39m found 1189 files in [1m_site[22m
+[36m[1mi  hosting:[22m[39m adding files to version [1000/1189] ([1m[32m84%[39m[22m)
+[36m[1mi  hosting:[22m[39m uploading new files [366/1062] ([1m[32m34%[39m[22m)
+[36m[1mi  hosting:[22m[39m uploading new files [791/1062] ([1m[32m74%[39m[22m)
 [36m[1mi  hosting:[22m[39m upload complete
 [32m[1m✔  hosting[prosyariah]:[22m[39m file upload complete
 [36m[1mi  hosting[prosyariah]:[22m[39m finalizing version...

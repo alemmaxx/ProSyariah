@@ -16,10 +16,10 @@ npm warn deprecated glob@10.5.0: Old versions of glob are not supported, and con
 ├──────────────┼────────────────────────────┤
 │ App ID:      │                            │
 └──────────────┴────────────────────────────┘
-[36m[1mi  hosting[prosyariah]:[22m[39m found 1184 files in [1m_site[22m
-[36m[1mi  hosting:[22m[39m adding files to version [0/1184] ([1m[32m0%[39m[22m)
-[36m[1mi  hosting:[22m[39m uploading new files [374/1088] ([1m[32m34%[39m[22m)
-[36m[1mi  hosting:[22m[39m uploading new files [1055/1088] ([1m[32m96%[39m[22m)
+[36m[1mi  hosting[prosyariah]:[22m[39m found 1183 files in [1m_site[22m
+[36m[1mi  hosting:[22m[39m adding files to version [0/1183] ([1m[32m0%[39m[22m)
+[36m[1mi  hosting:[22m[39m uploading new files [199/985] ([1m[32m20%[39m[22m)
+[36m[1mi  hosting:[22m[39m uploading new files [623/985] ([1m[32m63%[39m[22m)
 [36m[1mi  hosting:[22m[39m upload complete
 [32m[1m✔  hosting[prosyariah]:[22m[39m file upload complete
 [36m[1mi  hosting[prosyariah]:[22m[39m finalizing version...
@@ -34,4 +34,4 @@ npm warn deprecated glob@10.5.0: Old versions of glob are not supported, and con
 exit=0
 firestore rules OK
   Robot Auto hidup: 2 akaun · jenis: Isyarat/Champion/Berita, Isyarat/Champion/Berita
-✓ Notifikasi push: 2 akaun dalam Firestore, 1 dengan phone berdaftar, 0 notifikasi dihantar, Robot Auto 0 posisi baharu
+✓ Notifikasi push: 2 akaun dalam Firestore, 1 dengan phone berdaftar, 2 notifikasi dihantar, Robot Auto 0 posisi baharu

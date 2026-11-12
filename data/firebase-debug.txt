@@ -16,10 +16,10 @@ npm warn deprecated glob@10.5.0: Old versions of glob are not supported, and con
 ├──────────────┼────────────────────────────┤
 │ App ID:      │                            │
 └──────────────┴────────────────────────────┘
-[36m[1mi  hosting[prosyariah]:[22m[39m found 1182 files in [1m_site[22m
-[36m[1mi  hosting:[22m[39m adding files to version [0/1182] ([1m[32m0%[39m[22m)
-[36m[1mi  hosting:[22m[39m uploading new files [199/1047] ([1m[32m19%[39m[22m)
-[36m[1mi  hosting:[22m[39m uploading new files [621/1047] ([1m[32m59%[39m[22m)
+[36m[1mi  hosting[prosyariah]:[22m[39m found 1173 files in [1m_site[22m
+[36m[1mi  hosting:[22m[39m uploading new files [0/1027] ([1m[32m0%[39m[22m)
+[36m[1mi  hosting:[22m[39m uploading new files [520/1027] ([1m[32m50%[39m[22m)
+[36m[1mi  hosting:[22m[39m uploading new files [1023/1027] ([1m[32m99%[39m[22m)
 [36m[1mi  hosting:[22m[39m upload complete
 [32m[1m✔  hosting[prosyariah]:[22m[39m file upload complete
 [36m[1mi  hosting[prosyariah]:[22m[39m finalizing version...
@@ -34,5 +34,5 @@ npm warn deprecated glob@10.5.0: Old versions of glob are not supported, and con
 exit=0
 firestore rules OK
   Robot Auto hidup: 2 akaun · jenis: Isyarat/Champion/Berita, Isyarat/Champion/Berita
-  Robot Auto masuk: 0045 Southern Score Builders (Berita)
-✓ Notifikasi push: 2 akaun dalam Firestore, 1 dengan phone berdaftar, 1 notifikasi dihantar, Robot Auto 1 posisi baharu
+  Robot Auto masuk: 0268 L&P Global (Berita); 2089 United Plantations (Berita)
+✓ Notifikasi push: 2 akaun dalam Firestore, 1 dengan phone berdaftar, 2 notifikasi dihantar, Robot Auto 2 posisi baharu

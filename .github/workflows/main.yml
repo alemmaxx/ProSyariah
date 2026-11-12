@@ -17,6 +17,7 @@ permissions:
   contents: write
   pages: write
   id-token: write
+  actions: write
 
 concurrency:
   group: prosyariah-data
@@ -39,6 +40,17 @@ jobs:
 
       - name: Ambil data terkini (elak konflik dengan larian lepas)
         run: git pull -q --ff-only origin main || true
+
+      - name: Larian berjadual — teruskan hanya jika data belum terkini
+        if: github.event_name == 'schedule'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 scripts/gate.py
+          if [ "$(python3 scripts/gate.py | grep -c 'tidak perlu')" = "1" ]; then
+            gh run cancel ${{ github.run_id }} -R ${{ github.repository }}
+            sleep 60
+          fi
 
       - uses: actions/setup-python@v5
         with:
@@ -74,7 +86,7 @@ jobs:
           if [ -f sc-debug.txt ]; then cp sc-debug.txt data/sc-debug.txt; git add data/sc-debug.txt; fi
           if ! git diff --cached --quiet; then
             git commit -m "Data: kemas kini senarai SC / simbol KLSE"
-            git push
+            for i in 1 2 3 4; do git pull --rebase -X theirs -q && git push -q && break; sleep $((i*5)); done
           fi
 
       - name: Tarik harga & kira indicator
@@ -102,8 +114,7 @@ jobs:
           git add data/signals.json data/paper-live.json data/paper-summary.json data/paper-experiments.json data/exit-experiments.json data/market-meta.json data/news.json data/fund.json data/holidays.json data/klci.json data/regime-experiment.json 2>/dev/null || true
           if ! git diff --cached --quiet; then
             git commit -m "Data: rekod prestasi isyarat"
-            git pull --rebase -X theirs -q || true
-            git push
+            for i in 1 2 3 4; do git pull --rebase -X theirs -q && git push -q && break; sleep $((i*5)); done
           fi
 
       - name: Sediakan laman

@@ -43,8 +43,7 @@ jobs:
           git add data/news.json
           if ! git diff --cached --quiet; then
             git commit -qm "Data: berita terkini"
-            git pull --rebase -X theirs -q || true
-            git push -q
+            for i in 1 2 3 4; do git pull --rebase -X theirs -q && git push -q && break; sleep $((i*5)); done
           fi
       - name: Notifikasi Berita Berpotensi
         if: env.FIREBASE_SA != ''

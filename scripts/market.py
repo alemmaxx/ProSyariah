@@ -293,6 +293,12 @@ def main():
             json.dump(out, open(os.path.join(a.out, "s", f"{c}.json"), "w"), separators=(",", ":"))
         stocks[c] = item
     asof = max((v.get("d", "") for v in stocks.values()), default="")
+    try:   # jangan sekali-kali ganti data dengan data yang lebih lama (sumber harga kadang-kadang lewat)
+        old = json.load(open(os.path.join(ROOT, "data", "market-meta.json"))).get("asof", "")
+    except Exception:
+        old = ""
+    if old and asof < old:
+        raise SystemExit(f"GAGAL: sumber harga beri data {asof}, lebih lama daripada data sedia ada {old}. Data lama dikekalkan.")
     track.update(px, stocks, asof, a.out)
     paper.build(runs, px, stocks, asof, a.out)
     try:

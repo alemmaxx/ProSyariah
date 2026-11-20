@@ -21,10 +21,10 @@ npm warn deprecated glob@10.5.0: Old versions of glob are not supported, and con
 ├──────────────┼────────────────────────────┤
 │ App ID:      │                            │
 └──────────────┴────────────────────────────┘
-[36m[1mi  hosting[prosyariah]:[22m[39m found 1180 files in [1m_site[22m
-[36m[1mi  hosting:[22m[39m adding files to version [0/1180] ([1m[32m0%[39m[22m)
-[36m[1mi  hosting:[22m[39m uploading new files [271/1161] ([1m[32m23%[39m[22m)
-[36m[1mi  hosting:[22m[39m uploading new files [1078/1161] ([1m[32m92%[39m[22m)
+[36m[1mi  hosting[prosyariah]:[22m[39m found 1162 files in [1m_site[22m
+[36m[1mi  hosting:[22m[39m adding files to version [1000/1162] ([1m[32m86%[39m[22m)
+[36m[1mi  hosting:[22m[39m uploading new files [355/1147] ([1m[32m30%[39m[22m)
+[36m[1mi  hosting:[22m[39m uploading new files [1146/1147] ([1m[32m99%[39m[22m)
 [36m[1mi  hosting:[22m[39m upload complete
 [32m[1m✔  hosting[prosyariah]:[22m[39m file upload complete
 [36m[1mi  hosting[prosyariah]:[22m[39m finalizing version...
@@ -39,5 +39,5 @@ npm warn deprecated glob@10.5.0: Old versions of glob are not supported, and con
 exit=0
 firestore rules OK
   Robot Auto hidup: 2 akaun · jenis: Isyarat/Champion/Berita, Isyarat/Champion/Berita
-  Robot Auto masuk: 0293 KJTS (Berita); 4197 Sime Darby (Berita)
-✓ Notifikasi push: 2 akaun dalam Firestore, 1 dengan phone berdaftar, 3 notifikasi dihantar, Robot Auto 2 posisi baharu
+  Robot Auto masuk: 5141 Dayang Enterprise Holdings (Berita); 5789 LBS Bina Group (Berita); 0293 KJTS (Berita); 5141 Dayang Enterprise Holdings (Berita); 5789 LBS Bina Group (Berita)
+✓ Notifikasi push: 2 akaun dalam Firestore, 1 dengan phone berdaftar, 7 notifikasi dihantar, Robot Auto 5 posisi baharu

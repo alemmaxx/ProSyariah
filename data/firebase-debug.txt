@@ -14,29 +14,16 @@ npm warn deprecated uuid@9.0.1: uuid@10 and below is no longer supported.  For E
 npm warn deprecated uuid@9.0.1: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
 npm warn deprecated glob@10.5.0: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
 
-┌──────────────┬────────────────────────────┐
-│ Site ID:     │ prosyariah                 │
-├──────────────┼────────────────────────────┤
-│ Default URL: │ https://prosyariah.web.app │
-├──────────────┼────────────────────────────┤
-│ App ID:      │                            │
-└──────────────┴────────────────────────────┘
-[36m[1mi  hosting[prosyariah]:[22m[39m beginning deploy...
-[36m[1mi  hosting[prosyariah]:[22m[39m found 1162 files in [1m_site[22m
-[36m[1mi  hosting:[22m[39m adding files to version [0/1162] ([1m[32m0%[39m[22m)
-[36m[1mi  hosting:[22m[39m uploading new files [167/418] ([1m[32m39%[39m[22m)
-[36m[1mi  hosting:[22m[39m upload complete
-[32m[1m✔  hosting[prosyariah]:[22m[39m file upload complete
-[36m[1mi  hosting[prosyariah]:[22m[39m finalizing version...
-[32m[1m✔  hosting[prosyariah]:[22m[39m version finalized
-[36m[1mi  hosting[prosyariah]:[22m[39m releasing new version...
-[32m[1m✔  hosting[prosyariah]:[22m[39m release complete
+[1m[31mError:[39m[22m Request to https://firebasehosting.googleapis.com/v1beta1/projects/prosyariah-26a55/sites/prosyariah had HTTP Error: 500, Internal error encountered.
 
-[32m[1m✔ [22m[39m [1m[4mDeploy complete![24m[22m
+[1m[31mError:[39m[22m Request to https://firebasehosting.googleapis.com/v1beta1/projects/449079095972/sites?siteId=prosyariah had HTTP Error: 500, Internal error encountered.
 
-[1mProject Console:[22m https://console.firebase.google.com/project/prosyariah-26a55/overview
-[1mHosting URL:[22m https://prosyariah.web.app
-exit=0
+[1m[37m===[39m Deploying to 'prosyariah-26a55'...[22m
+
+[36m[1mi [22m[39m deploying [1mhosting[22m
+
+[1m[31mError:[39m[22m Request to https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/prosyariah/versions had HTTP Error: 500, Internal error encountered.
+exit=2
 firestore rules OK
   Robot Auto hidup: 2 akaun · jenis: Isyarat/Champion/Berita, Isyarat/Champion/Berita
-✓ Notifikasi push: 2 akaun dalam Firestore, 1 dengan phone berdaftar, 0 notifikasi dihantar, Robot Auto 0 posisi baharu
+✓ Notifikasi push: 2 akaun dalam Firestore, 1 dengan phone berdaftar, 1 notifikasi dihantar, Robot Auto 0 posisi baharu

@@ -21,10 +21,10 @@ npm warn deprecated glob@10.5.0: Old versions of glob are not supported, and con
 ├──────────────┼────────────────────────────┤
 │ App ID:      │                            │
 └──────────────┴────────────────────────────┘
-[36m[1mi  hosting[prosyariah]:[22m[39m found 1166 files in [1m_site[22m
-[36m[1mi  hosting:[22m[39m adding files to version [1000/1166] ([1m[32m85%[39m[22m)
-[36m[1mi  hosting:[22m[39m uploading new files [327/1150] ([1m[32m28%[39m[22m)
-[36m[1mi  hosting:[22m[39m uploading new files [850/1150] ([1m[32m73%[39m[22m)
+[36m[1mi  hosting[prosyariah]:[22m[39m beginning deploy...
+[36m[1mi  hosting[prosyariah]:[22m[39m found 1157 files in [1m_site[22m
+[36m[1mi  hosting:[22m[39m adding files to version [1000/1157] ([1m[32m86%[39m[22m)
+[36m[1mi  hosting:[22m[39m uploading new files [477/1143] ([1m[32m41%[39m[22m)
 [36m[1mi  hosting:[22m[39m upload complete
 [32m[1m✔  hosting[prosyariah]:[22m[39m file upload complete
 [36m[1mi  hosting[prosyariah]:[22m[39m finalizing version...
@@ -39,5 +39,5 @@ npm warn deprecated glob@10.5.0: Old versions of glob are not supported, and con
 exit=0
 firestore rules OK
   Robot Auto hidup: 2 akaun · jenis: Isyarat/Champion/Berita, Isyarat/Champion/Berita
-  Robot Auto masuk: 0172 OCK Group (Berita); 0172 OCK Group (Berita)
-✓ Notifikasi push: 2 akaun dalam Firestore, 1 dengan phone berdaftar, 3 notifikasi dihantar, Robot Auto 2 posisi baharu
+  Robot Auto masuk: 5209 Gas Malaysia (Berita); 5983 MBM Resources (Berita); 7133 United U Li Corporation (Berita)
+✓ Notifikasi push: 2 akaun dalam Firestore, 1 dengan phone berdaftar, 3 notifikasi dihantar, Robot Auto 3 posisi baharu

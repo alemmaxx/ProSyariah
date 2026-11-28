@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-28T08:58+00:00",
+ "generated": "2026-11-28T09:42+00:00",
  "asof": "2026-11-27",
  "provider": "yfinance",
  "count": 1135,
@@ -44,7 +44,7 @@
   },
   "os": {
    "name": "Lantunan lebih jualan",
-   "n": 10257,
+   "n": 10258,
    "p": 41,
    "md": 5.0,
    "d25": 2,
